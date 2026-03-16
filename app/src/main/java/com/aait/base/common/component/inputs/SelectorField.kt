@@ -9,15 +9,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.aait.base.R
 import com.aait.base.common.component.text.DefaultText
 import com.aait.base.ui.theme.PaddingDimensions
+import com.mahalatak.R
 
 /**
  * A text field component designed for triggering selectors (bottom sheets, dialogs).

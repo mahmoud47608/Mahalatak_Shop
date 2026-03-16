@@ -22,9 +22,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.aait.base.R
 import com.aait.base.ui.theme.PaddingDimensions
 import com.aait.base.ui.theme.SpacingDimensions
+import com.mahalatak.R
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date

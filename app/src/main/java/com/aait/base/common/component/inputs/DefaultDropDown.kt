@@ -1,7 +1,6 @@
 package com.aait.base.common.component.inputs
 
 import androidx.compose.animation.core.animateFloatAsState
-import com.aait.base.common.component.utilis.noRippleClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -52,10 +51,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
-import com.aait.base.R
 import com.aait.base.common.component.text.DefaultText
+import com.aait.base.common.component.utilis.noRippleClickable
 import com.aait.base.ui.theme.BaseTheme
 import com.aait.domain.entity.general.DataItem
+import com.mahalatak.R
 
 
 @OptIn(ExperimentalMaterial3Api::class)

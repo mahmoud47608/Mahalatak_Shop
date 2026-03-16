@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -32,11 +31,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.aait.base.R
 import com.aait.base.common.component.inputs.DefaultTextField
 import com.aait.base.ui.theme.ExtendedTheme
 import com.aait.base.ui.theme.PaddingDimensions
 import com.aait.domain.entity.general.DataItem
+import com.mahalatak.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -76,7 +75,8 @@ fun SinglePickerSheet(
                 color = ExtendedTheme.colors.textPrimary,
                 modifier = Modifier
                     .padding(all = PaddingDimensions.medium)
-                    .padding(top = PaddingDimensions.low, bottom = PaddingDimensions.medium).align(Alignment.CenterHorizontally)
+                    .padding(top = PaddingDimensions.low, bottom = PaddingDimensions.medium)
+                    .align(Alignment.CenterHorizontally)
             )
 
             // Search Bar

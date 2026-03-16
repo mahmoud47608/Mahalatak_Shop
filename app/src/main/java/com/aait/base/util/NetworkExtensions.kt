@@ -1,7 +1,6 @@
 package com.aait.base.util
 
 import android.util.Log
-import com.aait.base.R
 import com.aait.domain.entity.base.BaseResponse
 import com.aait.domain.util.DataState
 import com.aait.domain.util.NetworkExceptions
@@ -14,6 +13,7 @@ import com.aait.domain.util.ResponseStatus.NOT_ACTIVE
 import com.aait.domain.util.ResponseStatus.PENDING
 import com.aait.domain.util.ResponseStatus.SUCCESS
 import com.aait.domain.util.ResponseStatus.UN_AUTH
+import com.mahalatak.R
 
 interface NetworkExtensionsActions {
     fun onLoad(showLoading: Boolean) {}

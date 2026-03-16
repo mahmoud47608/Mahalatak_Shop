@@ -17,7 +17,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.PlayCircle
 import androidx.compose.material.icons.filled.Videocam
 import androidx.compose.material.icons.outlined.PhotoLibrary
@@ -38,8 +37,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.aait.base.R
 import com.aait.base.ui.theme.PaddingDimensions
+import com.mahalatak.R
 
 /**
  * Media picker mode to determine which options to show
@@ -104,7 +103,10 @@ fun MediaPickerBottomSheet(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = PaddingDimensions.high, vertical = PaddingDimensions.medium),
+                    .padding(
+                        horizontal = PaddingDimensions.high,
+                        vertical = PaddingDimensions.medium
+                    ),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {

@@ -15,8 +15,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.viewinterop.AndroidView
 import coil.compose.AsyncImage
-import com.aait.base.R
 import com.aait.base.ui.theme.PaddingDimensions
+import com.mahalatak.R
 
 
 @Composable
@@ -43,7 +43,7 @@ fun GeneralScreenContent(uiState: GeneralState) {
 
         // Content in WebView
         uiState.content?.let {
-            val rtlHtml = """
+            """
                 <!DOCTYPE html>
                 <html dir="rtl">
                 <head>

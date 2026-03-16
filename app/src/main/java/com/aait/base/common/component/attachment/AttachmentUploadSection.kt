@@ -18,12 +18,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.aait.base.R
 import com.aait.base.common.component.text.DefaultText
 import com.aait.base.common.picker.file.rememberFilePicker
 import com.aait.base.common.picker.image.rememberImagePicker
 import com.aait.base.ui.theme.ColorLightTokens
 import com.aait.base.ui.theme.PaddingDimensions
+import com.mahalatak.R
 
 /**
  * File type support mode for attachment upload
@@ -63,7 +63,7 @@ fun AttachmentUploadSection(
         onFileSelected(filePath)
     }
 
-    val pickPdf = rememberFilePicker { filePath ->
+    rememberFilePicker { filePath ->
         onFileSelected(filePath)
     }
 

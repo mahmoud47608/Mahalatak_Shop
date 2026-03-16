@@ -12,10 +12,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.aait.base.R
 import com.aait.base.common.component.button.RadioOption
 import com.aait.base.common.component.text.DefaultText
 import com.aait.base.ui.theme.ColorLightTokens
+import com.mahalatak.R
 
 
 @Composable

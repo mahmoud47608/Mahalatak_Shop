@@ -14,7 +14,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.aait.base.R
+import com.mahalatak.R
 import kotlinx.coroutines.delay
 
 @Preview(showBackground = true)

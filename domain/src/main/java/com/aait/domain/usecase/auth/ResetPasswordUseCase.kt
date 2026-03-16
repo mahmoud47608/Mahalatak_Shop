@@ -16,9 +16,9 @@ class ResetPasswordUseCase @Inject constructor(private val homeRepository: HomeR
         passwordConfirmation: String
     ) = flow {
         when {
-            code.length != 4 -> emit(DataState.Error(ValidationException.InValidCodeException))
-            !password.isValidPassword() -> emit(DataState.Error(ValidationException.InValidPasswordException))
-            password != passwordConfirmation -> emit(DataState.Error(ValidationException.InValidConfirmPasswordException))
+            code.length != 4 -> emit(DataState.Error(ValidationException.InValidCodeException()))
+            !password.isValidPassword() -> emit(DataState.Error(ValidationException.InValidPasswordException()))
+            password != passwordConfirmation -> emit(DataState.Error(ValidationException.InValidConfirmPasswordException()))
             else -> emitAll(
                 homeRepository.resetPassword(
                     code = code,

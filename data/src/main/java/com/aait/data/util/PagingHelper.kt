@@ -46,7 +46,7 @@ fun <T : Any> handlePagingResponse(
             )
 
             UN_AUTH,
-            BLOCK -> PagingSource.LoadResult.Error(NetworkExceptions.AuthorizationException)
+            BLOCK -> PagingSource.LoadResult.Error(NetworkExceptions.AuthorizationException())
 
             NEED_ACTIVATE -> PagingSource.LoadResult.Error(
                 NetworkExceptions.NeedActiveException(response.msg)
@@ -59,16 +59,16 @@ fun <T : Any> handlePagingResponse(
                 NetworkExceptions.CustomException(response.msg)
             )
 
-            else -> PagingSource.LoadResult.Error(NetworkExceptions.UnknownException)
+            else -> PagingSource.LoadResult.Error(NetworkExceptions.UnknownException())
         }
     } catch (exception: IOException) {
         Log.e(TAG, "IOException: ${exception.message}")
-        PagingSource.LoadResult.Error(NetworkExceptions.ConnectionException)
+        PagingSource.LoadResult.Error(NetworkExceptions.ConnectionException())
     } catch (exception: HttpException) {
         Log.e(TAG, "HttpException: ${exception.message}")
-        PagingSource.LoadResult.Error(NetworkExceptions.ServerException)
+        PagingSource.LoadResult.Error(NetworkExceptions.ServerException())
     } catch (exception: Exception) {
         Log.e(TAG, "Exception: ${exception.message}")
-        PagingSource.LoadResult.Error(NetworkExceptions.UnknownException)
+        PagingSource.LoadResult.Error(NetworkExceptions.UnknownException())
     }
 }

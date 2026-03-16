@@ -2,8 +2,8 @@ package com.aait.base.common.component.bottomNavigation
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import com.aait.base.R
 import com.aait.base.ui.Screens
+import com.mahalatak.R
 
 sealed class BottomNavItem(
     @param:StringRes val name: Int,

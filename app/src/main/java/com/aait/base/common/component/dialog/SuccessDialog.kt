@@ -21,13 +21,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.aait.base.R
 import com.aait.base.common.component.text.DefaultText
 import com.aait.base.ui.theme.BaseTheme
 import com.aait.base.ui.theme.CornerDimensions
 import com.aait.base.ui.theme.PaddingDimensions
 import com.aait.base.ui.theme.colorText
 import com.aait.base.ui.theme.colorTextHint
+import com.mahalatak.R
 
 
 @Composable

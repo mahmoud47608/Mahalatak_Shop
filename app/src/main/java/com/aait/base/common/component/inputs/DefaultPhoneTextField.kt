@@ -23,12 +23,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.aait.base.R
 import com.aait.base.common.component.text.DefaultText
 import com.aait.base.ui.theme.BaseTheme
 import com.aait.base.ui.theme.PaddingDimensions
 import com.aait.base.ui.theme.colorPrimary
 import com.aait.base.ui.theme.colorText
+import com.mahalatak.R
 
 
 /**

@@ -11,7 +11,7 @@ import javax.inject.Inject
 class ForgetPasswordUseCase @Inject constructor(private val homeRepository: HomeRepository) {
     operator fun invoke(email: String) = flow {
         if (!email.isValidEmail()) {
-            emit(DataState.Error(ValidationException.InValidEmailException))
+            emit(DataState.Error(ValidationException.InValidEmailException()))
         } else {
             emitAll(homeRepository.forgetPassword(email = email))
         }

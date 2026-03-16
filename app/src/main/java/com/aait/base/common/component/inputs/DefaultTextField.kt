@@ -1,6 +1,5 @@
 package com.aait.base.common.component.inputs
 
-import com.aait.base.common.component.utilis.noRippleClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -23,12 +22,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.aait.base.R
 import com.aait.base.common.component.text.DefaultText
+import com.aait.base.common.component.utilis.noRippleClickable
 import com.aait.base.ui.theme.BaseTheme
 import com.aait.base.ui.theme.colorPrimary
 import com.aait.base.ui.theme.colorText
 import com.aait.base.ui.theme.colorTextHint
+import com.mahalatak.R
 
 
 @OptIn(ExperimentalMaterial3Api::class)

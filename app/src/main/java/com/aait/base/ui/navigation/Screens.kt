@@ -1,9 +1,9 @@
 package com.aait.base.ui.navigation
 
 import androidx.navigation3.runtime.NavKey
-import com.aait.base.R
 import com.aait.base.common.component.toolbar.ToolBarState
 import com.aait.domain.entity.general.LatLngModel
+import com.mahalatak.R
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 

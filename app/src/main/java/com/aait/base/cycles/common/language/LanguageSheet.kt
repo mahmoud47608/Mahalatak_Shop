@@ -21,9 +21,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import com.aait.base.R
 import com.aait.base.ui.theme.PaddingDimensions
 import com.aait.base.ui.theme.SpacingDimensions
+import com.mahalatak.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -74,7 +74,9 @@ private fun LanguageSheetContent(
         Spacer(modifier = Modifier.height(SpacingDimensions.sp2))
 
         LazyColumn(
-            modifier = Modifier.fillMaxWidth().padding(bottom = PaddingDimensions.extraHigh)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = PaddingDimensions.extraHigh)
         ) {
             items(languages.size) {
                 LanguageItem(

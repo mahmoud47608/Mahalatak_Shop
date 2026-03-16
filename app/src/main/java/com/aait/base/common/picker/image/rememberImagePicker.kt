@@ -12,7 +12,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.FileProvider
-import com.aait.base.R
 import com.aait.base.common.component.dialog.LoadingDialog
 import com.aait.base.common.component.sheet.MediaPickerBottomSheet
 import com.aait.base.common.component.sheet.MediaPickerMode
@@ -20,6 +19,7 @@ import com.aait.base.util.files.CompressUtil.compressImageToWebPInCache
 import com.aait.base.util.files.CompressUtil.compressToString
 import com.aait.base.util.files.hasCameraPermission
 import com.aait.base.util.files.rememberCameraPermissionRequest
+import com.mahalatak.R
 import kotlinx.coroutines.launch
 import java.io.File
 

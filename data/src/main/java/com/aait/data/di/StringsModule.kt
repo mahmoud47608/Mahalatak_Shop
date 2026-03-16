@@ -1,6 +1,6 @@
 package com.aait.data.di
 
-import com.aait.data.BuildConfig
+import com.mahalatak.data.BuildConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

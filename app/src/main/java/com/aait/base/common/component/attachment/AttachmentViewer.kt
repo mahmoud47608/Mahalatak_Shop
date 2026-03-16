@@ -15,8 +15,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.aait.base.R
 import com.aait.base.ui.theme.PaddingDimensions
+import com.mahalatak.R
 
 /**
  * Attachment type enum for distinguishing between images, PDFs, videos, and general files.

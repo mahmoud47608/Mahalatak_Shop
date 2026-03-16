@@ -12,13 +12,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aait.base.common.component.dialog.PriorityAlertDialog
 import com.aait.base.fcm.NotificationHandler
 import com.aait.base.ui.navigation.AppScaffold
 import com.aait.base.ui.navigation.NavigationEvent
 import com.aait.base.ui.theme.BaseTheme
 import com.aait.base.util.UIMessage
+import com.mahalatak.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 

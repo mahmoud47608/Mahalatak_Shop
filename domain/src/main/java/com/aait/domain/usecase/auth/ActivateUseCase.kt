@@ -15,7 +15,7 @@ class ActivateUseCase @Inject constructor(private val homeRepository: HomeReposi
         macAddress: String
     ) = flow {
         when {
-            code.length != 4 -> emit(DataState.Error(ValidationException.InValidCodeException))
+            code.length != 4 -> emit(DataState.Error(ValidationException.InValidCodeException()))
             else -> emitAll(
                 homeRepository.activate(
                     code = code,

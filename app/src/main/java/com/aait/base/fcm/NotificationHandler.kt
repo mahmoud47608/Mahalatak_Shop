@@ -9,7 +9,6 @@ import android.media.RingtoneManager
 import androidx.core.app.NotificationCompat
 import com.aait.base.App
 import com.aait.base.MainActivity
-import com.aait.base.R
 import com.aait.base.fcm.NotificationKey.ACCEPT_JOIN_REQUEST
 import com.aait.base.fcm.NotificationKey.ACCOUNT_BLOCK
 import com.aait.base.fcm.NotificationKey.ACCOUNT_DELETED
@@ -19,6 +18,7 @@ import com.aait.base.util.Constants
 import com.aait.domain.repository.PreferenceRepository
 import com.aait.domain.util.fromJson
 import com.aait.domain.util.toJson
+import com.mahalatak.R
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

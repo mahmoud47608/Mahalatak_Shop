@@ -6,7 +6,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.aait.base.R
+import com.mahalatak.R
 
 // Define the custom FontFamily
 val expoArabic = FontFamily(

@@ -10,7 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import com.aait.base.R
+import com.mahalatak.R
 
 sealed interface BottomAppBarModel {
     val title: Int
@@ -43,7 +43,7 @@ fun BottomAppBar(
         }.coerceAtLeast(0)
     }
 
-    NavigationBar() {
+    NavigationBar {
         items.forEachIndexed { index, item ->
             NavigationBarItem(
                 selected = index == selectedIndex,

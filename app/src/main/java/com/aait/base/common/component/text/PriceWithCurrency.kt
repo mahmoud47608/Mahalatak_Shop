@@ -8,7 +8,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.unit.sp
-import com.aait.base.R
+import com.mahalatak.R
 
 @Composable
 fun PriceWithCurrency(

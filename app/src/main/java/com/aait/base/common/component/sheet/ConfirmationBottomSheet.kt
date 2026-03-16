@@ -19,11 +19,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.aait.base.common.component.button.DefaultButton
 import com.aait.base.common.component.button.ButtonStyle
-import com.aait.base.R
+import com.aait.base.common.component.button.DefaultButton
 import com.aait.base.ui.theme.BaseTheme
 import com.aait.base.ui.theme.PaddingDimensions
+import com.mahalatak.R
 
 /**
  * Generic confirmation bottom sheet component

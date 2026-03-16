@@ -1,13 +1,13 @@
 package com.aait.base.cycles.auth.login
 
 import androidx.lifecycle.viewModelScope
-import com.aait.base.R
 import com.aait.base.base.BaseViewModel
 import com.aait.base.util.applyCommonSideEffects
 import com.aait.domain.entity.AuthData
 import com.aait.domain.exceptions.ValidationException
 import com.aait.domain.usecase.auth.LoginUseCase
 import com.aait.domain.util.DataState
+import com.mahalatak.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -33,7 +33,7 @@ class LoginViewModel @Inject constructor(
                     password = uiState.value.password,
                     deviceId = deviceId,
                     socialId = null
-                ).collectLatest { it ->
+                ).collectLatest {
                     when (it) {
                         is DataState.Error -> {
                             when (it.throwable) {

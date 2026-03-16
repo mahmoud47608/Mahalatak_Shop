@@ -38,22 +38,22 @@ fun <T> safeApiCall(
 
 fun <T> handleSuccess(response: T): DataState<T> {
     if (response != null) return DataState.Success(response)
-    return DataState.Error(NetworkExceptions.UnknownException)
+    return DataState.Error(NetworkExceptions.UnknownException())
 }
 
 fun <T> handleError(it: Throwable): DataState<T> {
     it.printStackTrace()
     return when (it) {
         is TimeoutCancellationException -> {
-            DataState.Error(NetworkExceptions.TimeoutException)
+            DataState.Error(NetworkExceptions.TimeoutException())
         }
 
         is UnknownHostException -> {
-            DataState.Error(NetworkExceptions.ConnectionException)
+            DataState.Error(NetworkExceptions.ConnectionException())
         }
 
         is IOException -> {
-            DataState.Error(NetworkExceptions.UnknownException)
+            DataState.Error(NetworkExceptions.UnknownException())
         }
 
         is HttpException -> {
@@ -61,7 +61,7 @@ fun <T> handleError(it: Throwable): DataState<T> {
         }
 
         else -> {
-            DataState.Error(NetworkExceptions.UnknownException)
+            DataState.Error(NetworkExceptions.UnknownException())
         }
     }
 }
@@ -74,14 +74,14 @@ fun convertErrorBody(throwable: HttpException): Exception {
             val response: BaseResponse<AnyResponse> = Json.decodeFromString(jsonString)
             when (throwable.code()) {
                 FAIL -> NetworkExceptions.CustomException(response.msg)
-                UN_AUTH, BLOCKED -> NetworkExceptions.AuthorizationException
-                EXCEPTION -> NetworkExceptions.ServerException
-                else -> NetworkExceptions.UnknownException
+                UN_AUTH, BLOCKED -> NetworkExceptions.AuthorizationException()
+                EXCEPTION -> NetworkExceptions.ServerException()
+                else -> NetworkExceptions.UnknownException()
             }
         } else {
-            NetworkExceptions.UnknownException
+            NetworkExceptions.UnknownException()
         }
     } catch (e: Exception) {
-        NetworkExceptions.UnknownException
+        NetworkExceptions.UnknownException()
     }
 }

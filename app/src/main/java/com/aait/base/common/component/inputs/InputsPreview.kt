@@ -12,10 +12,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.aait.base.R
 import com.aait.base.ui.theme.BaseTheme
 import com.aait.domain.entity.general.DataItem
+import com.mahalatak.R
 
 
 @Preview(showBackground = true)

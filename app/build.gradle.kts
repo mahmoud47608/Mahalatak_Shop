@@ -14,7 +14,7 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.aait.base"
+        applicationId = "com.mahalatak"
         minSdk = 24
         targetSdk = 36
         versionCode = 1

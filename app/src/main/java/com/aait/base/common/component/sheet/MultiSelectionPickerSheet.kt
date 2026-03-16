@@ -33,13 +33,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.aait.base.R
 import com.aait.base.common.component.button.DefaultButton
 import com.aait.base.common.component.inputs.DefaultTextField
 import com.aait.base.ui.theme.ExtendedTheme
 import com.aait.base.ui.theme.PaddingDimensions
 import com.aait.base.ui.theme.SpacingDimensions
 import com.aait.domain.entity.general.DataItem
+import com.mahalatak.R
 import kotlinx.coroutines.launch
 
 @SuppressLint("ConfigurationScreenWidthHeight")

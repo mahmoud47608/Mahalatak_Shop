@@ -14,6 +14,7 @@ kotlin {
 }
 
 dependencies {
+    // Keep existing deps for backward compatibility during migration
     implementation(libs.dagger)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.serialization.json)

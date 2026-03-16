@@ -38,9 +38,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.aait.base.R
 import com.aait.base.common.component.preview_media.MultiImagePreviewDialog
 import com.aait.base.common.component.utilis.noRippleClickable
+import com.mahalatak.R
 import kotlinx.coroutines.delay
 
 

@@ -18,8 +18,8 @@ class LoginUseCase @Inject constructor(private val homeRepository: HomeRepositor
         socialId: String?
     ) = flow {
         when {
-            !phone.isValidPhone() -> emit(DataState.Error(ValidationException.InValidPhoneException))
-            !password.isValidPassword() -> emit(DataState.Error(ValidationException.InValidPasswordException))
+            !phone.isValidPhone() -> emit(DataState.Error(ValidationException.InValidPhoneException()))
+            !password.isValidPassword() -> emit(DataState.Error(ValidationException.InValidPasswordException()))
             else -> emitAll(
                 homeRepository.login(
                     countryCode = countryCode,

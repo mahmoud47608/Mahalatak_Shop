@@ -23,13 +23,13 @@ class RegisterUseCase @Inject constructor(private val homeRepository: HomeReposi
         terms: Boolean
     ) = flow {
         when {
-            !firstName.isValidName() -> emit(DataState.Error(ValidationException.InValidFirstNameException))
-            !lastName.isValidName() -> emit(DataState.Error(ValidationException.InValidLastNameException))
-            !phone.isValidPhone() -> emit(DataState.Error(ValidationException.InValidPhoneException))
-            !email.isValidEmail() -> emit(DataState.Error(ValidationException.InValidEmailException))
-            !password.isValidPassword() -> emit(DataState.Error(ValidationException.InValidPasswordException))
-            password != confirmPassword -> emit(DataState.Error(ValidationException.InValidConfirmPasswordException))
-            !terms -> emit(DataState.Error(ValidationException.InValidTermsException))
+            !firstName.isValidName() -> emit(DataState.Error(ValidationException.InValidFirstNameException()))
+            !lastName.isValidName() -> emit(DataState.Error(ValidationException.InValidLastNameException()))
+            !phone.isValidPhone() -> emit(DataState.Error(ValidationException.InValidPhoneException()))
+            !email.isValidEmail() -> emit(DataState.Error(ValidationException.InValidEmailException()))
+            !password.isValidPassword() -> emit(DataState.Error(ValidationException.InValidPasswordException()))
+            password != confirmPassword -> emit(DataState.Error(ValidationException.InValidConfirmPasswordException()))
+            !terms -> emit(DataState.Error(ValidationException.InValidTermsException()))
             else -> emitAll(
                 homeRepository.register(
                     firstName = firstName,

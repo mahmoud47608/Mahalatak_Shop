@@ -22,7 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.aait.base.R
+import com.mahalatak.R
 
 /**
  * A loading dialog that shows a circular progress indicator with an optional message.

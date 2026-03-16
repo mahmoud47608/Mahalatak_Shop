@@ -5,10 +5,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
-import com.aait.base.R
 import com.aait.base.util.NetworkExtensionsActions
 import com.aait.domain.entity.base.BaseResponse
 import com.aait.domain.util.NetworkExceptions
+import com.mahalatak.R
 
 /**
  * Observes paging state changes and handles errors automatically.

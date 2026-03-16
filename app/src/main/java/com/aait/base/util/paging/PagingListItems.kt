@@ -19,7 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
-import com.aait.base.R
+import com.mahalatak.R
 
 /**
  * Adds a loading indicator item when appending more data.

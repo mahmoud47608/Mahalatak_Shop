@@ -2,13 +2,10 @@ package com.aait.base.common.screens.general.terms
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.aait.base.common.component.toolbar.ToolBarState
 import com.aait.base.common.screens.general.GeneralScreenContent
-import com.aait.base.R
 import com.aait.base.ui.theme.BaseTheme
 
 @Composable

@@ -2,8 +2,6 @@ package com.aait.base.base
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aait.base.R
-import com.aait.base.common.component.toolbar.ToolBarState
 import com.aait.base.di.BaseViewModelEntryPoint
 import com.aait.base.ui.UIRepo
 import com.aait.base.util.ApplicationContextHolder
@@ -12,6 +10,7 @@ import com.aait.data.util.TokenHeaderProvider
 import com.aait.domain.entity.base.BaseResponse
 import com.aait.domain.repository.PreferenceRepository
 import com.google.firebase.messaging.FirebaseMessaging
+import com.mahalatak.R
 import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
