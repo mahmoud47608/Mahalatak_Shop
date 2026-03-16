@@ -20,7 +20,8 @@
       "mcp__figma__get_screenshot",
       "Bash(wc:*)",
       "Bash(grep:*)",
-      "Bash(cd:*)"
+      "Bash(cd:*)",
+      "Bash(ls:*)"
     ],
     "deny": [],
     "ask": []

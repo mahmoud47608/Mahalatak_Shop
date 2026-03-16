@@ -28,6 +28,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "Mahalatak"
 include(":app")
-include(":data")
-include(":domain")
-include(":shared")
+include(":shared-domain")
+include(":shared-data")
+include(":shared-ui")

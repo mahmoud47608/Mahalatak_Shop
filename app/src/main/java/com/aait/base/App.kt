@@ -7,10 +7,15 @@ import android.content.Context
 import android.media.AudioAttributes
 import android.media.RingtoneManager
 import android.os.Build
-import com.aait.base.util.ApplicationContextHolder
-import dagger.hilt.android.HiltAndroidApp
+import com.aait.base.di.appModule
+import com.aait.data.di.AppConfig
+import com.aait.data.di.platformModule
+import com.aait.ui.di.allSharedModules
+import com.aait.ui.util.ApplicationContextHolder
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
+import org.koin.dsl.module
 
-@HiltAndroidApp
 class App : Application() {
 
     private lateinit var notificationManager: NotificationManager
@@ -19,6 +24,21 @@ class App : Application() {
         super.onCreate()
 
         ApplicationContextHolder.init(this)
+
+        startKoin {
+            androidContext(this@App)
+            modules(
+                allSharedModules + platformModule() + appModule + module {
+                    single {
+                        AppConfig(
+                            apiKey = "",
+                            remoteUrl = "https://api.example.com",
+                            socketPort = "3000"
+                        )
+                    }
+                }
+            )
+        }
     }
 
     override fun attachBaseContext(base: Context) {
