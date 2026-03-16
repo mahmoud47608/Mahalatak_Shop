@@ -4,19 +4,22 @@ import android.util.Log
 import com.aait.domain.repository.PreferenceRepository
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import javax.inject.Inject
 
-class FirebaseMessagingReceiver : FirebaseMessagingService(), KoinComponent {
+@AndroidEntryPoint
+class FirebaseMessagingReceiver : FirebaseMessagingService() {
 
-    private val preferenceRepository: PreferenceRepository by inject()
+    @Inject
+    lateinit var preferenceRepository: PreferenceRepository
 
-    private val notificationHandler: NotificationHandler by inject()
+    @Inject
+    lateinit var notificationHandler: NotificationHandler
 
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 

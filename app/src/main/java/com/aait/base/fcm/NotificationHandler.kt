@@ -13,12 +13,13 @@ import com.aait.base.fcm.NotificationKey.ACCEPT_JOIN_REQUEST
 import com.aait.base.fcm.NotificationKey.ACCOUNT_BLOCK
 import com.aait.base.fcm.NotificationKey.ACCOUNT_DELETED
 import com.aait.base.fcm.NotificationKey.NEW_MESSAGE
+import com.aait.base.ui.UIRepo
+import com.aait.base.util.Constants
 import com.aait.domain.repository.PreferenceRepository
-import com.aait.domain.util.Constants
 import com.aait.domain.util.fromJson
 import com.aait.domain.util.toJson
-import com.aait.ui.ui.UIRepo
 import com.mahalatak.R
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -26,9 +27,10 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import java.util.concurrent.atomic.AtomicInteger
+import javax.inject.Inject
 
-class NotificationHandler(
-    private val context: Context,
+class NotificationHandler @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val preferenceRepository: PreferenceRepository,
     private val uiRepo: UIRepo
 ) {

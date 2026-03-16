@@ -1,9 +1,12 @@
-package com.aait.base.fcm.test
+package com.aait.base.cycles.more.test
 
 import androidx.lifecycle.ViewModel
 import com.aait.base.fcm.NotificationHandler
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class FCMTestViewModel(
+@HiltViewModel
+class FCMTestViewModel @Inject constructor(
     private val notificationHandler: NotificationHandler
 ) : ViewModel() {
 

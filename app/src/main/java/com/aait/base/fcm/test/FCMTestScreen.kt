@@ -23,13 +23,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.aait.base.cycles.more.test.FCMTestViewModel
 import com.aait.base.fcm.NotificationKey
-import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun FCMTestScreen(
-    viewModel: FCMTestViewModel = koinViewModel()
+    viewModel: FCMTestViewModel = hiltViewModel()
 ) {
     var orderId by remember { mutableStateOf("123") }
     var roomId by remember { mutableStateOf("1") }
@@ -101,7 +102,7 @@ fun FCMTestScreen(
                     )
 
                     // Order Related
-                    mapOf("order_id" to orderId)
+                    val orderData = mapOf("order_id" to orderId)
 
                     /*
                     TestBtn("User Accepted", NotificationKey.USER_ACCEPTED_ORDER_OFFER, onTestNotification, orderData)
