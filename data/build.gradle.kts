@@ -1,0 +1,71 @@
+import org.jetbrains.kotlin.konan.properties.Properties
+import java.io.FileInputStream
+
+plugins {
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ksp)
+}
+
+android {
+    namespace = "com.aait.data"
+    compileSdk = 36
+
+    defaultConfig {
+        minSdk = 24
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
+
+        val properties = Properties()
+        val configFile = listOf("config", "Config")
+            .map { project.rootProject.file(it) }
+            .firstOrNull { it.canRead() }
+        if (configFile != null) {
+            properties.load(FileInputStream(configFile))
+        }
+        buildConfigField("String", "API_KEY", properties.getProperty("API_KEY"))
+        buildConfigField("String", "REMOTE_URL", properties.getProperty("REMOTE_URL"))
+        buildConfigField("String", "SOCKET_PORT", properties.getProperty("SOCKET_PORT"))
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+    buildFeatures {
+        buildConfig = true
+    }
+}
+
+dependencies {
+    implementation(project(":domain"))
+    //
+    implementation(libs.dagger)
+    implementation(libs.hilt)
+    ksp(libs.hilt.compiler)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.kotlin.coroutines.adapter)
+    implementation(libs.logging.interceptor)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlinx.serialization.converter)
+    implementation(libs.datastore.preferences.core)
+    implementation(libs.datastore.preferences)
+    implementation(libs.socket)
+    implementation(libs.androidx.security.crypto)
+    implementation(libs.paging.runtime)
+    testImplementation(libs.junit)
+}

@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "262707956961",
+    "project_id": "seconds-b6cef",
+    "storage_bucket": "seconds-b6cef.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:262707956961:android:d6f1abbbd90190b3bd3ba0",
+        "android_client_info": {
+          "package_name": "com.aait.base"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "262707956961-3mqj0bh823eksassuo754dojf2ja315p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXR79gE0dRGkZvMU1G3ZFOTuRbNebyaQA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "262707956961-3mqj0bh823eksassuo754dojf2ja315p.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "262707956961-4fhfrjt4a7a02oo8b0l4d307kvpnin4t.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.aait.55Seconds"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

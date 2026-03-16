@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./gradlew:*)",
+      "Bash(find:*)",
+      "Bash(git checkout:*)",
+      "Bash(python3:*)",
+      "Bash(.\\\\gradlew :app:compileDebugKotlin:*)",
+      "Bash(cmd /c \"gradlew.bat :app:compileDebugKotlin 2>&1\")",
+      "Bash(cmd /c \"gradlew.bat :app:compileDebugKotlin\")",
+      "Bash(cmd /c \".\\\\gradlew.bat :app:compileDebugKotlin --no-daemon\")",
+      "Bash(cmd /c \"cd /d D:\\\\Android\\\\AAIT\\\\base-2026 && gradlew.bat :app:compileDebugKotlin --no-daemon 2>&1\")",
+      "Bash(dir D:AndroidAAITbase-2026gradlew*)",
+      "Bash(cmd //c \"gradlew.bat :app:compileDebugKotlin 2>&1\")",
+      "Bash(cmd //c \".\\\\gradlew.bat :app:compileDebugKotlin 2>&1\")",
+      "WebFetch(domain:www.figma.com)",
+      "mcp__figma__get_variable_defs",
+      "mcp__figma__get_metadata",
+      "mcp__figma__get_design_context",
+      "mcp__figma__get_screenshot",
+      "Bash(wc:*)",
+      "Bash(grep:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

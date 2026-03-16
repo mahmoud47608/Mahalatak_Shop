@@ -1,0 +1,102 @@
+<resources>
+    <string name="no_internet_connection">لا يوجد إتصال بالإنترنت</string>
+    <string name="something_went_wrong">هناك شئ خاطئ، يرجى المحاولة فى وقت لاحق</string>
+    <string name="please_enter_phone_number">الرجاء إدخال رقم الجوال</string>
+    <string name="please_enter_password">الرجاء إدخال كلمة المرور</string>
+
+    <string name="home">الرئيسية</string>
+    <string name="more">المزيد</string>
+    <string name="empty_string"></string>
+    <string name="unknown_location">موقع غير معروف</string>
+    <string name="pick_location">تحديد الموقع</string>
+    <string name="location">الموقع</string>
+    <string name="enable_location">تفعيل إذن الموقع</string>
+    <string name="location_services_are_disabled_please_enable_location">خدمات الموقع مُعطّلة. يُرجى تفعيلها.</string>
+    <string name="cancel">إلغاء</string>
+    <string name="settings">الإعدادت</string>
+    <string name="confirm">تأكيد</string>
+    <string name="select_time">حدد الوقت</string>
+    <string name="select_image_source">اختر مصدر الصورة</string>
+    <string name="select_video_source">اختر مصدر الفيديو</string>
+    <string name="select_media_source">اختر مصدر الوسائط</string>
+    <string name="take_photo">التقاط صورة</string>
+    <string name="record_video">تسجيل فيديو</string>
+    <string name="choose_from_gallery">اختر من المعرض</string>
+    <string name="preview_current">معاينة الحالي</string>
+    <string name="loading">جاري التحميل...</string>
+    <string name="compressing_media">جاري ضغط الوسائط...</string>
+    <string name="compressing_image">جاري ضغط الصورة...</string>
+    <string name="compressing_video">جاري ضغط الفيديو...</string>
+    <string name="change_language">تغيير اللغة</string>
+    <string name="yes">نعم</string>
+    <string name="no">لا</string>
+    <string name="terms_and_conditions">الشروط والأحكام</string>
+    <string name="select_file_type">اختر نوع الملف</string>
+    <string name="select_image">اختر صورة</string>
+    <string name="select_pdf">اختر ملف PDF</string>
+    <!-- DefaultImage Component -->
+    <string name="retry">إعادة المحاولة</string>
+    <string name="error_loading_image">حدث خطأ أثناء تحميل الصورة</string>
+
+    <!-- DefaultPhoneTextField Component -->
+    <string name="phone">رقم الهاتف</string>
+    <string name="please_enter_mobile_number">يرجى إدخال رقم الهاتف المحمول</string>
+
+    <!-- DefaultDropDown Component -->
+    <string name="single_male">أعزب</string>
+    <string name="single_female">آنسة</string>
+    <string name="married_male">متزوج</string>
+    <string name="married_female">متزوجة</string>
+    <string name="male">ذكر</string>
+    <string name="female">أنثى</string>
+    <string name="relationship_husband">زوج</string>
+    <string name="relationship_wife">زوجة</string>
+    <string name="relationship_grandchild">حفيد</string>
+
+    <!-- MultiSelectDropDown -->
+    <string name="select_all">تحديد الكل</string>
+    <string name="all">الكل</string>
+    <string name="clear_all">إلغاء التحديد</string>
+    <string name="done">تم</string>
+    <string name="items_selected">%d عنصر محدد</string>
+
+    <!-- Attachment Component -->
+    <string name="attachments">المرفقات</string>
+    <string name="supported_formats">الصيغ المدعومة: PDF، JPG، PNG (الحد الأقصى 5 ميجابايت)</string>
+    <string name="browse_attachments">استعراض المرفقات</string>
+    <string name="attach_image">إرفاق صورة</string>
+    <string name="attach_video">إرفاق فيديو</string>
+    <string name="attach_file">إرفاق ملف</string>
+
+    <!-- TextField Component -->
+    <string name="please_enter_code">يرجى إدخال الرمز</string>
+
+    <!-- City/Location Inputs -->
+    <string name="city_required">المدينة</string>
+    <string name="please_select_city">يرجى اختيار المدينة</string>
+
+    <!-- Auth & Security -->
+    <string name="session_expired_title">انتهت الجلسة</string>
+    <string name="session_expired_message">انتهت صلاحية الجلسة. يرجى تسجيل الدخول مرة أخرى.</string>
+    <string name="account_blocked_title">تم حظر الحساب</string>
+    <string name="account_blocked_message">تم حظر حسابك. يرجى التواصل مع الدعم.</string>
+    <string name="ok">حسنًا</string>
+    <string name="select_items">أختر العناصر</string>
+    <string name="search">بحث</string>
+    <string name="no_items_found_matching">لا توجد عناصر تطابق \"%1$s\"</string>
+    <string name="no_data_available">لا توجد بيانات متاحة</string>
+
+    <!-- Pagination -->
+    <string name="end_of_list">لا توجد عناصر أخرى</string>
+
+    <!-- Map Tracking -->
+    <string name="map_tracking">تتبع الخريطة</string>
+    <string name="start_tracking">بدء التتبع</string>
+    <string name="stop_tracking">إيقاف التتبع</string>
+    <string name="time">الوقت</string>
+    <string name="distance">المسافة</string>
+    <string name="speed">السرعة</string>
+    <string name="route_distance">مسافة المسار</string>
+    <string name="route_duration">الوقت المتوقع</string>
+
+</resources>
