@@ -1,6 +1,5 @@
 package com.aait.base.cycles.common.map.tracking
 
-import com.aait.base.ui.navigation.ComponentShowcaseNavKey
 import com.aait.base.ui.navigation.HomeNavKey
 import com.aait.base.ui.navigation.LoginNavKey
 import com.aait.base.ui.navigation.NavScreen
@@ -12,7 +11,6 @@ import com.aait.base.ui.navigation.NavigationHelper.push
 import com.aait.base.ui.navigation.SplashNavKey
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class MapTrackingViewModelTest {
@@ -44,7 +42,7 @@ class MapTrackingViewModelTest {
             SplashNavKey,
             LoginNavKey,
             HomeNavKey,
-            ComponentShowcaseNavKey()
+            HomeNavKey
         )
 
         backStack.popUpTo(LoginNavKey, inclusive = false)
@@ -58,7 +56,7 @@ class MapTrackingViewModelTest {
         val backStack = mutableListOf<NavScreen>(
             SplashNavKey,
             HomeNavKey,
-            ComponentShowcaseNavKey()
+            HomeNavKey
         )
 
         backStack.popToAndPush(HomeNavKey, LoginNavKey)
@@ -71,10 +69,10 @@ class MapTrackingViewModelTest {
     fun `clearStackAndNavigateTo resets stack`() {
         val backStack = mutableListOf<NavScreen>(SplashNavKey, HomeNavKey)
 
-        backStack.clearStackAndNavigateTo(ComponentShowcaseNavKey())
+        backStack.clearStackAndNavigateTo(HomeNavKey)
 
         assertEquals(1, backStack.size)
-        assertTrue(backStack.last() is ComponentShowcaseNavKey)
+        assertEquals(HomeNavKey, backStack.last())
         assertFalse(backStack.contains(SplashNavKey))
     }
 }

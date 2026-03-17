@@ -39,18 +39,9 @@ data class PickLocationNavKey(
     val latLngModel: LatLngModel?, override val hasTopPadding: Boolean = false
 ) : NavScreen()
 
-@Serializable
-data class ComponentShowcaseNavKey(
-    @Transient override val toolBarState: ToolBarState = ToolBarState.TitleWithBack(
-        title = "Component Showcase"
-    )
-) : NavScreen()
-
-@Serializable
+ء ~@Serializable
 data class ChatNavKey(
     val roomId: Int,
     val title: String? = null
 ) : NavScreen()
 
-@Serializable
-object FcmTestNavKey : NavScreen()

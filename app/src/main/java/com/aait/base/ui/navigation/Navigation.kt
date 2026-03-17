@@ -11,13 +11,10 @@ import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDe
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import com.aait.base.common.screens.ComponentShowcaseScreen
 import com.aait.base.cycles.common.map.location.PickLocationScreen
-import com.aait.base.fcm.test.FCMTestScreen
 import com.aait.base.cycles.splash.SplashScreen
 import com.aait.base.ui.navigation.NavigationHelper.clearStackAndNavigateTo
 import com.aait.base.ui.navigation.NavigationHelper.popUp
-import com.aait.base.ui.navigation.NavigationHelper.push
 import com.aait.helool.util.navigation.ResultKeys
 import com.aait.helool.util.navigation.rememberResultStore
 
@@ -39,7 +36,7 @@ fun Navigation(modifier: Modifier, backStack: MutableList<NavScreen>) {
                 SplashNavKey -> NavEntry(key) {
                     SplashScreen(
                         toLoginScreen = {
-                            backStack.clearStackAndNavigateTo(ComponentShowcaseNavKey())
+                            backStack.clearStackAndNavigateTo(HomeNavKey)
                         }
                     )
                 }
@@ -53,15 +50,6 @@ fun Navigation(modifier: Modifier, backStack: MutableList<NavScreen>) {
 
                 is MoreNavKey -> NavEntry(key) {}
 
-                is ComponentShowcaseNavKey -> NavEntry(key) {
-                    ComponentShowcaseScreen(
-                        resultStore,
-                        onPickLocation = {
-                            backStack.push(PickLocationNavKey(latLngModel = null))
-                        }
-                    )
-                }
-
                 is PickLocationNavKey -> NavEntry(key) {
                     PickLocationScreen(
                         location = key.latLngModel, onLocationPicked = { pickedLocation ->
@@ -70,10 +58,6 @@ fun Navigation(modifier: Modifier, backStack: MutableList<NavScreen>) {
                         }, onBack = { backStack.popUp() })
                 }
 
-
-                is FcmTestNavKey -> NavEntry(key) {
-                    FCMTestScreen()
-                }
 
                 is ChatNavKey -> NavEntry(key) {
                     ChatPlaceholderScreen(roomId = key.roomId, title = key.title)

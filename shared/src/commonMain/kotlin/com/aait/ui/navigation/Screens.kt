@@ -48,11 +48,3 @@ data class ChatScreen(val roomId: Int, val title: String? = null) : Screen {
     }
 }
 
-data object ComponentShowcaseScreen : Screen {
-    @Composable
-    override fun Content() {
-        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("Component Showcase", style = MaterialTheme.typography.headlineLarge)
-        }
-    }
-}
