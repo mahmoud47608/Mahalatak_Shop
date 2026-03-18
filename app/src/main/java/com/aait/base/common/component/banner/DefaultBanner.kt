@@ -94,8 +94,8 @@ fun CarouselBanner(
                             showPreview = true
                         },
                     contentScale = ContentScale.Crop,
-                    placeholder = painterResource(R.drawable.ic_launcher_foreground),
-                    error = painterResource(R.drawable.ic_launcher_foreground)
+                    placeholder = painterResource(R.drawable.app_icon),
+                    error = painterResource(R.drawable.app_icon)
                 )
             }
         }
@@ -183,7 +183,7 @@ private fun BannerPlaceholder(modifier: Modifier = Modifier) {
             contentAlignment = Alignment.Center
         ) {
             Image(
-                painter = painterResource(R.drawable.ic_launcher_foreground),
+                painter = painterResource(R.drawable.app_icon),
                 contentDescription = "Logo placeholder",
                 modifier = Modifier.size(100.dp),
                 contentScale = ContentScale.Fit

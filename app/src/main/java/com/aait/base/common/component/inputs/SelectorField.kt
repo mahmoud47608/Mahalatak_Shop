@@ -77,7 +77,7 @@ fun SelectorField(
             imeAction = ImeAction.None,
             trailingIcon = trailingIcon ?: {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_arrow_down),
+                    painter = painterResource(id = R.drawable.app_icon),
                     contentDescription = null,
                     modifier = Modifier.size(24.dp),
                     tint = MaterialTheme.colorScheme.primary

@@ -94,6 +94,16 @@
     <!-- Pagination -->
     <string name="end_of_list">No more items</string>
 
+    <!-- Login Screen -->
+    <string name="welcome_back">Welcome\nBack!</string>
+    <string name="username_or_email">Username or Email</string>
+    <string name="password">Password</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="login">Login</string>
+    <string name="or_continue_with">- OR Continue with -</string>
+    <string name="create_account_prefix">Create An Account </string>
+    <string name="sign_up">Sign Up</string>
+
     <!-- Map Tracking -->
     <string name="map_tracking">Map Tracking</string>
     <string name="start_tracking">Start Tracking</string>

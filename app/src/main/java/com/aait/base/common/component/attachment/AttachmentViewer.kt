@@ -26,10 +26,10 @@ enum class AttachmentType(
     @DrawableRes val iconRes: Int,
     @StringRes val defaultTitleRes: Int
 ) {
-    IMAGE(R.drawable.ic_attach_image, R.string.attach_image),
-    PDF(R.drawable.ic_attach_file, R.string.attach_file),
-    VIDEO(R.drawable.ic_attach_video, R.string.attach_video),
-    FILE(R.drawable.ic_attach_file, R.string.attach_file)
+    IMAGE(R.drawable.app_icon, R.string.attach_image),
+    PDF(R.drawable.app_icon, R.string.attach_file),
+    VIDEO(R.drawable.app_icon, R.string.attach_video),
+    FILE(R.drawable.app_icon, R.string.attach_file)
 }
 
 /**

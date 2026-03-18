@@ -59,7 +59,7 @@ fun DefaultAppBar(
         navigationIcon = {
             if (state.hasBackButton) {
                 IconAction(
-                    resId = R.drawable.ic_back,
+                    resId = R.drawable.app_icon,
                     contentDescription = "Back",
                     onClick = { state.onBackButtonClicked?.invoke() }
                 )
@@ -69,7 +69,7 @@ fun DefaultAppBar(
             when (state) {
                 is ToolBarState.TitleWithNotification -> {
                     IconAction(
-                        resId = R.drawable.ic_notifications,
+                        resId = R.drawable.app_icon,
                         contentDescription = "Notifications",
                         onClick = { state.onNotificationButtonClicked?.invoke() }
                     )

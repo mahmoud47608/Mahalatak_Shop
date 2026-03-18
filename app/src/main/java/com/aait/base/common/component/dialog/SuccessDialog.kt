@@ -58,7 +58,7 @@ fun SuccessDialog(
                 verticalArrangement = Arrangement.spacedBy(PaddingDimensions.medium)
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_notifications),
+                    painter = painterResource(id = R.drawable.app_icon),
                     contentDescription = "Success",
                     modifier = Modifier.size(50.dp),
                     tint = Color.Unspecified

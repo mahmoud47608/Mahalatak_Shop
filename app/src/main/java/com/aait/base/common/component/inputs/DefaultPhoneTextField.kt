@@ -60,8 +60,8 @@ fun DefaultTextFieldPhoneWithCode(
     phoneErrorText: String? = null,
     onPhoneChange: (String) -> Unit = {},
     countryCode: String = "+966",
-    countryFlagIcon: Int? = R.drawable.ic_saudi_flag,
-    phoneIcon: Int = R.drawable.ic_calling
+    countryFlagIcon: Int? = R.drawable.app_icon,
+    phoneIcon: Int = R.drawable.app_icon
 ) {
     var currentError by remember { mutableStateOf(phoneErrorText) }
     LaunchedEffect(phoneErrorText) {

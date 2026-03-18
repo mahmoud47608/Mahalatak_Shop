@@ -43,7 +43,7 @@ val appModule = module {
     single { UIRepo() }
     single { NotificationHandler(androidContext(), get(), get()) }
 
-    viewModel { MainViewModel(get(), get(), get()) }
+    viewModel { MainViewModel(get(), get()) }
     viewModel { LoginViewModel(get()) }
     viewModel { SplashViewModel() }
     viewModel { TermsViewModel() }

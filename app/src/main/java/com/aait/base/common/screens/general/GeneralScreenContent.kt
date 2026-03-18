@@ -34,8 +34,8 @@ fun GeneralScreenContent(uiState: GeneralState) {
         ) {
             AsyncImage(
                 model = uiState.image,
-                placeholder = painterResource(id = R.drawable.ic_launcher_foreground),
-                error = painterResource(id = R.drawable.ic_launcher_foreground),
+                placeholder = painterResource(id = R.drawable.app_icon),
+                error = painterResource(id = R.drawable.app_icon),
                 contentDescription = "alkarashi Logo",
                 contentScale = ContentScale.Fit
             )

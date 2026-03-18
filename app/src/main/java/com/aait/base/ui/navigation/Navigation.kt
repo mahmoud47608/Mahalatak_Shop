@@ -11,6 +11,7 @@ import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDe
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import com.aait.base.cycles.auth.login.LoginScreen
 import com.aait.base.cycles.common.map.location.PickLocationScreen
 import com.aait.base.cycles.splash.SplashScreen
 import com.aait.base.ui.navigation.NavigationHelper.clearStackAndNavigateTo
@@ -36,13 +37,13 @@ fun Navigation(modifier: Modifier, backStack: MutableList<NavScreen>) {
                 SplashNavKey -> NavEntry(key) {
                     SplashScreen(
                         toLoginScreen = {
-                            backStack.clearStackAndNavigateTo(HomeNavKey)
+                            backStack.clearStackAndNavigateTo(LoginNavKey)
                         }
                     )
                 }
 
                 LoginNavKey -> NavEntry(key) {
-
+                    LoginScreen()
                 }
 
                 HomeNavKey -> NavEntry(key) {}

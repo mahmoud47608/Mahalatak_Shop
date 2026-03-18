@@ -262,7 +262,7 @@ private fun HeaderSection(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            painter = painterResource(R.drawable.ic_back),
+            painter = painterResource(R.drawable.app_icon),
             contentDescription = null,
             modifier = Modifier.noRippleClickable { onBack() }
         )
@@ -312,7 +312,7 @@ private fun FooterSection(
             Text(text = stringResource(R.string.location))
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_location_on),
+                    painter = painterResource(R.drawable.app_icon),
                     contentDescription = null
                 )
                 Text(text = location, maxLines = 2)

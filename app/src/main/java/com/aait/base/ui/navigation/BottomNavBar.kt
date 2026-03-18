@@ -20,14 +20,14 @@ sealed interface BottomAppBarModel {
 
     data class Home(
         override val title: Int = R.string.home,
-        override val icon: Int = R.drawable.ic_launcher_foreground,
-        override val iconSelected: Int = R.drawable.ic_launcher_foreground,
+        override val icon: Int = R.drawable.app_icon,
+        override val iconSelected: Int = R.drawable.app_icon,
         override val navScreen: NavScreen = HomeNavKey
     ) : BottomAppBarModel
     data class More(
         override val title: Int = R.string.more,
-        override val icon: Int = R.drawable.ic_launcher_foreground,
-        override val iconSelected: Int = R.drawable.ic_launcher_foreground,
+        override val icon: Int = R.drawable.app_icon,
+        override val iconSelected: Int = R.drawable.app_icon,
         override val navScreen: NavScreen = MoreNavKey()
     ) : BottomAppBarModel
 }

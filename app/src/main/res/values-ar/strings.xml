@@ -89,6 +89,16 @@
     <!-- Pagination -->
     <string name="end_of_list">لا توجد عناصر أخرى</string>
 
+    <!-- Login Screen -->
+    <string name="welcome_back">مرحبًا\nبعودتك!</string>
+    <string name="username_or_email">اسم المستخدم أو البريد الإلكتروني</string>
+    <string name="password">كلمة المرور</string>
+    <string name="forgot_password">نسيت كلمة المرور؟</string>
+    <string name="login">تسجيل الدخول</string>
+    <string name="or_continue_with">- أو المتابعة عبر -</string>
+    <string name="create_account_prefix">ليس لديك حساب؟ </string>
+    <string name="sign_up">إنشاء حساب</string>
+
     <!-- Map Tracking -->
     <string name="map_tracking">تتبع الخريطة</string>
     <string name="start_tracking">بدء التتبع</string>

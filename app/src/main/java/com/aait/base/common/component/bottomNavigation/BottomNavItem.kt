@@ -16,8 +16,8 @@ sealed class BottomNavItem(
     data object Home : BottomNavItem(
         name = R.string.home,
         route = Screens.Login,
-        icon = R.drawable.ic_launcher_foreground,
-        iconSelected = R.drawable.ic_launcher_foreground
+        icon = R.drawable.app_icon,
+        iconSelected = R.drawable.app_icon
     )
 
 

@@ -26,7 +26,7 @@ import com.mahalatak.R
 fun EmptyComponent(
     modifier: Modifier = Modifier,
     message: String = stringResource(R.string.no_data_available),
-    iconResId: Painter = painterResource(R.drawable.logo)
+    iconResId: Painter = painterResource(R.drawable.app_icon)
 
 ) {
     Column(
