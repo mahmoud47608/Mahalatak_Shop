@@ -54,13 +54,6 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
 
-            // Voyager
-            implementation(libs.voyager.navigator)
-            implementation(libs.voyager.screenmodel)
-            implementation(libs.voyager.transitions)
-            implementation(libs.voyager.koin)
-            implementation(libs.voyager.tab.navigator)
-
             // Coil 3
             implementation(libs.coil3.compose)
             implementation(libs.coil3.network.ktor)
@@ -77,6 +70,9 @@ kotlin {
         }
 
         androidMain.dependencies {
+            // Data module
+            implementation(project(":data"))
+
             // Paging Compose (Android-only)
             implementation(libs.paging.compose.kmp)
 
@@ -94,6 +90,29 @@ kotlin {
 
             // Socket.IO (Android-specific)
             implementation(libs.socket)
+
+            // Navigation 3
+            implementation(libs.androidx.navigation3.ui)
+            implementation(libs.androidx.lifecycle.viewmodel.navigation3)
+            implementation(libs.androidx.material3.adaptive.navigation3)
+
+            // Maps
+            implementation(libs.maps.compose)
+            implementation(libs.play.services.location)
+            implementation(libs.play.services.maps)
+
+            // Media3 (ExoPlayer)
+            implementation(libs.media3.exoplayer)
+            implementation(libs.media3.ui)
+
+            // AppCompat (for locale)
+            implementation(libs.androidx.appcompat)
+
+            // EventBus
+            implementation(libs.eventbus)
+
+            // Firebase
+            implementation(libs.firebase.messaging.ktx)
         }
 
         iosMain.dependencies {

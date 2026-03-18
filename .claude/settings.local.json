@@ -29,7 +29,10 @@
       "Read(//d/project/base-compose-aug-2025/$HOME/.gradle/**)",
       "Read(//c/Users/Morsy/.gradle/jdks/**)",
       "Bash(mkdir:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(/tmp/app_structure.txt:*)",
+      "Read(//tmp/**)",
+      "WebSearch"
     ],
     "deny": [],
     "ask": []

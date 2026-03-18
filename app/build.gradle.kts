@@ -44,6 +44,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":shared"))
     implementation(project(":data"))
     implementation(project(":domain"))
     //
@@ -58,23 +59,7 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.compose)
     implementation(libs.koin.compose.viewmodel)
-    implementation(libs.material.icons)
-    implementation(libs.androidx.lifecycle.viewmodel.navigation3)
-    implementation(libs.androidx.material3.adaptive.navigation3)
-    implementation(libs.androidx.navigation3.ui)
-    implementation(libs.maps.compose)
-    implementation(libs.play.services.location)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.coil.compose)
-    implementation(libs.play.services.maps)
-    implementation(libs.lottie.compose)
-    implementation(libs.paging.runtime)
-    implementation(libs.paging.compose)
-    implementation(libs.media3.exoplayer)
-    implementation(libs.media3.ui)
-    implementation(libs.androidx.compose.material3)
     implementation(libs.firebase.crashlytics)
-    implementation(libs.eventbus)
     implementation(libs.logging.interceptor)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.messaging.ktx)
