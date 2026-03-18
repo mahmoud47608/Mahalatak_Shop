@@ -1,16 +1,16 @@
 -- Merging decision tree log ---
 manifest
-ADDED from D:\project\base-compose-aug-2025\shared\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest5644518491732691545.xml:2:13-83
-INJECTED from D:\project\base-compose-aug-2025\shared\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest5644518491732691545.xml:2:13-83
+ADDED from D:\project\base-compose-aug-2025\shared\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest9031744236788040111.xml:2:13-83
+INJECTED from D:\project\base-compose-aug-2025\shared\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest9031744236788040111.xml:2:13-83
 	package
-		INJECTED from D:\project\base-compose-aug-2025\shared\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest5644518491732691545.xml
+		INJECTED from D:\project\base-compose-aug-2025\shared\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest9031744236788040111.xml
 	xmlns:android
-		ADDED from D:\project\base-compose-aug-2025\shared\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest5644518491732691545.xml:2:23-81
+		ADDED from D:\project\base-compose-aug-2025\shared\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest9031744236788040111.xml:2:23-81
 uses-sdk
-INJECTED from D:\project\base-compose-aug-2025\shared\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest5644518491732691545.xml reason: use-sdk injection requested
-INJECTED from D:\project\base-compose-aug-2025\shared\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest5644518491732691545.xml
-INJECTED from D:\project\base-compose-aug-2025\shared\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest5644518491732691545.xml
+INJECTED from D:\project\base-compose-aug-2025\shared\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest9031744236788040111.xml reason: use-sdk injection requested
+INJECTED from D:\project\base-compose-aug-2025\shared\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest9031744236788040111.xml
+INJECTED from D:\project\base-compose-aug-2025\shared\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest9031744236788040111.xml
 	android:targetSdkVersion
-		INJECTED from D:\project\base-compose-aug-2025\shared\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest5644518491732691545.xml
+		INJECTED from D:\project\base-compose-aug-2025\shared\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest9031744236788040111.xml
 	android:minSdkVersion
-		INJECTED from D:\project\base-compose-aug-2025\shared\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest5644518491732691545.xml
+		INJECTED from D:\project\base-compose-aug-2025\shared\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest9031744236788040111.xml

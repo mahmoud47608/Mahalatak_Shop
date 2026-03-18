@@ -12,8 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
-import mahalatak.shared.generated.resources.Res
-import mahalatak.shared.generated.resources.app_icon
+import mahalatak.shared.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 

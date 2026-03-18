@@ -45,15 +45,7 @@ import androidx.compose.ui.unit.sp
 import com.aait.common.component.inputs.DefaultTextField
 import com.aait.ui.util.logDebug
 import kotlinx.coroutines.flow.collectLatest
-import mahalatak.shared.generated.resources.Res
-import mahalatak.shared.generated.resources.create_account_prefix
-import mahalatak.shared.generated.resources.forgot_password
-import mahalatak.shared.generated.resources.login
-import mahalatak.shared.generated.resources.or_continue_with
-import mahalatak.shared.generated.resources.password
-import mahalatak.shared.generated.resources.sign_up
-import mahalatak.shared.generated.resources.username_or_email
-import mahalatak.shared.generated.resources.welcome_back
+import mahalatak.shared.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
