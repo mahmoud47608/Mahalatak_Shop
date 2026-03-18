@@ -28,7 +28,8 @@
       "Bash(java -version)",
       "Read(//d/project/base-compose-aug-2025/$HOME/.gradle/**)",
       "Read(//c/Users/Morsy/.gradle/jdks/**)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(ls:*)"
     ],
     "deny": [],
     "ask": []

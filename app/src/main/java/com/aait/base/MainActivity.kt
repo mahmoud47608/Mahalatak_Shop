@@ -1,23 +1,40 @@
 package com.aait.base
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.res.stringResource
-import com.aait.base.common.component.dialog.PriorityAlertDialog
-import com.aait.base.fcm.NotificationHandler
-import com.aait.base.ui.navigation.AppScaffold
-import com.aait.base.ui.navigation.NavigationEvent
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.aait.base.common.component.toolbar.DefaultAppBar
+import com.aait.base.common.component.toolbar.ToolBarState
+import com.aait.base.ui.navigation.BottomAppBar
+import com.aait.base.ui.navigation.HomeNavKey
+import com.aait.base.ui.navigation.Navigation
+import com.aait.base.ui.navigation.NavigationHelper.popToAndPush
+import com.aait.base.ui.navigation.NavigationHelper.popUp
+import com.aait.base.ui.navigation.bottomBarItems
 import com.aait.base.ui.theme.BaseTheme
 import com.aait.base.util.UIMessage
-import com.mahalatak.R
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -27,104 +44,97 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.light(
+                scrim = android.graphics.Color.TRANSPARENT,
+                darkScrim = android.graphics.Color.TRANSPARENT,
+            )
+        )
         setContent {
             BaseTheme {
-                // ==================== State Collection ====================
-                val isLoading by viewModel.isLoading.collectAsState()
+                val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
                 val snackbarHostState = remember { SnackbarHostState() }
+                val backStack = viewModel.navigationStack
+                val currentScreen = backStack.lastOrNull()
 
-                // ==================== Message Handling ====================
-
+                val showBottomBar by remember(currentScreen) {
+                    derivedStateOf {
+                        currentScreen?.let { key ->
+                            bottomBarItems.any { it.navScreen::class == key::class }
+                        } ?: false
+                    }
+                }
+                val toolbar = currentScreen?.toolBarState ?: ToolBarState.Hidden
 
                 LaunchedEffect(Unit) {
                     viewModel.uiMessages.collectLatest { message ->
-                        when (message) {
-                            is UIMessage.Text ->
-                                snackbarHostState.showSnackbar(message.message)
-
-                            is UIMessage.Resource ->
-                                snackbarHostState.showSnackbar(getString(message.messageResId))
+                        val text = when (message) {
+                            is UIMessage.Text -> message.message
+                            is UIMessage.Resource -> getString(message.messageResId)
                         }
+                        snackbarHostState.showSnackbar(text)
                     }
                 }
 
-                // ==================== Auth Failure Dialog ====================
-                val isAuthFailed by viewModel.isAuthFailed.collectAsState()
-
-                if (isAuthFailed) {
-                    PriorityAlertDialog(
-                        title = stringResource(R.string.session_expired_title),
-                        message = stringResource(R.string.session_expired_message),
-                        buttonText = stringResource(R.string.ok),
-                        onButtonClick = {
-                            viewModel.onAuthFailed(false)
-                            viewModel.onLogout()
-                            // Navigate to login or visitor screen
-                        }
-                    )
-                }
-
-                // ==================== Account Blocked Dialog ====================
-                val isBlocked by viewModel.isBlocked.collectAsState()
-
-                if (isBlocked) {
-                    PriorityAlertDialog(
-                        title = stringResource(R.string.account_blocked_title),
-                        message = stringResource(R.string.account_blocked_message),
-                        buttonText = stringResource(R.string.ok),
-                        onButtonClick = {
-                            viewModel.onBlocked(false)
-                            viewModel.onLogout()
-                            // Navigate to visitor or login screen
-                        }
-                    )
-                }
-                // ==================== Main UI ====================
-                val backStack = viewModel.navigationStack
-
-                AppScaffold(
-                    backStack = backStack,
-                    isLoading = isLoading,
-                    snackbarHostState = snackbarHostState
-                )
-            }
-        }
-        if (savedInstanceState == null) {
-            handleNotificationIntent(intent)
-        }
-    }
-
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-        handleNotificationIntent(intent)
-    }
-    private fun handleNotificationIntent(intent: Intent?) {
-        intent?.let {
-            when (intent.action) {
-                NotificationHandler.ACTION_NAVIGATE_TO_LOGIN -> {
-                    viewModel.handleNavigationEvent(NavigationEvent.NavigateToLogin)
-                }
-
-                NotificationHandler.ACTION_NAVIGATE_TO_HOME -> {
-                    viewModel.handleNavigationEvent(NavigationEvent.NavigateToHome)
-                }
-
-                NotificationHandler.ACTION_NAVIGATE_TO_CHAT -> {
-                    val roomId = intent.getIntExtra(NotificationHandler.EXTRA_CHAT_ROOM_ID, 0)
-                    val title = intent.getStringExtra(NotificationHandler.EXTRA_CHAT_TITLE)
-                    if (roomId > 0) {
-                        viewModel.handleNavigationEvent(
-                            NavigationEvent.NavigateToChat(
-                                roomId = roomId,
-                                title = title
-                            )
+                Scaffold(
+                    snackbarHost = {
+                        SnackbarHost(
+                            hostState = snackbarHostState,
+                            modifier = Modifier.padding(bottom = 26.dp),
                         )
+                    },
+                    topBar = {
+                        val updatedToolbar = if (toolbar.onBackButtonClicked == null) {
+                            toolbar.updateBackButtonClicked { backStack.popUp() }
+                        } else {
+                            toolbar
+                        }
+                        DefaultAppBar(updatedToolbar)
+                    },
+                    bottomBar = {
+                        if (showBottomBar) {
+                            BottomAppBar(
+                                currentKey = currentScreen,
+                                items = bottomBarItems
+                            ) { item ->
+                                backStack.popToAndPush(HomeNavKey, newKey = item.navScreen)
+                            }
+                        }
+                    },
+                ) { innerPadding ->
+                    val contentPadding = PaddingValues(
+                        top = if (currentScreen?.hasTopPadding == true) innerPadding.calculateTopPadding() else 0.dp,
+                        bottom = if (currentScreen?.hasBottomPadding == true) innerPadding.calculateBottomPadding() else 0.dp,
+                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(contentPadding)
+                    ) {
+                        Navigation(
+                            modifier = Modifier.fillMaxSize(),
+                            backStack = backStack
+                        )
+                        if (isLoading) {
+                            LoadingOverlay()
+                        }
                     }
                 }
             }
-            intent.action = null
         }
     }
+}
 
+@Composable
+private fun LoadingOverlay() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black.copy(alpha = 0.3f))
+            .pointerInput(Unit) {},
+        contentAlignment = Alignment.Center,
+    ) {
+        CircularProgressIndicator()
+    }
 }
