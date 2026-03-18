@@ -1,7 +1,6 @@
 package com.aait.data.repo_impl
 
 import android.util.Log
-import com.aait.data.di.StringsModule.SocketBaseUrl
 import com.aait.domain.entity.base.SocketData
 import com.aait.domain.repository.PreferenceRepository
 import com.aait.domain.repository.SocketRepository
@@ -24,10 +23,9 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
-import javax.inject.Inject
 
-class SocketRepositoryImpl @Inject constructor(
-    @SocketBaseUrl private val socketBaseUrl: String,
+class SocketRepositoryImpl(
+    private val socketBaseUrl: String,
     private val preferenceRepository: PreferenceRepository
 ) : SocketRepository {
 

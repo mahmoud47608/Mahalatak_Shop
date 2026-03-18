@@ -3,9 +3,8 @@ package com.aait.data.repo_impl
 import com.aait.data.remote.HomeEndPoint
 import com.aait.data.util.safeApiCall
 import com.aait.domain.repository.HomeRepository
-import javax.inject.Inject
 
-class HomeRepositoryImpl @Inject constructor(private val homeEndPoint: HomeEndPoint) :
+class HomeRepositoryImpl(private val homeEndPoint: HomeEndPoint) :
     HomeRepository {
 
     override suspend fun login(

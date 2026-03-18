@@ -2,45 +2,29 @@ package com.aait.base.base
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aait.base.di.BaseViewModelEntryPoint
 import com.aait.base.ui.UIRepo
-import com.aait.base.util.ApplicationContextHolder
 import com.aait.base.util.NetworkExtensionsActions
-import com.aait.data.util.TokenHeaderProvider
 import com.aait.domain.entity.base.BaseResponse
 import com.aait.domain.repository.PreferenceRepository
+import com.aait.domain.util.TokenCacheManager
 import com.google.firebase.messaging.FirebaseMessaging
 import com.mahalatak.R
-import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 open class BaseViewModel<UiState : Any>(
     initialState: UiState
-) : ViewModel(), NetworkExtensionsActions {
+) : ViewModel(), NetworkExtensionsActions, KoinComponent {
 
-    private val entryPoint: BaseViewModelEntryPoint by lazy(LazyThreadSafetyMode.NONE) {
-        EntryPointAccessors.fromApplication(
-            ApplicationContextHolder.application,
-            BaseViewModelEntryPoint::class.java
-        )
-    }
-
-    protected val uiRepo: UIRepo by lazy(LazyThreadSafetyMode.NONE) {
-        entryPoint.uiRepo()
-    }
-
-    protected val preferenceRepository: PreferenceRepository by lazy(LazyThreadSafetyMode.NONE) {
-        entryPoint.preferenceRepository()
-    }
-
-    protected val tokenHeaderProvider: TokenHeaderProvider by lazy(LazyThreadSafetyMode.NONE) {
-        entryPoint.tokenHeaderProvider()
-    }
+    protected val uiRepo: UIRepo by inject()
+    protected val preferenceRepository: PreferenceRepository by inject()
+    protected val tokenCacheManager: TokenCacheManager by inject()
 
     private val _uiState = MutableStateFlow(initialState)
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
@@ -121,7 +105,7 @@ open class BaseViewModel<UiState : Any>(
     open suspend fun logout() {
         preferenceRepository.setUserData("")
         preferenceRepository.setToken("")
-        tokenHeaderProvider.removeToken()
+        tokenCacheManager.removeToken()
         preferenceRepository.setIsLogin(false)
     }
 }

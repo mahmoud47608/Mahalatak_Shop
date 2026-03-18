@@ -1,24 +1,22 @@
 package com.aait.data.util
 
 import com.aait.domain.repository.PreferenceRepository
+import com.aait.domain.util.TokenCacheManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class TokenHeaderProvider @Inject constructor(
+class TokenHeaderProvider(
     private val preferenceRepository: PreferenceRepository
-) {
+) : TokenCacheManager {
 
     @Volatile
     private var cachedToken: String = ""
 
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
     @Volatile
     private var cacheJob: Job? = null
@@ -35,14 +33,14 @@ class TokenHeaderProvider @Inject constructor(
         }
     }
 
-    fun refreshTokenCache() {
+    override fun refreshTokenCache() {
         if (cacheJob?.isActive == true) return
         cacheJob = scope.launch {
             cachedToken = preferenceRepository.getToken().first()
         }
     }
 
-    fun removeToken() {
+    override fun removeToken() {
         cachedToken = ""
     }
 }

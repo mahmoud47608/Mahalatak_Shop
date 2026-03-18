@@ -8,16 +8,13 @@ import com.aait.domain.exceptions.ValidationException
 import com.aait.domain.usecase.auth.LoginUseCase
 import com.aait.domain.util.DataState
 import com.mahalatak.R
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class LoginViewModel @Inject constructor(
+class LoginViewModel(
     private val loginUseCase: LoginUseCase
 ) : BaseViewModel<LoginState>(LoginState()) {
 
@@ -57,7 +54,7 @@ class LoginViewModel @Inject constructor(
                                     viewModelScope.launch {
                                         preferenceRepository.setToken(token)
                                         preferenceRepository.setIsLogin(true)
-                                        tokenHeaderProvider.refreshTokenCache()
+                                        tokenCacheManager.refreshTokenCache()
                                     }
                                 }
                                 _authData.value = response.data

@@ -1,28 +1,40 @@
 package com.aait.data.remote
 
+import com.aait.domain.entity.base.BaseResponse
 import com.aait.domain.entity.chat.RoomMessagesResponse
 import com.aait.domain.entity.chat.UploadMessageFileResponse
-import com.aait.domain.entity.base.BaseResponse
-import okhttp3.MultipartBody
-import retrofit2.http.GET
-import retrofit2.http.Multipart
-import retrofit2.http.POST
-import retrofit2.http.Part
-import retrofit2.http.Path
-import retrofit2.http.Query
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.forms.formData
+import io.ktor.client.request.forms.submitFormWithBinaryData
+import io.ktor.client.request.get
+import io.ktor.client.request.parameter
+import io.ktor.http.Headers
+import io.ktor.http.HttpHeaders
 
-interface ChatEndPoint {
+class ChatEndPoint(private val client: HttpClient) {
 
-    @GET("get-room-messages/{id}")
     suspend fun messages(
-        @Path("id") id: Int,
-        @Query("page") page: Int
-    ): BaseResponse<RoomMessagesResponse>
+        id: Int,
+        page: Int
+    ): BaseResponse<RoomMessagesResponse> =
+        client.get("get-room-messages/$id") {
+            parameter("page", page)
+        }.body()
 
-    @Multipart
-    @POST("upload-room-file/{id}")
     suspend fun uploadMessageFile(
-        @Path("id") id: Int,
-        @Part file: MultipartBody.Part
-    ): BaseResponse<UploadMessageFileResponse>
+        id: Int,
+        filePath: String,
+        fileName: String,
+        contentType: String
+    ): BaseResponse<UploadMessageFileResponse> =
+        client.submitFormWithBinaryData(
+            url = "upload-room-file/$id",
+            formData = formData {
+                append("file", filePath.encodeToByteArray(), Headers.build {
+                    append(HttpHeaders.ContentDisposition, "filename=\"$fileName\"")
+                    append(HttpHeaders.ContentType, contentType)
+                })
+            }
+        ).body()
 }

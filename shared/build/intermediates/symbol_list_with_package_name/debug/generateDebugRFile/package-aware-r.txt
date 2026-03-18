@@ -1,1 +1,1 @@
-com.aait.shared
+com.mahalatak.shared

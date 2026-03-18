@@ -23,7 +23,12 @@
       "Bash(cd:*)",
       "Bash(git worktree:*)",
       "Bash(for dir:*)",
-      "Bash(git stash:*)"
+      "Bash(git stash:*)",
+      "Bash(xargs head:*)",
+      "Bash(java -version)",
+      "Read(//d/project/base-compose-aug-2025/$HOME/.gradle/**)",
+      "Read(//c/Users/Morsy/.gradle/jdks/**)",
+      "Bash(mkdir:*)"
     ],
     "deny": [],
     "ask": []

@@ -2,9 +2,9 @@ package com.aait.ui.base
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aait.data.util.TokenHeaderProvider
 import com.aait.domain.entity.base.BaseResponse
 import com.aait.domain.repository.PreferenceRepository
+import com.aait.domain.util.TokenCacheManager
 import com.aait.ui.UIRepo
 import com.aait.ui.util.NetworkExtensionsActions
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +17,7 @@ open class BaseViewModel<UiState : Any>(
     initialState: UiState,
     protected val uiRepo: UIRepo,
     protected val preferenceRepository: PreferenceRepository,
-    protected val tokenHeaderProvider: TokenHeaderProvider
+    protected val tokenCacheManager: TokenCacheManager
 ) : ViewModel(), NetworkExtensionsActions {
 
     private val _uiState = MutableStateFlow(initialState)
@@ -77,7 +77,7 @@ open class BaseViewModel<UiState : Any>(
     open suspend fun logout() {
         preferenceRepository.setUserData("")
         preferenceRepository.setToken("")
-        tokenHeaderProvider.removeToken()
+        tokenCacheManager.removeToken()
         preferenceRepository.setIsLogin(false)
     }
 }

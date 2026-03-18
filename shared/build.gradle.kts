@@ -26,6 +26,8 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            implementation(project(":domain"))
+
             // Compose Multiplatform
             implementation(compose.runtime)
             implementation(compose.foundation)

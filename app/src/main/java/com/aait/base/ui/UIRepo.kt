@@ -1,6 +1,5 @@
 package com.aait.base.ui
 
-import com.aait.base.common.component.toolbar.ToolBarState
 import com.aait.base.util.UIMessage
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -8,11 +7,8 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class UIRepo @Inject constructor() {
+class UIRepo {
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()

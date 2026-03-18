@@ -8,6 +8,8 @@ import com.aait.domain.util.FailRequestCode.EXCEPTION
 import com.aait.domain.util.FailRequestCode.FAIL
 import com.aait.domain.util.FailRequestCode.UN_AUTH
 import com.aait.domain.util.NetworkExceptions
+import io.ktor.client.plugins.ResponseException
+import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.TimeoutCancellationException
@@ -18,9 +20,6 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.withTimeout
 import kotlinx.serialization.json.Json
-import retrofit2.HttpException
-import java.io.IOException
-import java.net.UnknownHostException
 
 fun <T> safeApiCall(
     apiCall: suspend () -> T
@@ -34,29 +33,21 @@ fun <T> safeApiCall(
 }.catch { throwable ->
     if (throwable is CancellationException) throw throwable
     emit(handleError(throwable))
-}.flowOn(Dispatchers.IO)
+}.flowOn(Dispatchers.Default)
 
 fun <T> handleSuccess(response: T): DataState<T> {
     if (response != null) return DataState.Success(response)
     return DataState.Error(NetworkExceptions.UnknownException())
 }
 
-fun <T> handleError(it: Throwable): DataState<T> {
+suspend fun <T> handleError(it: Throwable): DataState<T> {
     it.printStackTrace()
     return when (it) {
         is TimeoutCancellationException -> {
             DataState.Error(NetworkExceptions.TimeoutException())
         }
 
-        is UnknownHostException -> {
-            DataState.Error(NetworkExceptions.ConnectionException())
-        }
-
-        is IOException -> {
-            DataState.Error(NetworkExceptions.UnknownException())
-        }
-
-        is HttpException -> {
+        is ResponseException -> {
             DataState.Error(convertErrorBody(it))
         }
 
@@ -66,13 +57,12 @@ fun <T> handleError(it: Throwable): DataState<T> {
     }
 }
 
-fun convertErrorBody(throwable: HttpException): Exception {
+suspend fun convertErrorBody(throwable: ResponseException): Exception {
     return try {
-        val errorBody = throwable.response()?.errorBody()?.charStream()
-        val jsonString = errorBody?.buffered().use { it?.readText() }
-        if (!jsonString.isNullOrBlank()) {
+        val jsonString = throwable.response.bodyAsText()
+        if (jsonString.isNotBlank()) {
             val response: BaseResponse<AnyResponse> = Json.decodeFromString(jsonString)
-            when (throwable.code()) {
+            when (throwable.response.status.value) {
                 FAIL -> NetworkExceptions.CustomException(response.msg)
                 UN_AUTH, BLOCKED -> NetworkExceptions.AuthorizationException()
                 EXCEPTION -> NetworkExceptions.ServerException()

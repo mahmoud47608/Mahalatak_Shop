@@ -39,7 +39,7 @@ data class PickLocationNavKey(
     val latLngModel: LatLngModel?, override val hasTopPadding: Boolean = false
 ) : NavScreen()
 
-ء ~@Serializable
+@Serializable
 data class ChatNavKey(
     val roomId: Int,
     val title: String? = null

@@ -14,7 +14,7 @@ import com.aait.domain.util.ResponseStatus.NOT_ACTIVE
 import com.aait.domain.util.ResponseStatus.PENDING
 import com.aait.domain.util.ResponseStatus.SUCCESS
 import com.aait.domain.util.ResponseStatus.UN_AUTH
-import retrofit2.HttpException
+import io.ktor.client.plugins.ResponseException
 import java.io.IOException
 
 private const val TAG = "PagingHelper"
@@ -64,8 +64,8 @@ fun <T : Any> handlePagingResponse(
     } catch (exception: IOException) {
         Log.e(TAG, "IOException: ${exception.message}")
         PagingSource.LoadResult.Error(NetworkExceptions.ConnectionException())
-    } catch (exception: HttpException) {
-        Log.e(TAG, "HttpException: ${exception.message}")
+    } catch (exception: ResponseException) {
+        Log.e(TAG, "ResponseException: ${exception.message}")
         PagingSource.LoadResult.Error(NetworkExceptions.ServerException())
     } catch (exception: Exception) {
         Log.e(TAG, "Exception: ${exception.message}")

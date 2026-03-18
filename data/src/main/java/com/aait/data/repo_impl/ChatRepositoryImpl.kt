@@ -1,12 +1,10 @@
 package com.aait.data.repo_impl
 
 import com.aait.data.remote.ChatEndPoint
-import com.aait.data.util.multipart.MultiPartUtil.toMultiPart
 import com.aait.data.util.safeApiCall
 import com.aait.domain.repository.ChatRepository
-import javax.inject.Inject
 
-class ChatRepositoryImpl @Inject constructor(private val chatEndPoint: ChatEndPoint) :
+class ChatRepositoryImpl(private val chatEndPoint: ChatEndPoint) :
     ChatRepository {
 
     override suspend fun messages(
@@ -26,7 +24,9 @@ class ChatRepositoryImpl @Inject constructor(private val chatEndPoint: ChatEndPo
     ) = safeApiCall {
         chatEndPoint.uploadMessageFile(
             id = id,
-            file = file.toMultiPart("file")
+            filePath = file,
+            fileName = file.substringAfterLast("/"),
+            contentType = fileType
         )
     }
 }

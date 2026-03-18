@@ -4,7 +4,7 @@ import java.io.FileInputStream
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -53,17 +53,18 @@ android {
 dependencies {
     implementation(project(":domain"))
     //
-    implementation(libs.dagger)
-    implementation(libs.hilt)
-    ksp(libs.hilt.compiler)
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.kotlin.coroutines.adapter)
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.okhttp)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.ktor.client.logging)
+    implementation(libs.multiplatform.settings)
+    implementation(libs.multiplatform.settings.no.arg)
     implementation(libs.logging.interceptor)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.serialization.json)
-    implementation(libs.kotlinx.serialization.converter)
-    implementation(libs.datastore.preferences.core)
-    implementation(libs.datastore.preferences)
     implementation(libs.socket)
     implementation(libs.androidx.security.crypto)
     implementation(libs.paging.runtime)

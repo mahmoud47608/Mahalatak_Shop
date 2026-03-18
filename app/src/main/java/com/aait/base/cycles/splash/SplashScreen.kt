@@ -13,14 +13,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.mahalatak.R
 import kotlinx.coroutines.delay
+import org.koin.compose.viewmodel.koinViewModel
 
 @Preview(showBackground = true)
 @Composable
 fun SplashScreen(
-    viewModel: SplashViewModel = hiltViewModel(),
+    viewModel: SplashViewModel = koinViewModel(),
     toLoginScreen: () -> Unit = {}
 ) {
     // Launch effect to delay and navigate

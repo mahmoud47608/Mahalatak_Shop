@@ -19,7 +19,6 @@ import com.aait.domain.repository.PreferenceRepository
 import com.aait.domain.util.fromJson
 import com.aait.domain.util.toJson
 import com.mahalatak.R
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -27,10 +26,9 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import java.util.concurrent.atomic.AtomicInteger
-import javax.inject.Inject
 
-class NotificationHandler @Inject constructor(
-    @ApplicationContext private val context: Context,
+class NotificationHandler(
+    private val context: Context,
     private val preferenceRepository: PreferenceRepository,
     private val uiRepo: UIRepo
 ) {

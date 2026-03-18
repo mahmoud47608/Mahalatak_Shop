@@ -4,14 +4,12 @@ import com.aait.data.datasource.PreferenceDataSource
 import com.aait.data.util.PreferenceConstants
 import com.aait.domain.repository.PreferenceRepository
 import kotlinx.coroutines.flow.flow
-import java.util.Locale
-import javax.inject.Inject
 
-class PreferenceRepositoryImpl @Inject constructor(private val preferenceDataSource: PreferenceDataSource) :
+class PreferenceRepositoryImpl(private val preferenceDataSource: PreferenceDataSource) :
     PreferenceRepository {
 
     override suspend fun getLanguage() = flow {
-        preferenceDataSource.getValue(PreferenceConstants.LANGUAGE, Locale.getDefault().language)
+        preferenceDataSource.getValue(PreferenceConstants.LANGUAGE, "en")
             .collect { emit(it as String) }
     }
 

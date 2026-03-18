@@ -13,7 +13,6 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -25,9 +24,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import com.aait.base.common.component.bottomNavigation.BottomNavItem.Companion.bottomNavItems
 import com.aait.base.ui.theme.BaseTheme
 
@@ -36,21 +32,17 @@ import com.aait.base.ui.theme.BaseTheme
 @Composable
 fun BottomNavPreview() {
     BaseTheme {
-        BottomNavigationBarWithIndicator(navController = rememberNavController())
+        BottomNavigationBarWithIndicator(currentRoute = null, onNavigate = {})
     }
 }
 
 
-// Alternative version with custom indicator (if you want the yellow indicator line)
 @Composable
 fun BottomNavigationBarWithIndicator(
-    navController: NavHostController
+    currentRoute: String?,
+    onNavigate: (BottomNavItem) -> Unit
 ) {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
-
     Column {
-        // Top border line
         HorizontalDivider(
             thickness = 0.5.dp,
             color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
@@ -104,13 +96,7 @@ fun BottomNavigationBarWithIndicator(
                         selected = isSelected,
                         onClick = {
                             if (!isSelected) {
-                                navController.navigate(item.route) {
-                                    popUpTo(bottomNavItems.first().route) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
+                                onNavigate(item)
                             }
                         },
                         alwaysShowLabel = true,

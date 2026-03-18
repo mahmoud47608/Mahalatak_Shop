@@ -33,11 +33,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.flow.collectLatest
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Preview(showBackground = true)
 @Composable
-fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
+fun LoginScreen(viewModel: LoginViewModel = koinViewModel()) {
 
     val uiState by viewModel.uiState.collectAsState()
 

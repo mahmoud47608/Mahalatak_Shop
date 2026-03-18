@@ -10,9 +10,8 @@ import com.aait.base.ui.navigation.LoginNavKey
 import com.aait.base.ui.navigation.NavScreen
 import com.aait.base.ui.navigation.NavigationEvent
 import com.aait.base.ui.navigation.SplashNavKey
-import com.aait.data.util.TokenHeaderProvider
 import com.aait.domain.repository.PreferenceRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.aait.domain.util.TokenCacheManager
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,12 +19,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class MainViewModel @Inject constructor(
+class MainViewModel(
     private val uiRepo: UIRepo,
-    private val tokenHeaderProvider: TokenHeaderProvider,
+    private val tokenCacheManager: TokenCacheManager,
     private val preferenceRepository: PreferenceRepository
 ) : ViewModel() {
 
@@ -66,7 +63,7 @@ class MainViewModel @Inject constructor(
     fun onLogout() {
         viewModelScope.launch {
             preferenceRepository.onLogout()
-            tokenHeaderProvider.removeToken()
+            tokenCacheManager.removeToken()
             uiRepo.setAuthFailed(false)
             uiRepo.setBlocked(false)
             navigationStack.clear()
@@ -79,7 +76,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun refreshTokenCache() {
-        tokenHeaderProvider.refreshTokenCache()
+        tokenCacheManager.refreshTokenCache()
     }
 
     fun handleNavigationEvent(event: NavigationEvent) {
