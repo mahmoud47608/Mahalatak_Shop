@@ -3,18 +3,13 @@ package com.aait.data.di
 import com.aait.data.datasource.PreferenceDataSource
 import com.aait.data.datasource.PreferenceDataSourceImpl
 import com.aait.data.datasource.SecureStorage
-import com.aait.data.remote.ChatEndPoint
 import com.aait.data.remote.HomeEndPoint
-import com.aait.data.repo_impl.ChatRepositoryImpl
 import com.aait.data.repo_impl.HomeRepositoryImpl
 import com.aait.data.repo_impl.PreferenceRepositoryImpl
-import com.aait.data.repo_impl.SocketRepositoryImpl
 import com.aait.data.util.NetworkConstants
 import com.aait.data.util.TokenHeaderProvider
-import com.aait.domain.repository.ChatRepository
 import com.aait.domain.repository.HomeRepository
 import com.aait.domain.repository.PreferenceRepository
-import com.aait.domain.repository.SocketRepository
 import com.aait.domain.util.TokenCacheManager
 import com.mahalatak.data.BuildConfig
 import com.russhwolf.settings.Settings
@@ -38,8 +33,6 @@ import kotlin.coroutines.CoroutineContext
 val stringsModule = module {
     single(named("baseUrl")) { BuildConfig.REMOTE_URL }
     single(named("remoteBaseUrl")) { "${get<String>(named("baseUrl"))}/api/" }
-    single(named("socketPort")) { BuildConfig.SOCKET_PORT }
-    single(named("socketBaseUrl")) { "${get<String>(named("baseUrl"))}:${get<String>(named("socketPort"))}" }
 }
 
 val dataStoreModule = module {
@@ -77,11 +70,8 @@ val networkModule = module {
 
 val endpointModule = module {
     single { HomeEndPoint(get()) }
-    single { ChatEndPoint(get()) }
 }
 
 val repositoryModule = module {
     single<HomeRepository> { HomeRepositoryImpl(get()) }
-    single<ChatRepository> { ChatRepositoryImpl(get()) }
-    single<SocketRepository> { SocketRepositoryImpl(get(named("socketBaseUrl")), get()) }
 }

@@ -12,17 +12,12 @@ import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.aait.cycles.auth.login.LoginScreen
-import com.aait.cycles.common.map.location.PickLocationScreen
 import com.aait.cycles.splash.SplashScreen
-import com.aait.helool.util.navigation.ResultKeys
-import com.aait.helool.util.navigation.rememberResultStore
 import com.aait.ui.navigation.NavigationHelper.clearStackAndNavigateTo
 import com.aait.ui.navigation.NavigationHelper.popUp
 
 @Composable
 fun Navigation(modifier: Modifier, backStack: MutableList<NavScreen>) {
-
-    val resultStore = rememberResultStore()
 
     NavDisplay(
         modifier = modifier,
@@ -52,11 +47,15 @@ fun Navigation(modifier: Modifier, backStack: MutableList<NavScreen>) {
                 is MoreNavKey -> NavEntry(key) {}
 
                 is PickLocationNavKey -> NavEntry(key) {
-                    PickLocationScreen(
-                        location = key.latLngModel, onLocationPicked = { pickedLocation ->
-                            resultStore.setResult(ResultKeys.LOCATION.name, pickedLocation)
-                            backStack.popUp()
-                        }, onBack = { backStack.popUp() })
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Pick Location",
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    }
                 }
 
 

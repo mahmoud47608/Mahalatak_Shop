@@ -1,6 +1,5 @@
 package com.aait.domain.entity
 
-import com.aait.domain.entity.base.SocketData
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -32,14 +31,5 @@ data class AuthData(
         @SerialName("is_followed") val isFollowed: Boolean? = null,
         @SerialName("is_completed") val isCompleted: Boolean? = null,
         @SerialName("token") val token: String? = null
-    ) {
-        fun mapToSocketData(): SocketData {
-            return SocketData(
-                id = this.id.toString(),
-                name = this.firstName,
-                type = this.userType,
-                avatar = this.image
-            )
-        }
-    }
+    )
 }

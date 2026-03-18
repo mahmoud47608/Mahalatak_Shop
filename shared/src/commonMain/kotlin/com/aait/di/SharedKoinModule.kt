@@ -1,7 +1,6 @@
 package com.aait.di
 
 import com.aait.cycles.auth.login.LoginViewModel
-import com.aait.cycles.screens.terms.TermsViewModel
 import com.aait.cycles.splash.SplashViewModel
 import com.aait.ui.UIRepo
 import org.koin.core.module.dsl.viewModel
@@ -11,5 +10,4 @@ val sharedModule = module {
     single { UIRepo() }
     viewModel { LoginViewModel(get(), get(), get(), get()) }
     viewModel { SplashViewModel(get(), get(), get()) }
-    viewModel { TermsViewModel(get(), get(), get()) }
 }

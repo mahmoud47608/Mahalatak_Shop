@@ -37,7 +37,10 @@
       "Bash(cp -v \"D:/project/base-compose-aug-2025/app/src/main/res/values-ar/strings.xml\" \"D:/project/base-compose-aug-2025/shared/src/commonMain/composeResources/values-ar/strings.xml\")",
       "Bash(cp -v \"D:/project/base-compose-aug-2025/app/src/main/res/drawable/app_icon.png\" \"D:/project/base-compose-aug-2025/shared/src/commonMain/composeResources/drawable/app_icon.png\")",
       "Bash(cp -v \"D:/project/base-compose-aug-2025/app/src/main/res/raw/done.json\" \"D:/project/base-compose-aug-2025/shared/src/commonMain/composeResources/files/done.json\")",
-      "Bash(cp -v D:/project/base-compose-aug-2025/app/src/main/res/font/*.ttf \"D:/project/base-compose-aug-2025/shared/src/commonMain/composeResources/font/\")"
+      "Bash(cp -v D:/project/base-compose-aug-2025/app/src/main/res/font/*.ttf \"D:/project/base-compose-aug-2025/shared/src/commonMain/composeResources/font/\")",
+      "Bash(while read:*)",
+      "Bash(do rmdir:*)",
+      "Bash(done)"
     ],
     "deny": [],
     "ask": []
