@@ -84,14 +84,14 @@ kotlin {
 
             // Android Compose
             implementation(libs.androidx.activity.compose)
+            implementation(libs.androidx.core.ktx)
+            implementation(libs.androidx.lifecycle.runtime.ktx)
 
             // Android Security (EncryptedSharedPreferences)
             implementation(libs.androidx.security.crypto)
 
             // Socket.IO (Android-specific)
             implementation(libs.socket)
-
-            // Navigation 3 — removed, using custom stack-based navigation in commonMain
 
             // Maps
             implementation(libs.maps.compose)
@@ -110,6 +110,16 @@ kotlin {
 
             // Firebase
             implementation(libs.firebase.messaging.ktx)
+            implementation(libs.firebase.crashlytics)
+            implementation(libs.firebase.firestore)
+            implementation(libs.firebase.analytics.ktx)
+            implementation(libs.firebase.auth)
+
+            // Google Play Services
+            implementation(libs.play.services.auth)
+
+            // Network logging
+            implementation(libs.logging.interceptor)
         }
 
         iosMain.dependencies {

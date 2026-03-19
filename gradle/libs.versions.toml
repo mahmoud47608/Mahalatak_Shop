@@ -24,6 +24,8 @@ eventbus = "3.3.1"
 firebaseBom = "33.14.0"
 firebaseMessaging = "24.1.1"
 firebaseFirestore = "26.0.2"
+firebaseAnalytics = "22.4.0"
+firebaseAuth = "23.2.0"
 playServicesAuth = "21.4.0"
 security = "1.1.0-alpha06"
 nav3Core = "1.0.0"
@@ -76,9 +78,9 @@ eventbus = { group = "org.greenrobot", name = "eventbus", version.ref = "eventbu
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 firebase-messaging-ktx = { group = "com.google.firebase", name = "firebase-messaging-ktx", version.ref = "firebaseMessaging" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
-firebase-analytics-ktx = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
+firebase-analytics-ktx = { group = "com.google.firebase", name = "firebase-analytics-ktx", version.ref = "firebaseAnalytics" }
 play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "playServicesAuth" }
-firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 
 androidx-material3-adaptive-navigation3 = { group = "androidx.compose.material3.adaptive", name = "adaptive-navigation3", version.ref = "material3AdaptiveNav3" }
