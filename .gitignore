@@ -1,69 +1,32 @@
+# Gradle files
+.gradle/
+build/
+**/build/
+/*/build/
+
+# Kotlin/JVM compiled files
+bin/
+**/bin/
+
+# IDE files (Android Studio / IntelliJ)
+.idea/
 *.iml
-.gradle
+*.iws
+*.ipr
 /local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
+.navigation/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Multiplatform Specific
+.kotlin/
+kotlin-js-store/
+
+# OS specific
 .DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
-local.properties
-/.idea/
-/domain/bin/main/com/aait/domain/entity/base/AnyResponse.kt
-/domain/bin/main/com/aait/domain/entity/base/BaseResponse.kt
-/domain/bin/main/com/aait/domain/entity/base/Pagination.kt
-/domain/bin/main/com/aait/domain/entity/base/SocketData.kt
-/domain/bin/main/com/aait/domain/entity/chat/CallResponse.kt
-/domain/bin/main/com/aait/domain/entity/chat/MessageItem.kt
-/domain/bin/main/com/aait/domain/entity/chat/MessagesResponse.kt
-/domain/bin/main/com/aait/domain/entity/chat/RoomMemberItem.kt
-/domain/bin/main/com/aait/domain/entity/chat/RoomMessagesResponse.kt
-/domain/bin/main/com/aait/domain/entity/chat/RoomResponse.kt
-/domain/bin/main/com/aait/domain/entity/chat/UploadMessageFileResponse.kt
-/domain/bin/main/com/aait/domain/entity/general/CountriesResponse.kt
-/domain/bin/main/com/aait/domain/entity/general/DataItem.kt
-/domain/bin/main/com/aait/domain/entity/general/LatLngModel.kt
-/domain/bin/main/com/aait/domain/entity/AuthData.kt
-/domain/bin/main/com/aait/domain/exceptions/ValidationException.kt
-/domain/bin/main/com/aait/domain/repository/ChatRepository.kt
-/domain/bin/main/com/aait/domain/repository/HomeRepository.kt
-/domain/bin/main/com/aait/domain/repository/PreferenceRepository.kt
-/domain/bin/main/com/aait/domain/repository/SocketRepository.kt
-/domain/bin/main/com/aait/domain/usecase/auth/ActivateUseCase.kt
-/domain/bin/main/com/aait/domain/usecase/auth/ForgetPasswordUseCase.kt
-/domain/bin/main/com/aait/domain/usecase/auth/LoginUseCase.kt
-/domain/bin/main/com/aait/domain/usecase/auth/RegisterUseCase.kt
-/domain/bin/main/com/aait/domain/usecase/auth/ResendCodeUseCase.kt
-/domain/bin/main/com/aait/domain/usecase/auth/ResetPasswordUseCase.kt
-/domain/bin/main/com/aait/domain/usecase/chat/MessagesUseCase.kt
-/domain/bin/main/com/aait/domain/usecase/chat/UploadMessageFileUseCase.kt
-/domain/bin/main/com/aait/domain/usecase/general/CountriesUseCase.kt
-/domain/bin/main/com/aait/domain/usecase/socket/ConnectSocketUseCase.kt
-/domain/bin/main/com/aait/domain/usecase/socket/DisconnectSocketUseCase.kt
-/domain/bin/main/com/aait/domain/usecase/socket/EmitSocketUseCase.kt
-/domain/bin/main/com/aait/domain/usecase/socket/OpenChannelSocketUseCase.kt
-/domain/bin/main/com/aait/domain/util/CommonValidation.kt
-/domain/bin/main/com/aait/domain/util/Constants.kt
-/domain/bin/main/com/aait/domain/util/DataState.kt
-/domain/bin/main/com/aait/domain/util/FirebaseExceptions.kt
-/domain/bin/main/com/aait/domain/util/Gson.kt
-/domain/bin/main/com/aait/domain/util/NetworkExceptions.kt
-/domain/bin/main/com/aait/domain/util/ResponseStatusConstants.kt
+Thumbs.db
 
-# Auto Claude data directory
+# Auto Claude (Keep these if you use it)
 .auto-claude/
-
-# Auto Claude generated files
-.auto-claude-security.json
-.auto-claude-status
 .claude_settings.json
-.worktrees/
-.security-key
-logs/security/
-/domain/bin/main/com/aait/domain/entity/general/RemoteMediaItem.kt
-/domain/bin/main/com/aait/domain/entity/general/MediaItemModel.kt
