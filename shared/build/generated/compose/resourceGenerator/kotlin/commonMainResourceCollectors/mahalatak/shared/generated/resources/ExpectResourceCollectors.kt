@@ -1,5 +1,7 @@
 package mahalatak.shared.generated.resources
 
+import kotlin.String
+import kotlin.collections.Map
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.FontResource
 import org.jetbrains.compose.resources.PluralStringResource
