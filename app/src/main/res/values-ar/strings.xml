@@ -1,4 +1,5 @@
 <resources>
+    <string name="app_name">محلاتك</string>
     <string name="no_internet_connection">لا يوجد إتصال بالإنترنت</string>
     <string name="something_went_wrong">هناك شئ خاطئ، يرجى المحاولة فى وقت لاحق</string>
     <string name="please_enter_phone_number">الرجاء إدخال رقم الجوال</string>
