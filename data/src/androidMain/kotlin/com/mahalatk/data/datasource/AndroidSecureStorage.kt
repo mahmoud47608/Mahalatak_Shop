@@ -7,7 +7,7 @@ import androidx.security.crypto.MasterKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-class SecureStorage(private val context: Context) {
+class AndroidSecureStorage(private val context: Context) : SecureStorage {
 
     private val encryptedSharedPreferences by lazy {
         EncryptedSharedPreferences.create(
@@ -21,7 +21,7 @@ class SecureStorage(private val context: Context) {
         )
     }
 
-    suspend fun getValue(key: String, default: Any?): Flow<Any?> {
+    override suspend fun getValue(key: String, default: Any?): Flow<Any?> {
         return flowOf(
             try {
                 when (default) {
@@ -42,7 +42,7 @@ class SecureStorage(private val context: Context) {
         )
     }
 
-    suspend fun setValue(key: String, value: Any?) {
+    override suspend fun setValue(key: String, value: Any?) {
         try {
             encryptedSharedPreferences.edit {
                 when (value) {

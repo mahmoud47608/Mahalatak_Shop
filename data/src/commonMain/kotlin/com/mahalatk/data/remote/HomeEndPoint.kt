@@ -1,5 +1,6 @@
 package com.mahalatk.data.remote
 
+import com.mahalatk.data.platform.platformDeviceType
 import com.mahalatk.domain.entity.AuthData
 import com.mahalatk.domain.entity.base.BaseResponse
 import io.ktor.client.HttpClient
@@ -15,7 +16,7 @@ class HomeEndPoint(private val client: HttpClient) {
         password: String,
         deviceId: String,
         socialId: String?,
-        deviceType: String = "android"
+        deviceType: String = platformDeviceType
     ): BaseResponse<AuthData> = client.submitForm(
         url = "sign-in",
         formParameters = parameters {

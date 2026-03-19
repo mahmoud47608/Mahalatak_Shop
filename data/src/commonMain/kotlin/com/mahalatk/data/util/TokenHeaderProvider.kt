@@ -8,6 +8,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlin.concurrent.Volatile
 
 class TokenHeaderProvider(
     private val preferenceRepository: PreferenceRepository

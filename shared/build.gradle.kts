@@ -27,6 +27,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(project(":domain"))
+            implementation(project(":data"))
 
             // Compose Multiplatform
             implementation(compose.runtime)
@@ -70,9 +71,6 @@ kotlin {
         }
 
         androidMain.dependencies {
-            // Data module
-            implementation(project(":data"))
-
             // Paging Compose (Android-only)
             implementation(libs.paging.compose.kmp)
 
