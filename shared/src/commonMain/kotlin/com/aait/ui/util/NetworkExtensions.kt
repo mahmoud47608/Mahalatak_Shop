@@ -23,92 +23,95 @@ interface NetworkExtensionsActions {
     fun authorizationNeedActive(msg: String, data: BaseResponse<*>) {}
 }
 
-fun <T> DataState<T>.applyCommonSideEffects(
-    networkExtensionsActions: NetworkExtensionsActions,
+fun <T> DataState<BaseResponse<T>>.applyCommonSideEffects(
+    actions: NetworkExtensionsActions,
     showLoading: Boolean = true,
     showSuccessToast: Boolean = false,
     cancelNotActive: Boolean = false,
-    onSuccess: (T) -> Unit = {},
+    onSuccess: (BaseResponse<T>) -> Unit = {},
 ) {
     when (this) {
         is DataState.Loading -> {
-            if (showLoading) networkExtensionsActions.onLoad(true)
+            if (showLoading) actions.onLoad(true)
         }
 
         is DataState.Success -> {
-            networkExtensionsActions.onLoad(false)
-            val msg = (data as BaseResponse<*>).msg
-            when ((data as BaseResponse<*>).key) {
+            actions.onLoad(false)
+            val response = data
+            val msg = response.msg
+            when (response.key) {
                 SUCCESS, ACTIVE -> {
-                    if (showSuccessToast) networkExtensionsActions.onShowSuccessToast(msg)
-                    onSuccess(this.data)
+                    if (showSuccessToast) actions.onShowSuccessToast(msg)
+                    onSuccess(response)
                 }
 
                 NEED_ACTIVATE -> {
-                    networkExtensionsActions.authorizationNeedActive(
-                        msg,
-                        this.data as BaseResponse<*>
-                    )
+                    actions.authorizationNeedActive(msg, response)
                 }
 
                 UN_AUTH -> {
-                    networkExtensionsActions.authorizationFail()
+                    actions.authorizationFail()
                 }
 
                 BLOCK -> {
-                    networkExtensionsActions.block()
+                    actions.block()
                 }
 
                 NOT_ACTIVE, PENDING, FAILED, EXCEPTION -> {
-                    if ((data as BaseResponse<*>).key == NOT_ACTIVE && cancelNotActive) {
-                        if (showSuccessToast) networkExtensionsActions.onShowSuccessToast(msg)
-                        onSuccess(this.data)
+                    if (response.key == NOT_ACTIVE && cancelNotActive) {
+                        if (showSuccessToast) actions.onShowSuccessToast(msg)
+                        onSuccess(response)
                     } else {
-                        networkExtensionsActions.onFail(msg)
+                        actions.onFail(msg)
                     }
                 }
 
                 else -> {
-                    networkExtensionsActions.onCommonError(StringKeys.SOMETHING_WENT_WRONG)
+                    actions.onCommonError(StringKeys.SOMETHING_WENT_WRONG)
                 }
             }
         }
 
         is DataState.Error -> {
-            networkExtensionsActions.onLoad(false)
-            handleError(networkExtensionsActions, throwable, this.data)
+            actions.onLoad(false)
+            handleError(actions, throwable, this.data)
         }
 
         DataState.Idle -> {
-            networkExtensionsActions.onLoad(false)
+            actions.onLoad(false)
         }
     }
 }
 
 fun handleError(
-    networkExtensionsActions: NetworkExtensionsActions,
+    actions: NetworkExtensionsActions,
     throwable: Throwable,
-    data: Any?
+    data: BaseResponse<*>?
 ) {
     when (throwable) {
         is NetworkExceptions.AuthorizationException -> {
-            networkExtensionsActions.authorizationFail()
+            actions.authorizationFail()
         }
 
         is NetworkExceptions.NeedActiveException -> {
-            networkExtensionsActions.authorizationNeedActive(throwable.msg, data as BaseResponse<*>)
+            val response = data
+            if (response != null) {
+                actions.authorizationNeedActive(throwable.msg, response)
+            } else {
+                actions.onFail(throwable.msg)
+            }
         }
 
         is NetworkExceptions.ConnectionException -> {
-            networkExtensionsActions.onCommonError(StringKeys.NO_INTERNET_CONNECTION)
+            actions.onCommonError(StringKeys.NO_INTERNET_CONNECTION)
         }
 
         is NetworkExceptions.CustomException -> {
-            networkExtensionsActions.onFail(throwable.msg)
+            actions.onFail(throwable.msg)
         }
 
         else -> {
-            networkExtensionsActions.onCommonError(throwable.getIsCommonException())
+            actions.onCommonError(throwable.getIsCommonException())
         }
     }
 }

@@ -4,8 +4,8 @@ import com.aait.data.datasource.PreferenceDataSource
 import com.aait.data.datasource.PreferenceDataSourceImpl
 import com.aait.data.datasource.SecureStorage
 import com.aait.data.remote.HomeEndPoint
-import com.aait.data.repo_impl.HomeRepositoryImpl
-import com.aait.data.repo_impl.PreferenceRepositoryImpl
+import com.aait.data.repository.HomeRepositoryImpl
+import com.aait.data.repository.PreferenceRepositoryImpl
 import com.aait.data.util.NetworkConstants
 import com.aait.data.util.TokenHeaderProvider
 import com.aait.domain.repository.HomeRepository
@@ -15,10 +15,12 @@ import com.mahalatak.data.BuildConfig
 import com.russhwolf.settings.Settings
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.HttpSend
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.plugins.plugin
 import io.ktor.client.request.header
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.Dispatchers
@@ -50,6 +52,7 @@ val networkModule = module {
     single<TokenCacheManager> { get<TokenHeaderProvider>() }
     single<CoroutineContext> { Dispatchers.IO }
     single {
+        val tokenProvider = get<TokenHeaderProvider>()
         HttpClient(OkHttp) {
             engine {
                 config {
@@ -62,7 +65,14 @@ val networkModule = module {
             defaultRequest {
                 url(get<String>(named("remoteBaseUrl")))
                 header(NetworkConstants.LANGUAGE, Locale.getDefault().language)
-                header(NetworkConstants.AUTHORIZATION, get<TokenHeaderProvider>().getToken())
+            }
+        }.also { client ->
+            client.plugin(HttpSend).intercept { request ->
+                val token = tokenProvider.getToken()
+                if (token.isNotEmpty()) {
+                    request.headers[NetworkConstants.AUTHORIZATION] = token
+                }
+                execute(request)
             }
         }
     }

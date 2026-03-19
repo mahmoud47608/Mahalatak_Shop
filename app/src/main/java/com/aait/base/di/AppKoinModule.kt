@@ -9,9 +9,8 @@ val appModule = module {
     single {
         NotificationHandler(
             context = androidContext(),
-            preferenceRepository = get(),
-            uiRepo = get(),
-            notificationActivityClass = MainActivity::class.java
+            fcmEventHandler = get(),
+            notificationActivityClass = MainActivity::class.java,
         )
     }
 }

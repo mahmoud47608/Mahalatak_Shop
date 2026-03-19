@@ -40,7 +40,9 @@
       "Bash(cp -v D:/project/base-compose-aug-2025/app/src/main/res/font/*.ttf \"D:/project/base-compose-aug-2025/shared/src/commonMain/composeResources/font/\")",
       "Bash(while read:*)",
       "Bash(do rmdir:*)",
-      "Bash(done)"
+      "Bash(done)",
+      "Bash(sed -i 's/package com.aait.cycles.auth.login/package com.aait.features.auth.login/' auth/login/LoginScreen.kt auth/login/LoginState.kt auth/login/LoginViewModel.kt)",
+      "Bash(sed -i 's/package com.aait.cycles.splash/package com.aait.features.splash/' splash/SplashScreen.kt splash/SplashViewModel.kt)"
     ],
     "deny": [],
     "ask": []

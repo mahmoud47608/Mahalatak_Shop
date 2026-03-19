@@ -1,13 +1,22 @@
 package com.aait.di
 
-import com.aait.cycles.auth.login.LoginViewModel
-import com.aait.cycles.splash.SplashViewModel
-import com.aait.ui.UIRepo
+import com.aait.fcm.FcmEventHandler
+import com.aait.features.auth.login.LoginViewModel
+import com.aait.features.splash.SplashViewModel
+import com.aait.ui.managers.LoadingManager
+import com.aait.ui.managers.MessageManager
+import com.aait.ui.managers.SessionManager
+import com.aait.ui.navigation.MainViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val sharedModule = module {
-    single { UIRepo() }
-    viewModel { LoginViewModel(get(), get(), get(), get()) }
-    viewModel { SplashViewModel(get(), get(), get()) }
+    single { LoadingManager() }
+    single { MessageManager() }
+    single { SessionManager() }
+    single { FcmEventHandler(get(), get()) }
+
+    viewModel { MainViewModel(get(), get(), get()) }
+    viewModel { SplashViewModel(get(), get()) }
+    viewModel { LoginViewModel(get(), get(), get(), get(), get(), get()) }
 }

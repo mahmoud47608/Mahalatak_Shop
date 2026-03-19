@@ -91,10 +91,7 @@ kotlin {
             // Socket.IO (Android-specific)
             implementation(libs.socket)
 
-            // Navigation 3
-            implementation(libs.androidx.navigation3.ui)
-            implementation(libs.androidx.lifecycle.viewmodel.navigation3)
-            implementation(libs.androidx.material3.adaptive.navigation3)
+            // Navigation 3 — removed, using custom stack-based navigation in commonMain
 
             // Maps
             implementation(libs.maps.compose)

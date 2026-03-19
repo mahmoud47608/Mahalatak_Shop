@@ -7,28 +7,16 @@ import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
 import androidx.core.app.NotificationCompat
-import com.aait.domain.repository.PreferenceRepository
-import com.aait.domain.util.fromJson
-import com.aait.domain.util.toJson
-import com.aait.fcm.NotificationKey.ACCEPT_JOIN_REQUEST
-import com.aait.fcm.NotificationKey.ACCOUNT_BLOCK
-import com.aait.fcm.NotificationKey.ACCOUNT_DELETED
-import com.aait.fcm.NotificationKey.NEW_MESSAGE
-import com.aait.ui.UIRepo
-import com.aait.ui.util.Constants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
 import java.util.concurrent.atomic.AtomicInteger
 
 class NotificationHandler(
     private val context: Context,
-    private val preferenceRepository: PreferenceRepository,
-    private val uiRepo: UIRepo,
-    private val notificationActivityClass: Class<*> = context::class.java
+    private val fcmEventHandler: FcmEventHandler,
+    private val notificationActivityClass: Class<*> = context::class.java,
 ) {
 
     private var notificationManager: NotificationManager? = null
@@ -45,58 +33,35 @@ class NotificationHandler(
     }
 
     fun handleNotification(data: Map<String, String>) {
-        if (data.isNotEmpty()) {
-            EventBus.getDefault().post(data)
-            scope.launch(Dispatchers.Main) {
-                uiRepo.emitFcmUpdate(data)
-            }
-            displayNotification(data)
-        }
+        if (data.isEmpty()) return
+
+        fcmEventHandler.handleNotificationData(data)
+        displayNotification(data)
     }
 
     private fun displayNotification(data: Map<String, String>) {
-        var title: String?
-        var message: String?
-
-        val notificationItem = data.toJson().fromJson<NotificationItem>()
+        val item = fcmEventHandler.parseNotification(data)
 
         scope.launch(Dispatchers.IO) {
-            if (preferenceRepository.getLanguage().first() == Constants.ARABIC) {
-                title = notificationItem.titleAr ?: ""
-                message = notificationItem.bodyAr ?: ""
-            } else {
-                title = notificationItem.titleEn ?: ""
-                message = notificationItem.bodyEn ?: ""
-            }
+            val language = fcmEventHandler.getCurrentLanguage()
+            val (title, message) = fcmEventHandler.getLocalizedContent(item, language)
 
             showNotification(
                 title = title,
                 message = message,
-                pendingIntent = getPendingIntent(notificationItem)
+                pendingIntent = getPendingIntent(item),
             )
-        }
-
-        // Handle immediate navigation for blocking actions
-        when (notificationItem.type) {
-            ACCOUNT_BLOCK, ACCOUNT_DELETED -> {
-                scope.launch(Dispatchers.IO) {
-                    preferenceRepository.onLogout()
-                    runCatching { navigateToLoginIntent().send() }
-                }
-            }
         }
     }
 
-    private fun getPendingIntent(notificationItem: NotificationItem): PendingIntent {
-        return when (notificationItem.type) {
-            // Navigate to login
-            ACCOUNT_BLOCK, ACCOUNT_DELETED -> navigateToLoginIntent()
+    private fun getPendingIntent(item: NotificationItem): PendingIntent {
+        return when (item.type) {
+            NotificationKey.ACCOUNT_BLOCK,
+            NotificationKey.ACCOUNT_DELETED -> navigateToLoginIntent()
 
-            // Navigate to home
-            ACCEPT_JOIN_REQUEST -> navigateToHomeIntent()
+            NotificationKey.ACCEPT_JOIN_REQUEST -> navigateToHomeIntent()
 
-            // Navigate to Chat
-            NEW_MESSAGE -> navigateToChatIntent(notificationItem)
+            NotificationKey.NEW_MESSAGE -> navigateToChatIntent(item)
 
             else -> navigateToNotificationsIntent()
         }
@@ -111,7 +76,7 @@ class NotificationHandler(
             context,
             System.currentTimeMillis().toInt(),
             intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
     }
 
@@ -124,7 +89,7 @@ class NotificationHandler(
             context,
             System.currentTimeMillis().toInt(),
             intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
     }
 
@@ -137,30 +102,29 @@ class NotificationHandler(
             context,
             System.currentTimeMillis().toInt(),
             intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
     }
 
-    private fun navigateToChatIntent(notificationItem: NotificationItem): PendingIntent {
+    private fun navigateToChatIntent(item: NotificationItem): PendingIntent {
         val intent = Intent(context, notificationActivityClass).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
             action = ACTION_NAVIGATE_TO_CHAT
-            putExtra(EXTRA_CHAT_ROOM_ID, notificationItem.roomId?.toIntOrNull() ?: 0)
-            // Use titleEn as default title, or empty
-            putExtra(EXTRA_CHAT_TITLE, notificationItem.titleEn ?: "")
+            putExtra(EXTRA_CHAT_ROOM_ID, item.roomId?.toIntOrNull() ?: 0)
+            putExtra(EXTRA_CHAT_TITLE, item.titleEn ?: "")
         }
         return PendingIntent.getActivity(
             context,
             System.currentTimeMillis().toInt(),
             intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
     }
 
     private fun showNotification(
         title: String?,
         message: String?,
-        pendingIntent: PendingIntent
+        pendingIntent: PendingIntent,
     ) {
         val builder = NotificationCompat.Builder(context, NotificationChannelConfig.CHANNEL_ID)
             .setContentTitle(title)
