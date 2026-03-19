@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "com.mahalatak.data"
+    namespace = "com.mahalatk.data"
     compileSdk = 36
 
     defaultConfig {

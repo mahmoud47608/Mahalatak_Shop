@@ -124,7 +124,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.mahalatak.shared"
+    namespace = "com.mahalatk.shared"
     compileSdk = 36
 
     defaultConfig {

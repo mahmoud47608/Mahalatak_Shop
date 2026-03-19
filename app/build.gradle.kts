@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    namespace = "com.mahalatak"
+    namespace = "com.mahalatk"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.mahalatak"
+        applicationId = "com.mahalatk"
         minSdk = 24
         targetSdk = 36
         versionCode = 1

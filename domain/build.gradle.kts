@@ -32,7 +32,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.aait.domain"
+    namespace = "com.mahalatk.domain"
     compileSdk = 36
     defaultConfig { minSdk = 24 }
     compileOptions {
