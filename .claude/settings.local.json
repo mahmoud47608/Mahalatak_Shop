@@ -45,7 +45,8 @@
       "Bash(sed -i 's/package com.aait.cycles.splash/package com.aait.features.splash/' splash/SplashScreen.kt splash/SplashViewModel.kt)",
       "Bash(xargs cat:*)",
       "Bash(find /d/project/Mahalatak/domain/src -type f \\\\\\(-name *.kt -o -name *.kts \\\\\\))",
-      "Bash(find /d/project/Mahalatak/shared/src -type f \\\\\\(-name *.kt -o -name *.kts \\\\\\))"
+      "Bash(find /d/project/Mahalatak/shared/src -type f \\\\\\(-name *.kt -o -name *.kts \\\\\\))",
+      "Bash(chmod:*)"
     ],
     "deny": [],
     "ask": []
