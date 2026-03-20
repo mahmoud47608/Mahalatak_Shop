@@ -43,6 +43,7 @@ import com.mahalatk.common.component.bottomsheet.LanguageSelectorBottomSheet
 import com.mahalatk.common.component.button.DefaultButton
 import com.mahalatk.common.component.button.LanguageButton
 import com.mahalatk.common.component.inputs.DefaultTextField
+import com.mahalatk.common.util.getCurrentLanguageCode
 import com.mahalatk.ui.theme.MahalatkTheme
 import kotlinx.coroutines.flow.collectLatest
 import mahalatk.shared.generated.resources.Res
@@ -211,7 +212,7 @@ fun LoginScreen(
     // Language Bottom Sheet
     LanguageSelectorBottomSheet(
         showBottomSheet = showLanguageSheet,
-        currentLanguage = AppLanguage.ARABIC, // TODO: get from preferences
+        currentLanguage = if (getCurrentLanguageCode() == "ar") AppLanguage.ARABIC else AppLanguage.ENGLISH,
         onDismiss = { showLanguageSheet = false },
         onLanguageSelected = { language ->
             onLanguageChanged(language)

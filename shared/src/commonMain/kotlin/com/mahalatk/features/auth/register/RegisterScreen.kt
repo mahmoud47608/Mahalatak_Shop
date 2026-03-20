@@ -57,6 +57,7 @@ import com.mahalatk.common.component.button.LanguageButton
 import com.mahalatk.common.component.imagepicker.rememberImagePickerLauncher
 import com.mahalatk.common.component.imagepicker.toImageBitmap
 import com.mahalatk.common.component.inputs.DefaultTextField
+import com.mahalatk.common.util.getCurrentLanguageCode
 import com.mahalatk.ui.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.already_have_account
@@ -335,7 +336,7 @@ fun RegisterScreen(
     // Language Bottom Sheet
     LanguageSelectorBottomSheet(
         showBottomSheet = showLanguageSheet,
-        currentLanguage = AppLanguage.ARABIC, // TODO: get from preferences
+        currentLanguage = if (getCurrentLanguageCode() == "ar") AppLanguage.ARABIC else AppLanguage.ENGLISH,
         onDismiss = { showLanguageSheet = false },
         onLanguageSelected = { language ->
             onLanguageChanged(language)
