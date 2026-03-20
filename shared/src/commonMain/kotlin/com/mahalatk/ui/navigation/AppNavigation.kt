@@ -86,7 +86,7 @@ fun App(viewModel: MainViewModel = koinViewModel()) {
             ) {
                 NavigationContent(
                     modifier = Modifier.fillMaxSize(),
-                    currentRoute = currentRoute,
+                    currentEntry = navigator.currentEntry,
                     navigator = navigator,
                     onLanguageChanged = { language -> changeLanguage(language.code) },
                 )

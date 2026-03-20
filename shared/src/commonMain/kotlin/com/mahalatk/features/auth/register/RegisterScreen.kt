@@ -31,6 +31,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.currentCompositeKeyHash
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -74,7 +75,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun RegisterScreen(
-    viewModel: RegisterViewModel = koinViewModel(),
+    viewModel: RegisterViewModel = koinViewModel(key = currentCompositeKeyHash.toString()),
     onNavigateToLogin: () -> Unit = {},
     onLanguageChanged: (AppLanguage) -> Unit = {},
 ) {
