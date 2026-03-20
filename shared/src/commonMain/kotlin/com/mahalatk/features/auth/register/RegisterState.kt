@@ -1,6 +1,7 @@
 package com.mahalatk.features.auth.register
 
 import androidx.compose.runtime.Immutable
+import org.jetbrains.compose.resources.StringResource
 
 @Immutable
 data class RegisterState(
@@ -11,10 +12,10 @@ data class RegisterState(
     val confirmPassword: String = "",
     val passwordVisible: Boolean = false,
     val confirmPasswordVisible: Boolean = false,
-    val nameError: String? = null,
-    val mobileError: String? = null,
-    val emailError: String? = null,
-    val passwordError: String? = null,
-    val confirmPasswordError: String? = null,
+    val nameError: StringResource? = null,
+    val mobileError: StringResource? = null,
+    val emailError: StringResource? = null,
+    val passwordError: StringResource? = null,
+    val confirmPasswordError: StringResource? = null,
     val profileImage: ByteArray? = null,
 )

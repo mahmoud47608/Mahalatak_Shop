@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import com.mahalatk.common.component.button.DefaultButton
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
@@ -36,6 +35,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mahalatk.common.component.button.DefaultButton
 import com.mahalatk.common.component.inputs.DefaultTextField
 import com.mahalatk.ui.theme.MahalatkTheme
 import kotlinx.coroutines.flow.collectLatest
@@ -45,8 +45,6 @@ import mahalatk.shared.generated.resources.create_account_prefix
 import mahalatk.shared.generated.resources.forgot_password
 import mahalatk.shared.generated.resources.login
 import mahalatk.shared.generated.resources.password
-import mahalatk.shared.generated.resources.please_enter_password
-import mahalatk.shared.generated.resources.please_enter_phone_number
 import mahalatk.shared.generated.resources.sign_up
 import mahalatk.shared.generated.resources.username_or_email
 import org.jetbrains.compose.resources.painterResource
@@ -60,16 +58,6 @@ fun LoginScreen(
     onNavigateToSignUp: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()
-
-    // Map error keys to localized strings
-    val mobileError = when (uiState.mobileError) {
-        "please_enter_phone_number" -> stringResource(Res.string.please_enter_phone_number)
-        else -> uiState.mobileError
-    }
-    val passwordError = when (uiState.passwordError) {
-        "please_enter_password" -> stringResource(Res.string.please_enter_password)
-        else -> uiState.passwordError
-    }
 
     Column(
         modifier = Modifier
@@ -96,7 +84,7 @@ fun LoginScreen(
             placeholderText = stringResource(Res.string.username_or_email),
             keyboardType = KeyboardType.Phone,
             imeAction = ImeAction.Next,
-            errorText = mobileError,
+            errorText = uiState.mobileError?.let { stringResource(it) },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Filled.Person,
@@ -123,7 +111,7 @@ fun LoginScreen(
             placeholderText = stringResource(Res.string.password),
             keyboardType = KeyboardType.Password,
             imeAction = ImeAction.Done,
-            errorText = passwordError,
+            errorText = uiState.passwordError?.let { stringResource(it) },
             visualTransformation = if (uiState.passwordVisible) VisualTransformation.None
             else PasswordVisualTransformation(),
             leadingIcon = {
@@ -161,7 +149,7 @@ fun LoginScreen(
                 .clickable { }
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(60.dp))
 
         // Login Button
         DefaultButton(

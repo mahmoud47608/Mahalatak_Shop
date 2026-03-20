@@ -56,14 +56,7 @@ import mahalatk.shared.generated.resources.confirm_password
 import mahalatk.shared.generated.resources.email
 import mahalatk.shared.generated.resources.full_name
 import mahalatk.shared.generated.resources.password
-import mahalatk.shared.generated.resources.passwords_do_not_match
 import mahalatk.shared.generated.resources.phone
-import mahalatk.shared.generated.resources.please_enter_confirm_password
-import mahalatk.shared.generated.resources.please_enter_email
-import mahalatk.shared.generated.resources.please_enter_name
-import mahalatk.shared.generated.resources.please_enter_password
-import mahalatk.shared.generated.resources.please_enter_phone_number
-import mahalatk.shared.generated.resources.please_enter_valid_email
 import mahalatk.shared.generated.resources.register
 import mahalatk.shared.generated.resources.sign_in
 import mahalatk.shared.generated.resources.upload_photo
@@ -81,13 +74,6 @@ fun RegisterScreen(
     val pickImage = rememberImagePickerLauncher { bytes ->
         viewModel.updateState { copy(profileImage = bytes) }
     }
-
-    // Map error keys to localized strings
-    val nameError = uiState.nameError?.toLocalizedError()
-    val mobileError = uiState.mobileError?.toLocalizedError()
-    val emailError = uiState.emailError?.toLocalizedError()
-    val passwordError = uiState.passwordError?.toLocalizedError()
-    val confirmPasswordError = uiState.confirmPasswordError?.toLocalizedError()
 
     Column(
         modifier = Modifier
@@ -166,7 +152,7 @@ fun RegisterScreen(
                 placeholderText = stringResource(Res.string.full_name),
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Next,
-                errorText = nameError,
+                errorText = uiState.nameError?.let { stringResource(it) },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Filled.Person,
@@ -188,7 +174,7 @@ fun RegisterScreen(
                 placeholderText = stringResource(Res.string.phone),
                 keyboardType = KeyboardType.Phone,
                 imeAction = ImeAction.Next,
-                errorText = mobileError,
+                errorText = uiState.mobileError?.let { stringResource(it) },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Filled.Phone,
@@ -210,7 +196,7 @@ fun RegisterScreen(
                 placeholderText = stringResource(Res.string.email),
                 keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Next,
-                errorText = emailError,
+                errorText = uiState.emailError?.let { stringResource(it) },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Filled.Email,
@@ -232,7 +218,7 @@ fun RegisterScreen(
                 placeholderText = stringResource(Res.string.password),
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Next,
-                errorText = passwordError,
+                errorText = uiState.passwordError?.let { stringResource(it) },
                 visualTransformation = if (uiState.passwordVisible) VisualTransformation.None
                 else PasswordVisualTransformation(),
                 leadingIcon = {
@@ -270,7 +256,7 @@ fun RegisterScreen(
                 placeholderText = stringResource(Res.string.confirm_password),
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done,
-                errorText = confirmPasswordError,
+                errorText = uiState.confirmPasswordError?.let { stringResource(it) },
                 visualTransformation = if (uiState.confirmPasswordVisible) VisualTransformation.None
                 else PasswordVisualTransformation(),
                 leadingIcon = {
@@ -330,19 +316,5 @@ fun RegisterScreen(
                     .clickable { onNavigateToLogin() }
             )
         }
-    }
-}
-
-@Composable
-private fun String.toLocalizedError(): String {
-    return when (this) {
-        "please_enter_name" -> stringResource(Res.string.please_enter_name)
-        "please_enter_phone_number" -> stringResource(Res.string.please_enter_phone_number)
-        "please_enter_email" -> stringResource(Res.string.please_enter_email)
-        "please_enter_valid_email" -> stringResource(Res.string.please_enter_valid_email)
-        "please_enter_password" -> stringResource(Res.string.please_enter_password)
-        "please_enter_confirm_password" -> stringResource(Res.string.please_enter_confirm_password)
-        "passwords_do_not_match" -> stringResource(Res.string.passwords_do_not_match)
-        else -> this
     }
 }

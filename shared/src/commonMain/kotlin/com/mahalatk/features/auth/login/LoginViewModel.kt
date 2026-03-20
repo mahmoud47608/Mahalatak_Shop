@@ -18,6 +18,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import mahalatk.shared.generated.resources.Res
+import mahalatk.shared.generated.resources.please_enter_password
+import mahalatk.shared.generated.resources.please_enter_phone_number
 
 class LoginViewModel(
     private val loginUseCase: LoginUseCase,
@@ -56,10 +59,10 @@ class LoginViewModel(
                                 error.errors.forEach { validationError ->
                                     when (validationError) {
                                         is ValidationException.InValidPhoneException ->
-                                            updateState { copy(mobileError = "please_enter_phone_number") }
+                                            updateState { copy(mobileError = Res.string.please_enter_phone_number) }
 
                                         is ValidationException.InValidPasswordException ->
-                                            updateState { copy(passwordError = "please_enter_password") }
+                                            updateState { copy(passwordError = Res.string.please_enter_password) }
 
                                         else -> {}
                                     }
