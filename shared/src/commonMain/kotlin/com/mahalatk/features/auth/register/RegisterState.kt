@@ -1,21 +1,72 @@
 package com.mahalatk.features.auth.register
 
 import androidx.compose.runtime.Immutable
+import mahalatk.shared.generated.resources.Res
+import mahalatk.shared.generated.resources.category_kids
+import mahalatk.shared.generated.resources.category_men
+import mahalatk.shared.generated.resources.category_men_shoes
+import mahalatk.shared.generated.resources.category_women
+import mahalatk.shared.generated.resources.category_women_shoes
 import org.jetbrains.compose.resources.StringResource
+
+enum class AccountType {
+    SHOP_OWNER,
+    EMPLOYEE
+}
+
+enum class ShopCategory(val labelRes: StringResource) {
+    MEN(Res.string.category_men),
+    WOMEN(Res.string.category_women),
+    KIDS(Res.string.category_kids),
+    MEN_SHOES(Res.string.category_men_shoes),
+    WOMEN_SHOES(Res.string.category_women_shoes),
+}
+
+enum class DeliveryType {
+    SHOP_DELIVERY,
+    APP_DELIVERY
+}
 
 @Immutable
 data class RegisterState(
-    val name: String = "",
+    val accountType: AccountType = AccountType.SHOP_OWNER,
+
+    // Shop Owner fields
+    val shopName: String = "",
+    val ownerName: String = "",
+    val selectedCategories: Set<ShopCategory> = emptySet(),
+    val deliveryType: DeliveryType? = null,
+    val shopImage: ByteArray? = null,
+
+    // Employee fields
+    val employeeName: String = "",
+    val selectedShop: String? = null,
+    val employeeImage: ByteArray? = null,
+
+    // Common fields
     val mobile: String = "",
-    val email: String = "",
     val password: String = "",
     val confirmPassword: String = "",
     val passwordVisible: Boolean = false,
     val confirmPasswordVisible: Boolean = false,
-    val nameError: StringResource? = null,
+
+    // Error fields
+    val shopNameError: StringResource? = null,
+    val ownerNameError: StringResource? = null,
+    val categoryError: StringResource? = null,
+    val deliveryTypeError: StringResource? = null,
+    val employeeNameError: StringResource? = null,
+    val selectedShopError: StringResource? = null,
     val mobileError: StringResource? = null,
-    val emailError: StringResource? = null,
     val passwordError: StringResource? = null,
     val confirmPasswordError: StringResource? = null,
-    val profileImage: ByteArray? = null,
+
+    // Available shops for employee selection
+    val availableShops: List<String> = listOf(
+        "محل الأناقة",
+        "محل الموضة",
+        "محل الأحذية",
+        "محل الأطفال",
+        "محل السعادة",
+    ),
 )

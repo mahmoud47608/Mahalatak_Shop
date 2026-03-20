@@ -115,6 +115,36 @@
     <string name="passwords_do_not_match">كلمتا المرور غير متطابقتين</string>
     <string name="upload_photo">رفع صورة</string>
 
+    <!-- Register Screen - Tabs -->
+    <string name="shop_owner">صاحب محل</string>
+    <string name="employee">موظف</string>
+
+    <!-- Register Screen - Shop Owner -->
+    <string name="shop_name">اسم المحل</string>
+    <string name="owner_name">اسم صاحب المحل</string>
+    <string name="shop_logo">لوجو المحل</string>
+    <string name="shop_category">تصنيف المحل</string>
+    <string name="category_men">رجالي</string>
+    <string name="category_women">حريمي</string>
+    <string name="category_kids">أطفال</string>
+    <string name="category_men_shoes">أحذية رجالي</string>
+    <string name="category_women_shoes">أحذية حريمي</string>
+    <string name="delivery_type">نوع التوصيل</string>
+    <string name="shop_delivery">توصيل عن طريق المحل</string>
+    <string name="app_delivery">توصيل عن طريق التطبيق</string>
+    <string name="select_delivery_type">اختر نوع التوصيل</string>
+    <string name="please_enter_shop_name">الرجاء إدخال اسم المحل</string>
+    <string name="please_enter_owner_name">الرجاء إدخال اسم صاحب المحل</string>
+    <string name="please_select_category">الرجاء اختيار تصنيف واحد على الأقل</string>
+    <string name="please_select_delivery_type">الرجاء اختيار نوع التوصيل</string>
+
+    <!-- Register Screen - Employee -->
+    <string name="employee_name">اسم الموظف</string>
+    <string name="employee_photo">صورة الموظف</string>
+    <string name="select_shop">اختر المحل</string>
+    <string name="please_enter_employee_name">الرجاء إدخال اسم الموظف</string>
+    <string name="please_select_shop">الرجاء اختيار المحل</string>
+
     <!-- Map Tracking -->
     <string name="map_tracking">تتبع الخريطة</string>
     <string name="start_tracking">بدء التتبع</string>
