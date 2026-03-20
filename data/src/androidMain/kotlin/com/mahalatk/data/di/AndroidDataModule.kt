@@ -1,7 +1,7 @@
 package com.mahalatk.data.di
 
 import com.mahalatk.data.datasource.AndroidSecureStorage
-import com.mahalatk.data.datasource.SecureStorage
+import com.mahalatk.domain.datasource.SecureStorage
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.Module
 import org.koin.dsl.module

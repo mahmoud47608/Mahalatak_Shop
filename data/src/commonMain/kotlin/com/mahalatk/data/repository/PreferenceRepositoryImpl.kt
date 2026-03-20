@@ -1,7 +1,7 @@
 package com.mahalatk.data.repository
 
-import com.mahalatk.data.datasource.PreferenceDataSource
 import com.mahalatk.data.util.PreferenceConstants
+import com.mahalatk.domain.datasource.PreferenceDataSource
 import com.mahalatk.domain.repository.PreferenceRepository
 import kotlinx.coroutines.flow.flow
 

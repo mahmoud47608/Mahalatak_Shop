@@ -1,6 +1,5 @@
 package com.mahalatk.data.di
 
-import com.mahalatk.data.datasource.PreferenceDataSource
 import com.mahalatk.data.datasource.PreferenceDataSourceImpl
 import com.mahalatk.data.platform.AppConfig
 import com.mahalatk.data.platform.createPlatformHttpClient
@@ -9,6 +8,7 @@ import com.mahalatk.data.remote.HomeEndPoint
 import com.mahalatk.data.repository.HomeRepositoryImpl
 import com.mahalatk.data.repository.PreferenceRepositoryImpl
 import com.mahalatk.data.util.TokenHeaderProvider
+import com.mahalatk.domain.datasource.PreferenceDataSource
 import com.mahalatk.domain.repository.HomeRepository
 import com.mahalatk.domain.repository.PreferenceRepository
 import com.mahalatk.domain.util.TokenCacheManager

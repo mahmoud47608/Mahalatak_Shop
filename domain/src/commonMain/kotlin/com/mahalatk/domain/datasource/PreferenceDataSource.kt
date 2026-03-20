@@ -1,8 +1,8 @@
-package com.mahalatk.data.datasource
+package com.mahalatk.domain.datasource
 
 import kotlinx.coroutines.flow.Flow
 
-interface SecureStorage {
+interface PreferenceDataSource {
     suspend fun getValue(key: String, default: Any?): Flow<Any?>
     suspend fun setValue(key: String, value: Any?)
 }
