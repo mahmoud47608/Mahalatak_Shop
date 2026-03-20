@@ -1,24 +1,22 @@
 package com.mahalatk.features.auth.login
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -30,7 +28,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -45,14 +42,16 @@ import androidx.compose.ui.unit.sp
 import com.mahalatk.common.component.inputs.DefaultTextField
 import kotlinx.coroutines.flow.collectLatest
 import mahalatk.shared.generated.resources.Res
+import mahalatk.shared.generated.resources.app_icon
 import mahalatk.shared.generated.resources.create_account_prefix
 import mahalatk.shared.generated.resources.forgot_password
 import mahalatk.shared.generated.resources.login
-import mahalatk.shared.generated.resources.or_continue_with
 import mahalatk.shared.generated.resources.password
+import mahalatk.shared.generated.resources.please_enter_password
+import mahalatk.shared.generated.resources.please_enter_phone_number
 import mahalatk.shared.generated.resources.sign_up
 import mahalatk.shared.generated.resources.username_or_email
-import mahalatk.shared.generated.resources.welcome_back
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -62,34 +61,46 @@ private val Teal = Color(0xFF1B8A7A)
 fun LoginScreen(
     viewModel: LoginViewModel = koinViewModel(),
     onNavigateToHome: () -> Unit = {},
+    onNavigateToSignUp: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()
+
+    // Map error keys to localized strings
+    val mobileError = when (uiState.mobileError) {
+        "please_enter_phone_number" -> stringResource(Res.string.please_enter_phone_number)
+        else -> uiState.mobileError
+    }
+    val passwordError = when (uiState.passwordError) {
+        "please_enter_password" -> stringResource(Res.string.please_enter_password)
+        else -> uiState.passwordError
+    }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = 24.dp, vertical = 48.dp)
+            .padding(horizontal = 24.dp, vertical = 48.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Title
-        Text(
-            text = stringResource(Res.string.welcome_back),
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Bold,
-            lineHeight = 36.sp,
-            color = Color.Black
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Logo
+        Image(
+            painter = painterResource(Res.drawable.app_icon),
+            contentDescription = null,
         )
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(40.dp))
 
-        // Email/Username field
+        // Phone field
         DefaultTextField(
             value = uiState.mobile,
-            onValueChanged = { viewModel.updateState { copy(mobile = it) } },
+            onValueChanged = { viewModel.updateState { copy(mobile = it, mobileError = null) } },
             placeholderText = stringResource(Res.string.username_or_email),
-            keyboardType = KeyboardType.Email,
+            keyboardType = KeyboardType.Phone,
             imeAction = ImeAction.Next,
+            errorText = mobileError,
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Filled.Person,
@@ -105,10 +116,18 @@ fun LoginScreen(
         // Password field
         DefaultTextField(
             value = uiState.password,
-            onValueChanged = { viewModel.updateState { copy(password = it) } },
+            onValueChanged = {
+                viewModel.updateState {
+                    copy(
+                        password = it,
+                        passwordError = null
+                    )
+                }
+            },
             placeholderText = stringResource(Res.string.password),
             keyboardType = KeyboardType.Password,
             imeAction = ImeAction.Done,
+            errorText = passwordError,
             visualTransformation = if (uiState.passwordVisible) VisualTransformation.None
             else PasswordVisualTransformation(),
             leadingIcon = {
@@ -122,9 +141,11 @@ fun LoginScreen(
                 IconButton(onClick = {
                     viewModel.updateState { copy(passwordVisible = !uiState.passwordVisible) }
                 }) {
-                    Text(
-                        text = if (uiState.passwordVisible) "\uD83D\uDE48" else "\uD83D\uDC41",
-                        fontSize = 18.sp
+                    Icon(
+                        imageVector = if (uiState.passwordVisible) Icons.Filled.Visibility
+                        else Icons.Filled.VisibilityOff,
+                        contentDescription = null,
+                        tint = Color.Gray
                     )
                 }
             },
@@ -163,31 +184,6 @@ fun LoginScreen(
             )
         }
 
-        Spacer(modifier = Modifier.height(32.dp))
-
-        // OR Continue with divider
-        Text(
-            text = stringResource(Res.string.or_continue_with),
-            color = Color.Gray,
-            fontSize = 14.sp,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // Social login row
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            SocialIconButton("G")
-            Spacer(modifier = Modifier.size(16.dp))
-            SocialIconButton("\uD83C\uDF4E")
-            Spacer(modifier = Modifier.size(16.dp))
-            SocialIconButton("f")
-        }
-
         Spacer(modifier = Modifier.weight(1f))
         Spacer(modifier = Modifier.height(32.dp))
 
@@ -204,7 +200,7 @@ fun LoginScreen(
             color = Color.Black,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .clickable { }
+                .clickable { onNavigateToSignUp() }
         )
     }
 
@@ -214,24 +210,5 @@ fun LoginScreen(
                 onNavigateToHome()
             }
         }
-    }
-}
-
-@Composable
-private fun SocialIconButton(label: String) {
-    Box(
-        modifier = Modifier
-            .size(48.dp)
-            .clip(CircleShape)
-            .background(Color(0xFFF5F5F5))
-            .clickable { },
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = label,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.DarkGray
-        )
     }
 }

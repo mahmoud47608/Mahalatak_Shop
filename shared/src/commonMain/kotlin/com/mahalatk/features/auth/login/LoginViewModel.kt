@@ -39,6 +39,7 @@ class LoginViewModel(
     val authData: StateFlow<AuthData?> = _authData.asStateFlow()
 
     fun login() {
+        updateState { copy(mobileError = null, passwordError = null) }
         viewModelScope.launch {
             val deviceId = preferenceRepository.getFirebaseToken().first()
             loginUseCase(
@@ -50,12 +51,20 @@ class LoginViewModel(
             ).collectLatest {
                 when (it) {
                     is DataState.Error -> {
-                        when (it.throwable) {
-                            is ValidationException.InValidPhoneException ->
-                                messageManager.showByKey("please_enter_phone_number")
+                        when (val error = it.throwable) {
+                            is ValidationException.MultipleValidationException -> {
+                                error.errors.forEach { validationError ->
+                                    when (validationError) {
+                                        is ValidationException.InValidPhoneException ->
+                                            updateState { copy(mobileError = "please_enter_phone_number") }
 
-                            is ValidationException.InValidPasswordException ->
-                                messageManager.showByKey("please_enter_password")
+                                        is ValidationException.InValidPasswordException ->
+                                            updateState { copy(passwordError = "please_enter_password") }
+
+                                        else -> {}
+                                    }
+                                }
+                            }
 
                             else -> it.applyCommonSideEffects<AuthData>(
                                 this@LoginViewModel,

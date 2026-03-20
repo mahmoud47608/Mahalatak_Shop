@@ -14,12 +14,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import com.mahalatk.common.component.text.DefaultText
 import com.mahalatk.common.component.utilis.noRippleClickable
-import com.mahalatk.ui.theme.colorPrimary
 import com.mahalatk.ui.theme.colorText
 import com.mahalatk.ui.theme.colorTextHint
 
@@ -88,7 +88,7 @@ fun DefaultTextField(
             unfocusedContainerColor = MaterialTheme.colorScheme.surface,
             disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
             errorContainerColor = MaterialTheme.colorScheme.surface,
-            focusedBorderColor = colorPrimary(),
+            focusedBorderColor = Color(0xFF1B8A7A),
             unfocusedBorderColor = MaterialTheme.colorScheme.outline,
             disabledBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
             disabledPlaceholderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
