@@ -28,6 +28,10 @@
     <string name="compressing_image">جاري ضغط الصورة...</string>
     <string name="compressing_video">جاري ضغط الفيديو...</string>
     <string name="change_language">تغيير اللغة</string>
+    <string name="language">اللغة</string>
+    <string name="language_selector_title">اختيار لغة التطبيق</string>
+    <string name="language_selector_subtitle">يرجى اختيار لغة التطبيق التي تفضلها</string>
+    <string name="language_selector_confirm">متابعة</string>
     <string name="yes">نعم</string>
     <string name="no">لا</string>
     <string name="terms_and_conditions">الشروط والأحكام</string>

@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
+import com.mahalatk.common.component.bottomsheet.AppLanguage
 import com.mahalatk.common.component.toolbar.DefaultAppBar
 import com.mahalatk.ui.theme.MahalatkTheme
 import com.mahalatk.ui.util.UIMessage
@@ -26,7 +27,10 @@ import kotlinx.coroutines.flow.collectLatest
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun App(viewModel: MainViewModel = koinViewModel()) {
+fun App(
+    viewModel: MainViewModel = koinViewModel(),
+    onLanguageChanged: (AppLanguage) -> Unit = {},
+) {
     MahalatkTheme {
         val navigator = rememberAppNavigator()
         val isLoading by viewModel.isLoading.collectAsState()
@@ -86,6 +90,7 @@ fun App(viewModel: MainViewModel = koinViewModel()) {
                     modifier = Modifier.fillMaxSize(),
                     currentRoute = currentRoute,
                     navigator = navigator,
+                    onLanguageChanged = onLanguageChanged,
                 )
 
                 if (isLoading) {

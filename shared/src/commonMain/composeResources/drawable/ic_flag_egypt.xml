@@ -1,0 +1,28 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="55dp"
+    android:height="38dp"
+    android:viewportWidth="55"
+    android:viewportHeight="38">
+    <group>
+        <clip-path android:pathData="M4,0H51C53.209,0 55,1.791 55,4V34C55,36.209 53.209,38 51,38H4C1.791,38 0,36.209 0,34V4C0,1.791 1.791,0 4,0Z" />
+        <!-- Red stripe -->
+        <path
+            android:fillColor="#CE1126"
+            android:pathData="M0,0H55V12.667H0Z" />
+        <!-- White stripe -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M0,12.667H55V25.333H0Z" />
+        <!-- Black stripe -->
+        <path
+            android:fillColor="#000000"
+            android:pathData="M0,25.333H55V38H0Z" />
+        <!-- Eagle of Saladin (simplified) -->
+        <path
+            android:fillColor="#C09300"
+            android:pathData="M27.5,15.5m-3.5,0a3.5,3.5 0,1,1 7,0a3.5,3.5 0,1,1 -7,0" />
+        <path
+            android:fillColor="#C09300"
+            android:pathData="M25.5,19L29.5,19L29,22L26,22Z" />
+    </group>
+</vector>

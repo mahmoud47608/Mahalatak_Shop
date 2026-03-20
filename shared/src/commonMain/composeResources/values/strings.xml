@@ -86,6 +86,12 @@
     <string name="change_language">change language</string>
     <string name="arabic" translatable="false">العربية</string>
     <string name="english" translatable="false">English</string>
+    <string name="language">Language</string>
+    <string name="language_selector_title">Choose App Language</string>
+    <string name="language_selector_subtitle">Please choose your preferred app language</string>
+    <string name="language_english" translatable="false">English</string>
+    <string name="language_arabic" translatable="false">اللغة العربية</string>
+    <string name="language_selector_confirm">Continue</string>
     <string name="select_items">select items</string>
     <string name="search">search</string>
     <string name="no_items_found_matching">No items found matching \"%1$s\"</string>

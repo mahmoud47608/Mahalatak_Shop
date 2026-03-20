@@ -23,6 +23,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.SpanStyle
@@ -35,7 +38,10 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mahalatk.common.component.bottomsheet.AppLanguage
+import com.mahalatk.common.component.bottomsheet.LanguageSelectorBottomSheet
 import com.mahalatk.common.component.button.DefaultButton
+import com.mahalatk.common.component.button.LanguageButton
 import com.mahalatk.common.component.inputs.DefaultTextField
 import com.mahalatk.ui.theme.MahalatkTheme
 import kotlinx.coroutines.flow.collectLatest
@@ -56,18 +62,28 @@ fun LoginScreen(
     viewModel: LoginViewModel = koinViewModel(),
     onNavigateToHome: () -> Unit = {},
     onNavigateToSignUp: () -> Unit = {},
+    onLanguageChanged: (AppLanguage) -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    var showLanguageSheet by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MahalatkTheme.white)
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = 24.dp, vertical = 48.dp),
+            .padding(vertical = 48.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(24.dp))
+        // Language Button - top end
+        LanguageButton(
+            onClick = { showLanguageSheet = true },
+            modifier = Modifier
+                .align(Alignment.End)
+                .padding(end = 16.dp)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         // Logo
         Image(
@@ -77,86 +93,95 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        // Phone field
-        DefaultTextField(
-            value = uiState.mobile,
-            onValueChanged = { viewModel.updateState { copy(mobile = it, mobileError = null) } },
-            placeholderText = stringResource(Res.string.username_or_email),
-            keyboardType = KeyboardType.Phone,
-            imeAction = ImeAction.Next,
-            errorText = uiState.mobileError?.let { stringResource(it) },
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Filled.Person,
-                    contentDescription = null,
-                    tint = MahalatkTheme.hint
-                )
-            },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Password field
-        DefaultTextField(
-            value = uiState.password,
-            onValueChanged = {
-                viewModel.updateState {
-                    copy(
-                        password = it,
-                        passwordError = null
-                    )
-                }
-            },
-            placeholderText = stringResource(Res.string.password),
-            keyboardType = KeyboardType.Password,
-            imeAction = ImeAction.Done,
-            errorText = uiState.passwordError?.let { stringResource(it) },
-            visualTransformation = if (uiState.passwordVisible) VisualTransformation.None
-            else PasswordVisualTransformation(),
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Filled.Lock,
-                    contentDescription = null,
-                    tint = MahalatkTheme.hint
-                )
-            },
-            trailingIcon = {
-                IconButton(onClick = {
-                    viewModel.updateState { copy(passwordVisible = !uiState.passwordVisible) }
-                }) {
+        Column(modifier = Modifier.padding(horizontal = 24.dp)) {
+            // Phone field
+            DefaultTextField(
+                value = uiState.mobile,
+                onValueChanged = {
+                    viewModel.updateState {
+                        copy(
+                            mobile = it,
+                            mobileError = null
+                        )
+                    }
+                },
+                placeholderText = stringResource(Res.string.username_or_email),
+                keyboardType = KeyboardType.Phone,
+                imeAction = ImeAction.Next,
+                errorText = uiState.mobileError?.let { stringResource(it) },
+                leadingIcon = {
                     Icon(
-                        imageVector = if (uiState.passwordVisible) Icons.Filled.Visibility
-                        else Icons.Filled.VisibilityOff,
+                        imageVector = Icons.Filled.Person,
                         contentDescription = null,
                         tint = MahalatkTheme.hint
                     )
-                }
-            },
-            modifier = Modifier.fillMaxWidth()
-        )
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
 
-        Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        // Forgot Password
-        Text(
-            text = stringResource(Res.string.forgot_password),
-            color = MahalatkTheme.primary,
-            fontSize = 14.sp,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier
-                .align(Alignment.End)
-                .clickable { }
-        )
+            // Password field
+            DefaultTextField(
+                value = uiState.password,
+                onValueChanged = {
+                    viewModel.updateState {
+                        copy(
+                            password = it,
+                            passwordError = null
+                        )
+                    }
+                },
+                placeholderText = stringResource(Res.string.password),
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Done,
+                errorText = uiState.passwordError?.let { stringResource(it) },
+                visualTransformation = if (uiState.passwordVisible) VisualTransformation.None
+                else PasswordVisualTransformation(),
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.Lock,
+                        contentDescription = null,
+                        tint = MahalatkTheme.hint
+                    )
+                },
+                trailingIcon = {
+                    IconButton(onClick = {
+                        viewModel.updateState { copy(passwordVisible = !uiState.passwordVisible) }
+                    }) {
+                        Icon(
+                            imageVector = if (uiState.passwordVisible) Icons.Filled.Visibility
+                            else Icons.Filled.VisibilityOff,
+                            contentDescription = null,
+                            tint = MahalatkTheme.hint
+                        )
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
 
-        Spacer(modifier = Modifier.height(60.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-        // Login Button
-        DefaultButton(
-            text = stringResource(Res.string.login),
-            onClick = { viewModel.login() },
-            modifier = Modifier.fillMaxWidth()
-        )
+            // Forgot Password
+            Text(
+                text = stringResource(Res.string.forgot_password),
+                color = MahalatkTheme.primary,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .clickable { }
+            )
+
+            Spacer(modifier = Modifier.height(60.dp))
+
+            // Login Button
+            DefaultButton(
+                text = stringResource(Res.string.login),
+                onClick = { viewModel.login() },
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
 
         Spacer(modifier = Modifier.weight(1f))
         Spacer(modifier = Modifier.height(32.dp))
@@ -182,6 +207,16 @@ fun LoginScreen(
                 .clickable { onNavigateToSignUp() }
         )
     }
+
+    // Language Bottom Sheet
+    LanguageSelectorBottomSheet(
+        showBottomSheet = showLanguageSheet,
+        currentLanguage = AppLanguage.ARABIC, // TODO: get from preferences
+        onDismiss = { showLanguageSheet = false },
+        onLanguageSelected = { language ->
+            onLanguageChanged(language)
+        }
+    )
 
     LaunchedEffect(Unit) {
         viewModel.authData.collectLatest { authData ->

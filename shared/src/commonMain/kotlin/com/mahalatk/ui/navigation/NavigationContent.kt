@@ -1,13 +1,9 @@
 package com.mahalatk.ui.navigation
 
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.mahalatk.common.component.bottomsheet.AppLanguage
 import com.mahalatk.features.auth.login.LoginScreen
 import com.mahalatk.features.auth.register.RegisterScreen
 import com.mahalatk.features.splash.SplashScreen
@@ -17,6 +13,7 @@ fun NavigationContent(
     modifier: Modifier = Modifier,
     currentRoute: Route?,
     navigator: AppNavigator,
+    onLanguageChanged: (AppLanguage) -> Unit = {},
 ) {
     Crossfade(targetState = currentRoute, modifier = modifier) { route ->
         when (route) {
@@ -26,11 +23,13 @@ fun NavigationContent(
 
             is Route.Login -> LoginScreen(
                 onNavigateToHome = { navigator.replaceAll(Route.Home) },
-                onNavigateToSignUp = { navigator.push(Route.Register) }
+                onNavigateToSignUp = { navigator.push(Route.Register) },
+                onLanguageChanged = onLanguageChanged
             )
 
             is Route.Register -> RegisterScreen(
-                onNavigateToLogin = { navigator.pop() }
+                onNavigateToLogin = { navigator.pop() },
+                onLanguageChanged = onLanguageChanged
             )
 
             is Route.Home -> {
