@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.mahalatk.features.auth.login.LoginScreen
+import com.mahalatk.features.auth.register.RegisterScreen
 import com.mahalatk.features.splash.SplashScreen
 
 @Composable
@@ -24,7 +25,12 @@ fun NavigationContent(
             )
 
             is Route.Login -> LoginScreen(
-                onNavigateToHome = { navigator.replaceAll(Route.Home) }
+                onNavigateToHome = { navigator.replaceAll(Route.Home) },
+                onNavigateToSignUp = { navigator.push(Route.Register) }
+            )
+
+            is Route.Register -> RegisterScreen(
+                onNavigateToLogin = { navigator.pop() }
             )
 
             is Route.Home -> {
@@ -35,28 +41,7 @@ fun NavigationContent(
                 // TODO: MoreScreen
             }
 
-            is Route.PickLocation -> {
-                PlaceholderScreen("Pick Location")
-            }
-
-            is Route.Chat -> {
-                PlaceholderScreen("Chat #${route.roomId}${route.title?.let { " - $it" } ?: ""}")
-            }
-
             null -> {}
         }
-    }
-}
-
-@Composable
-private fun PlaceholderScreen(text: String) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center,
-    ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.titleMedium,
-        )
     }
 }

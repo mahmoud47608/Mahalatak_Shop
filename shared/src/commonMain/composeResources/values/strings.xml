@@ -103,6 +103,18 @@
     <string name="or_continue_with">- OR Continue with -</string>
     <string name="create_account_prefix">Create An Account </string>
     <string name="sign_up">Sign Up</string>
+    <string name="register">Register</string>
+    <string name="full_name">Full Name</string>
+    <string name="email">Email</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="already_have_account">Already have an account? </string>
+    <string name="sign_in">Sign In</string>
+    <string name="please_enter_name">Please enter your name</string>
+    <string name="please_enter_email">Please enter your email</string>
+    <string name="please_enter_valid_email">Please enter a valid email</string>
+    <string name="please_enter_confirm_password">Please confirm your password</string>
+    <string name="passwords_do_not_match">Passwords do not match</string>
+    <string name="upload_photo">Upload Photo</string>
 
     <!-- Map Tracking -->
     <string name="map_tracking">Map Tracking</string>

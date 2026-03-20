@@ -98,6 +98,18 @@
     <string name="or_continue_with">- أو المتابعة عبر -</string>
     <string name="create_account_prefix">ليس لديك حساب؟ </string>
     <string name="sign_up">إنشاء حساب</string>
+    <string name="register">تسجيل</string>
+    <string name="full_name">الاسم الكامل</string>
+    <string name="email">البريد الإلكتروني</string>
+    <string name="confirm_password">تأكيد كلمة المرور</string>
+    <string name="already_have_account">لديك حساب بالفعل؟ </string>
+    <string name="sign_in">تسجيل دخول</string>
+    <string name="please_enter_name">الرجاء إدخال الاسم</string>
+    <string name="please_enter_email">الرجاء إدخال البريد الإلكتروني</string>
+    <string name="please_enter_valid_email">الرجاء إدخال بريد إلكتروني صحيح</string>
+    <string name="please_enter_confirm_password">الرجاء تأكيد كلمة المرور</string>
+    <string name="passwords_do_not_match">كلمتا المرور غير متطابقتين</string>
+    <string name="upload_photo">رفع صورة</string>
 
     <!-- Map Tracking -->
     <string name="map_tracking">تتبع الخريطة</string>

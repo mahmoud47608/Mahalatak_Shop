@@ -22,6 +22,11 @@ fun Route.screenConfig(): ScreenConfig = when (this) {
         hasBottomPadding = false,
     )
 
+    is Route.Register -> ScreenConfig(
+        hasTopPadding = false,
+        hasBottomPadding = false,
+    )
+
     is Route.Home -> ScreenConfig(
         hasTopPadding = false,
         hasBottomPadding = false,
@@ -33,11 +38,5 @@ fun Route.screenConfig(): ScreenConfig = when (this) {
         showBottomBar = true,
     )
 
-    is Route.PickLocation -> ScreenConfig(
-        hasTopPadding = false,
-    )
 
-    is Route.Chat -> ScreenConfig(
-        toolBarState = ToolBarState.TitleWithBack(title = title ?: "Chat"),
-    )
 }

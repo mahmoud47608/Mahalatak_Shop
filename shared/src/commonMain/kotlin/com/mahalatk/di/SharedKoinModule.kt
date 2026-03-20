@@ -2,6 +2,7 @@ package com.mahalatk.di
 
 import com.mahalatk.fcm.FcmEventHandler
 import com.mahalatk.features.auth.login.LoginViewModel
+import com.mahalatk.features.auth.register.RegisterViewModel
 import com.mahalatk.features.splash.SplashViewModel
 import com.mahalatk.ui.managers.LoadingManager
 import com.mahalatk.ui.managers.MessageManager
@@ -19,4 +20,5 @@ val sharedModule = module {
     viewModel { MainViewModel(get(), get(), get()) }
     viewModel { SplashViewModel(get(), get()) }
     viewModel { LoginViewModel(get(), get(), get(), get(), get(), get()) }
+    viewModel { RegisterViewModel(get(), get()) }
 }
