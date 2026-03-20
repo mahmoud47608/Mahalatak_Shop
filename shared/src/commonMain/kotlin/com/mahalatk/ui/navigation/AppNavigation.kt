@@ -20,14 +20,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import com.mahalatk.common.component.toolbar.DefaultAppBar
-import com.mahalatk.ui.theme.BaseTheme
+import com.mahalatk.ui.theme.MahalatkTheme
 import com.mahalatk.ui.util.UIMessage
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun App(viewModel: MainViewModel = koinViewModel()) {
-    BaseTheme {
+    MahalatkTheme {
         val navigator = rememberAppNavigator()
         val isLoading by viewModel.isLoading.collectAsState()
         val snackbarHostState = remember { SnackbarHostState() }

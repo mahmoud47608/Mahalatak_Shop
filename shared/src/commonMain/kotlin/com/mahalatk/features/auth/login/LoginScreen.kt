@@ -28,7 +28,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -40,6 +39,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mahalatk.common.component.inputs.DefaultTextField
+import com.mahalatk.ui.theme.MahalatkTheme
 import kotlinx.coroutines.flow.collectLatest
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.app_icon
@@ -54,8 +54,6 @@ import mahalatk.shared.generated.resources.username_or_email
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-
-private val Teal = Color(0xFF1B8A7A)
 
 @Composable
 fun LoginScreen(
@@ -78,7 +76,7 @@ fun LoginScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(MahalatkTheme.white)
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 24.dp, vertical = 48.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -105,7 +103,7 @@ fun LoginScreen(
                 Icon(
                     imageVector = Icons.Filled.Person,
                     contentDescription = null,
-                    tint = Color.Gray
+                    tint = MahalatkTheme.hint
                 )
             },
             modifier = Modifier.fillMaxWidth()
@@ -134,7 +132,7 @@ fun LoginScreen(
                 Icon(
                     imageVector = Icons.Filled.Lock,
                     contentDescription = null,
-                    tint = Color.Gray
+                    tint = MahalatkTheme.hint
                 )
             },
             trailingIcon = {
@@ -145,7 +143,7 @@ fun LoginScreen(
                         imageVector = if (uiState.passwordVisible) Icons.Filled.Visibility
                         else Icons.Filled.VisibilityOff,
                         contentDescription = null,
-                        tint = Color.Gray
+                        tint = MahalatkTheme.hint
                     )
                 }
             },
@@ -157,7 +155,7 @@ fun LoginScreen(
         // Forgot Password
         Text(
             text = stringResource(Res.string.forgot_password),
-            color = Teal,
+            color = MahalatkTheme.primary,
             fontSize = 14.sp,
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier
@@ -174,13 +172,13 @@ fun LoginScreen(
                 .fillMaxWidth()
                 .height(52.dp),
             shape = RoundedCornerShape(12.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Teal)
+            colors = ButtonDefaults.buttonColors(containerColor = MahalatkTheme.primary)
         ) {
             Text(
                 text = stringResource(Res.string.login),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = Color.White
+                color = MahalatkTheme.white
             )
         }
 
@@ -190,14 +188,19 @@ fun LoginScreen(
         // Create An Account / Sign Up
         val annotatedText = buildAnnotatedString {
             append(stringResource(Res.string.create_account_prefix))
-            withStyle(style = SpanStyle(color = Teal, fontWeight = FontWeight.Bold)) {
+            withStyle(
+                style = SpanStyle(
+                    color = MahalatkTheme.primary,
+                    fontWeight = FontWeight.Bold
+                )
+            ) {
                 append(stringResource(Res.string.sign_up))
             }
         }
         Text(
             text = annotatedText,
             fontSize = 14.sp,
-            color = Color.Black,
+            color = MahalatkTheme.black,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .clickable { onNavigateToSignUp() }
