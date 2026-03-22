@@ -1,7 +1,5 @@
 package com.mahalatk.ui.navigation
 
-import com.mahalatk.domain.entity.general.LatLngModel
-
 sealed interface Route {
 
     data object Splash : Route
@@ -11,6 +9,8 @@ sealed interface Route {
     data object Register : Route
 
     data object Home : Route
+
+    data object Parts : Route
 
     data object More : Route
 }

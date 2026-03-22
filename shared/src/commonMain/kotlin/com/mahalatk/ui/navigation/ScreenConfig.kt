@@ -33,10 +33,14 @@ fun Route.screenConfig(): ScreenConfig = when (this) {
         showBottomBar = true,
     )
 
+    is Route.Parts -> ScreenConfig(
+        hasTopPadding = false,
+        hasBottomPadding = false,
+        showBottomBar = true,
+    )
+
     is Route.More -> ScreenConfig(
         toolBarState = ToolBarState.TitleWithBack(titleResId = Res.string.more),
         showBottomBar = true,
     )
-
-
 }

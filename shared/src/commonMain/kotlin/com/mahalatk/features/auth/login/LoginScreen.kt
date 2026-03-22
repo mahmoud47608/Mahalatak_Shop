@@ -179,7 +179,7 @@ fun LoginScreen(
             // Login Button
             DefaultButton(
                 text = stringResource(Res.string.login),
-                onClick = { viewModel.login() },
+                onClick = { onNavigateToHome() },
                 modifier = Modifier.fillMaxWidth()
             )
         }

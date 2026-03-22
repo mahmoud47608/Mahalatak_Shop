@@ -66,10 +66,7 @@ fun App(viewModel: MainViewModel = koinViewModel()) {
                     AppBottomBar(
                         currentRoute = currentRoute,
                     ) { item ->
-                        navigator.popToRoot()
-                        if (navigator.currentRoute != item.route) {
-                            navigator.push(item.route)
-                        }
+                        navigator.replaceAll(item.route)
                     }
                 }
             },

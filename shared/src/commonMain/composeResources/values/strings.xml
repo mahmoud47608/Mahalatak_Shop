@@ -6,8 +6,9 @@
     <string name="please_enter_password">Please enter password</string>
     <string name="rsa_currency" translatable="false">﷼</string>
 
-    <string name="home">home</string>
-    <string name="more">more</string>
+    <string name="home">Home</string>
+    <string name="parts">Parts</string>
+    <string name="more">More</string>
     <string name="empty_string"></string>
     <string name="unknown_location">unknown location</string>
     <string name="pick_location">pick location</string>

@@ -4,6 +4,7 @@ import com.mahalatk.data.util.NetworkConstants
 import com.mahalatk.data.util.TokenHeaderProvider
 import com.mahalatk.domain.util.getPlatformLanguage
 import io.ktor.client.HttpClient
+import io.ktor.client.HttpClientConfig
 import io.ktor.client.plugins.HttpSend
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
@@ -27,7 +28,7 @@ fun HttpClient.installTokenInterceptor(tokenProvider: TokenHeaderProvider): Http
     return this
 }
 
-fun io.ktor.client.HttpClientConfig<*>.installCommonPlugins(json: Json, baseUrl: String) {
+fun HttpClientConfig<*>.installCommonPlugins(json: Json, baseUrl: String) {
     install(ContentNegotiation) { json(json) }
     install(Logging) { level = LogLevel.BODY }
     defaultRequest {
