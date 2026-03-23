@@ -28,7 +28,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mahalatk.common.component.button.ButtonStyle
 import com.mahalatk.common.component.button.DefaultButton
-import com.mahalatk.ui.theme.MahalatkTheme
+import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.ic_flag_egypt
 import mahalatk.shared.generated.resources.ic_flag_usa

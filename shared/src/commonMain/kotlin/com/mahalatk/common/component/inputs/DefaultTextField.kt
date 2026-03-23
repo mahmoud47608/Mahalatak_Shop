@@ -19,7 +19,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import com.mahalatk.common.component.text.DefaultText
 import com.mahalatk.common.component.utilis.noRippleClickable
-import com.mahalatk.ui.theme.MahalatkTheme
+import com.mahalatk.theme.MahalatkTheme
 
 
 @OptIn(ExperimentalMaterial3Api::class)

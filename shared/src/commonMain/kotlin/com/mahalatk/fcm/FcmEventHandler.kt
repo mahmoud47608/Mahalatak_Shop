@@ -1,9 +1,9 @@
 package com.mahalatk.fcm
 
+import com.mahalatk.base.managers.SessionManager
 import com.mahalatk.domain.repository.PreferenceRepository
 import com.mahalatk.domain.util.fromJson
 import com.mahalatk.domain.util.toJson
-import com.mahalatk.ui.managers.SessionManager
 import com.mahalatk.ui.util.Constants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

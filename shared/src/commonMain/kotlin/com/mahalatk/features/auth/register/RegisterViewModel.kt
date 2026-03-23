@@ -1,8 +1,8 @@
 package com.mahalatk.features.auth.register
 
-import com.mahalatk.ui.base.BaseViewModel
-import com.mahalatk.ui.managers.LoadingManager
-import com.mahalatk.ui.managers.MessageManager
+import com.mahalatk.base.BaseViewModel
+import com.mahalatk.base.managers.LoadingManager
+import com.mahalatk.base.managers.MessageManager
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.passwords_do_not_match
 import mahalatk.shared.generated.resources.please_enter_confirm_password

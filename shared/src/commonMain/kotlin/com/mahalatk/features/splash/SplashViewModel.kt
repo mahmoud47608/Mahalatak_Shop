@@ -1,10 +1,10 @@
 package com.mahalatk.features.splash
 
 import androidx.lifecycle.viewModelScope
+import com.mahalatk.base.BaseViewModel
+import com.mahalatk.base.managers.LoadingManager
+import com.mahalatk.base.managers.MessageManager
 import com.mahalatk.domain.repository.PreferenceRepository
-import com.mahalatk.ui.base.BaseViewModel
-import com.mahalatk.ui.managers.LoadingManager
-import com.mahalatk.ui.managers.MessageManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

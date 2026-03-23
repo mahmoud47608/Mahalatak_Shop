@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mahalatk.ui.theme.MahalatkTheme
+import com.mahalatk.theme.MahalatkTheme
 
 enum class ButtonStyle {
     PRIMARY,

@@ -1,13 +1,13 @@
 package com.mahalatk.di
 
+import com.mahalatk.base.managers.LoadingManager
+import com.mahalatk.base.managers.MessageManager
+import com.mahalatk.base.managers.SessionManager
 import com.mahalatk.fcm.FcmEventHandler
 import com.mahalatk.features.auth.login.LoginViewModel
 import com.mahalatk.features.auth.register.RegisterViewModel
+import com.mahalatk.features.main.MainViewModel
 import com.mahalatk.features.splash.SplashViewModel
-import com.mahalatk.ui.managers.LoadingManager
-import com.mahalatk.ui.managers.MessageManager
-import com.mahalatk.ui.managers.SessionManager
-import com.mahalatk.ui.navigation.MainViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 

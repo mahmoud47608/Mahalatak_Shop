@@ -14,7 +14,6 @@ import com.mahalatk.di.appModule
 import com.mahalatk.di.sharedModule
 import com.mahalatk.di.useCaseModule
 import com.mahalatk.fcm.NotificationChannelConfig
-import com.mahalatk.ui.util.ApplicationContextHolder
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -25,7 +24,6 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        ApplicationContextHolder.init(this)
 
         startKoin {
             androidContext(this@App)

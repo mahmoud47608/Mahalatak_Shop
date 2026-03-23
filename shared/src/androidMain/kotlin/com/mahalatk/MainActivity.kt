@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.mahalatk.ui.navigation.App
+import com.mahalatk.features.main.App
 
 class MainActivity : ComponentActivity() {
 

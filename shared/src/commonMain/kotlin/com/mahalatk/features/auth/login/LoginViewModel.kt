@@ -1,16 +1,16 @@
 package com.mahalatk.features.auth.login
 
 import androidx.lifecycle.viewModelScope
+import com.mahalatk.base.SessionAwareViewModel
+import com.mahalatk.base.managers.LoadingManager
+import com.mahalatk.base.managers.MessageManager
+import com.mahalatk.base.managers.SessionManager
 import com.mahalatk.domain.entity.AuthData
 import com.mahalatk.domain.exceptions.ValidationException
 import com.mahalatk.domain.repository.PreferenceRepository
 import com.mahalatk.domain.usecase.auth.LoginUseCase
 import com.mahalatk.domain.util.DataState
 import com.mahalatk.domain.util.TokenCacheManager
-import com.mahalatk.ui.base.SessionAwareViewModel
-import com.mahalatk.ui.managers.LoadingManager
-import com.mahalatk.ui.managers.MessageManager
-import com.mahalatk.ui.managers.SessionManager
 import com.mahalatk.ui.util.applyCommonSideEffects
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

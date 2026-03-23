@@ -75,7 +75,7 @@ import com.mahalatk.common.component.imagepicker.rememberImagePickerLauncher
 import com.mahalatk.common.component.imagepicker.toImageBitmap
 import com.mahalatk.common.component.inputs.DefaultTextField
 import com.mahalatk.common.util.getCurrentLanguageCode
-import com.mahalatk.ui.theme.MahalatkTheme
+import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.already_have_account
 import mahalatk.shared.generated.resources.app_delivery

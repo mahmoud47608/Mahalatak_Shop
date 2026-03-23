@@ -44,7 +44,7 @@ import com.mahalatk.common.component.button.DefaultButton
 import com.mahalatk.common.component.button.LanguageButton
 import com.mahalatk.common.component.inputs.DefaultTextField
 import com.mahalatk.common.util.getCurrentLanguageCode
-import com.mahalatk.ui.theme.MahalatkTheme
+import com.mahalatk.theme.MahalatkTheme
 import kotlinx.coroutines.flow.collectLatest
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.app_icon
@@ -185,7 +185,6 @@ fun LoginScreen(
         }
 
         Spacer(modifier = Modifier.weight(1f))
-        Spacer(modifier = Modifier.height(32.dp))
 
         // Create An Account / Sign Up
         val annotatedText = buildAnnotatedString {
