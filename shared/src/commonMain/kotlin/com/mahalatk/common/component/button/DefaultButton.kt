@@ -12,7 +12,6 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -84,15 +83,14 @@ fun DefaultButton(
             colors = ButtonDefaults.buttonColors(
                 containerColor = containerColor,
                 contentColor = contentColor,
-                disabledContainerColor = Color(0xFFAAAAAA),
-                disabledContentColor = MahalatkTheme.white
+                disabledContainerColor = MahalatkTheme.hint,
+                disabledContentColor = MahalatkTheme.white.copy(alpha = 0.7f)
             )
         ) {
             Text(
                 text = text,
                 modifier = Modifier.padding(contentPadding),
                 style = MahalatkTheme.labelMedium.copy(fontSize = 14.sp),
-                color = contentColor
             )
         }
     }

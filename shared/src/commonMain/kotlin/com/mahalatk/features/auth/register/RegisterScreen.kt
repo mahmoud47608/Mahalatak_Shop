@@ -232,7 +232,7 @@ fun RegisterScreen(
                     },
                     trailingIcon = {
                         IconButton(onClick = {
-                            viewModel.updateState { copy(passwordVisible = !uiState.passwordVisible) }
+                            viewModel.updateState { copy(passwordVisible = !passwordVisible) }
                         }) {
                             Icon(
                                 imageVector = if (uiState.passwordVisible) Icons.Filled.Visibility
@@ -271,7 +271,7 @@ fun RegisterScreen(
                     trailingIcon = {
                         IconButton(onClick = {
                             viewModel.updateState {
-                                copy(confirmPasswordVisible = !uiState.confirmPasswordVisible)
+                                copy(confirmPasswordVisible = !confirmPasswordVisible)
                             }
                         }) {
                             Icon(

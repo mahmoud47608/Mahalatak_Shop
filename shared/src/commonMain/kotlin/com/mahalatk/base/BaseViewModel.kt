@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mahalatk.base.managers.LoadingManager
 import com.mahalatk.base.managers.MessageManager
-import com.mahalatk.ui.util.NetworkExtensionsActions
+import com.mahalatk.util.NetworkExtensionsActions
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

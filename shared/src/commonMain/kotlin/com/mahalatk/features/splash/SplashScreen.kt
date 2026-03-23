@@ -6,12 +6,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.app_icon
 import org.jetbrains.compose.resources.painterResource
@@ -23,16 +22,11 @@ fun SplashScreen(
     onNavigateToLogin: () -> Unit = {},
     onNavigateToHome: () -> Unit = {},
 ) {
-    val isLoggedIn by viewModel.isLoggedIn.collectAsState()
-
-    LaunchedEffect(isLoggedIn) {
-        // Wait for login check + splash animation
+    LaunchedEffect(Unit) {
+        // Wait for login check to complete, then show splash for 1.5s
+        val loggedIn = viewModel.isLoggedIn.first { it != null }
         delay(1500)
-        when (isLoggedIn) {
-            true -> onNavigateToHome()
-            false -> onNavigateToLogin()
-            null -> {} // still checking, wait
-        }
+        if (loggedIn == true) onNavigateToHome() else onNavigateToLogin()
     }
 
     Box(

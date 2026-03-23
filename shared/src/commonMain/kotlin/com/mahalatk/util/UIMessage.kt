@@ -1,4 +1,4 @@
-package com.mahalatk.ui.util
+package com.mahalatk.util
 
 sealed class UIMessage {
     data class Text(val message: String) : UIMessage()

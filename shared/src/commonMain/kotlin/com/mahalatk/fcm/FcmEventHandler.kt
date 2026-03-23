@@ -4,7 +4,7 @@ import com.mahalatk.base.managers.SessionManager
 import com.mahalatk.domain.repository.PreferenceRepository
 import com.mahalatk.domain.util.fromJson
 import com.mahalatk.domain.util.toJson
-import com.mahalatk.ui.util.Constants
+import com.mahalatk.util.Constants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -15,8 +15,13 @@ class FcmEventHandler(
     private val sessionManager: SessionManager,
     private val preferenceRepository: PreferenceRepository,
 ) {
+    // App-lifetime scope (singleton via Koin). Cancelled in destroy() if needed.
+    private val supervisorJob = SupervisorJob()
+    private val scope = CoroutineScope(supervisorJob + Dispatchers.Default)
 
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+    fun destroy() {
+        supervisorJob.cancel()
+    }
 
     fun handleNotificationData(data: Map<String, String>) {
         if (data.isEmpty()) return

@@ -11,7 +11,7 @@ import com.mahalatk.domain.repository.PreferenceRepository
 import com.mahalatk.domain.usecase.auth.LoginUseCase
 import com.mahalatk.domain.util.DataState
 import com.mahalatk.domain.util.TokenCacheManager
-import com.mahalatk.ui.util.applyCommonSideEffects
+import com.mahalatk.util.applyCommonSideEffects
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

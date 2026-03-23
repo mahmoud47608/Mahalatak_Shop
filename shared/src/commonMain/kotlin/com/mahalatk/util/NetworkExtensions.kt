@@ -1,4 +1,4 @@
-package com.mahalatk.ui.util
+package com.mahalatk.util
 
 import com.mahalatk.domain.entity.base.BaseResponse
 import com.mahalatk.domain.util.DataState

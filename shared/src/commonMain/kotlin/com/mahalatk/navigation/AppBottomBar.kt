@@ -19,9 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.mahalatk.common.component.utilis.noRippleClickable
 import com.mahalatk.theme.AppColor
+import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.home
 import mahalatk.shared.generated.resources.ic_nav_home
@@ -115,12 +115,12 @@ fun AppBottomBar(
                         tint = Color.Unspecified,
                         modifier = Modifier.size(24.dp),
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = stringResource(item.label),
                         color = color,
                         fontWeight = fontWeight,
-                        fontSize = 14.sp,
+                        style = MahalatkTheme.labelSmall,
                     )
                 }
             }

@@ -8,11 +8,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -41,12 +36,6 @@ fun DefaultTextField(
     onClick: (() -> Unit)? = null,
     onValueChanged: (String) -> Unit
 ) {
-    var currentError by remember { mutableStateOf(errorText) }
-
-    LaunchedEffect(errorText) {
-        currentError = errorText
-    }
-
     OutlinedTextField(
         modifier = modifier
             .fillMaxWidth()
@@ -56,7 +45,6 @@ fun DefaultTextField(
         enabled = isEnabled,
         onValueChange = { newText ->
             if (maxLength == null || newText.length <= maxLength) {
-                currentError = null
                 onValueChanged(newText)
             }
         },
@@ -92,12 +80,12 @@ fun DefaultTextField(
             disabledPlaceholderColor = MahalatkTheme.hint.copy(alpha = 0.5f),
             errorBorderColor = MahalatkTheme.error
         ),
-        isError = currentError != null,
+        isError = errorText != null,
         supportingText =
-            if (currentError != null) {
+            if (errorText != null) {
                 {
                     DefaultText(
-                        text = currentError.toString(),
+                        text = errorText,
                         textStyle = MahalatkTheme.bodySmall,
                         textColor = MahalatkTheme.error
                     )

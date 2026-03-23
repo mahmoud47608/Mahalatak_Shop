@@ -26,7 +26,7 @@ import com.mahalatk.navigation.LocalNavigator
 import com.mahalatk.navigation.NavigationHost
 import com.mahalatk.navigation.rememberAppNavigator
 import com.mahalatk.theme.MahalatkTheme
-import com.mahalatk.ui.util.UIMessage
+import com.mahalatk.util.UIMessage
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.compose.viewmodel.koinViewModel
 

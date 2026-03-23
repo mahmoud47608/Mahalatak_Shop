@@ -1,6 +1,6 @@
 package com.mahalatk.base.managers
 
-import com.mahalatk.ui.util.UIMessage
+import com.mahalatk.util.UIMessage
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow

@@ -1,4 +1,4 @@
-package com.mahalatk.ui.util
+package com.mahalatk.util
 
 object StringKeys {
     const val NO_INTERNET_CONNECTION = "no_internet_connection"

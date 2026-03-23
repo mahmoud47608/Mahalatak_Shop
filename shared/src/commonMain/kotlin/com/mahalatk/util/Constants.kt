@@ -1,7 +1,7 @@
-package com.mahalatk.ui.util
+package com.mahalatk.util
 
 object Constants {
     const val ARABIC = "ar"
     const val ENGLISH = "en"
-    const val RIYAL_UNICODE = "\\uFDFC"
+    const val RIYAL_UNICODE = "\uFDFC"
 }
