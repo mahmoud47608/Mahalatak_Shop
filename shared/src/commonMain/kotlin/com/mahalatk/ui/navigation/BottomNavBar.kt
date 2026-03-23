@@ -38,48 +38,51 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
-sealed interface BottomNavItem {
-    val title: StringResource
-    val icon: DrawableResource
-    val iconSelected: DrawableResource
-    val route: Route
-
-    data class Home(
-        override val title: StringResource = Res.string.home,
-        override val icon: DrawableResource = Res.drawable.ic_nav_home,
-        override val iconSelected: DrawableResource = Res.drawable.ic_nav_home_selected,
-        override val route: Route = Route.Home,
-    ) : BottomNavItem
-
-    data class Parts(
-        override val title: StringResource = Res.string.parts,
-        override val icon: DrawableResource = Res.drawable.ic_nav_parts,
-        override val iconSelected: DrawableResource = Res.drawable.ic_nav_parts_selected,
-        override val route: Route = Route.Parts,
-    ) : BottomNavItem
-
-    data class More(
-        override val title: StringResource = Res.string.more,
-        override val icon: DrawableResource = Res.drawable.ic_nav_more,
-        override val iconSelected: DrawableResource = Res.drawable.ic_nav_more_selected,
-        override val route: Route = Route.More,
-    ) : BottomNavItem
+/**
+ * Bottom navigation items.
+ * data object (not data class) → one instance, no allocation per render.
+ */
+enum class BottomNavItem(
+    val icon: DrawableResource,
+    val iconSelected: DrawableResource,
+    val label: StringResource,
+    val route: Route,
+) {
+    Home(
+        icon = Res.drawable.ic_nav_home,
+        iconSelected = Res.drawable.ic_nav_home_selected,
+        label = Res.string.home,
+        route = Route.Home,
+    ),
+    Parts(
+        icon = Res.drawable.ic_nav_parts,
+        iconSelected = Res.drawable.ic_nav_parts_selected,
+        label = Res.string.parts,
+        route = Route.Parts,
+    ),
+    More(
+        icon = Res.drawable.ic_nav_more,
+        iconSelected = Res.drawable.ic_nav_more_selected,
+        label = Res.string.more,
+        route = Route.More,
+    );
 
     companion object {
-        val items = listOf(Home(), Parts(), More())
+        fun fromRoute(route: Route): BottomNavItem? = when (route) {
+            is Route.Home -> Home
+            is Route.Parts -> Parts
+            is Route.More -> More
+            else -> null
+        }
     }
 }
 
 @Composable
 fun AppBottomBar(
-    currentRoute: Route?,
+    currentRoute: Route,
     onItemSelected: (BottomNavItem) -> Unit,
 ) {
-    val selectedIndex = remember(currentRoute) {
-        BottomNavItem.items.indexOfFirst {
-            it.route::class == currentRoute?.let { r -> r::class }
-        }.coerceAtLeast(0)
-    }
+    val selectedItem = BottomNavItem.fromRoute(currentRoute)
 
     Surface(
         shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
@@ -93,8 +96,8 @@ fun AppBottomBar(
                 .height(72.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
         ) {
-            BottomNavItem.items.forEachIndexed { index, item ->
-                val isSelected = index == selectedIndex
+            BottomNavItem.entries.forEach { item ->
+                val isSelected = item == selectedItem
                 val color = if (isSelected) AppColor.Primary else AppColor.NavInactive
                 val fontWeight = if (isSelected) FontWeight.Medium else FontWeight.Normal
 
@@ -106,24 +109,20 @@ fun AppBottomBar(
                             indication = null,
                             interactionSource = remember { MutableInteractionSource() },
                         ) {
-                            if (!isSelected) {
-                                onItemSelected(item)
-                            }
+                            if (!isSelected) onItemSelected(item)
                         },
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center,
                 ) {
                     Icon(
-                        painter = painterResource(
-                            if (isSelected) item.iconSelected else item.icon
-                        ),
-                        contentDescription = stringResource(item.title),
+                        painter = painterResource(if (isSelected) item.iconSelected else item.icon),
+                        contentDescription = stringResource(item.label),
                         tint = color,
                         modifier = Modifier.size(24.dp),
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = stringResource(item.title),
+                        text = stringResource(item.label),
                         color = color,
                         fontWeight = fontWeight,
                         fontSize = 14.sp,

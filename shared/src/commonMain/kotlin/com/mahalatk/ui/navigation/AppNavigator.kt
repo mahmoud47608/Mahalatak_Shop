@@ -2,32 +2,29 @@ package com.mahalatk.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-data class NavEntry(val route: Route, val id: String) {
-    @OptIn(ExperimentalUuidApi::class)
-    constructor(route: Route) : this(route, Uuid.random().toString())
-}
-
+/**
+ * Simple back stack navigator - Nav3 philosophy: you own the list.
+ *
+ * No UUID, no NavEntry wrapper. Just a list of Routes.
+ * koinViewModel() creates ONE instance per ViewModel type (no leak).
+ */
 @Stable
 class AppNavigator(initialRoute: Route = Route.Splash) {
 
-    private val _backStack = mutableStateListOf(NavEntry(initialRoute))
+    private val _backStack = mutableStateListOf(initialRoute)
 
-    val currentEntry: NavEntry?
-        get() = _backStack.lastOrNull()
-
-    val currentRoute: Route?
-        get() = currentEntry?.route
+    val currentRoute: Route
+        get() = _backStack.last()
 
     val canGoBack: Boolean
         get() = _backStack.size > 1
 
     fun push(route: Route) {
-        _backStack.add(NavEntry(route))
+        _backStack.add(route)
     }
 
     fun pop(): Boolean {
@@ -38,30 +35,16 @@ class AppNavigator(initialRoute: Route = Route.Splash) {
 
     fun replaceAll(route: Route) {
         _backStack.clear()
-        _backStack.add(NavEntry(route))
+        _backStack.add(route)
     }
+}
 
-    fun replaceTop(route: Route) {
-        if (_backStack.isNotEmpty()) {
-            _backStack.removeAt(_backStack.lastIndex)
-        }
-        _backStack.add(NavEntry(route))
-    }
-
-    fun popToRoot() {
-        while (_backStack.size > 1) {
-            _backStack.removeAt(_backStack.lastIndex)
-        }
-    }
-
-    fun popTo(predicate: (Route) -> Boolean, inclusive: Boolean = false) {
-        val index = _backStack.indexOfLast { predicate(it.route) }
-        if (index == -1) return
-        val fromIndex = if (inclusive) index else index + 1
-        if (fromIndex < _backStack.size) {
-            _backStack.subList(fromIndex, _backStack.size).clear()
-        }
-    }
+/**
+ * Access the navigator from any composable without lambda drilling.
+ * Usage: val navigator = LocalNavigator.current
+ */
+val LocalNavigator = compositionLocalOf<AppNavigator> {
+    error("No AppNavigator provided. Wrap your content with CompositionLocalProvider.")
 }
 
 @Composable

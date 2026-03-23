@@ -5,28 +5,35 @@ import com.mahalatk.common.component.bottomsheet.AppLanguage
 import com.mahalatk.features.auth.login.LoginScreen
 import com.mahalatk.features.auth.register.RegisterScreen
 import com.mahalatk.features.splash.SplashScreen
-import com.mahalatk.ui.navigation.AppNavigator
 import com.mahalatk.ui.navigation.Route
 
+/**
+ * Auth screens routing.
+ * Takes lambdas (not navigator) → decoupled, testable, reusable.
+ */
 @Composable
 fun AuthNavGraph(
     route: Route,
-    navigator: AppNavigator,
+    onNavigateToLogin: () -> Unit,
+    onNavigateToHome: () -> Unit,
+    onNavigateToRegister: () -> Unit,
+    onBack: () -> Unit,
     onLanguageChanged: (AppLanguage) -> Unit,
 ) {
     when (route) {
         is Route.Splash -> SplashScreen(
-            onNavigateToLogin = { navigator.replaceAll(Route.Login) },
+            onNavigateToLogin = onNavigateToLogin,
+            onNavigateToHome = onNavigateToHome,
         )
 
         is Route.Login -> LoginScreen(
-            onNavigateToHome = { navigator.replaceAll(Route.Home) },
-            onNavigateToSignUp = { navigator.push(Route.Register) },
+            onNavigateToHome = onNavigateToHome,
+            onNavigateToSignUp = onNavigateToRegister,
             onLanguageChanged = onLanguageChanged,
         )
 
         is Route.Register -> RegisterScreen(
-            onNavigateToLogin = { navigator.pop() },
+            onNavigateToLogin = onBack,
             onLanguageChanged = onLanguageChanged,
         )
 

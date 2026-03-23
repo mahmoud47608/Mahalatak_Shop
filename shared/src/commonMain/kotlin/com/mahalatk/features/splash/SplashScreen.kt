@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,10 +21,18 @@ import org.koin.compose.viewmodel.koinViewModel
 fun SplashScreen(
     viewModel: SplashViewModel = koinViewModel(),
     onNavigateToLogin: () -> Unit = {},
+    onNavigateToHome: () -> Unit = {},
 ) {
-    LaunchedEffect(Unit) {
+    val isLoggedIn by viewModel.isLoggedIn.collectAsState()
+
+    LaunchedEffect(isLoggedIn) {
+        // Wait for login check + splash animation
         delay(1500)
-        onNavigateToLogin()
+        when (isLoggedIn) {
+            true -> onNavigateToHome()
+            false -> onNavigateToLogin()
+            null -> {} // still checking, wait
+        }
     }
 
     Box(

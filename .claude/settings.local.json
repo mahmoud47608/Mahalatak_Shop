@@ -46,7 +46,8 @@
       "Bash(xargs cat:*)",
       "Bash(find /d/project/Mahalatak/domain/src -type f \\\\\\(-name *.kt -o -name *.kts \\\\\\))",
       "Bash(find /d/project/Mahalatak/shared/src -type f \\\\\\(-name *.kt -o -name *.kts \\\\\\))",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "Bash(grep -E \"\\\\.\\(kt\\)$\")"
     ],
     "deny": [],
     "ask": []

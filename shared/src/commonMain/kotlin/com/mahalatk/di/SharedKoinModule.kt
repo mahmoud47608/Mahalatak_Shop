@@ -18,7 +18,7 @@ val sharedModule = module {
     single { FcmEventHandler(get(), get()) }
 
     viewModel { MainViewModel(get(), get(), get()) }
-    viewModel { SplashViewModel(get(), get()) }
+    viewModel { SplashViewModel(get(), get(), get()) }
     viewModel { LoginViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { RegisterViewModel(get(), get()) }
 }

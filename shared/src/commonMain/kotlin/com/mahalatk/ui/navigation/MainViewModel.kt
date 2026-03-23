@@ -10,11 +10,9 @@ class MainViewModel(
     messageManager: MessageManager,
     private val tokenCacheManager: TokenCacheManager,
 ) : ViewModel() {
-
     init {
         tokenCacheManager.refreshTokenCache()
     }
-
     val isLoading = loadingManager.isLoading
     val uiMessages = messageManager.messages
 }

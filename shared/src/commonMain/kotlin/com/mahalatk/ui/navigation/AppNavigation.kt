@@ -2,7 +2,6 @@ package com.mahalatk.ui.navigation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
@@ -10,6 +9,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -19,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
-import com.mahalatk.common.component.toolbar.DefaultAppBar
 import com.mahalatk.common.util.rememberLanguageChanger
 import com.mahalatk.ui.theme.MahalatkTheme
 import com.mahalatk.ui.util.UIMessage
@@ -34,8 +33,10 @@ fun App(viewModel: MainViewModel = koinViewModel()) {
         val isLoading by viewModel.isLoading.collectAsState()
         val snackbarHostState = remember { SnackbarHostState() }
         val currentRoute = navigator.currentRoute
-        val config = currentRoute?.screenConfig() ?: ScreenConfig()
 
+        val isTabScreen = BottomNavItem.fromRoute(currentRoute) != null
+
+        // Snackbar messages
         LaunchedEffect(Unit) {
             viewModel.uiMessages.collectLatest { message ->
                 val text = when (message) {
@@ -46,57 +47,47 @@ fun App(viewModel: MainViewModel = koinViewModel()) {
             }
         }
 
-        Scaffold(
-            snackbarHost = {
-                SnackbarHost(
-                    hostState = snackbarHostState,
-                    modifier = Modifier.padding(bottom = 26.dp),
-                )
-            },
-            topBar = {
-                val toolbar = if (config.toolBarState.onBackButtonClicked == null) {
-                    config.toolBarState.updateBackButtonClicked { navigator.pop() }
-                } else {
-                    config.toolBarState
-                }
-                DefaultAppBar(toolbar)
-            },
-            bottomBar = {
-                if (config.showBottomBar) {
-                    AppBottomBar(
-                        currentRoute = currentRoute,
-                    ) { item ->
-                        navigator.replaceAll(item.route)
+        // ✅ Provide navigator to all children via CompositionLocal
+        CompositionLocalProvider(LocalNavigator provides navigator) {
+            Scaffold(
+                snackbarHost = {
+                    SnackbarHost(
+                        hostState = snackbarHostState,
+                        modifier = Modifier.padding(bottom = 26.dp),
+                    )
+                },
+                bottomBar = {
+                    if (isTabScreen) {
+                        AppBottomBar(
+                            currentRoute = currentRoute,
+                            onItemSelected = { item -> navigator.replaceAll(item.route) },
+                        )
                     }
-                }
-            },
-        ) { innerPadding ->
-            val contentPadding = PaddingValues(
-                top = if (config.hasTopPadding) innerPadding.calculateTopPadding() else 0.dp,
-                bottom = if (config.hasBottomPadding) innerPadding.calculateBottomPadding() else 0.dp,
-            )
+                },
+            ) { innerPadding ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(
+                            bottom = if (isTabScreen) innerPadding.calculateBottomPadding() else 0.dp
+                        )
+                ) {
+                    // Screen routing
+                    Navigation(currentRoute, navigator) { language ->
+                        changeLanguage.invoke(language)
+                    }
 
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(contentPadding)
-            ) {
-                NavigationContent(
-                    modifier = Modifier.fillMaxSize(),
-                    currentEntry = navigator.currentEntry,
-                    navigator = navigator,
-                    onLanguageChanged = { language -> changeLanguage(language.code) },
-                )
-
-                if (isLoading) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(Color.Black.copy(alpha = 0.3f))
-                            .pointerInput(Unit) {},
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        CircularProgressIndicator()
+                    // Loading overlay
+                    if (isLoading) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(Color.Black.copy(alpha = 0.3f))
+                                .pointerInput(Unit) {},
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            CircularProgressIndicator()
+                        }
                     }
                 }
             }
