@@ -9,7 +9,6 @@ import android.media.RingtoneManager
 import android.os.Build
 import com.mahalatk.data.di.commonDataModule
 import com.mahalatk.data.di.platformDataModule
-import com.mahalatk.di.androidSharedModule
 import com.mahalatk.di.appModule
 import com.mahalatk.di.sharedModule
 import com.mahalatk.di.useCaseModule
@@ -32,7 +31,6 @@ class App : Application() {
                 commonDataModule,
                 useCaseModule,
                 sharedModule,
-                androidSharedModule,
                 appModule
             )
         }

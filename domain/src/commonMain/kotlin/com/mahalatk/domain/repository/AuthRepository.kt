@@ -5,7 +5,7 @@ import com.mahalatk.domain.entity.base.BaseResponse
 import com.mahalatk.domain.util.DataState
 import kotlinx.coroutines.flow.Flow
 
-interface HomeRepository {
+interface AuthRepository {
 
     suspend fun login(
         countryCode: String,

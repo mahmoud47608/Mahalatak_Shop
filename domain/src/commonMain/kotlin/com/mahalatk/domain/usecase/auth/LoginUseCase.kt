@@ -1,14 +1,14 @@
 package com.mahalatk.domain.usecase.auth
 
 import com.mahalatk.domain.exceptions.ValidationException
-import com.mahalatk.domain.repository.HomeRepository
+import com.mahalatk.domain.repository.AuthRepository
 import com.mahalatk.domain.util.CommonValidation.isValidPassword
 import com.mahalatk.domain.util.CommonValidation.isValidPhone
 import com.mahalatk.domain.util.DataState
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 
-class LoginUseCase(private val homeRepository: HomeRepository) {
+class LoginUseCase(private val authRepository: AuthRepository) {
     operator fun invoke(
         countryCode: String,
         phone: String,
@@ -25,7 +25,7 @@ class LoginUseCase(private val homeRepository: HomeRepository) {
             emit(DataState.Error(ValidationException.MultipleValidationException(errors)))
         } else {
             emitAll(
-                homeRepository.login(
+                authRepository.login(
                     countryCode = countryCode,
                     phone = phone,
                     password = password,

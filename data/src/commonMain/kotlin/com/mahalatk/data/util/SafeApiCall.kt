@@ -8,26 +8,23 @@ import com.mahalatk.domain.util.FailRequestCode.EXCEPTION
 import com.mahalatk.domain.util.FailRequestCode.FAIL
 import com.mahalatk.domain.util.FailRequestCode.UN_AUTH
 import com.mahalatk.domain.util.NetworkExceptions
+import io.ktor.client.plugins.HttpRequestTimeoutException
 import io.ktor.client.plugins.ResponseException
 import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.withTimeout
 import kotlinx.serialization.json.Json
 
 fun <T> safeApiCall(
     apiCall: suspend () -> T
 ): Flow<DataState<T>> = flow {
-    withTimeout(120000L) {
-        val response = apiCall.invoke()
-        emit(handleSuccess(response))
-    }
+    val response = apiCall.invoke()
+    emit(handleSuccess(response))
 }.onStart {
     emit(DataState.Loading)
 }.catch { throwable ->
@@ -43,7 +40,7 @@ fun <T> handleSuccess(response: T): DataState<T> {
 suspend fun <T> handleError(it: Throwable): DataState<T> {
     it.printStackTrace()
     return when (it) {
-        is TimeoutCancellationException -> {
+        is HttpRequestTimeoutException -> {
             DataState.Error(NetworkExceptions.TimeoutException())
         }
 

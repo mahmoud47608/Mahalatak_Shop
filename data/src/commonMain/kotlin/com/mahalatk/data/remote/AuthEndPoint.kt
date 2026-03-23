@@ -8,7 +8,7 @@ import io.ktor.client.call.body
 import io.ktor.client.request.forms.submitForm
 import io.ktor.http.parameters
 
-class HomeEndPoint(private val client: HttpClient) {
+class AuthEndPoint(private val client: HttpClient) {
 
     suspend fun login(
         countryCode: String,

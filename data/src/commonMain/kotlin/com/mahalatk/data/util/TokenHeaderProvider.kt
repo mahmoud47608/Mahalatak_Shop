@@ -17,10 +17,16 @@ class TokenHeaderProvider(
     @Volatile
     private var cachedToken: String = ""
 
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+    // App-lifetime scope (singleton via Koin). Cancelled in destroy() if needed.
+    private val supervisorJob = SupervisorJob()
+    private val scope = CoroutineScope(supervisorJob + Dispatchers.Default)
 
     @Volatile
     private var cacheJob: Job? = null
+
+    fun destroy() {
+        supervisorJob.cancel()
+    }
 
     init {
         refreshTokenCache()

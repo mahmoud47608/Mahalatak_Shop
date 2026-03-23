@@ -11,7 +11,6 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.plugin
-import io.ktor.client.request.header
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
@@ -23,6 +22,8 @@ fun HttpClient.installTokenInterceptor(tokenProvider: TokenHeaderProvider): Http
         if (token.isNotEmpty()) {
             request.headers[NetworkConstants.AUTHORIZATION] = token
         }
+        // Dynamic language header - updates on every request
+        request.headers[NetworkConstants.LANGUAGE] = getPlatformLanguage()
         execute(request)
     }
     return this
@@ -33,6 +34,5 @@ fun HttpClientConfig<*>.installCommonPlugins(json: Json, baseUrl: String) {
     install(Logging) { level = LogLevel.BODY }
     defaultRequest {
         url("$baseUrl/api/")
-        header(NetworkConstants.LANGUAGE, getPlatformLanguage())
     }
 }

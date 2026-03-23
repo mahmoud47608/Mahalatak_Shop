@@ -1,11 +1,11 @@
 package com.mahalatk.data.repository
 
-import com.mahalatk.data.remote.HomeEndPoint
+import com.mahalatk.data.remote.AuthEndPoint
 import com.mahalatk.data.util.safeApiCall
-import com.mahalatk.domain.repository.HomeRepository
+import com.mahalatk.domain.repository.AuthRepository
 
-class HomeRepositoryImpl(private val homeEndPoint: HomeEndPoint) :
-    HomeRepository {
+class AuthRepositoryImpl(private val authEndPoint: AuthEndPoint) :
+    AuthRepository {
 
     override suspend fun login(
         countryCode: String,
@@ -14,7 +14,7 @@ class HomeRepositoryImpl(private val homeEndPoint: HomeEndPoint) :
         deviceId: String,
         socialId: String?
     ) = safeApiCall {
-        homeEndPoint.login(
+        authEndPoint.login(
             countryCode = countryCode,
             phone = phone,
             password = password,
