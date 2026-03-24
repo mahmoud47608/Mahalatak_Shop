@@ -16,7 +16,7 @@ fun NavigationHost(changeLanguage: (String) -> Unit) {
         label = "NavigationHost",
     ) { route ->
         when (route) {
-            is Route.Splash, is Route.Login, is Route.Register -> {
+            is Route.Splash, is Route.Login, is Route.Register, is Route.PickLocation -> {
                 AuthNavGraph(
                     route = route,
                     onLanguageChanged = { language ->

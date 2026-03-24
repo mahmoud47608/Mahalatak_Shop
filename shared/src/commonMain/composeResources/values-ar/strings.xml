@@ -79,6 +79,13 @@
     <!-- City/Location Inputs -->
     <string name="city_required">المدينة</string>
     <string name="please_select_city">يرجى اختيار المدينة</string>
+    <string name="select_city">اختر المدينة</string>
+    <string name="shop_location">موقع المحل</string>
+    <string name="select_location">حدد الموقع</string>
+    <string name="please_select_location">يرجى تحديد موقع المحل</string>
+    <string name="location_permission_required">يجب السماح بإذن الموقع</string>
+    <string name="location_on_map">الموقع على الخريطة</string>
+    <string name="add_address">إضافة عنوان</string>
 
     <!-- Auth & Security -->
     <string name="session_expired_title">انتهت الجلسة</string>

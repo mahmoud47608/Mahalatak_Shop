@@ -12,7 +12,9 @@ import mahalatk.shared.generated.resources.please_enter_password
 import mahalatk.shared.generated.resources.please_enter_phone_number
 import mahalatk.shared.generated.resources.please_enter_shop_name
 import mahalatk.shared.generated.resources.please_select_category
+import mahalatk.shared.generated.resources.please_select_city
 import mahalatk.shared.generated.resources.please_select_delivery_type
+import mahalatk.shared.generated.resources.please_select_location
 import mahalatk.shared.generated.resources.please_select_shop
 
 class RegisterViewModel(
@@ -45,6 +47,21 @@ class RegisterViewModel(
         updateState { copy(deliveryType = type, deliveryTypeError = null) }
     }
 
+    fun selectCity(city: CityItem) {
+        updateState { copy(selectedCity = city, cityError = null) }
+    }
+
+    fun updateLocation(lat: Double, lng: Double, address: String) {
+        updateState {
+            copy(
+                locationLat = lat,
+                locationLng = lng,
+                locationAddress = address,
+                locationError = null,
+            )
+        }
+    }
+
     fun selectShop(shop: String) {
         updateState { copy(selectedShop = shop, selectedShopError = null) }
     }
@@ -59,6 +76,8 @@ class RegisterViewModel(
                 ownerNameError = null,
                 categoryError = null,
                 deliveryTypeError = null,
+                cityError = null,
+                locationError = null,
                 employeeNameError = null,
                 selectedShopError = null,
                 mobileError = null,
@@ -85,6 +104,14 @@ class RegisterViewModel(
                 }
                 if (state.deliveryType == null) {
                     updateState { copy(deliveryTypeError = Res.string.please_select_delivery_type) }
+                    hasError = true
+                }
+                if (state.selectedCity == null) {
+                    updateState { copy(cityError = Res.string.please_select_city) }
+                    hasError = true
+                }
+                if (state.locationLat == null || state.locationLng == null) {
+                    updateState { copy(locationError = Res.string.please_select_location) }
                     hasError = true
                 }
             }

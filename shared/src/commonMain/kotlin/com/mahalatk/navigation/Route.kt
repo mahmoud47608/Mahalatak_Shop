@@ -8,6 +8,8 @@ sealed interface Route {
 
     data object Register : Route
 
+    data object PickLocation : Route
+
     data object Home : Route
 
     data object Parts : Route

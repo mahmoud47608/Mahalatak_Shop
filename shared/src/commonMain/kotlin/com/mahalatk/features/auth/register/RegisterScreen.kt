@@ -25,6 +25,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
@@ -42,6 +43,7 @@ import androidx.compose.material3.TabRowDefaults.SecondaryIndicator
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.currentCompositeKeyHash
 import androidx.compose.runtime.getValue
@@ -66,6 +68,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mahalatk.common.component.bottomsheet.AppLanguage
+import com.mahalatk.common.component.bottomsheet.CityBottomSheet
 import com.mahalatk.common.component.bottomsheet.DeliveryTypeBottomSheet
 import com.mahalatk.common.component.bottomsheet.LanguageSelectorBottomSheet
 import com.mahalatk.common.component.bottomsheet.ShopSelectorBottomSheet
@@ -79,6 +82,7 @@ import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.already_have_account
 import mahalatk.shared.generated.resources.app_delivery
+import mahalatk.shared.generated.resources.city_required
 import mahalatk.shared.generated.resources.confirm_password
 import mahalatk.shared.generated.resources.delivery_type
 import mahalatk.shared.generated.resources.employee
@@ -87,10 +91,13 @@ import mahalatk.shared.generated.resources.owner_name
 import mahalatk.shared.generated.resources.password
 import mahalatk.shared.generated.resources.phone
 import mahalatk.shared.generated.resources.register
+import mahalatk.shared.generated.resources.select_city
 import mahalatk.shared.generated.resources.select_delivery_type
+import mahalatk.shared.generated.resources.select_location
 import mahalatk.shared.generated.resources.select_shop
 import mahalatk.shared.generated.resources.shop_category
 import mahalatk.shared.generated.resources.shop_delivery
+import mahalatk.shared.generated.resources.shop_location
 import mahalatk.shared.generated.resources.shop_name
 import mahalatk.shared.generated.resources.shop_owner
 import mahalatk.shared.generated.resources.sign_in
@@ -103,12 +110,23 @@ import org.koin.compose.viewmodel.koinViewModel
 fun RegisterScreen(
     viewModel: RegisterViewModel = koinViewModel(key = currentCompositeKeyHash.toString()),
     onNavigateToLogin: () -> Unit = {},
+    onNavigateToPickLocation: () -> Unit = {},
     onLanguageChanged: (AppLanguage) -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var showLanguageSheet by remember { mutableStateOf(false) }
     var showDeliverySheet by remember { mutableStateOf(false) }
+    var showCitySheet by remember { mutableStateOf(false) }
     var showShopSheet by remember { mutableStateOf(false) }
+
+    // Observe location result from PickLocationScreen
+    val locationResult by LocationResultHolder.result.collectAsState()
+    LaunchedEffect(locationResult) {
+        locationResult?.let {
+            viewModel.updateLocation(it.lat, it.lng, it.address)
+            LocationResultHolder.consume()
+        }
+    }
 
     val pickImage = rememberImagePickerLauncher { bytes ->
         when (uiState.accountType) {
@@ -194,6 +212,8 @@ fun RegisterScreen(
                     viewModel = viewModel,
                     onPickImage = pickImage,
                     onShowDeliverySheet = { showDeliverySheet = true },
+                    onShowCitySheet = { showCitySheet = true },
+                    onPickLocation = onNavigateToPickLocation,
                 )
 
                 AccountType.EMPLOYEE -> EmployeeForm(
@@ -335,6 +355,14 @@ fun RegisterScreen(
         onTypeSelected = { viewModel.selectDeliveryType(it) }
     )
 
+    CityBottomSheet(
+        showBottomSheet = showCitySheet,
+        cities = uiState.availableCities,
+        selectedCity = uiState.selectedCity,
+        onDismiss = { showCitySheet = false },
+        onCitySelected = { viewModel.selectCity(it) }
+    )
+
     ShopSelectorBottomSheet(
         showBottomSheet = showShopSheet,
         shops = uiState.availableShops,
@@ -353,6 +381,8 @@ private fun ShopOwnerForm(
     viewModel: RegisterViewModel,
     onPickImage: () -> Unit,
     onShowDeliverySheet: () -> Unit,
+    onShowCitySheet: () -> Unit,
+    onPickLocation: () -> Unit,
 ) {
     // Shop Logo
     ProfileImagePicker(
@@ -511,6 +541,102 @@ private fun ShopOwnerForm(
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = stringResource(uiState.deliveryTypeError),
+                color = MahalatkTheme.error,
+                style = MahalatkTheme.labelMedium,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // City selector
+        Text(
+            text = stringResource(Res.string.city_required),
+            style = MahalatkTheme.titleMedium,
+            color = MahalatkTheme.black,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .border(
+                    1.dp,
+                    if (uiState.cityError != null) MahalatkTheme.error else MahalatkTheme.border,
+                    RoundedCornerShape(12.dp)
+                )
+                .clickable { onShowCitySheet() }
+                .padding(horizontal = 16.dp, vertical = 14.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = uiState.selectedCity?.name ?: stringResource(Res.string.select_city),
+                style = MahalatkTheme.bodyMedium,
+                color = if (uiState.selectedCity != null) MahalatkTheme.black else MahalatkTheme.hint,
+            )
+            Icon(
+                imageVector = Icons.Filled.KeyboardArrowDown,
+                contentDescription = null,
+                tint = MahalatkTheme.hint,
+            )
+        }
+
+        if (uiState.cityError != null) {
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = stringResource(uiState.cityError),
+                color = MahalatkTheme.error,
+                style = MahalatkTheme.labelMedium,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // Shop Location picker
+        Text(
+            text = stringResource(Res.string.shop_location),
+            style = MahalatkTheme.titleMedium,
+            color = MahalatkTheme.black,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .border(
+                    1.dp,
+                    if (uiState.locationError != null) MahalatkTheme.error else MahalatkTheme.border,
+                    RoundedCornerShape(12.dp)
+                )
+                .clickable { onPickLocation() }
+                .padding(horizontal = 16.dp, vertical = 14.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = uiState.locationAddress.ifBlank { stringResource(Res.string.select_location) },
+                style = MahalatkTheme.bodyMedium,
+                color = if (uiState.locationAddress.isNotBlank()) MahalatkTheme.black else MahalatkTheme.hint,
+                maxLines = 1,
+                modifier = Modifier.weight(1f)
+            )
+            Icon(
+                imageVector = Icons.Filled.LocationOn,
+                contentDescription = null,
+                tint = if (uiState.locationLat != null) MahalatkTheme.primary else MahalatkTheme.hint,
+            )
+        }
+
+        if (uiState.locationError != null) {
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = stringResource(uiState.locationError),
                 color = MahalatkTheme.error,
                 style = MahalatkTheme.labelMedium,
                 modifier = Modifier.fillMaxWidth()

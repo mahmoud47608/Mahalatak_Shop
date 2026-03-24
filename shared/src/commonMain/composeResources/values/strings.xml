@@ -68,6 +68,13 @@
     <!-- City/Location Inputs -->
     <string name="city_required">City</string>
     <string name="please_select_city">Please select city</string>
+    <string name="select_city">Select City</string>
+    <string name="shop_location">Shop Location</string>
+    <string name="select_location">Select Location</string>
+    <string name="please_select_location">Please select shop location</string>
+    <string name="location_permission_required">Location permission is required</string>
+    <string name="location_on_map">Location on Map</string>
+    <string name="add_address">Add Address</string>
 
     <!-- Auth & Security -->
     <string name="session_expired_title">Session Expired</string>
