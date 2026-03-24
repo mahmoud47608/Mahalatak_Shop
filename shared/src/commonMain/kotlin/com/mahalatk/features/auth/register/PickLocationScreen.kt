@@ -27,11 +27,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.mahalatk.common.component.button.DefaultButton
-import com.mahalatk.features.auth.register.map.PlatformMapView
-import com.mahalatk.features.auth.register.map.getAddressFromCoordinates
-import com.mahalatk.features.auth.register.map.getCurrentDeviceLocation
-import com.mahalatk.features.auth.register.map.hasLocationPermission
-import com.mahalatk.features.auth.register.map.rememberLocationPermissionLauncher
+import com.mahalatk.common.component.map.PlatformMapView
+import com.mahalatk.common.component.map.getAddressFromCoordinates
+import com.mahalatk.common.component.map.getCurrentDeviceLocation
+import com.mahalatk.common.component.map.hasLocationPermission
+import com.mahalatk.common.component.map.rememberLocationPermissionLauncher
 import com.mahalatk.theme.MahalatkTheme
 import kotlinx.coroutines.launch
 import mahalatk.shared.generated.resources.Res

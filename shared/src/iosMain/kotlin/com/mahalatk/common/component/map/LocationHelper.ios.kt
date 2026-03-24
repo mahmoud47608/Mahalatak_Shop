@@ -2,7 +2,6 @@ package com.mahalatk.common.component.map
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import com.mahalatk.features.auth.register.map.hasLocationPermission
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.useContents
 import kotlinx.coroutines.suspendCancellableCoroutine

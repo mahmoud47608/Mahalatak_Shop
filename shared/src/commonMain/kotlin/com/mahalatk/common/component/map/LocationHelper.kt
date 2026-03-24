@@ -1,4 +1,4 @@
-package com.mahalatk.features.auth.register.map
+package com.mahalatk.common.component.map
 
 import androidx.compose.runtime.Composable
 
