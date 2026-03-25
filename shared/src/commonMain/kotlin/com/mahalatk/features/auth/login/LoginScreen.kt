@@ -45,11 +45,11 @@ import mahalatk.shared.generated.resources.app_icon
 import mahalatk.shared.generated.resources.create_account_prefix
 import mahalatk.shared.generated.resources.forgot_password
 import mahalatk.shared.generated.resources.ic_lock
-import mahalatk.shared.generated.resources.ic_user
+import mahalatk.shared.generated.resources.ic_phone
 import mahalatk.shared.generated.resources.login
 import mahalatk.shared.generated.resources.password
+import mahalatk.shared.generated.resources.phone
 import mahalatk.shared.generated.resources.sign_up
-import mahalatk.shared.generated.resources.username_or_email
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -99,13 +99,13 @@ fun LoginScreen(
                         )
                     }
                 },
-                placeholderText = stringResource(Res.string.username_or_email),
+                placeholderText = stringResource(Res.string.phone),
                 keyboardType = KeyboardType.Phone,
                 imeAction = ImeAction.Next,
                 errorText = uiState.mobileError?.let { stringResource(it) },
                 leadingIcon = {
                     Icon(
-                        painter = painterResource(Res.drawable.ic_user),
+                        painter = painterResource(Res.drawable.ic_phone),
                         contentDescription = null,
                         modifier = Modifier.size(24.dp),
                         tint = MahalatkTheme.hint

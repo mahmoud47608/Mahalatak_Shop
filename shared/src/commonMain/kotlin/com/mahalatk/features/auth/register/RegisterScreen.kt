@@ -17,6 +17,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.LocalShipping
+import androidx.compose.material.icons.filled.Storefront
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Card
@@ -70,6 +72,7 @@ import mahalatk.shared.generated.resources.confirm_password
 import mahalatk.shared.generated.resources.employee
 import mahalatk.shared.generated.resources.employee_name
 import mahalatk.shared.generated.resources.ic_camera
+import mahalatk.shared.generated.resources.ic_city
 import mahalatk.shared.generated.resources.ic_location
 import mahalatk.shared.generated.resources.ic_lock
 import mahalatk.shared.generated.resources.ic_phone
@@ -411,9 +414,8 @@ private fun ShopOwnerForm(
             errorText = uiState.shopNameError?.let { stringResource(it) },
             leadingIcon = {
                 Icon(
-                    painterResource(Res.drawable.ic_user),
+                    Icons.Filled.Storefront,
                     null,
-                    modifier = Modifier.size(24.dp),
                     tint = MahalatkTheme.hint
                 )
             },
@@ -487,6 +489,13 @@ private fun ShopOwnerForm(
             isEnabled = false,
             onClick = { onShowDeliverySheet() },
             errorText = uiState.deliveryTypeError?.let { stringResource(it) },
+            leadingIcon = {
+                Icon(
+                    Icons.Filled.LocalShipping,
+                    null,
+                    tint = MahalatkTheme.hint
+                )
+            },
             trailingIcon = {
                 Icon(
                     imageVector = Icons.Filled.KeyboardArrowDown,
@@ -507,6 +516,14 @@ private fun ShopOwnerForm(
             isEnabled = false,
             onClick = { onShowCitySheet() },
             errorText = uiState.cityError?.let { stringResource(it) },
+            leadingIcon = {
+                Icon(
+                    painterResource(Res.drawable.ic_city),
+                    null,
+                    modifier = Modifier.size(24.dp),
+                    tint = MahalatkTheme.hint
+                )
+            },
             trailingIcon = {
                 Icon(
                     imageVector = Icons.Filled.KeyboardArrowDown,
@@ -527,7 +544,7 @@ private fun ShopOwnerForm(
             isEnabled = false,
             onClick = { onPickLocation() },
             errorText = uiState.locationError?.let { stringResource(it) },
-            trailingIcon = {
+            leadingIcon = {
                 Icon(
                     painter = painterResource(Res.drawable.ic_location),
                     contentDescription = null,
@@ -550,6 +567,13 @@ private fun ShopOwnerForm(
             isEnabled = false,
             onClick = { onShowCategorySheet() },
             errorText = uiState.categoryError?.let { stringResource(it) },
+            leadingIcon = {
+                Icon(
+                    Icons.Filled.Storefront,
+                    null,
+                    tint = MahalatkTheme.hint
+                )
+            },
             trailingIcon = {
                 Icon(
                     imageVector = Icons.Filled.KeyboardArrowDown,
