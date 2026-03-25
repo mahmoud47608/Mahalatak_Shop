@@ -122,6 +122,9 @@
     <string name="please_enter_confirm_password">الرجاء تأكيد كلمة المرور</string>
     <string name="passwords_do_not_match">كلمتا المرور غير متطابقتين</string>
     <string name="upload_photo">رفع صورة</string>
+    <string name="upload_shop_logo">شعار المحل</string>
+    <string name="upload_personal_photo">صورتك الشخصية</string>
+    <string name="please_upload_image">الرجاء رفع صورة</string>
 
     <!-- Register Screen - Tabs -->
     <string name="shop_owner">صاحب محل</string>

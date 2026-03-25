@@ -85,7 +85,7 @@ fun LoginScreen(
             contentScale = ContentScale.Crop
         )
 
-        Spacer(modifier = Modifier.height(52.dp))
+        Spacer(modifier = Modifier.height(40.dp))
 
         Column(modifier = Modifier.padding(horizontal = 24.dp)) {
             // Phone field

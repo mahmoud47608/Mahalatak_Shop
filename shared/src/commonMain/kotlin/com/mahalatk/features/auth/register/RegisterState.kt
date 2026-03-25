@@ -68,6 +68,7 @@ data class RegisterState(
     val locationError: StringResource? = null,
     val employeeNameError: StringResource? = null,
     val selectedShopError: StringResource? = null,
+    val imageError: StringResource? = null,
     val mobileError: StringResource? = null,
     val passwordError: StringResource? = null,
     val confirmPasswordError: StringResource? = null,

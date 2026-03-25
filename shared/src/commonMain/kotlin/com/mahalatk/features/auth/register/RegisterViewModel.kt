@@ -16,6 +16,7 @@ import mahalatk.shared.generated.resources.please_select_city
 import mahalatk.shared.generated.resources.please_select_delivery_type
 import mahalatk.shared.generated.resources.please_select_location
 import mahalatk.shared.generated.resources.please_select_shop
+import mahalatk.shared.generated.resources.please_upload_image
 
 class RegisterViewModel(
     loadingManager: LoadingManager,
@@ -80,6 +81,7 @@ class RegisterViewModel(
                 locationError = null,
                 employeeNameError = null,
                 selectedShopError = null,
+                imageError = null,
                 mobileError = null,
                 passwordError = null,
                 confirmPasswordError = null,
@@ -90,6 +92,10 @@ class RegisterViewModel(
 
         when (state.accountType) {
             AccountType.SHOP_OWNER -> {
+                if (state.shopImage == null) {
+                    updateState { copy(imageError = Res.string.please_upload_image) }
+                    hasError = true
+                }
                 if (state.shopName.isBlank()) {
                     updateState { copy(shopNameError = Res.string.please_enter_shop_name) }
                     hasError = true
@@ -117,6 +123,10 @@ class RegisterViewModel(
             }
 
             AccountType.EMPLOYEE -> {
+                if (state.employeeImage == null) {
+                    updateState { copy(imageError = Res.string.please_upload_image) }
+                    hasError = true
+                }
                 if (state.employeeName.isBlank()) {
                     updateState { copy(employeeNameError = Res.string.please_enter_employee_name) }
                     hasError = true

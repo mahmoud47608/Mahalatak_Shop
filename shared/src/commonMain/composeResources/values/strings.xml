@@ -129,6 +129,9 @@
     <string name="please_enter_confirm_password">Please confirm your password</string>
     <string name="passwords_do_not_match">Passwords do not match</string>
     <string name="upload_photo">Upload Photo</string>
+    <string name="upload_shop_logo">Shop Logo</string>
+    <string name="upload_personal_photo">Your Personal Photo</string>
+    <string name="please_upload_image">Please upload an image</string>
 
     <!-- Register Screen - Tabs -->
     <string name="shop_owner">Shop Owner</string>

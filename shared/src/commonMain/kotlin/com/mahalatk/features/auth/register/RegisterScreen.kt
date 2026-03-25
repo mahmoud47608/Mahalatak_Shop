@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.LocalShipping
 import androidx.compose.material.icons.filled.Storefront
@@ -54,10 +55,8 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mahalatk.common.component.bottomsheet.CategoryBottomSheet
-import com.mahalatk.common.component.bottomsheet.CityBottomSheet
-import com.mahalatk.common.component.bottomsheet.DeliveryTypeBottomSheet
-import com.mahalatk.common.component.bottomsheet.ShopSelectorBottomSheet
+import com.mahalatk.common.component.bottomsheet.MultiSelectBottomSheet
+import com.mahalatk.common.component.bottomsheet.SingleSelectBottomSheet
 import com.mahalatk.common.component.button.DefaultButton
 import com.mahalatk.common.component.button.LanguageButton
 import com.mahalatk.common.component.imagepicker.rememberImagePickerLauncher
@@ -91,7 +90,8 @@ import mahalatk.shared.generated.resources.shop_delivery
 import mahalatk.shared.generated.resources.shop_name
 import mahalatk.shared.generated.resources.shop_owner
 import mahalatk.shared.generated.resources.sign_in
-import mahalatk.shared.generated.resources.upload_photo
+import mahalatk.shared.generated.resources.upload_personal_photo
+import mahalatk.shared.generated.resources.upload_shop_logo
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -119,8 +119,19 @@ fun RegisterScreen(
 
     val pickImage = rememberImagePickerLauncher { bytes ->
         when (uiState.accountType) {
-            AccountType.SHOP_OWNER -> viewModel.updateState { copy(shopImage = bytes) }
-            AccountType.EMPLOYEE -> viewModel.updateState { copy(employeeImage = bytes) }
+            AccountType.SHOP_OWNER -> viewModel.updateState {
+                copy(
+                    shopImage = bytes,
+                    imageError = null
+                )
+            }
+
+            AccountType.EMPLOYEE -> viewModel.updateState {
+                copy(
+                    employeeImage = bytes,
+                    imageError = null
+                )
+            }
         }
     }
 
@@ -342,34 +353,61 @@ fun RegisterScreen(
     }
 
     // Bottom Sheets
-    DeliveryTypeBottomSheet(
+    SingleSelectBottomSheet(
         showBottomSheet = showDeliverySheet,
-        selectedType = uiState.deliveryType,
+        title = stringResource(Res.string.select_delivery_type),
+        items = DeliveryType.entries.toList(),
+        selectedItem = uiState.deliveryType,
+        itemLabel = { type ->
+            when (type) {
+                DeliveryType.SHOP_DELIVERY -> stringResource(Res.string.shop_delivery)
+                DeliveryType.APP_DELIVERY -> stringResource(Res.string.app_delivery)
+            }
+        },
+        onItemSelected = { viewModel.selectDeliveryType(it) },
         onDismiss = { showDeliverySheet = false },
-        onTypeSelected = { viewModel.selectDeliveryType(it) }
+        leadingIcon = { type, isSelected ->
+            val icon = when (type) {
+                DeliveryType.SHOP_DELIVERY -> Icons.Filled.LocalShipping
+                DeliveryType.APP_DELIVERY -> Icons.Filled.DirectionsCar
+            }
+            Icon(
+                icon, null,
+                modifier = Modifier.size(28.dp),
+                tint = if (isSelected) MahalatkTheme.primary else MahalatkTheme.hint
+            )
+        }
     )
 
-    CityBottomSheet(
+    SingleSelectBottomSheet(
         showBottomSheet = showCitySheet,
-        cities = uiState.availableCities,
-        selectedCity = uiState.selectedCity,
+        title = stringResource(Res.string.select_city),
+        items = uiState.availableCities,
+        selectedItem = uiState.selectedCity,
+        itemLabel = { it.name },
+        onItemSelected = { viewModel.selectCity(it) },
         onDismiss = { showCitySheet = false },
-        onCitySelected = { viewModel.selectCity(it) }
+        isItemSelected = { item, selected -> item.id == selected?.id }
     )
 
-    ShopSelectorBottomSheet(
+    SingleSelectBottomSheet(
         showBottomSheet = showShopSheet,
-        shops = uiState.availableShops,
-        selectedShop = uiState.selectedShop,
-        onDismiss = { showShopSheet = false },
-        onShopSelected = { viewModel.selectShop(it) }
+        title = stringResource(Res.string.select_shop),
+        items = uiState.availableShops,
+        selectedItem = uiState.selectedShop,
+        itemLabel = { it },
+        onItemSelected = { viewModel.selectShop(it) },
+        onDismiss = { showShopSheet = false }
     )
 
-    CategoryBottomSheet(
+    MultiSelectBottomSheet(
         showBottomSheet = showCategorySheet,
-        selectedCategories = uiState.selectedCategories,
-        onDismiss = { showCategorySheet = false },
-        onCategoryToggle = { viewModel.toggleCategory(it) }
+        title = stringResource(Res.string.shop_category),
+        items = ShopCategory.entries.toList(),
+        selectedItems = uiState.selectedCategories,
+        itemLabel = { stringResource(it.labelRes) },
+        onItemToggle = { viewModel.toggleCategory(it) },
+        onDismiss = { showCategorySheet = false }
     )
 }
 
@@ -388,6 +426,8 @@ private fun ShopOwnerForm(
     // Shop Logo
     ProfileImagePicker(
         imageBytes = uiState.shopImage,
+        label = stringResource(Res.string.upload_shop_logo),
+        errorText = uiState.imageError?.let { stringResource(it) },
         onClick = onPickImage,
     )
 
@@ -598,6 +638,8 @@ private fun EmployeeForm(
     // Employee Photo
     ProfileImagePicker(
         imageBytes = uiState.employeeImage,
+        label = stringResource(Res.string.upload_personal_photo),
+        errorText = uiState.imageError?.let { stringResource(it) },
         onClick = onPickImage,
     )
 
@@ -683,6 +725,8 @@ private fun EmployeeForm(
 @Composable
 private fun ProfileImagePicker(
     imageBytes: ByteArray?,
+    label: String,
+    errorText: String? = null,
     onClick: () -> Unit,
 ) {
     Column(
@@ -737,10 +781,19 @@ private fun ProfileImagePicker(
         }
 
         Text(
-            text = stringResource(Res.string.upload_photo),
+            text = label,
             style = MahalatkTheme.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
             color = MahalatkTheme.black,
             modifier = Modifier.padding(top = 8.dp)
         )
+
+        if (errorText != null) {
+            Text(
+                text = errorText,
+                style = MahalatkTheme.bodySmall,
+                color = MahalatkTheme.error,
+                modifier = Modifier.padding(top = 4.dp)
+            )
+        }
     }
 }
