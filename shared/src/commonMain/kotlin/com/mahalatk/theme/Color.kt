@@ -4,13 +4,13 @@ import androidx.compose.ui.graphics.Color
 
 object AppColor {
     // Primary (Teal)
-    val Primary = Color(0xFF1B8A7A)
+    val Primary = Color(0xFF307E8B)
     val OnPrimary = Color(0xFFFFFFFF)
     val PrimaryContainer = Color(0xFFE0F5F1)
-    val OnPrimaryContainer = Color(0xFF0D4A40)
+    val OnPrimaryContainer = Color(0xFF307E8B)
 
     // Secondary (Purple)
-    val Secondary = Color(0xFF543592)
+    val Secondary = Color(0x876FC0BA)
     val OnSecondary = Color(0xFFFFFFFF)
     val SecondaryContainer = Color(0xFFEDE7F6)
     val OnSecondaryContainer = Color(0xFF2A2D2D)

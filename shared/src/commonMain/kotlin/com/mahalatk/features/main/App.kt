@@ -1,8 +1,10 @@
 package com.mahalatk.features.main
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
@@ -18,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.mahalatk.navigation.AppBottomBar
 import com.mahalatk.navigation.BottomNavItem
@@ -27,6 +30,9 @@ import com.mahalatk.navigation.rememberAppNavigator
 import com.mahalatk.theme.MahalatkTheme
 import com.mahalatk.util.UIMessage
 import kotlinx.coroutines.flow.collectLatest
+import mahalatk.shared.generated.resources.Res
+import mahalatk.shared.generated.resources.ic_background
+import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -73,6 +79,16 @@ fun App(viewModel: MainViewModel = koinViewModel()) {
                             bottom = if (isTabScreen) innerPadding.calculateBottomPadding() else 0.dp
                         )
                 ) {
+                    // Background image
+                    Image(
+                        painter = painterResource(Res.drawable.ic_background),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.TopCenter),
+                    )
+
                     // Screen routing
                     NavigationHost()
 
