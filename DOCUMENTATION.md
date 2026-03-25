@@ -942,7 +942,7 @@ safeApiCall {                           ← غلاف آمن
         ↓
 HttpClient (OkHttp/Darwin)
         ↓ (+ Token Header تلقائي)
-POST https://basephp.aait-sa.com/api/sign-in
+POST https://ninety-sheets.com/api/sign-in
         ↓
 Flow<DataState<BaseResponse<AuthData>>>
    ↓ Loading
@@ -1350,7 +1350,7 @@ android {
 ```properties
 # القيم دي بتتقرأ في Build time وبتتحول لـ BuildConfig على Android
 API_KEY="AIzaSyAoZ356P2Ke2Xm_njlJIiYjrgp3NgEkVnI"
-REMOTE_URL="https://basephp.aait-sa.com"
+REMOTE_URL="https://ninety-sheets.com"
 SOCKET_PORT="4777"
 ```
 
@@ -1382,7 +1382,7 @@ SOCKET_PORT="4777"
    client.submitForm(url = "sign-in", formParameters = {...})
    ↓
 10. HttpClient:
-    URL: https://basephp.aait-sa.com/api/sign-in
+    URL: https://ninety-sheets.com/api/sign-in
     Headers:
       - lang: "ar" (أو "en")
       - Authorization: "Bearer eyJ..." (لو موجود)

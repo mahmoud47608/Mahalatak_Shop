@@ -7,8 +7,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,10 +14,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -32,9 +28,6 @@ import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Storefront
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material.icons.outlined.ChildCare
-import androidx.compose.material.icons.outlined.Man
-import androidx.compose.material.icons.outlined.Woman
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Tab
@@ -54,7 +47,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.BitmapPainter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -63,11 +55,11 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mahalatk.common.component.bottomsheet.AppLanguage
+import com.mahalatk.common.component.bottomsheet.CategoryBottomSheet
 import com.mahalatk.common.component.bottomsheet.CityBottomSheet
 import com.mahalatk.common.component.bottomsheet.DeliveryTypeBottomSheet
 import com.mahalatk.common.component.bottomsheet.LanguageSelectorBottomSheet
@@ -82,9 +74,7 @@ import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.already_have_account
 import mahalatk.shared.generated.resources.app_delivery
-import mahalatk.shared.generated.resources.city_required
 import mahalatk.shared.generated.resources.confirm_password
-import mahalatk.shared.generated.resources.delivery_type
 import mahalatk.shared.generated.resources.employee
 import mahalatk.shared.generated.resources.employee_name
 import mahalatk.shared.generated.resources.owner_name
@@ -97,7 +87,6 @@ import mahalatk.shared.generated.resources.select_location
 import mahalatk.shared.generated.resources.select_shop
 import mahalatk.shared.generated.resources.shop_category
 import mahalatk.shared.generated.resources.shop_delivery
-import mahalatk.shared.generated.resources.shop_location
 import mahalatk.shared.generated.resources.shop_name
 import mahalatk.shared.generated.resources.shop_owner
 import mahalatk.shared.generated.resources.sign_in
@@ -105,7 +94,6 @@ import mahalatk.shared.generated.resources.upload_photo
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun RegisterScreen(
     viewModel: RegisterViewModel = koinViewModel(key = currentCompositeKeyHash.toString()),
@@ -118,6 +106,7 @@ fun RegisterScreen(
     var showDeliverySheet by remember { mutableStateOf(false) }
     var showCitySheet by remember { mutableStateOf(false) }
     var showShopSheet by remember { mutableStateOf(false) }
+    var showCategorySheet by remember { mutableStateOf(false) }
 
     // Observe location result from PickLocationScreen
     val locationResult by LocationResultHolder.result.collectAsState()
@@ -213,6 +202,7 @@ fun RegisterScreen(
                     onPickImage = pickImage,
                     onShowDeliverySheet = { showDeliverySheet = true },
                     onShowCitySheet = { showCitySheet = true },
+                    onShowCategorySheet = { showCategorySheet = true },
                     onPickLocation = onNavigateToPickLocation,
                 )
 
@@ -370,11 +360,17 @@ fun RegisterScreen(
         onDismiss = { showShopSheet = false },
         onShopSelected = { viewModel.selectShop(it) }
     )
+
+    CategoryBottomSheet(
+        showBottomSheet = showCategorySheet,
+        selectedCategories = uiState.selectedCategories,
+        onDismiss = { showCategorySheet = false },
+        onCategoryToggle = { viewModel.toggleCategory(it) }
+    )
 }
 
 // ─── Shop Owner Form ─────────────────────────────────────────────────
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun ShopOwnerForm(
     uiState: RegisterState,
@@ -382,6 +378,7 @@ private fun ShopOwnerForm(
     onPickImage: () -> Unit,
     onShowDeliverySheet: () -> Unit,
     onShowCitySheet: () -> Unit,
+    onShowCategorySheet: () -> Unit,
     onPickLocation: () -> Unit,
 ) {
     // Shop Logo
@@ -460,188 +457,91 @@ private fun ShopOwnerForm(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Shop Category section
-        Text(
-            text = stringResource(Res.string.shop_category),
-            style = MahalatkTheme.titleMedium,
-            color = MahalatkTheme.black,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        FlowRow(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
-            ShopCategory.entries.forEach { category ->
-                CategoryCircle(
-                    category = category,
-                    isSelected = category in uiState.selectedCategories,
-                    onClick = { viewModel.toggleCategory(category) }
-                )
-            }
-        }
-
-        if (uiState.categoryError != null) {
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = stringResource(uiState.categoryError),
-                color = MahalatkTheme.error,
-                style = MahalatkTheme.labelMedium,
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
-
-        Spacer(modifier = Modifier.height(20.dp))
-
         // Delivery Type selector
-        Text(
-            text = stringResource(Res.string.delivery_type),
-            style = MahalatkTheme.titleMedium,
-            color = MahalatkTheme.black,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
         val deliveryLabel = when (uiState.deliveryType) {
             DeliveryType.SHOP_DELIVERY -> stringResource(Res.string.shop_delivery)
             DeliveryType.APP_DELIVERY -> stringResource(Res.string.app_delivery)
-            null -> stringResource(Res.string.select_delivery_type)
+            null -> ""
         }
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .border(
-                    1.dp,
-                    if (uiState.deliveryTypeError != null) MahalatkTheme.error else MahalatkTheme.border,
-                    RoundedCornerShape(12.dp)
+        DefaultTextField(
+            value = deliveryLabel,
+            onValueChanged = {},
+            placeholderText = stringResource(Res.string.select_delivery_type),
+            isEnabled = false,
+            onClick = { onShowDeliverySheet() },
+            errorText = uiState.deliveryTypeError?.let { stringResource(it) },
+            trailingIcon = {
+                Icon(
+                    imageVector = Icons.Filled.KeyboardArrowDown,
+                    contentDescription = null,
+                    tint = MahalatkTheme.hint,
                 )
-                .clickable { onShowDeliverySheet() }
-                .padding(horizontal = 16.dp, vertical = 14.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = deliveryLabel,
-                style = MahalatkTheme.bodyMedium,
-                color = if (uiState.deliveryType != null) MahalatkTheme.black else MahalatkTheme.hint,
-            )
-            Icon(
-                imageVector = Icons.Filled.KeyboardArrowDown,
-                contentDescription = null,
-                tint = MahalatkTheme.hint,
-            )
-        }
-
-        if (uiState.deliveryTypeError != null) {
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = stringResource(uiState.deliveryTypeError),
-                color = MahalatkTheme.error,
-                style = MahalatkTheme.labelMedium,
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
 
         Spacer(modifier = Modifier.height(20.dp))
 
         // City selector
-        Text(
-            text = stringResource(Res.string.city_required),
-            style = MahalatkTheme.titleMedium,
-            color = MahalatkTheme.black,
+        DefaultTextField(
+            value = uiState.selectedCity?.name ?: "",
+            onValueChanged = {},
+            placeholderText = stringResource(Res.string.select_city),
+            isEnabled = false,
+            onClick = { onShowCitySheet() },
+            errorText = uiState.cityError?.let { stringResource(it) },
+            trailingIcon = {
+                Icon(
+                    imageVector = Icons.Filled.KeyboardArrowDown,
+                    contentDescription = null,
+                    tint = MahalatkTheme.hint,
+                )
+            },
             modifier = Modifier.fillMaxWidth()
         )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .border(
-                    1.dp,
-                    if (uiState.cityError != null) MahalatkTheme.error else MahalatkTheme.border,
-                    RoundedCornerShape(12.dp)
-                )
-                .clickable { onShowCitySheet() }
-                .padding(horizontal = 16.dp, vertical = 14.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = uiState.selectedCity?.name ?: stringResource(Res.string.select_city),
-                style = MahalatkTheme.bodyMedium,
-                color = if (uiState.selectedCity != null) MahalatkTheme.black else MahalatkTheme.hint,
-            )
-            Icon(
-                imageVector = Icons.Filled.KeyboardArrowDown,
-                contentDescription = null,
-                tint = MahalatkTheme.hint,
-            )
-        }
-
-        if (uiState.cityError != null) {
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = stringResource(uiState.cityError),
-                color = MahalatkTheme.error,
-                style = MahalatkTheme.labelMedium,
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
 
         Spacer(modifier = Modifier.height(20.dp))
 
         // Shop Location picker
-        Text(
-            text = stringResource(Res.string.shop_location),
-            style = MahalatkTheme.titleMedium,
-            color = MahalatkTheme.black,
+        DefaultTextField(
+            value = uiState.locationAddress,
+            onValueChanged = {},
+            placeholderText = stringResource(Res.string.select_location),
+            isEnabled = false,
+            onClick = { onPickLocation() },
+            errorText = uiState.locationError?.let { stringResource(it) },
+            trailingIcon = {
+                Icon(
+                    imageVector = Icons.Filled.LocationOn,
+                    contentDescription = null,
+                    tint = if (uiState.locationLat != null) MahalatkTheme.primary else MahalatkTheme.hint,
+                )
+            },
             modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .border(
-                    1.dp,
-                    if (uiState.locationError != null) MahalatkTheme.error else MahalatkTheme.border,
-                    RoundedCornerShape(12.dp)
+        // Shop Category selector
+        val categoryNames = uiState.selectedCategories.map { stringResource(it.labelRes) }
+        val categoryLabel = categoryNames.joinToString(", ")
+        DefaultTextField(
+            value = categoryLabel,
+            onValueChanged = {},
+            placeholderText = stringResource(Res.string.shop_category),
+            isEnabled = false,
+            onClick = { onShowCategorySheet() },
+            errorText = uiState.categoryError?.let { stringResource(it) },
+            trailingIcon = {
+                Icon(
+                    imageVector = Icons.Filled.KeyboardArrowDown,
+                    contentDescription = null,
+                    tint = MahalatkTheme.hint,
                 )
-                .clickable { onPickLocation() }
-                .padding(horizontal = 16.dp, vertical = 14.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = uiState.locationAddress.ifBlank { stringResource(Res.string.select_location) },
-                style = MahalatkTheme.bodyMedium,
-                color = if (uiState.locationAddress.isNotBlank()) MahalatkTheme.black else MahalatkTheme.hint,
-                maxLines = 1,
-                modifier = Modifier.weight(1f)
-            )
-            Icon(
-                imageVector = Icons.Filled.LocationOn,
-                contentDescription = null,
-                tint = if (uiState.locationLat != null) MahalatkTheme.primary else MahalatkTheme.hint,
-            )
-        }
-
-        if (uiState.locationError != null) {
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = stringResource(uiState.locationError),
-                color = MahalatkTheme.error,
-                style = MahalatkTheme.labelMedium,
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }
 
@@ -708,49 +608,22 @@ private fun EmployeeForm(
         Spacer(modifier = Modifier.height(16.dp))
 
         // Select Shop
-        Text(
-            text = stringResource(Res.string.select_shop),
-            style = MahalatkTheme.titleMedium,
-            color = MahalatkTheme.black,
+        DefaultTextField(
+            value = uiState.selectedShop ?: "",
+            onValueChanged = {},
+            placeholderText = stringResource(Res.string.select_shop),
+            isEnabled = false,
+            onClick = { onShowShopSheet() },
+            errorText = uiState.selectedShopError?.let { stringResource(it) },
+            trailingIcon = {
+                Icon(
+                    imageVector = Icons.Filled.KeyboardArrowDown,
+                    contentDescription = null,
+                    tint = MahalatkTheme.hint,
+                )
+            },
             modifier = Modifier.fillMaxWidth()
         )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .border(
-                    1.dp,
-                    if (uiState.selectedShopError != null) MahalatkTheme.error else MahalatkTheme.border,
-                    RoundedCornerShape(12.dp)
-                )
-                .clickable { onShowShopSheet() }
-                .padding(horizontal = 16.dp, vertical = 14.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = uiState.selectedShop ?: stringResource(Res.string.select_shop),
-                style = MahalatkTheme.bodyMedium,
-                color = if (uiState.selectedShop != null) MahalatkTheme.black else MahalatkTheme.hint,
-            )
-            Icon(
-                imageVector = Icons.Filled.KeyboardArrowDown,
-                contentDescription = null,
-                tint = MahalatkTheme.hint,
-            )
-        }
-
-        if (uiState.selectedShopError != null) {
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = stringResource(uiState.selectedShopError),
-                color = MahalatkTheme.error,
-                style = MahalatkTheme.labelMedium,
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
     }
 }
 
@@ -798,55 +671,5 @@ private fun ProfileImagePicker(
                 )
             }
         }
-    }
-}
-
-@Composable
-private fun CategoryCircle(
-    category: ShopCategory,
-    isSelected: Boolean,
-    onClick: () -> Unit,
-) {
-    val icon: ImageVector = when (category) {
-        ShopCategory.MEN -> Icons.Outlined.Man
-        ShopCategory.WOMEN -> Icons.Outlined.Woman
-        ShopCategory.KIDS -> Icons.Outlined.ChildCare
-        ShopCategory.MEN_SHOES -> Icons.Outlined.Man
-        ShopCategory.WOMEN_SHOES -> Icons.Outlined.Woman
-    }
-
-    val bgColor =
-        if (isSelected) MahalatkTheme.primary.copy(alpha = 0.12f) else MahalatkTheme.iconBackground
-    val borderColor = if (isSelected) MahalatkTheme.primary else MahalatkTheme.border
-    val iconTint = if (isSelected) MahalatkTheme.primary else MahalatkTheme.hint
-
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.width(64.dp)
-    ) {
-        Box(
-            modifier = Modifier
-                .size(56.dp)
-                .clip(CircleShape)
-                .background(bgColor)
-                .border(2.dp, borderColor, CircleShape)
-                .clickable { onClick() },
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = iconTint,
-                modifier = Modifier.size(28.dp)
-            )
-        }
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = stringResource(category.labelRes),
-            style = MahalatkTheme.labelMedium,
-            color = if (isSelected) MahalatkTheme.primary else MahalatkTheme.black,
-            textAlign = TextAlign.Center,
-            maxLines = 2,
-        )
     }
 }
