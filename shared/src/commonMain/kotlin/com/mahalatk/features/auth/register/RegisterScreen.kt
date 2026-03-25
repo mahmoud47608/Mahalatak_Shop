@@ -2,8 +2,6 @@ package com.mahalatk.features.auth.register
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -19,13 +18,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Phone
-import androidx.compose.material.icons.filled.Storefront
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Icon
@@ -58,18 +51,16 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mahalatk.common.component.bottomsheet.AppLanguage
 import com.mahalatk.common.component.bottomsheet.CategoryBottomSheet
 import com.mahalatk.common.component.bottomsheet.CityBottomSheet
 import com.mahalatk.common.component.bottomsheet.DeliveryTypeBottomSheet
-import com.mahalatk.common.component.bottomsheet.LanguageSelectorBottomSheet
 import com.mahalatk.common.component.bottomsheet.ShopSelectorBottomSheet
 import com.mahalatk.common.component.button.DefaultButton
 import com.mahalatk.common.component.button.LanguageButton
 import com.mahalatk.common.component.imagepicker.rememberImagePickerLauncher
 import com.mahalatk.common.component.imagepicker.toImageBitmap
 import com.mahalatk.common.component.inputs.DefaultTextField
-import com.mahalatk.common.util.getCurrentLanguageCode
+import com.mahalatk.common.component.utilis.noRippleClickable
 import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.already_have_account
@@ -77,6 +68,12 @@ import mahalatk.shared.generated.resources.app_delivery
 import mahalatk.shared.generated.resources.confirm_password
 import mahalatk.shared.generated.resources.employee
 import mahalatk.shared.generated.resources.employee_name
+import mahalatk.shared.generated.resources.ic_camera
+import mahalatk.shared.generated.resources.ic_location
+import mahalatk.shared.generated.resources.ic_lock
+import mahalatk.shared.generated.resources.ic_phone
+import mahalatk.shared.generated.resources.ic_profile
+import mahalatk.shared.generated.resources.ic_user
 import mahalatk.shared.generated.resources.owner_name
 import mahalatk.shared.generated.resources.password
 import mahalatk.shared.generated.resources.phone
@@ -91,6 +88,7 @@ import mahalatk.shared.generated.resources.shop_name
 import mahalatk.shared.generated.resources.shop_owner
 import mahalatk.shared.generated.resources.sign_in
 import mahalatk.shared.generated.resources.upload_photo
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -99,10 +97,8 @@ fun RegisterScreen(
     viewModel: RegisterViewModel = koinViewModel(key = currentCompositeKeyHash.toString()),
     onNavigateToLogin: () -> Unit = {},
     onNavigateToPickLocation: () -> Unit = {},
-    onLanguageChanged: (AppLanguage) -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    var showLanguageSheet by remember { mutableStateOf(false) }
     var showDeliverySheet by remember { mutableStateOf(false) }
     var showCitySheet by remember { mutableStateOf(false) }
     var showShopSheet by remember { mutableStateOf(false) }
@@ -145,7 +141,7 @@ fun RegisterScreen(
                     tint = MahalatkTheme.black
                 )
             }
-            LanguageButton(onClick = { showLanguageSheet = true })
+            LanguageButton()
         }
 
         // Tab Layout
@@ -235,8 +231,9 @@ fun RegisterScreen(
                     else PasswordVisualTransformation(),
                     leadingIcon = {
                         Icon(
-                            imageVector = Icons.Filled.Lock,
+                            painter = painterResource(Res.drawable.ic_lock),
                             contentDescription = null,
+                            modifier = Modifier.size(24.dp),
                             tint = MahalatkTheme.hint
                         )
                     },
@@ -273,8 +270,9 @@ fun RegisterScreen(
                     else PasswordVisualTransformation(),
                     leadingIcon = {
                         Icon(
-                            imageVector = Icons.Filled.Lock,
+                            painter = painterResource(Res.drawable.ic_lock),
                             contentDescription = null,
+                            modifier = Modifier.size(24.dp),
                             tint = MahalatkTheme.hint
                         )
                     },
@@ -324,20 +322,13 @@ fun RegisterScreen(
                     color = MahalatkTheme.black,
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
-                        .clickable { onNavigateToLogin() }
+                        .noRippleClickable { onNavigateToLogin() }
                 )
             }
         }
     }
 
     // Bottom Sheets
-    LanguageSelectorBottomSheet(
-        showBottomSheet = showLanguageSheet,
-        currentLanguage = if (getCurrentLanguageCode() == "ar") AppLanguage.ARABIC else AppLanguage.ENGLISH,
-        onDismiss = { showLanguageSheet = false },
-        onLanguageSelected = { language -> onLanguageChanged(language) }
-    )
-
     DeliveryTypeBottomSheet(
         showBottomSheet = showDeliverySheet,
         selectedType = uiState.deliveryType,
@@ -409,7 +400,12 @@ private fun ShopOwnerForm(
             imeAction = ImeAction.Next,
             errorText = uiState.shopNameError?.let { stringResource(it) },
             leadingIcon = {
-                Icon(Icons.Filled.Storefront, null, tint = MahalatkTheme.hint)
+                Icon(
+                    painterResource(Res.drawable.ic_user),
+                    null,
+                    modifier = Modifier.size(24.dp),
+                    tint = MahalatkTheme.hint
+                )
             },
             modifier = Modifier.fillMaxWidth()
         )
@@ -432,7 +428,12 @@ private fun ShopOwnerForm(
             imeAction = ImeAction.Next,
             errorText = uiState.ownerNameError?.let { stringResource(it) },
             leadingIcon = {
-                Icon(Icons.Filled.Person, null, tint = MahalatkTheme.hint)
+                Icon(
+                    painterResource(Res.drawable.ic_user),
+                    null,
+                    modifier = Modifier.size(24.dp),
+                    tint = MahalatkTheme.hint
+                )
             },
             modifier = Modifier.fillMaxWidth()
         )
@@ -450,7 +451,12 @@ private fun ShopOwnerForm(
             imeAction = ImeAction.Next,
             errorText = uiState.mobileError?.let { stringResource(it) },
             leadingIcon = {
-                Icon(Icons.Filled.Phone, null, tint = MahalatkTheme.hint)
+                Icon(
+                    painterResource(Res.drawable.ic_phone),
+                    null,
+                    modifier = Modifier.size(24.dp),
+                    tint = MahalatkTheme.hint
+                )
             },
             modifier = Modifier.fillMaxWidth()
         )
@@ -513,8 +519,9 @@ private fun ShopOwnerForm(
             errorText = uiState.locationError?.let { stringResource(it) },
             trailingIcon = {
                 Icon(
-                    imageVector = Icons.Filled.LocationOn,
+                    painter = painterResource(Res.drawable.ic_location),
                     contentDescription = null,
+                    modifier = Modifier.size(24.dp),
                     tint = if (uiState.locationLat != null) MahalatkTheme.primary else MahalatkTheme.hint,
                 )
             },
@@ -582,7 +589,12 @@ private fun EmployeeForm(
             imeAction = ImeAction.Next,
             errorText = uiState.employeeNameError?.let { stringResource(it) },
             leadingIcon = {
-                Icon(Icons.Filled.Person, null, tint = MahalatkTheme.hint)
+                Icon(
+                    painterResource(Res.drawable.ic_user),
+                    null,
+                    modifier = Modifier.size(24.dp),
+                    tint = MahalatkTheme.hint
+                )
             },
             modifier = Modifier.fillMaxWidth()
         )
@@ -600,7 +612,12 @@ private fun EmployeeForm(
             imeAction = ImeAction.Next,
             errorText = uiState.mobileError?.let { stringResource(it) },
             leadingIcon = {
-                Icon(Icons.Filled.Phone, null, tint = MahalatkTheme.hint)
+                Icon(
+                    painterResource(Res.drawable.ic_phone),
+                    null,
+                    modifier = Modifier.size(24.dp),
+                    tint = MahalatkTheme.hint
+                )
             },
             modifier = Modifier.fillMaxWidth()
         )
@@ -634,42 +651,62 @@ private fun ProfileImagePicker(
     imageBytes: ByteArray?,
     onClick: () -> Unit,
 ) {
-    Box(
-        modifier = Modifier
-            .size(120.dp)
-            .clip(CircleShape)
-            .background(MahalatkTheme.iconBackground)
-            .border(2.dp, MahalatkTheme.border, CircleShape)
-            .clickable { onClick() },
-        contentAlignment = Alignment.Center
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (imageBytes != null) {
-            val bitmap = imageBytes.toImageBitmap()
-            if (bitmap != null) {
-                Image(
-                    painter = BitmapPainter(bitmap),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(120.dp)
-                        .clip(CircleShape),
-                    contentScale = ContentScale.Crop
-                )
+        Box {
+            // Profile Picture Circle
+            Box(
+                modifier = Modifier
+                    .size(100.dp)
+                    .clip(CircleShape)
+                    .background(MahalatkTheme.iconBackground),
+                contentAlignment = Alignment.Center
+            ) {
+                if (imageBytes != null) {
+                    val bitmap = imageBytes.toImageBitmap()
+                    if (bitmap != null) {
+                        Image(
+                            painter = BitmapPainter(bitmap),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(100.dp)
+                                .clip(CircleShape),
+                            contentScale = ContentScale.Crop
+                        )
+                    }
+                } else {
+                    Image(
+                        painter = painterResource(Res.drawable.ic_profile),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(top = 14.dp)
+                    )
+                }
             }
-        } else {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Icon(
-                    imageVector = Icons.Filled.CameraAlt,
+
+            // Camera button overlay at bottom-right
+            IconButton(
+                onClick = onClick,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .size(40.dp)
+                    .offset(x = 1.dp, y = 1.dp)
+            ) {
+                Image(
+                    painter = painterResource(Res.drawable.ic_camera),
                     contentDescription = null,
-                    tint = MahalatkTheme.hint,
-                    modifier = Modifier.size(36.dp)
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = stringResource(Res.string.upload_photo),
-                    color = MahalatkTheme.hint,
-                    fontSize = 10.sp,
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
         }
+
+        Text(
+            text = stringResource(Res.string.upload_photo),
+            style = MahalatkTheme.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
+            color = MahalatkTheme.black,
+            modifier = Modifier.padding(top = 8.dp)
+        )
     }
 }

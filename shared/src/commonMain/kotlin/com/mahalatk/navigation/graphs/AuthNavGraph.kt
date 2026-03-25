@@ -1,7 +1,6 @@
 package com.mahalatk.navigation.graphs
 
 import androidx.compose.runtime.Composable
-import com.mahalatk.common.component.bottomsheet.AppLanguage
 import com.mahalatk.features.auth.login.LoginScreen
 import com.mahalatk.features.auth.register.LocationResultHolder
 import com.mahalatk.features.auth.register.PickLocationScreen
@@ -17,7 +16,6 @@ import com.mahalatk.navigation.Route
 @Composable
 fun AuthNavGraph(
     route: Route,
-    onLanguageChanged: (AppLanguage) -> Unit,
 ) {
     val navigation = LocalNavigator.current
 
@@ -30,13 +28,11 @@ fun AuthNavGraph(
         is Route.Login -> LoginScreen(
             onNavigateToHome = { navigation.replaceAll(Route.Home) },
             onNavigateToSignUp = { navigation.push(Route.Register) },
-            onLanguageChanged = onLanguageChanged,
         )
 
         is Route.Register -> RegisterScreen(
             onNavigateToLogin = { navigation.pop() },
             onNavigateToPickLocation = { navigation.push(Route.PickLocation) },
-            onLanguageChanged = onLanguageChanged,
         )
 
         is Route.PickLocation -> PickLocationScreen(

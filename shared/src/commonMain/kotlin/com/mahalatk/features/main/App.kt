@@ -19,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
-import com.mahalatk.common.util.rememberLanguageChanger
 import com.mahalatk.navigation.AppBottomBar
 import com.mahalatk.navigation.BottomNavItem
 import com.mahalatk.navigation.LocalNavigator
@@ -34,7 +33,6 @@ import org.koin.compose.viewmodel.koinViewModel
 fun App(viewModel: MainViewModel = koinViewModel()) {
     MahalatkTheme {
         val navigator = rememberAppNavigator()
-        val changeLanguage = rememberLanguageChanger()
         val isLoading by viewModel.isLoading.collectAsState()
         val snackbarHostState = remember { SnackbarHostState() }
 
@@ -76,9 +74,7 @@ fun App(viewModel: MainViewModel = koinViewModel()) {
                         )
                 ) {
                     // Screen routing
-                    NavigationHost { language ->
-                        changeLanguage.invoke(language)
-                    }
+                    NavigationHost()
 
                     // Loading overlay
                     if (isLoading) {

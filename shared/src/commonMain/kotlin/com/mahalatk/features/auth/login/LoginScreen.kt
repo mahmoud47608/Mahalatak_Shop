@@ -2,18 +2,16 @@ package com.mahalatk.features.auth.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Icon
@@ -23,9 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.SpanStyle
@@ -38,18 +33,18 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mahalatk.common.component.bottomsheet.AppLanguage
-import com.mahalatk.common.component.bottomsheet.LanguageSelectorBottomSheet
 import com.mahalatk.common.component.button.DefaultButton
 import com.mahalatk.common.component.button.LanguageButton
 import com.mahalatk.common.component.inputs.DefaultTextField
-import com.mahalatk.common.util.getCurrentLanguageCode
+import com.mahalatk.common.component.utilis.noRippleClickable
 import com.mahalatk.theme.MahalatkTheme
 import kotlinx.coroutines.flow.collectLatest
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.app_icon
 import mahalatk.shared.generated.resources.create_account_prefix
 import mahalatk.shared.generated.resources.forgot_password
+import mahalatk.shared.generated.resources.ic_lock
+import mahalatk.shared.generated.resources.ic_user
 import mahalatk.shared.generated.resources.login
 import mahalatk.shared.generated.resources.password
 import mahalatk.shared.generated.resources.sign_up
@@ -63,10 +58,8 @@ fun LoginScreen(
     viewModel: LoginViewModel = koinViewModel(),
     onNavigateToHome: () -> Unit = {},
     onNavigateToSignUp: () -> Unit = {},
-    onLanguageChanged: (AppLanguage) -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    var showLanguageSheet by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -78,7 +71,6 @@ fun LoginScreen(
     ) {
         // Language Button - top end
         LanguageButton(
-            onClick = { showLanguageSheet = true },
             modifier = Modifier
                 .align(Alignment.End)
                 .padding(end = 16.dp)
@@ -112,8 +104,9 @@ fun LoginScreen(
                 errorText = uiState.mobileError?.let { stringResource(it) },
                 leadingIcon = {
                     Icon(
-                        imageVector = Icons.Filled.Person,
+                        painter = painterResource(Res.drawable.ic_user),
                         contentDescription = null,
+                        modifier = Modifier.size(24.dp),
                         tint = MahalatkTheme.hint
                     )
                 },
@@ -141,8 +134,9 @@ fun LoginScreen(
                 else PasswordVisualTransformation(),
                 leadingIcon = {
                     Icon(
-                        imageVector = Icons.Filled.Lock,
+                        painter = painterResource(Res.drawable.ic_lock),
                         contentDescription = null,
+                        modifier = Modifier.size(24.dp),
                         tint = MahalatkTheme.hint
                     )
                 },
@@ -171,7 +165,7 @@ fun LoginScreen(
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier
                     .align(Alignment.End)
-                    .clickable { }
+                    .noRippleClickable { }
             )
 
             Spacer(modifier = Modifier.height(60.dp))
@@ -204,19 +198,9 @@ fun LoginScreen(
             color = MahalatkTheme.black,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .clickable { onNavigateToSignUp() }
+                .noRippleClickable { onNavigateToSignUp() }
         )
     }
-
-    // Language Bottom Sheet
-    LanguageSelectorBottomSheet(
-        showBottomSheet = showLanguageSheet,
-        currentLanguage = if (getCurrentLanguageCode() == "ar") AppLanguage.ARABIC else AppLanguage.ENGLISH,
-        onDismiss = { showLanguageSheet = false },
-        onLanguageSelected = { language ->
-            onLanguageChanged(language)
-        }
-    )
 
     LaunchedEffect(Unit) {
         viewModel.authData.collectLatest { authData ->

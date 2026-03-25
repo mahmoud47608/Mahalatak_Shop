@@ -13,7 +13,7 @@ import com.mahalatk.features.splash.SplashScreen
 import com.mahalatk.navigation.graphs.MainNavGraph
 
 @Composable
-fun NavigationHost(changeLanguage: (String) -> Unit) {
+fun NavigationHost() {
     val navigator = LocalNavigator.current
 
     NavDisplay(
@@ -37,9 +37,6 @@ fun NavigationHost(changeLanguage: (String) -> Unit) {
                     LoginScreen(
                         onNavigateToHome = { navigator.replaceAll(Route.Home) },
                         onNavigateToSignUp = { navigator.push(Route.Register) },
-                        onLanguageChanged = { language ->
-                            changeLanguage(language.code)
-                        },
                     )
                 }
 
@@ -47,9 +44,6 @@ fun NavigationHost(changeLanguage: (String) -> Unit) {
                     RegisterScreen(
                         onNavigateToLogin = { navigator.pop() },
                         onNavigateToPickLocation = { navigator.push(Route.PickLocation) },
-                        onLanguageChanged = { language ->
-                            changeLanguage(language.code)
-                        },
                     )
                 }
 

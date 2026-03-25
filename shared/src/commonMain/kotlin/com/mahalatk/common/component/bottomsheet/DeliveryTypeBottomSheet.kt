@@ -2,7 +2,6 @@ package com.mahalatk.common.component.bottomsheet
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.mahalatk.common.component.utilis.noRippleClickable
 import com.mahalatk.features.auth.register.DeliveryType
 import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
@@ -117,7 +117,7 @@ private fun DeliveryOptionCard(
             .fillMaxWidth()
             .background(backgroundColor, RoundedCornerShape(12.dp))
             .border(1.5.dp, borderColor, RoundedCornerShape(12.dp))
-            .clickable { onClick() }
+            .noRippleClickable { onClick() }
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
