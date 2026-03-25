@@ -47,7 +47,16 @@
       "Bash(find /d/project/Mahalatak/domain/src -type f \\\\\\(-name *.kt -o -name *.kts \\\\\\))",
       "Bash(find /d/project/Mahalatak/shared/src -type f \\\\\\(-name *.kt -o -name *.kts \\\\\\))",
       "Bash(chmod:*)",
-      "Bash(grep -E \"\\\\.\\(kt\\)$\")"
+      "Bash(grep -E \"\\\\.\\(kt\\)$\")",
+      "WebFetch(domain:insert-koin.io)",
+      "WebFetch(domain:johnoreilly.dev)",
+      "WebFetch(domain:mvnrepository.com)",
+      "Bash(jar tf:*)",
+      "Read(//d/tmp/**)",
+      "Bash(cp /c/Users/Morsy/.gradle/caches/modules-2/files-2.1/androidx.navigation3/navigation3-runtime-android/1.0.0/74660c9b7962a5440456b090c24374f577a3b0cc/navigation3-runtime.aar nav3.zip)",
+      "Bash(unzip -q nav3.zip -d nav3_extract)",
+      "Bash(cp /c/Users/Morsy/.gradle/caches/modules-2/files-2.1/androidx.lifecycle/lifecycle-viewmodel-navigation3-android/2.10.0/61b29cab6398a56ad5993b6f3b49d43e84589b70/lifecycle-viewmodel-navigation3.aar vm3.zip)",
+      "Bash(unzip -qo vm3.zip -d vm3_extract)"
     ],
     "deny": [],
     "ask": []

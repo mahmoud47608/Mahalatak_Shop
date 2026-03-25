@@ -5,47 +5,50 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateList
 
 /**
- * Simple back stack navigator - Nav3 philosophy: you own the list.
+ * Nav3-style navigator — you own the back stack.
  *
- * No UUID, no NavEntry wrapper. Just a list of Routes.
- * koinViewModel() creates ONE instance per ViewModel type (no leak).
+ * The [backStack] is a [SnapshotStateList] passed directly to NavDisplay.
+ * NavDisplay + entryDecorators keep ViewModel & saveable state alive
+ * for every entry that stays on the stack.
  */
 @Stable
 class AppNavigator(initialRoute: Route = Route.Splash) {
 
-    private val _backStack = mutableStateListOf(initialRoute)
+    /** The back stack — Nav3 NavDisplay reads this directly. */
+    val backStack: SnapshotStateList<Route> = mutableStateListOf(initialRoute)
 
     val currentRoute: Route
-        get() = _backStack.last()
+        get() = backStack.last()
 
     val canGoBack: Boolean
-        get() = _backStack.size > 1
+        get() = backStack.size > 1
 
     fun push(route: Route) {
-        if (_backStack.last() == route) return
-        _backStack.add(route)
+        if (backStack.last() == route) return
+        backStack.add(route)
     }
 
     fun pop(): Boolean {
         if (!canGoBack) return false
-        _backStack.removeAt(_backStack.lastIndex)
+        backStack.removeAt(backStack.lastIndex)
         return true
     }
 
     fun replace(route: Route) {
-        _backStack[_backStack.lastIndex] = route
+        backStack[backStack.lastIndex] = route
     }
 
     fun replaceAll(route: Route) {
-        _backStack.clear()
-        _backStack.add(route)
+        backStack.clear()
+        backStack.add(route)
     }
 
     fun popUntil(predicate: (Route) -> Boolean) {
-        while (_backStack.size > 1 && !predicate(_backStack.last())) {
-            _backStack.removeAt(_backStack.lastIndex)
+        while (backStack.size > 1 && !predicate(backStack.last())) {
+            backStack.removeAt(backStack.lastIndex)
         }
     }
 }

@@ -1,34 +1,73 @@
 package com.mahalatk.navigation
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Composable
-import com.mahalatk.navigation.graphs.AuthNavGraph
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.NavEntry
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.ui.NavDisplay
+import com.mahalatk.features.auth.login.LoginScreen
+import com.mahalatk.features.auth.register.LocationResultHolder
+import com.mahalatk.features.auth.register.PickLocationScreen
+import com.mahalatk.features.auth.register.RegisterScreen
+import com.mahalatk.features.splash.SplashScreen
 import com.mahalatk.navigation.graphs.MainNavGraph
 
 @Composable
 fun NavigationHost(changeLanguage: (String) -> Unit) {
-    AnimatedContent(
-        targetState = LocalNavigator.current.currentRoute,
-        transitionSpec = { fadeIn() togetherWith fadeOut() },
-        label = "NavigationHost",
-    ) { route ->
-        when (route) {
-            is Route.Splash, is Route.Login, is Route.Register, is Route.PickLocation -> {
-                AuthNavGraph(
-                    route = route,
-                    onLanguageChanged = { language ->
-                        changeLanguage(language.code)
-                    },
-                )
-            }
+    val navigator = LocalNavigator.current
 
-            is Route.Home, is Route.Parts, is Route.More -> {
-                MainNavGraph(route = route)
+    NavDisplay(
+        backStack = navigator.backStack,
+        onBack = { navigator.pop() },
+        entryDecorators = listOf(
+            rememberSaveableStateHolderNavEntryDecorator(),
+            rememberViewModelStoreNavEntryDecorator(),
+        ),
+        entryProvider = { route ->
+            when (route) {
+                // ─── Auth ────────────────────────────────
+                is Route.Splash -> NavEntry(route) {
+                    SplashScreen(
+                        onNavigateToLogin = { navigator.replaceAll(Route.Login) },
+                        onNavigateToHome = { navigator.replaceAll(Route.Home) },
+                    )
+                }
+
+                is Route.Login -> NavEntry(route) {
+                    LoginScreen(
+                        onNavigateToHome = { navigator.replaceAll(Route.Home) },
+                        onNavigateToSignUp = { navigator.push(Route.Register) },
+                        onLanguageChanged = { language ->
+                            changeLanguage(language.code)
+                        },
+                    )
+                }
+
+                is Route.Register -> NavEntry(route) {
+                    RegisterScreen(
+                        onNavigateToLogin = { navigator.pop() },
+                        onNavigateToPickLocation = { navigator.push(Route.PickLocation) },
+                        onLanguageChanged = { language ->
+                            changeLanguage(language.code)
+                        },
+                    )
+                }
+
+                is Route.PickLocation -> NavEntry(route) {
+                    PickLocationScreen(
+                        onBackWithResult = { lat, lng, address ->
+                            LocationResultHolder.setResult(lat, lng, address)
+                            navigator.pop()
+                        },
+                        onBack = { navigator.pop() },
+                    )
+                }
+
+                // ─── Main ────────────────────────────────
+                is Route.Home, is Route.Parts, is Route.More -> NavEntry(route) {
+                    MainNavGraph(route = route)
+                }
             }
         }
-    }
+    )
 }
-
