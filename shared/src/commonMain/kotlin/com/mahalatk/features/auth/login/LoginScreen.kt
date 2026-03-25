@@ -23,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -81,9 +82,10 @@ fun LoginScreen(
         Image(
             painter = painterResource(Res.drawable.app_icon),
             contentDescription = null,
+            contentScale = ContentScale.Crop
         )
 
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(52.dp))
 
         Column(modifier = Modifier.padding(horizontal = 24.dp)) {
             // Phone field
