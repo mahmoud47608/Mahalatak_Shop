@@ -13,11 +13,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Tab
@@ -121,7 +124,7 @@ fun RegisterScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(vertical = 48.dp)
+            .padding(top = 48.dp, bottom = 16.dp)
     ) {
         LanguageButton(
             modifier = Modifier
@@ -136,181 +139,203 @@ fun RegisterScreen(
             stringResource(Res.string.employee)
         )
 
-        TabRow(
-            selectedTabIndex = selectedTabIndex,
-            containerColor = MahalatkTheme.white,
-            contentColor = MahalatkTheme.primary,
-            indicator = { tabPositions ->
-                SecondaryIndicator(
-                    modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
-                    color = MahalatkTheme.primary,
-                    height = 3.dp
-                )
-            }
+        val cardShape = RoundedCornerShape(24.dp)
+
+        // Card wrapping TabRow + Form (fixed position, content scrolls inside)
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .padding(horizontal = 16.dp).padding(top = 60.dp, bottom = 20.dp),
+            shape = cardShape,
+            colors = CardDefaults.cardColors(containerColor = MahalatkTheme.white),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
         ) {
-            tabs.forEachIndexed { index, title ->
-                Tab(
-                    selected = selectedTabIndex == index,
-                    onClick = {
-                        val type = if (index == 0) AccountType.SHOP_OWNER else AccountType.EMPLOYEE
-                        if (uiState.accountType != type) {
-                            viewModel.switchAccountType(type)
-                        }
-                    },
-                    text = {
-                        Text(
-                            text = title,
-                            style = MahalatkTheme.titleMedium,
-                            color = if (selectedTabIndex == index) MahalatkTheme.primary else MahalatkTheme.hint,
+            Column {
+                TabRow(
+                    selectedTabIndex = selectedTabIndex,
+                    containerColor = MahalatkTheme.white,
+                    contentColor = MahalatkTheme.primary,
+                    indicator = { tabPositions ->
+                        SecondaryIndicator(
+                            modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
+                            color = MahalatkTheme.primary,
+                            height = 3.dp
                         )
                     }
-                )
-            }
-        }
-
-        // Scrollable Form Content
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(vertical = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            when (uiState.accountType) {
-                AccountType.SHOP_OWNER -> ShopOwnerForm(
-                    uiState = uiState,
-                    viewModel = viewModel,
-                    onPickImage = pickImage,
-                    onShowDeliverySheet = { showDeliverySheet = true },
-                    onShowCitySheet = { showCitySheet = true },
-                    onShowCategorySheet = { showCategorySheet = true },
-                    onPickLocation = onNavigateToPickLocation,
-                )
-
-                AccountType.EMPLOYEE -> EmployeeForm(
-                    uiState = uiState,
-                    viewModel = viewModel,
-                    onPickImage = pickImage,
-                    onShowShopSheet = { showShopSheet = true },
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Common fields: Password, Confirm Password
-            Column(
-                modifier = Modifier.padding(horizontal = 24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                // Password field
-                DefaultTextField(
-                    value = uiState.password,
-                    onValueChanged = {
-                        viewModel.updateState { copy(password = it, passwordError = null) }
-                    },
-                    placeholderText = stringResource(Res.string.password),
-                    keyboardType = KeyboardType.Password,
-                    imeAction = ImeAction.Next,
-                    errorText = uiState.passwordError?.let { stringResource(it) },
-                    visualTransformation = if (uiState.passwordVisible) VisualTransformation.None
-                    else PasswordVisualTransformation(),
-                    leadingIcon = {
-                        Icon(
-                            painter = painterResource(Res.drawable.ic_lock),
-                            contentDescription = null,
-                            modifier = Modifier.size(24.dp),
-                            tint = MahalatkTheme.hint
-                        )
-                    },
-                    trailingIcon = {
-                        IconButton(onClick = {
-                            viewModel.updateState { copy(passwordVisible = !passwordVisible) }
-                        }) {
-                            Icon(
-                                imageVector = if (uiState.passwordVisible) Icons.Filled.Visibility
-                                else Icons.Filled.VisibilityOff,
-                                contentDescription = null,
-                                tint = MahalatkTheme.hint
-                            )
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Confirm Password field
-                DefaultTextField(
-                    value = uiState.confirmPassword,
-                    onValueChanged = {
-                        viewModel.updateState {
-                            copy(confirmPassword = it, confirmPasswordError = null)
-                        }
-                    },
-                    placeholderText = stringResource(Res.string.confirm_password),
-                    keyboardType = KeyboardType.Password,
-                    imeAction = ImeAction.Done,
-                    errorText = uiState.confirmPasswordError?.let { stringResource(it) },
-                    visualTransformation = if (uiState.confirmPasswordVisible) VisualTransformation.None
-                    else PasswordVisualTransformation(),
-                    leadingIcon = {
-                        Icon(
-                            painter = painterResource(Res.drawable.ic_lock),
-                            contentDescription = null,
-                            modifier = Modifier.size(24.dp),
-                            tint = MahalatkTheme.hint
-                        )
-                    },
-                    trailingIcon = {
-                        IconButton(onClick = {
-                            viewModel.updateState {
-                                copy(confirmPasswordVisible = !confirmPasswordVisible)
+                ) {
+                    tabs.forEachIndexed { index, title ->
+                        Tab(
+                            selected = selectedTabIndex == index,
+                            onClick = {
+                                val type =
+                                    if (index == 0) AccountType.SHOP_OWNER else AccountType.EMPLOYEE
+                                if (uiState.accountType != type) {
+                                    viewModel.switchAccountType(type)
+                                }
+                            },
+                            text = {
+                                Text(
+                                    text = title,
+                                    style = MahalatkTheme.titleMedium,
+                                    color = if (selectedTabIndex == index) MahalatkTheme.primary else MahalatkTheme.hint,
+                                )
                             }
-                        }) {
-                            Icon(
-                                imageVector = if (uiState.confirmPasswordVisible) Icons.Filled.Visibility
-                                else Icons.Filled.VisibilityOff,
-                                contentDescription = null,
-                                tint = MahalatkTheme.hint
-                            )
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                // Register Button
-                DefaultButton(
-                    text = stringResource(Res.string.register),
-                    onClick = { viewModel.register() },
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-                // Already have an account? Sign In
-                val annotatedText = buildAnnotatedString {
-                    append(stringResource(Res.string.already_have_account))
-                    withStyle(
-                        style = SpanStyle(
-                            color = MahalatkTheme.primary,
-                            fontWeight = FontWeight.Bold
                         )
-                    ) {
-                        append(stringResource(Res.string.sign_in))
                     }
                 }
-                Text(
-                    text = annotatedText,
-                    fontSize = 14.sp,
-                    color = MahalatkTheme.black,
+
+                // Scrollable Form Content inside the card
+                Column(
                     modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .noRippleClickable { onNavigateToLogin() }
-                )
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .padding(vertical = 24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    when (uiState.accountType) {
+                        AccountType.SHOP_OWNER -> ShopOwnerForm(
+                            uiState = uiState,
+                            viewModel = viewModel,
+                            onPickImage = pickImage,
+                            onShowDeliverySheet = { showDeliverySheet = true },
+                            onShowCitySheet = { showCitySheet = true },
+                            onShowCategorySheet = { showCategorySheet = true },
+                            onPickLocation = onNavigateToPickLocation,
+                        )
+
+                        AccountType.EMPLOYEE -> EmployeeForm(
+                            uiState = uiState,
+                            viewModel = viewModel,
+                            onPickImage = pickImage,
+                            onShowShopSheet = { showShopSheet = true },
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Common fields: Password, Confirm Password
+                    Column(
+                        modifier = Modifier.padding(horizontal = 24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        // Password field
+                        DefaultTextField(
+                            value = uiState.password,
+                            onValueChanged = {
+                                viewModel.updateState {
+                                    copy(password = it, passwordError = null)
+                                }
+                            },
+                            placeholderText = stringResource(Res.string.password),
+                            keyboardType = KeyboardType.Password,
+                            imeAction = ImeAction.Next,
+                            errorText = uiState.passwordError?.let { stringResource(it) },
+                            visualTransformation = if (uiState.passwordVisible) VisualTransformation.None
+                            else PasswordVisualTransformation(),
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(Res.drawable.ic_lock),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(24.dp),
+                                    tint = MahalatkTheme.hint
+                                )
+                            },
+                            trailingIcon = {
+                                IconButton(onClick = {
+                                    viewModel.updateState { copy(passwordVisible = !passwordVisible) }
+                                }) {
+                                    Icon(
+                                        imageVector = if (uiState.passwordVisible) Icons.Filled.Visibility
+                                        else Icons.Filled.VisibilityOff,
+                                        contentDescription = null,
+                                        tint = MahalatkTheme.hint
+                                    )
+                                }
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        // Confirm Password field
+                        DefaultTextField(
+                            value = uiState.confirmPassword,
+                            onValueChanged = {
+                                viewModel.updateState {
+                                    copy(confirmPassword = it, confirmPasswordError = null)
+                                }
+                            },
+                            placeholderText = stringResource(Res.string.confirm_password),
+                            keyboardType = KeyboardType.Password,
+                            imeAction = ImeAction.Done,
+                            errorText = uiState.confirmPasswordError?.let { stringResource(it) },
+                            visualTransformation = if (uiState.confirmPasswordVisible) VisualTransformation.None
+                            else PasswordVisualTransformation(),
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(Res.drawable.ic_lock),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(24.dp),
+                                    tint = MahalatkTheme.hint
+                                )
+                            },
+                            trailingIcon = {
+                                IconButton(onClick = {
+                                    viewModel.updateState {
+                                        copy(confirmPasswordVisible = !confirmPasswordVisible)
+                                    }
+                                }) {
+                                    Icon(
+                                        imageVector = if (uiState.confirmPasswordVisible) Icons.Filled.Visibility
+                                        else Icons.Filled.VisibilityOff,
+                                        contentDescription = null,
+                                        tint = MahalatkTheme.hint
+                                    )
+                                }
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                }
             }
         }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Register Button
+        DefaultButton(
+            text = stringResource(Res.string.register),
+            onClick = { viewModel.register() },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Already have an account? Sign In
+        val annotatedText = buildAnnotatedString {
+            append(stringResource(Res.string.already_have_account))
+            withStyle(
+                style = SpanStyle(
+                    color = MahalatkTheme.primary,
+                    fontWeight = FontWeight.Bold
+                )
+            ) {
+                append(stringResource(Res.string.sign_in))
+            }
+        }
+        Text(
+            text = annotatedText,
+            fontSize = 14.sp,
+            color = MahalatkTheme.black,
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .noRippleClickable { onNavigateToLogin() }
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
     }
 
     // Bottom Sheets
