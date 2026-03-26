@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.refTo
+import kotlinx.cinterop.useContents
+import platform.CoreGraphics.CGRectMake
 import platform.CoreGraphics.CGSizeMake
 import platform.Foundation.NSData
 import platform.PhotosUI.PHPickerConfiguration
@@ -51,16 +53,16 @@ private class ImagePickerDelegate(
         val result = didFinishPicking.firstOrNull() as? PHPickerResult ?: return
         val provider = result.itemProvider ?: return
 
-        if (provider.canLoadObjectOfClass(UIImage)) {
-            provider.loadObjectOfClass(UIImage) { reading, error ->
-                if (error != null) return@loadObjectOfClass
-                val image = reading as? UIImage ?: return@loadObjectOfClass
+        if (provider.hasItemConformingToTypeIdentifier("public.image")) {
+            provider.loadDataRepresentationForTypeIdentifier("public.image") { data, error ->
+                if (error != null || data == null) return@loadDataRepresentationForTypeIdentifier
+                val image = UIImage(data = data) ?: return@loadDataRepresentationForTypeIdentifier
 
                 // Resize then compress
                 val resized = resizeImage(image, MAX_IMAGE_DIMENSION)
-                val data = UIImageJPEGRepresentation(resized, COMPRESSION_QUALITY)
-                    ?: return@loadObjectOfClass
-                val bytes = data.toByteArray()
+                val compressedData = UIImageJPEGRepresentation(resized, COMPRESSION_QUALITY)
+                    ?: return@loadDataRepresentationForTypeIdentifier
+                val bytes = compressedData.toByteArray()
                 onImagePicked(bytes)
             }
         }
@@ -69,8 +71,9 @@ private class ImagePickerDelegate(
 
 @OptIn(ExperimentalForeignApi::class)
 private fun resizeImage(image: UIImage, maxDimension: Int): UIImage {
-    val width = image.size.width
-    val height = image.size.height
+    val imageSize = image.size.useContents { this }
+    val width = imageSize.width
+    val height = imageSize.height
 
     if (width <= maxDimension && height <= maxDimension) return image
 
@@ -88,9 +91,7 @@ private fun resizeImage(image: UIImage, maxDimension: Int): UIImage {
 
     val newSize = CGSizeMake(newWidth, newHeight)
     UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
-    image.drawInRect(
-        platform.CoreGraphics.CGRectMake(0.0, 0.0, newWidth, newHeight)
-    )
+    image.drawInRect(CGRectMake(0.0, 0.0, newWidth, newHeight))
     val resizedImage = UIGraphicsGetImageFromCurrentImageContext()
     UIGraphicsEndImageContext()
 
