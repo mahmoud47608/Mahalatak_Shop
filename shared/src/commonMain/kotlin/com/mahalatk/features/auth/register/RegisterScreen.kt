@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -155,12 +156,16 @@ fun RegisterScreen(
 
         val cardShape = RoundedCornerShape(24.dp)
 
+        // Proportional spacer - pushes card down relative to screen height
+        Spacer(modifier = Modifier.fillMaxHeight(0.08f))
+
         // Card wrapping TabRow + Form (fixed position, content scrolls inside)
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
-                .padding(horizontal = 16.dp).padding(top = 60.dp, bottom = 20.dp),
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 20.dp),
             shape = cardShape,
             colors = CardDefaults.cardColors(containerColor = MahalatkTheme.white),
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
