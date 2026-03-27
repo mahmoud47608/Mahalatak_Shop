@@ -20,6 +20,8 @@ sealed interface Route {
 
     data class ChatDetail(val chatId: String, val customerName: String) : Route
 
+    data class Activation(val phoneNumber: String) : Route
+
     data object Notifications : Route
 
     data object Account : Route

@@ -102,6 +102,7 @@ fun RegisterScreen(
     viewModel: RegisterViewModel = koinViewModel(key = currentCompositeKeyHash.toString()),
     onNavigateToLogin: () -> Unit = {},
     onNavigateToPickLocation: () -> Unit = {},
+    onNavigateToActivation: (phoneNumber: String) -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var showDeliverySheet by remember { mutableStateOf(false) }
@@ -325,7 +326,13 @@ fun RegisterScreen(
         // Register Button
         DefaultButton(
             text = stringResource(Res.string.register),
-            onClick = { viewModel.register() },
+            onClick = {
+                viewModel.register()
+                val state = viewModel.uiState.value
+                if (state.mobileError == null && state.mobile.isNotBlank() && state.mobile.length >= 9) {
+                    onNavigateToActivation(state.mobile)
+                }
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)

@@ -167,6 +167,13 @@
     <string name="please_enter_employee_name">Please enter employee name</string>
     <string name="please_select_shop">Please select a shop</string>
 
+    <!-- Activation Screen -->
+    <string name="activation_code">Activation Code</string>
+    <string name="activation_subtitle">Please enter the code sent to</string>
+    <string name="verify">Verify</string>
+    <string name="resend_code">Resend Code</string>
+    <string name="didnt_receive_code">Didn\'t receive the code?</string>
+
     <!-- Notifications Screen -->
     <string name="notifications">Notifications</string>
     <string name="no_notifications">No notifications yet</string>

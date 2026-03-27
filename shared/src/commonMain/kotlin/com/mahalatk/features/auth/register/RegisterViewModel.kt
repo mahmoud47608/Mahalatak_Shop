@@ -4,19 +4,7 @@ import com.mahalatk.base.BaseViewModel
 import com.mahalatk.base.managers.LoadingManager
 import com.mahalatk.base.managers.MessageManager
 import mahalatk.shared.generated.resources.Res
-import mahalatk.shared.generated.resources.passwords_do_not_match
-import mahalatk.shared.generated.resources.please_enter_confirm_password
-import mahalatk.shared.generated.resources.please_enter_employee_name
-import mahalatk.shared.generated.resources.please_enter_owner_name
-import mahalatk.shared.generated.resources.please_enter_password
 import mahalatk.shared.generated.resources.please_enter_phone_number
-import mahalatk.shared.generated.resources.please_enter_shop_name
-import mahalatk.shared.generated.resources.please_select_category
-import mahalatk.shared.generated.resources.please_select_city
-import mahalatk.shared.generated.resources.please_select_delivery_type
-import mahalatk.shared.generated.resources.please_select_location
-import mahalatk.shared.generated.resources.please_select_shop
-import mahalatk.shared.generated.resources.please_upload_image
 
 class RegisterViewModel(
     loadingManager: LoadingManager,
@@ -68,97 +56,17 @@ class RegisterViewModel(
     }
 
     fun register() {
+        // Clear previous errors
+        updateState { copy(mobileError = null) }
+
         val state = uiState.value
 
-        // Clear previous errors
-        updateState {
-            copy(
-                shopNameError = null,
-                ownerNameError = null,
-                categoryError = null,
-                deliveryTypeError = null,
-                cityError = null,
-                locationError = null,
-                employeeNameError = null,
-                selectedShopError = null,
-                imageError = null,
-                mobileError = null,
-                passwordError = null,
-                confirmPasswordError = null,
-            )
-        }
-
-        var hasError = false
-
-        when (state.accountType) {
-            AccountType.SHOP_OWNER -> {
-                if (state.shopImage == null) {
-                    updateState { copy(imageError = Res.string.please_upload_image) }
-                    hasError = true
-                }
-                if (state.shopName.isBlank()) {
-                    updateState { copy(shopNameError = Res.string.please_enter_shop_name) }
-                    hasError = true
-                }
-                if (state.ownerName.isBlank()) {
-                    updateState { copy(ownerNameError = Res.string.please_enter_owner_name) }
-                    hasError = true
-                }
-                if (state.selectedCategories.isEmpty()) {
-                    updateState { copy(categoryError = Res.string.please_select_category) }
-                    hasError = true
-                }
-                if (state.deliveryType == null) {
-                    updateState { copy(deliveryTypeError = Res.string.please_select_delivery_type) }
-                    hasError = true
-                }
-                if (state.selectedCity == null) {
-                    updateState { copy(cityError = Res.string.please_select_city) }
-                    hasError = true
-                }
-                if (state.locationLat == null || state.locationLng == null) {
-                    updateState { copy(locationError = Res.string.please_select_location) }
-                    hasError = true
-                }
-            }
-
-            AccountType.EMPLOYEE -> {
-                if (state.employeeImage == null) {
-                    updateState { copy(imageError = Res.string.please_upload_image) }
-                    hasError = true
-                }
-                if (state.employeeName.isBlank()) {
-                    updateState { copy(employeeNameError = Res.string.please_enter_employee_name) }
-                    hasError = true
-                }
-                if (state.selectedShop == null) {
-                    updateState { copy(selectedShopError = Res.string.please_select_shop) }
-                    hasError = true
-                }
-            }
-        }
-
-        // Common validation
+        // Temporarily validate mobile only
         if (state.mobile.isBlank() || state.mobile.length < 9) {
             updateState { copy(mobileError = Res.string.please_enter_phone_number) }
-            hasError = true
+            return
         }
 
-        if (state.password.isBlank() || state.password.length < 8) {
-            updateState { copy(passwordError = Res.string.please_enter_password) }
-            hasError = true
-        }
-
-        if (state.confirmPassword.isBlank()) {
-            updateState { copy(confirmPasswordError = Res.string.please_enter_confirm_password) }
-            hasError = true
-        } else if (state.password != state.confirmPassword) {
-            updateState { copy(confirmPasswordError = Res.string.passwords_do_not_match) }
-            hasError = true
-        }
-
-        if (hasError) return
-
-        // TODO: Call register use case
+        // TODO: Add back full validation and call register use case
     }
 }

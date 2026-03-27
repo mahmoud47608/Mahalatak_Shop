@@ -5,6 +5,7 @@ import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDe
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import com.mahalatk.features.auth.activation.ActivationScreen
 import com.mahalatk.features.auth.login.LoginScreen
 import com.mahalatk.features.auth.register.LocationResultHolder
 import com.mahalatk.features.auth.register.PickLocationScreen
@@ -46,6 +47,14 @@ fun NavigationHost() {
                     RegisterScreen(
                         onNavigateToLogin = { navigator.pop() },
                         onNavigateToPickLocation = { navigator.push(Route.PickLocation) },
+                        onNavigateToActivation = { phone -> navigator.push(Route.Activation(phone)) },
+                    )
+                }
+
+                is Route.Activation -> NavEntry(route) {
+                    ActivationScreen(
+                        phoneNumber = route.phoneNumber,
+                        onVerified = { navigator.replaceAll(Route.Home) },
                     )
                 }
 
