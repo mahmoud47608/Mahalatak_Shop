@@ -180,6 +180,12 @@
     <string name="order_number">Order #%s</string>
     <string name="today">Today</string>
 
+    <!-- Products Screen -->
+    <string name="my_products">My Products</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="currency">EGP</string>
+
     <!-- More Screen -->
     <string name="profile">Profile</string>
     <string name="my_ratings">My Ratings</string>
