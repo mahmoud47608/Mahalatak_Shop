@@ -163,6 +163,11 @@
     <string name="please_enter_employee_name">Please enter employee name</string>
     <string name="please_select_shop">Please select a shop</string>
 
+    <!-- More Screen -->
+    <string name="profile">Profile</string>
+    <string name="my_ratings">My Ratings</string>
+    <string name="complaints">Complaints</string>
+
     <!-- Map Tracking -->
     <string name="map_tracking">Map Tracking</string>
     <string name="start_tracking">Start Tracking</string>
