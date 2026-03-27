@@ -1,18 +1,9 @@
 package com.mahalatk.domain.util
 
-object Constants {
-
-    const val TAG = "AppDebug"
-
-    const val NETWORK_TIMEOUT = 300000L
-    const val BEARER = "Bearer "
-    const val AUTHORIZATION = "Authorization"
-    const val LANGUAGE = "lang"
-
-    val language: String
-        get() = getPlatformLanguage()
-}
-
+/**
+ * API parameter names and response constants.
+ * Network-layer constants (BEARER, AUTHORIZATION, etc.) live in data:NetworkConstants.
+ */
 object NetworkParams {
     const val METHOD = "_method"
     const val PATCH = "patch"
@@ -97,7 +88,6 @@ object NetworkParams {
     const val PRODUCT_ID = "product_id"
     const val NOTIFICATION_ID = "notification_id"
 }
-
 
 object MethodType {
     const val PATCH = "patch"

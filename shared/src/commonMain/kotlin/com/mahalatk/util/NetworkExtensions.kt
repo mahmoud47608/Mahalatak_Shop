@@ -74,7 +74,7 @@ fun <T> DataState<BaseResponse<T>>.applyCommonSideEffects(
 
         is DataState.Error -> {
             actions.onLoad(false)
-            handleError(actions, throwable, this.data)
+            handleError(actions, throwable)
         }
 
         DataState.Idle -> {
@@ -86,7 +86,6 @@ fun <T> DataState<BaseResponse<T>>.applyCommonSideEffects(
 fun handleError(
     actions: NetworkExtensionsActions,
     throwable: Throwable,
-    data: BaseResponse<*>?
 ) {
     when (throwable) {
         is NetworkExceptions.AuthorizationException -> {
@@ -94,12 +93,7 @@ fun handleError(
         }
 
         is NetworkExceptions.NeedActiveException -> {
-            val response = data
-            if (response != null) {
-                actions.authorizationNeedActive(throwable.msg, response)
-            } else {
-                actions.onFail(throwable.msg)
-            }
+            actions.onFail(throwable.msg)
         }
 
         is NetworkExceptions.ConnectionException -> {

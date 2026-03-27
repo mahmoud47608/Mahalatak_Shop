@@ -15,7 +15,6 @@ class FcmEventHandler(
     private val sessionManager: SessionManager,
     private val preferenceRepository: PreferenceRepository,
 ) {
-    // App-lifetime scope (singleton via Koin). Cancelled in destroy() if needed.
     private val supervisorJob = SupervisorJob()
     private val scope = CoroutineScope(supervisorJob + Dispatchers.Default)
 

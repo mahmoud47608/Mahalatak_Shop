@@ -3,119 +3,84 @@ package com.mahalatk.data.repository
 import com.mahalatk.data.util.PreferenceConstants
 import com.mahalatk.domain.datasource.PreferenceDataSource
 import com.mahalatk.domain.repository.PreferenceRepository
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
-class PreferenceRepositoryImpl(private val preferenceDataSource: PreferenceDataSource) :
-    PreferenceRepository {
+class PreferenceRepositoryImpl(
+    private val dataSource: PreferenceDataSource,
+) : PreferenceRepository {
 
-    override suspend fun getLanguage() = flow {
-        preferenceDataSource.getValue(PreferenceConstants.LANGUAGE, "en")
-            .collect { emit(it as String) }
-    }
+    // ─── String preferences ─────────────────
 
-    override suspend fun setLanguage(lang: String) {
-        return preferenceDataSource.setValue(PreferenceConstants.LANGUAGE, lang)
-    }
+    override suspend fun getLanguage(): Flow<String> =
+        getString(PreferenceConstants.LANGUAGE, "en")
 
-    override suspend fun getToken() = flow {
-        preferenceDataSource.getValue(PreferenceConstants.TOKEN, "").collect {
-            emit(it as String)
-        }
-    }
+    override suspend fun setLanguage(lang: String) =
+        dataSource.setValue(PreferenceConstants.LANGUAGE, lang)
 
-    override suspend fun setToken(mToken: String) {
-        preferenceDataSource.setValue(PreferenceConstants.TOKEN, mToken)
-    }
+    override suspend fun getToken(): Flow<String> =
+        getString(PreferenceConstants.TOKEN, "")
 
-    override suspend fun getNotifyStatus() = flow {
-        preferenceDataSource.getValue("notify_status", "true").collect {
-            emit(it as String)
-        }
-    }
+    override suspend fun setToken(mToken: String) =
+        dataSource.setValue(PreferenceConstants.TOKEN, mToken)
 
-    override suspend fun setNotifyStatus(status: String) {
-        preferenceDataSource.setValue("notify_status", status)
-    }
+    override suspend fun getNotifyStatus(): Flow<String> =
+        getString(PreferenceConstants.NOTIFY_STATUS, "true")
 
-    override suspend fun getUserData() = flow {
-        preferenceDataSource.getValue(PreferenceConstants.USER_DATA, "").collect {
-            emit(it as String)
-        }
-    }
+    override suspend fun setNotifyStatus(status: String) =
+        dataSource.setValue(PreferenceConstants.NOTIFY_STATUS, status)
 
-    override suspend fun setUserData(userData: String) {
-        preferenceDataSource.setValue(PreferenceConstants.USER_DATA, userData)
-    }
+    override suspend fun getUserData(): Flow<String> =
+        getString(PreferenceConstants.USER_DATA, "")
 
-    override suspend fun getSocketData() = flow {
-        preferenceDataSource.getValue(PreferenceConstants.SOCKET_DATA, "").collect {
-            emit(it as String)
-        }
-    }
+    override suspend fun setUserData(userData: String) =
+        dataSource.setValue(PreferenceConstants.USER_DATA, userData)
 
-    override suspend fun setSocketData(data: String) {
-        preferenceDataSource.setValue(PreferenceConstants.SOCKET_DATA, data)
-    }
+    override suspend fun getSocketData(): Flow<String> =
+        getString(PreferenceConstants.SOCKET_DATA, "")
 
-    override suspend fun getFirebaseToken() = flow {
-        preferenceDataSource.getValue(PreferenceConstants.FIREBASE_TOKEN, "").collect {
-            emit(it as String)
-        }
-    }
+    override suspend fun setSocketData(data: String) =
+        dataSource.setValue(PreferenceConstants.SOCKET_DATA, data)
 
-    override suspend fun setFirebaseToken(token: String) {
-        preferenceDataSource.setValue(PreferenceConstants.FIREBASE_TOKEN, token)
-    }
+    override suspend fun getFirebaseToken(): Flow<String> =
+        getString(PreferenceConstants.FIREBASE_TOKEN, "")
 
-    override suspend fun getAvailabilityStatus() = flow {
-        preferenceDataSource.getValue(PreferenceConstants.AVAILABILITY, true).collect {
-            emit(it as Boolean)
-        }
-    }
+    override suspend fun setFirebaseToken(token: String) =
+        dataSource.setValue(PreferenceConstants.FIREBASE_TOKEN, token)
 
-    override suspend fun setAvailabilityStatus(status: Boolean) {
-        preferenceDataSource.setValue(PreferenceConstants.AVAILABILITY, status)
-    }
+    override suspend fun getUserType(): Flow<String> =
+        getString(PreferenceConstants.USER_TYPE, "user")
 
-    override suspend fun getUserType() = flow {
-        preferenceDataSource.getValue(PreferenceConstants.USER_TYPE, "user").collect {
-            emit(it as String)
-        }
-    }
+    override suspend fun setUserType(type: String) =
+        dataSource.setValue(PreferenceConstants.USER_TYPE, type)
 
-    override suspend fun setUserType(type: String) {
-        preferenceDataSource.setValue(PreferenceConstants.USER_TYPE, type)
-    }
+    override suspend fun getCountries(): Flow<String> =
+        getString(PreferenceConstants.COUNTRIES, "")
 
-    override suspend fun getIsFirstTime() = flow {
-        preferenceDataSource.getValue(PreferenceConstants.IS_FIRST_TIME, true).collect {
-            emit(it as Boolean)
-        }
-    }
+    override suspend fun setCountries(countries: String) =
+        dataSource.setValue(PreferenceConstants.COUNTRIES, countries)
 
-    override suspend fun setIsFirstTime(firstTime: Boolean) {
-        preferenceDataSource.setValue(PreferenceConstants.IS_FIRST_TIME, firstTime)
-    }
+    // ─── Boolean preferences ────────────────
 
-    override suspend fun getIsLogin() = flow {
-        preferenceDataSource.getValue(PreferenceConstants.IS_LOGIN, false).collect {
-            emit(it as Boolean)
-        }
-    }
+    override suspend fun getIsFirstTime(): Flow<Boolean> =
+        getBoolean(PreferenceConstants.IS_FIRST_TIME, true)
 
-    override suspend fun setIsLogin(active: Boolean) {
-        preferenceDataSource.setValue(PreferenceConstants.IS_LOGIN, active)
-    }
+    override suspend fun setIsFirstTime(firstTime: Boolean) =
+        dataSource.setValue(PreferenceConstants.IS_FIRST_TIME, firstTime)
 
-    override suspend fun getCountries() = flow {
-        preferenceDataSource.getValue(PreferenceConstants.COUNTRIES, "").collect {
-            emit(it as String)
-        }
-    }
+    override suspend fun getIsLogin(): Flow<Boolean> =
+        getBoolean(PreferenceConstants.IS_LOGIN, false)
 
-    override suspend fun setCountries(countries: String) {
-        preferenceDataSource.setValue(PreferenceConstants.COUNTRIES, countries)
-    }
+    override suspend fun setIsLogin(active: Boolean) =
+        dataSource.setValue(PreferenceConstants.IS_LOGIN, active)
+
+    override suspend fun getAvailabilityStatus(): Flow<Boolean> =
+        getBoolean(PreferenceConstants.AVAILABILITY, true)
+
+    override suspend fun setAvailabilityStatus(status: Boolean) =
+        dataSource.setValue(PreferenceConstants.AVAILABILITY, status)
+
+    // ─── Logout ─────────────────────────────
 
     override suspend fun onLogout() {
         setToken("")
@@ -123,4 +88,12 @@ class PreferenceRepositoryImpl(private val preferenceDataSource: PreferenceDataS
         setSocketData("")
         setIsLogin(false)
     }
+
+    // ─── Helpers (type-safe, no unsafe casts) ──
+
+    private suspend fun getString(key: String, default: String): Flow<String> =
+        dataSource.getValue(key, default).map { it as? String ?: default }
+
+    private suspend fun getBoolean(key: String, default: Boolean): Flow<Boolean> =
+        dataSource.getValue(key, default).map { it as? Boolean ?: default }
 }
