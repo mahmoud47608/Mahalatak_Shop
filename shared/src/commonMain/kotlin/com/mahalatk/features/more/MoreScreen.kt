@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -21,6 +20,7 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.mahalatk.common.component.animation.AnimatedListItem
 import com.mahalatk.common.component.utilis.noRippleClickable
@@ -68,7 +69,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 private data class MenuItem(
     val icon: DrawableResource,
-    val titleRes: org.jetbrains.compose.resources.StringResource
+    val titleRes: org.jetbrains.compose.resources.StringResource,
 )
 
 @Composable
@@ -82,12 +83,17 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
         )
     }
 
-    val menuItems = remember {
+    val mainMenuItems = remember {
         listOf(
             MenuItem(Res.drawable.ic_profile, Res.string.profile),
             MenuItem(Res.drawable.ic_settings, Res.string.settings),
             MenuItem(Res.drawable.ic_rating, Res.string.my_ratings),
             MenuItem(Res.drawable.ic_complaint, Res.string.complaints),
+        )
+    }
+
+    val infoMenuItems = remember {
+        listOf(
             MenuItem(Res.drawable.ic_about, Res.string.about_app),
             MenuItem(Res.drawable.ic_terms, Res.string.terms_conditions),
             MenuItem(Res.drawable.ic_privacy, Res.string.privacy_policy),
@@ -100,16 +106,16 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(200.dp)
+                .height(120.dp)
                 .background(
                     brush = headerGradient,
-                    shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
+                    shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp),
                 ),
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 50.dp, start = PaddingDimensions.high, end = 4.dp),
+                    .padding(top = 36.dp, start = PaddingDimensions.high, end = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
@@ -134,10 +140,10 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 140.dp),
+                .padding(top = 85.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            // ── Floating Profile Card ──
+            // ── Profile Card ──
             item {
                 AnimatedListItem(0) {
                     ProfileCard(
@@ -149,14 +155,28 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
 
             item { Spacer(modifier = Modifier.height(16.dp)) }
 
-            // ── Menu Items ──
-            itemsIndexed(menuItems) { index, item ->
-                AnimatedListItem(index + 1) {
-                    MoreMenuItem(
-                        icon = item.icon,
-                        title = stringResource(item.titleRes),
-                        onClick = { },
-                    )
+            // ── Main Menu Group ──
+            item {
+                AnimatedListItem(1) {
+                    MenuGroup(items = mainMenuItems, onItemClick = { })
+                }
+            }
+
+            item { Spacer(modifier = Modifier.height(12.dp)) }
+
+            // ── Info Menu Group ──
+            item {
+                AnimatedListItem(2) {
+                    MenuGroup(items = infoMenuItems, onItemClick = { })
+                }
+            }
+
+            item { Spacer(modifier = Modifier.height(12.dp)) }
+
+            // ── Logout ──
+            item {
+                AnimatedListItem(3) {
+                    LogoutButton(onClick = { })
                 }
             }
 
@@ -165,26 +185,34 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
     }
 }
 
+// ── Profile Card ──────────────────────────────────────────
+
 @Composable
 private fun ProfileCard(userName: String, userImage: String) {
     Card(
         modifier = Modifier.fillMaxWidth().padding(horizontal = PaddingDimensions.high),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth().padding(vertical = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
+            // Avatar
             Box(
-                modifier = Modifier.size(80.dp).clip(CircleShape)
+                modifier = Modifier
+                    .size(56.dp)
+                    .clip(CircleShape)
                     .background(AppColor.Primary.copy(alpha = 0.1f)),
                 contentAlignment = Alignment.Center,
             ) {
                 if (userImage.isNotEmpty()) {
                     AsyncImage(
-                        model = userImage, contentDescription = null,
+                        model = userImage,
+                        contentDescription = null,
                         modifier = Modifier.fillMaxSize().clip(CircleShape),
                         contentScale = ContentScale.Crop,
                     )
@@ -192,33 +220,74 @@ private fun ProfileCard(userName: String, userImage: String) {
                     Image(
                         painter = painterResource(Res.drawable.ic_profile),
                         contentDescription = null,
-                        modifier = Modifier.size(50.dp).padding(top = 6.dp),
+                        modifier = Modifier.size(36.dp).padding(top = 4.dp),
                     )
                 }
             }
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(
-                text = userName.ifEmpty { "Ahmed Mohamed" },
-                style = MahalatkTheme.titleMedium,
-                color = AppColor.TextPrimary,
-                fontWeight = FontWeight.SemiBold,
-            )
-            Spacer(modifier = Modifier.height(6.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                repeat(3) {
-                    Icon(
-                        Icons.Filled.Star,
-                        null,
-                        tint = Color(0xFFFFC107),
-                        modifier = Modifier.size(18.dp)
-                    )
+
+            Spacer(modifier = Modifier.width(14.dp))
+
+            // Name + Rating
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = userName.ifEmpty { "Ahmed Mohamed" },
+                    style = MahalatkTheme.titleSmall,
+                    color = AppColor.TextPrimary,
+                    fontWeight = FontWeight.SemiBold,
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    repeat(3) {
+                        Icon(
+                            Icons.Filled.Star, null,
+                            tint = Color(0xFFFFC107),
+                            modifier = Modifier.size(14.dp),
+                        )
+                    }
+                    repeat(2) {
+                        Icon(
+                            Icons.Filled.Star, null,
+                            tint = AppColor.TextHint.copy(alpha = 0.3f),
+                            modifier = Modifier.size(14.dp),
+                        )
+                    }
                 }
-                repeat(2) {
-                    Icon(
-                        Icons.Filled.Star,
-                        null,
-                        tint = AppColor.TextHint.copy(alpha = 0.3f),
-                        modifier = Modifier.size(18.dp)
+            }
+
+            // Arrow
+            Icon(
+                Icons.AutoMirrored.Filled.KeyboardArrowRight, null,
+                tint = AppColor.TextHint,
+                modifier = Modifier.size(20.dp),
+            )
+        }
+    }
+}
+
+// ── Menu Group (single card with dividers) ────────────────
+
+@Composable
+private fun MenuGroup(items: List<MenuItem>, onItemClick: (Int) -> Unit) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = PaddingDimensions.high),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+    ) {
+        Column {
+            items.forEachIndexed { index, item ->
+                MenuRow(
+                    icon = item.icon,
+                    title = stringResource(item.titleRes),
+                    onClick = { onItemClick(index) },
+                )
+                if (index < items.lastIndex) {
+                    HorizontalDivider(
+                        modifier = Modifier.padding(start = 52.dp, end = 16.dp),
+                        thickness = 0.5.dp,
+                        color = AppColor.Outline,
                     )
                 }
             }
@@ -227,43 +296,68 @@ private fun ProfileCard(userName: String, userImage: String) {
 }
 
 @Composable
-private fun MoreMenuItem(icon: DrawableResource, title: String, onClick: () -> Unit) {
+private fun MenuRow(icon: DrawableResource, title: String, onClick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .noRippleClickable { onClick() }
+            .padding(horizontal = 14.dp, vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Box(
+            modifier = Modifier
+                .size(32.dp)
+                .background(AppColor.Primary.copy(alpha = 0.08f), CircleShape),
+            contentAlignment = Alignment.Center,
+        ) {
+            Icon(
+                painterResource(icon), null,
+                tint = AppColor.Primary,
+                modifier = Modifier.size(16.dp),
+            )
+        }
+        Spacer(modifier = Modifier.width(SpacingDimensions.sp2))
+        Text(
+            text = title,
+            style = MahalatkTheme.bodyMedium,
+            color = AppColor.TextPrimary,
+            fontWeight = FontWeight.Medium,
+            modifier = Modifier.weight(1f),
+        )
+        Icon(
+            Icons.AutoMirrored.Filled.KeyboardArrowRight, null,
+            tint = AppColor.TextHint,
+            modifier = Modifier.size(18.dp),
+        )
+    }
+}
+
+// ── Logout Button ─────────────────────────────────────────
+
+@Composable
+private fun LogoutButton(onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = PaddingDimensions.high, vertical = 4.dp)
+            .padding(horizontal = PaddingDimensions.high)
             .noRippleClickable { onClick() },
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 14.dp, vertical = 10.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 14.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = androidx.compose.foundation.layout.Arrangement.Center,
         ) {
-            Box(
-                modifier = Modifier.size(32.dp)
-                    .background(AppColor.Primary.copy(alpha = 0.1f), CircleShape),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(
-                    painterResource(icon),
-                    null,
-                    tint = AppColor.Primary,
-                    modifier = Modifier.size(16.dp)
-                )
-            }
-            Spacer(modifier = Modifier.width(SpacingDimensions.sp2))
             Text(
-                text = title,
+                text = "Logout",
                 style = MahalatkTheme.bodyMedium,
-                color = AppColor.TextPrimary,
-                fontWeight = FontWeight.Medium,
-                modifier = Modifier.weight(1f),
-            )
-            Icon(
-                Icons.AutoMirrored.Filled.KeyboardArrowRight, null,
-                tint = AppColor.TextHint, modifier = Modifier.size(18.dp),
+                color = AppColor.Error,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 14.sp,
             )
         }
     }
