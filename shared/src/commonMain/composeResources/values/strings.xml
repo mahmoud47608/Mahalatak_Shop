@@ -180,6 +180,11 @@
     <string name="order_number">Order #%s</string>
     <string name="today">Today</string>
 
+    <!-- More Screen -->
+    <string name="profile">Profile</string>
+    <string name="my_ratings">My Ratings</string>
+    <string name="complaints">Complaints</string>
+
     <!-- Map Tracking -->
     <string name="map_tracking">Map Tracking</string>
     <string name="start_tracking">Start Tracking</string>
