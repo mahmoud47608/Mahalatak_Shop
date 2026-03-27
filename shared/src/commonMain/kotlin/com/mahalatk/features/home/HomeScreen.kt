@@ -14,7 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -38,6 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import com.mahalatk.common.component.animation.AnimatedListItem
 import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.CornerDimensions
 import com.mahalatk.theme.MahalatkTheme
@@ -243,8 +244,8 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
                 )
             }
 
-            items(state.newOrders, key = { it.id }) { order ->
-                OrderCard(order = order)
+            itemsIndexed(state.newOrders, key = { _, o -> o.id }) { index, order ->
+                AnimatedListItem(index) { OrderCard(order = order) }
             }
 
             item { Spacer(modifier = Modifier.height(16.dp)) }

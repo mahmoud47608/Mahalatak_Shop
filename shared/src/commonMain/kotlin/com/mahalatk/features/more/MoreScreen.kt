@@ -12,10 +12,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Star
@@ -37,27 +37,36 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.mahalatk.common.component.animation.AnimatedListItem
 import com.mahalatk.common.component.utilis.noRippleClickable
 import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.MahalatkTheme
 import com.mahalatk.theme.PaddingDimensions
 import com.mahalatk.theme.SpacingDimensions
 import mahalatk.shared.generated.resources.Res
+import mahalatk.shared.generated.resources.about_app
 import mahalatk.shared.generated.resources.complaints
+import mahalatk.shared.generated.resources.ic_about
 import mahalatk.shared.generated.resources.ic_complaint
 import mahalatk.shared.generated.resources.ic_notification
+import mahalatk.shared.generated.resources.ic_privacy
 import mahalatk.shared.generated.resources.ic_profile
 import mahalatk.shared.generated.resources.ic_rating
 import mahalatk.shared.generated.resources.ic_settings
+import mahalatk.shared.generated.resources.ic_terms
 import mahalatk.shared.generated.resources.more
 import mahalatk.shared.generated.resources.my_ratings
+import mahalatk.shared.generated.resources.privacy_policy
 import mahalatk.shared.generated.resources.profile
 import mahalatk.shared.generated.resources.settings
+import mahalatk.shared.generated.resources.terms_conditions
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.viewmodel.koinViewModel
+
+private data class MenuItem(val icon: DrawableResource, val title: String)
 
 @Composable
 fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
@@ -70,7 +79,17 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
         )
     }
 
-    Box(modifier = Modifier.fillMaxSize().background(MahalatkTheme.white)) {
+    val menuItems = listOf(
+        MenuItem(Res.drawable.ic_profile, stringResource(Res.string.profile)),
+        MenuItem(Res.drawable.ic_settings, stringResource(Res.string.settings)),
+        MenuItem(Res.drawable.ic_rating, stringResource(Res.string.my_ratings)),
+        MenuItem(Res.drawable.ic_complaint, stringResource(Res.string.complaints)),
+        MenuItem(Res.drawable.ic_about, stringResource(Res.string.about_app)),
+        MenuItem(Res.drawable.ic_terms, stringResource(Res.string.terms_conditions)),
+        MenuItem(Res.drawable.ic_privacy, stringResource(Res.string.privacy_policy)),
+    )
+
+    Box(modifier = Modifier.fillMaxSize().background(AppColor.ScreenBackground)) {
 
         // ── Gradient Header Banner ──
         Box(
@@ -79,10 +98,9 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
                 .height(200.dp)
                 .background(
                     brush = headerGradient,
-                    shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp),
+                    shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
                 ),
         ) {
-            // Page title + Notification icon
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -96,7 +114,6 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.weight(1f),
                 )
-
                 IconButton(onClick = { navigator.push(com.mahalatk.navigation.Route.Notifications) }) {
                     Icon(
                         imageVector = vectorResource(Res.drawable.ic_notification),
@@ -109,183 +126,140 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
         }
 
         // ── Scrollable Content ──
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 140.dp)
-                .verticalScroll(rememberScrollState()),
+                .padding(top = 140.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             // ── Floating Profile Card ──
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = PaddingDimensions.high),
-                shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(containerColor = MahalatkTheme.white),
-                elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 24.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    // Profile image
-                    Box(
-                        modifier = Modifier
-                            .size(80.dp)
-                            .clip(CircleShape)
-                            .background(MahalatkTheme.primary.copy(alpha = 0.1f)),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        if (state.userImage.isNotEmpty()) {
-                            AsyncImage(
-                                model = state.userImage,
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .clip(CircleShape),
-                                contentScale = ContentScale.Crop,
-                            )
-                        } else {
-                            Image(
-                                painter = painterResource(Res.drawable.ic_profile),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .size(50.dp)
-                                    .padding(top = 6.dp),
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    // User name
-                    Text(
-                        text = state.userName.ifEmpty { "Ahmed Mohamed" },
-                        style = MahalatkTheme.titleMedium,
-                        color = MahalatkTheme.black,
-                        fontWeight = FontWeight.SemiBold,
+            item {
+                AnimatedListItem(0) {
+                    ProfileCard(
+                        userName = state.userName,
+                        userImage = state.userImage,
                     )
-
-                    Spacer(modifier = Modifier.height(6.dp))
-
-                    // Rating - 3 filled stars + 2 empty
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        repeat(3) {
-                            Icon(
-                                imageVector = Icons.Filled.Star,
-                                contentDescription = null,
-                                tint = Color(0xFFFFC107),
-                                modifier = Modifier.size(18.dp),
-                            )
-                        }
-                        repeat(2) {
-                            Icon(
-                                imageVector = Icons.Filled.Star,
-                                contentDescription = null,
-                                tint = MahalatkTheme.hint.copy(alpha = 0.3f),
-                                modifier = Modifier.size(18.dp),
-                            )
-                        }
-                    }
                 }
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            item { Spacer(modifier = Modifier.height(16.dp)) }
 
-            // ── Menu Items Card ──
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = PaddingDimensions.high),
-                shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(containerColor = MahalatkTheme.white),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-            ) {
-                Column(
-                    modifier = Modifier.padding(vertical = SpacingDimensions.sp1),
-                ) {
+            // ── Menu Items ──
+            itemsIndexed(menuItems) { index, item ->
+                AnimatedListItem(index + 1) {
                     MoreMenuItem(
-                        icon = Res.drawable.ic_profile,
-                        title = stringResource(Res.string.profile),
-                        onClick = { },
-                    )
-
-                    MoreMenuItem(
-                        icon = Res.drawable.ic_settings,
-                        title = stringResource(Res.string.settings),
-                        onClick = { },
-                    )
-
-                    MoreMenuItem(
-                        icon = Res.drawable.ic_rating,
-                        title = stringResource(Res.string.my_ratings),
-                        onClick = { },
-                    )
-
-                    MoreMenuItem(
-                        icon = Res.drawable.ic_complaint,
-                        title = stringResource(Res.string.complaints),
+                        icon = item.icon,
+                        title = item.title,
                         onClick = { },
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            item { Spacer(modifier = Modifier.height(24.dp)) }
         }
     }
 }
 
 @Composable
-private fun MoreMenuItem(
-    icon: DrawableResource,
-    title: String,
-    onClick: () -> Unit,
-) {
-    Row(
+private fun ProfileCard(userName: String, userImage: String) {
+    Card(
+        modifier = Modifier.fillMaxWidth().padding(horizontal = PaddingDimensions.high),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth().padding(vertical = 24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Box(
+                modifier = Modifier.size(80.dp).clip(CircleShape)
+                    .background(AppColor.Primary.copy(alpha = 0.1f)),
+                contentAlignment = Alignment.Center,
+            ) {
+                if (userImage.isNotEmpty()) {
+                    AsyncImage(
+                        model = userImage, contentDescription = null,
+                        modifier = Modifier.fillMaxSize().clip(CircleShape),
+                        contentScale = ContentScale.Crop,
+                    )
+                } else {
+                    Image(
+                        painter = painterResource(Res.drawable.ic_profile),
+                        contentDescription = null,
+                        modifier = Modifier.size(50.dp).padding(top = 6.dp),
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = userName.ifEmpty { "Ahmed Mohamed" },
+                style = MahalatkTheme.titleMedium,
+                color = AppColor.TextPrimary,
+                fontWeight = FontWeight.SemiBold,
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                repeat(3) {
+                    Icon(
+                        Icons.Filled.Star,
+                        null,
+                        tint = Color(0xFFFFC107),
+                        modifier = Modifier.size(18.dp)
+                    )
+                }
+                repeat(2) {
+                    Icon(
+                        Icons.Filled.Star,
+                        null,
+                        tint = AppColor.TextHint.copy(alpha = 0.3f),
+                        modifier = Modifier.size(18.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun MoreMenuItem(icon: DrawableResource, title: String, onClick: () -> Unit) {
+    Card(
         modifier = Modifier
             .fillMaxWidth()
-            .noRippleClickable(onClick = onClick)
-            .padding(horizontal = PaddingDimensions.extraHigh, vertical = 14.dp),
-        verticalAlignment = Alignment.CenterVertically,
+            .padding(horizontal = PaddingDimensions.high, vertical = 4.dp)
+            .noRippleClickable { onClick() },
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
     ) {
-        // Icon with tinted circle background
-        Box(
-            modifier = Modifier
-                .size(40.dp)
-                .background(
-                    color = MahalatkTheme.primary.copy(alpha = 0.1f),
-                    shape = CircleShape,
-                ),
-            contentAlignment = Alignment.Center,
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 14.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
+            Box(
+                modifier = Modifier.size(40.dp)
+                    .background(AppColor.Primary.copy(alpha = 0.1f), CircleShape),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    painterResource(icon),
+                    null,
+                    tint = AppColor.Primary,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+            Spacer(modifier = Modifier.width(SpacingDimensions.sp4))
+            Text(
+                text = title,
+                style = MahalatkTheme.bodyLarge,
+                color = AppColor.TextPrimary,
+                fontWeight = FontWeight.Medium,
+                modifier = Modifier.weight(1f),
+            )
             Icon(
-                painter = painterResource(icon),
-                contentDescription = null,
-                tint = MahalatkTheme.primary,
-                modifier = Modifier.size(20.dp),
+                Icons.AutoMirrored.Filled.KeyboardArrowRight, null,
+                tint = AppColor.TextHint, modifier = Modifier.size(22.dp),
             )
         }
-
-        Spacer(modifier = Modifier.width(SpacingDimensions.sp4))
-
-        Text(
-            text = title,
-            style = MahalatkTheme.bodyLarge,
-            color = MahalatkTheme.black,
-            fontWeight = FontWeight.Medium,
-            modifier = Modifier.weight(1f),
-        )
-
-        Icon(
-            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-            contentDescription = null,
-            tint = MahalatkTheme.hint,
-            modifier = Modifier.size(22.dp),
-        )
     }
 }

@@ -1,8 +1,5 @@
 package com.mahalatk.features.notifications
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,7 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -38,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.mahalatk.common.component.animation.AnimatedListItem
 import com.mahalatk.common.component.utilis.noRippleClickable
 import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.CornerDimensions
@@ -124,11 +122,8 @@ fun NotificationsScreen(
                 verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 item { Spacer(modifier = Modifier.height(12.dp)) }
-                items(state.notifications, key = { it.id }) { notification ->
-                    AnimatedVisibility(
-                        visible = true,
-                        exit = shrinkVertically() + fadeOut(),
-                    ) {
+                itemsIndexed(state.notifications, key = { _, n -> n.id }) { index, notification ->
+                    AnimatedListItem(index) {
                         NotificationCard(
                             notification = notification,
                             onDelete = { viewModel.deleteNotification(notification.id) },

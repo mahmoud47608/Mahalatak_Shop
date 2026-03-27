@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -36,6 +36,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import com.mahalatk.common.component.animation.AnimatedListItem
 import com.mahalatk.common.component.header.ScreenHeader
 import com.mahalatk.common.component.utilis.noRippleClickable
 import com.mahalatk.theme.AppColor
@@ -67,8 +68,8 @@ fun ProductsScreen(viewModel: ProductsViewModel = koinViewModel()) {
                 verticalArrangement = Arrangement.spacedBy(14.dp),
             ) {
                 item { Spacer(modifier = Modifier.height(6.dp)) }
-                items(state.products, key = { it.id }) { product ->
-                    ProductCard(product = product)
+                itemsIndexed(state.products, key = { _, p -> p.id }) { index, product ->
+                    AnimatedListItem(index) { ProductCard(product = product) }
                 }
                 item { Spacer(modifier = Modifier.height(80.dp)) }
             }

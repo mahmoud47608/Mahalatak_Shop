@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -33,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mahalatk.common.component.animation.AnimatedListItem
 import com.mahalatk.common.component.header.ScreenHeader
 import com.mahalatk.common.component.tabs.FilterTabs
 import com.mahalatk.common.component.utilis.noRippleClickable
@@ -83,15 +84,17 @@ fun ChatScreen(viewModel: ChatViewModel = koinViewModel()) {
                 modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp),
                 verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
-                items(filteredConversations, key = { it.id }) { conversation ->
-                    ChatItem(
+                itemsIndexed(filteredConversations, key = { _, c -> c.id }) { index, conversation ->
+                    AnimatedListItem(index) {
+                        ChatItem(
                         conversation = conversation,
                         onClick = {
                             navigator.push(
                                 Route.ChatDetail(conversation.id, conversation.customerName)
                             )
                         },
-                    )
+                        )
+                    }
                 }
                 item { Spacer(modifier = Modifier.height(16.dp)) }
             }

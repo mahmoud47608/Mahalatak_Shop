@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mahalatk.common.component.animation.AnimatedListItem
 import com.mahalatk.common.component.header.ScreenHeader
 import com.mahalatk.common.component.tabs.FilterTabs
 import com.mahalatk.theme.AppColor
@@ -85,8 +86,8 @@ fun OrdersScreen(viewModel: OrdersViewModel = koinViewModel()) {
                 modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                items(filteredOrders, key = { it.id }) { order ->
-                    OrderCard(order = order)
+                itemsIndexed(filteredOrders, key = { _, o -> o.id }) { index, order ->
+                    AnimatedListItem(index) { OrderCard(order = order) }
                 }
                 item { Spacer(modifier = Modifier.height(16.dp)) }
             }
