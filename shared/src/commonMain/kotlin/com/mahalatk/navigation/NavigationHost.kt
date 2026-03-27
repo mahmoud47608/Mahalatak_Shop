@@ -58,7 +58,8 @@ fun NavigationHost() {
                 }
 
                 // ─── Main ────────────────────────────────
-                is Route.Home, is Route.Parts, is Route.More -> NavEntry(route) {
+                is Route.Home, is Route.Products, is Route.Orders, is Route.Chat, is Route.Account,
+                is Route.Parts, is Route.More -> NavEntry(route) {
                     MainNavGraph(route = route)
                 }
             }

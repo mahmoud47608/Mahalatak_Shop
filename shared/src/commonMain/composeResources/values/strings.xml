@@ -7,6 +7,10 @@
     <string name="rsa_currency" translatable="false">﷼</string>
 
     <string name="home">Home</string>
+    <string name="products">Products</string>
+    <string name="orders">Orders</string>
+    <string name="chat">Chat</string>
+    <string name="account">Account</string>
     <string name="parts">Parts</string>
     <string name="more">More</string>
     <string name="empty_string"></string>
@@ -162,6 +166,19 @@
     <string name="select_shop">Select Shop</string>
     <string name="please_enter_employee_name">Please enter employee name</string>
     <string name="please_select_shop">Please select a shop</string>
+
+    <!-- Home Screen -->
+    <string name="hello">Hello</string>
+    <string name="receive_new_orders">Receive New Orders</string>
+    <string name="available">Available</string>
+    <string name="unavailable">Unavailable</string>
+    <string name="self_delivery">Self Delivery</string>
+    <string name="statistics">Statistics</string>
+    <string name="completed_orders">Completed Orders</string>
+    <string name="cancelled_orders">Cancelled Orders</string>
+    <string name="new_orders">New Orders</string>
+    <string name="order_number">Order #%s</string>
+    <string name="today">Today</string>
 
     <!-- Map Tracking -->
     <string name="map_tracking">Map Tracking</string>

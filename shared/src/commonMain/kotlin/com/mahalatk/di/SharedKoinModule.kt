@@ -6,6 +6,7 @@ import com.mahalatk.base.managers.SessionManager
 import com.mahalatk.fcm.FcmEventHandler
 import com.mahalatk.features.auth.login.LoginViewModel
 import com.mahalatk.features.auth.register.RegisterViewModel
+import com.mahalatk.features.home.HomeViewModel
 import com.mahalatk.features.main.MainViewModel
 import com.mahalatk.features.splash.SplashViewModel
 import org.koin.core.module.dsl.viewModel
@@ -21,4 +22,5 @@ val sharedModule = module {
     viewModel { SplashViewModel(get(), get(), get()) }
     viewModel { LoginViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { RegisterViewModel(get(), get()) }
+    viewModel { HomeViewModel(get()) }
 }

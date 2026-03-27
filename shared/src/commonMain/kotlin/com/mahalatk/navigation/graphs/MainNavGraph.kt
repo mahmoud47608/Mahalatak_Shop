@@ -1,9 +1,11 @@
 package com.mahalatk.navigation.graphs
 
 import androidx.compose.runtime.Composable
+import com.mahalatk.features.chat.ChatScreen
 import com.mahalatk.features.home.HomeScreen
 import com.mahalatk.features.more.MoreScreen
-import com.mahalatk.features.parts.PartsScreen
+import com.mahalatk.features.orders.OrdersScreen
+import com.mahalatk.features.products.ProductsScreen
 import com.mahalatk.navigation.Route
 
 /**
@@ -14,8 +16,10 @@ import com.mahalatk.navigation.Route
 fun MainNavGraph(route: Route) {
     when (route) {
         is Route.Home -> HomeScreen()
-        is Route.Parts -> PartsScreen()
-        is Route.More -> MoreScreen()
-        else -> error("Unexpected route in MainNavGraph: $route")
+        is Route.Products -> ProductsScreen()
+        is Route.Orders -> OrdersScreen()
+        is Route.Chat -> ChatScreen()
+        is Route.Account -> MoreScreen()
+        else -> HomeScreen()
     }
 }

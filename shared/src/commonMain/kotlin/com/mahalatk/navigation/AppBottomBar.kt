@@ -23,15 +23,21 @@ import com.mahalatk.common.component.utilis.noRippleClickable
 import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
+import mahalatk.shared.generated.resources.account
+import mahalatk.shared.generated.resources.chat
 import mahalatk.shared.generated.resources.home
+import mahalatk.shared.generated.resources.ic_nav_chat
+import mahalatk.shared.generated.resources.ic_nav_chat_selected
 import mahalatk.shared.generated.resources.ic_nav_home
 import mahalatk.shared.generated.resources.ic_nav_home_selected
 import mahalatk.shared.generated.resources.ic_nav_more
 import mahalatk.shared.generated.resources.ic_nav_more_selected
-import mahalatk.shared.generated.resources.ic_nav_parts
-import mahalatk.shared.generated.resources.ic_nav_parts_selected
-import mahalatk.shared.generated.resources.more
-import mahalatk.shared.generated.resources.parts
+import mahalatk.shared.generated.resources.ic_nav_orders
+import mahalatk.shared.generated.resources.ic_nav_orders_selected
+import mahalatk.shared.generated.resources.ic_nav_products
+import mahalatk.shared.generated.resources.ic_nav_products_selected
+import mahalatk.shared.generated.resources.orders
+import mahalatk.shared.generated.resources.products
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
@@ -39,7 +45,6 @@ import org.jetbrains.compose.resources.stringResource
 
 /**
  * Bottom navigation items.
- * data object (not data class) → one instance, no allocation per render.
  */
 enum class BottomNavItem(
     val icon: DrawableResource,
@@ -53,24 +58,38 @@ enum class BottomNavItem(
         label = Res.string.home,
         route = Route.Home,
     ),
-    Parts(
-        icon = Res.drawable.ic_nav_parts,
-        iconSelected = Res.drawable.ic_nav_parts_selected,
-        label = Res.string.parts,
-        route = Route.Parts,
+    Products(
+        icon = Res.drawable.ic_nav_products,
+        iconSelected = Res.drawable.ic_nav_products_selected,
+        label = Res.string.products,
+        route = Route.Products,
     ),
-    More(
+    Orders(
+        icon = Res.drawable.ic_nav_orders,
+        iconSelected = Res.drawable.ic_nav_orders_selected,
+        label = Res.string.orders,
+        route = Route.Orders,
+    ),
+    Chat(
+        icon = Res.drawable.ic_nav_chat,
+        iconSelected = Res.drawable.ic_nav_chat_selected,
+        label = Res.string.chat,
+        route = Route.Chat,
+    ),
+    Account(
         icon = Res.drawable.ic_nav_more,
         iconSelected = Res.drawable.ic_nav_more_selected,
-        label = Res.string.more,
-        route = Route.More,
+        label = Res.string.account,
+        route = Route.Account,
     );
 
     companion object {
         fun fromRoute(route: Route): BottomNavItem? = when (route) {
             is Route.Home -> Home
-            is Route.Parts -> Parts
-            is Route.More -> More
+            is Route.Products -> Products
+            is Route.Orders -> Orders
+            is Route.Chat -> Chat
+            is Route.Account -> Account
             else -> null
         }
     }
