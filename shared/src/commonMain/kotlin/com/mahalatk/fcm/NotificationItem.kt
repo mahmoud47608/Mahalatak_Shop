@@ -10,8 +10,8 @@ data class NotificationItem(
     @SerialName("body_ar") val bodyAr: String? = "",
     @SerialName("body_en") val bodyEn: String? = "",
     @SerialName("type") val type: String? = "",
-    @SerialName("order_id") val orderId: String? = "",
-    @SerialName("room_id") val roomId: String? = "",
+    @SerialName("order_id") val orderId: Int? = null,
+    @SerialName("room_id") val roomId: Int? = null,
     @SerialName("sent_or_received") val sentOrReceived: String? = "",
     @SerialName("order_type") val orderType: String? = ""
 )

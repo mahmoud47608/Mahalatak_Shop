@@ -110,7 +110,7 @@ class NotificationHandler(
         val intent = Intent(context, notificationActivityClass).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
             action = ACTION_NAVIGATE_TO_CHAT
-            putExtra(EXTRA_CHAT_ROOM_ID, item.roomId?.toIntOrNull() ?: 0)
+            putExtra(EXTRA_CHAT_ROOM_ID, item.roomId ?: 0)
             putExtra(EXTRA_CHAT_TITLE, item.titleEn ?: "")
         }
         return PendingIntent.getActivity(
