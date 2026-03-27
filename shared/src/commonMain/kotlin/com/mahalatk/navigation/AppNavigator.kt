@@ -46,6 +46,18 @@ class AppNavigator(initialRoute: Route = Route.Splash) {
         backStack.add(route)
     }
 
+    /**
+     * Switch bottom-nav tab without destroying other tab states.
+     * Keeps only the first entry (or replaces it) so NavDisplay
+     * can still hold saveable state for previously visited tabs.
+     */
+    fun switchTab(route: Route) {
+        if (backStack.lastOrNull() == route) return
+        // Remove everything above the root, then replace root
+        backStack.clear()
+        backStack.add(route)
+    }
+
     fun popUntil(predicate: (Route) -> Boolean) {
         while (backStack.size > 1 && !predicate(backStack.last())) {
             backStack.removeAt(backStack.lastIndex)

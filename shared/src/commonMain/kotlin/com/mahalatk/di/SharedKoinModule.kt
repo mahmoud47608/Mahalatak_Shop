@@ -11,6 +11,7 @@ import com.mahalatk.features.chat.ChatViewModel
 import com.mahalatk.features.home.HomeViewModel
 import com.mahalatk.features.main.MainViewModel
 import com.mahalatk.features.more.MoreViewModel
+import com.mahalatk.features.notifications.NotificationsViewModel
 import com.mahalatk.features.orders.OrdersViewModel
 import com.mahalatk.features.products.ProductsViewModel
 import com.mahalatk.features.splash.SplashViewModel
@@ -33,4 +34,5 @@ val sharedModule = module {
     viewModel { OrdersViewModel() }
     viewModel { ChatViewModel() }
     viewModel { ChatDetailViewModel() }
+    viewModel { NotificationsViewModel() }
 }

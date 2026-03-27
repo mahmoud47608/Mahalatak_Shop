@@ -10,6 +10,7 @@ import com.mahalatk.features.auth.register.LocationResultHolder
 import com.mahalatk.features.auth.register.PickLocationScreen
 import com.mahalatk.features.auth.register.RegisterScreen
 import com.mahalatk.features.chat.ChatDetailScreen
+import com.mahalatk.features.notifications.NotificationsScreen
 import com.mahalatk.features.splash.SplashScreen
 import com.mahalatk.navigation.graphs.MainNavGraph
 
@@ -56,6 +57,11 @@ fun NavigationHost() {
                         },
                         onBack = { navigator.pop() },
                     )
+                }
+
+                // ─── Notifications ───────────────────────────
+                is Route.Notifications -> NavEntry(route) {
+                    NotificationsScreen(onBack = { navigator.pop() })
                 }
 
                 // ─── Chat Detail ──────────────────────────

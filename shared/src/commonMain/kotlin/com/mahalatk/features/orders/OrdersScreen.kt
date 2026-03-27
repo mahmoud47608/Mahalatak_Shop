@@ -1,6 +1,5 @@
 package com.mahalatk.features.orders
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,17 +22,18 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mahalatk.common.component.utilis.noRippleClickable
+import com.mahalatk.common.component.header.ScreenHeader
+import com.mahalatk.common.component.tabs.FilterTabs
 import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.CornerDimensions
 import com.mahalatk.theme.MahalatkTheme
@@ -53,40 +53,24 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun OrdersScreen(viewModel: OrdersViewModel = koinViewModel()) {
     val state by viewModel.uiState.collectAsState()
+    val filteredOrders by remember { derivedStateOf { state.filteredOrders } }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(AppColor.ScreenBackground),
     ) {
-        // ── Header ──
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(90.dp)
-                .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            AppColor.Primary,
-                            AppColor.Primary.copy(alpha = 0.85f),
-                        ),
-                    ),
-                ),
-            contentAlignment = Alignment.BottomCenter,
-        ) {
-            Text(
-                text = stringResource(Res.string.my_orders),
-                style = MahalatkTheme.titleLarge,
-                color = Color.White,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 14.dp),
-            )
-        }
+        ScreenHeader(title = stringResource(Res.string.my_orders))
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // ── Tab Filter ──
-        OrderTabs(
+        FilterTabs(
+            tabs = listOf(
+                OrderTab.New to stringResource(Res.string.new_tab),
+                OrderTab.Current to stringResource(Res.string.current_tab),
+                OrderTab.Completed to stringResource(Res.string.completed_tab),
+                OrderTab.Returns to stringResource(Res.string.returns_tab),
+            ),
             selectedTab = state.selectedTab,
             onTabSelected = viewModel::selectTab,
             modifier = Modifier.padding(horizontal = 20.dp),
@@ -94,35 +78,14 @@ fun OrdersScreen(viewModel: OrdersViewModel = koinViewModel()) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // ── Orders List ──
-        if (state.filteredOrders.isEmpty()) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(
-                        painter = painterResource(Res.drawable.ic_check_circle),
-                        contentDescription = null,
-                        tint = AppColor.TextHint.copy(alpha = 0.4f),
-                        modifier = Modifier.size(64.dp),
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Text(
-                        text = stringResource(Res.string.no_orders),
-                        style = MahalatkTheme.bodyLarge,
-                        color = AppColor.TextHint,
-                    )
-                }
-            }
+        if (filteredOrders.isEmpty()) {
+            EmptyOrdersPlaceholder()
         } else {
             LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 20.dp),
+                modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                items(state.filteredOrders, key = { it.id }) { order ->
+                items(filteredOrders, key = { it.id }) { order ->
                     OrderCard(order = order)
                 }
                 item { Spacer(modifier = Modifier.height(16.dp)) }
@@ -131,67 +94,26 @@ fun OrdersScreen(viewModel: OrdersViewModel = koinViewModel()) {
     }
 }
 
-// ──────────────────────────────────────────────
-// Tab Filter Row
-// ──────────────────────────────────────────────
 @Composable
-private fun OrderTabs(
-    selectedTab: OrderTab,
-    onTabSelected: (OrderTab) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val tabs = listOf(
-        OrderTab.New to stringResource(Res.string.new_tab),
-        OrderTab.Current to stringResource(Res.string.current_tab),
-        OrderTab.Completed to stringResource(Res.string.completed_tab),
-        OrderTab.Returns to stringResource(Res.string.returns_tab),
-    )
-
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(
-                color = Color.White,
-                shape = RoundedCornerShape(14.dp),
+private fun EmptyOrdersPlaceholder() {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Icon(
+                painter = painterResource(Res.drawable.ic_check_circle),
+                contentDescription = null,
+                tint = AppColor.TextHint.copy(alpha = 0.4f),
+                modifier = Modifier.size(64.dp),
             )
-            .padding(4.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly,
-    ) {
-        tabs.forEach { (tab, label) ->
-            val isSelected = tab == selectedTab
-            val bgColor by animateColorAsState(
-                targetValue = if (isSelected) AppColor.Primary else Color.Transparent,
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = stringResource(Res.string.no_orders),
+                style = MahalatkTheme.bodyLarge,
+                color = AppColor.TextHint,
             )
-            val textColor by animateColorAsState(
-                targetValue = if (isSelected) Color.White else AppColor.TextHint,
-            )
-
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .background(
-                        color = bgColor,
-                        shape = RoundedCornerShape(10.dp),
-                    )
-                    .noRippleClickable { onTabSelected(tab) }
-                    .padding(vertical = 10.dp),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    text = label,
-                    style = MahalatkTheme.labelMedium,
-                    color = textColor,
-                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                    textAlign = TextAlign.Center,
-                )
-            }
         }
     }
 }
 
-// ──────────────────────────────────────────────
-// Order Card
-// ──────────────────────────────────────────────
 @Composable
 private fun OrderCard(order: Order) {
     Card(
@@ -200,21 +122,13 @@ private fun OrderCard(order: Order) {
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-        ) {
-            // Top row: avatar + info + status badge
+        Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                // Customer avatar
                 Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clip(CircleShape)
+                    modifier = Modifier.size(48.dp).clip(CircleShape)
                         .background(AppColor.Secondary.copy(alpha = 0.3f)),
                     contentAlignment = Alignment.Center,
                 ) {
@@ -228,7 +142,6 @@ private fun OrderCard(order: Order) {
 
                 Spacer(modifier = Modifier.width(12.dp))
 
-                // Name + order number
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = order.customerName,
@@ -244,38 +157,24 @@ private fun OrderCard(order: Order) {
                     )
                 }
 
-                // Status badge
                 StatusBadge(status = order.status)
             }
 
             Spacer(modifier = Modifier.height(12.dp))
-
-            // Divider
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(1.dp)
-                    .background(AppColor.Outline),
-            )
-
+            Box(modifier = Modifier.fillMaxWidth().height(1.dp).background(AppColor.Outline))
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Bottom row: items + price + time
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                // Total price
                 Text(
                     text = "${order.totalPrice.toInt()} ${stringResource(Res.string.currency)}",
                     style = MahalatkTheme.titleSmall,
                     color = AppColor.Primary,
                     fontWeight = FontWeight.Bold,
                 )
-
                 Spacer(modifier = Modifier.weight(1f))
-
-                // Date + time
                 Text(
                     text = "${order.date} • ${order.time}",
                     style = MahalatkTheme.labelSmall,
@@ -286,9 +185,6 @@ private fun OrderCard(order: Order) {
     }
 }
 
-// ──────────────────────────────────────────────
-// Status Badge
-// ──────────────────────────────────────────────
 @Composable
 private fun StatusBadge(status: OrderStatus) {
     val (bgColor, textColor, label) = when (status) {
@@ -320,10 +216,7 @@ private fun StatusBadge(status: OrderStatus) {
 
     Box(
         modifier = Modifier
-            .background(
-                color = bgColor,
-                shape = RoundedCornerShape(8.dp),
-            )
+            .background(color = bgColor, shape = RoundedCornerShape(8.dp))
             .padding(horizontal = 12.dp, vertical = 5.dp),
     ) {
         Text(

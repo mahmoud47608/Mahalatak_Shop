@@ -71,7 +71,7 @@ fun App(viewModel: MainViewModel = koinViewModel()) {
                 bottomBar = {
                     if (isTabScreen) {
                         AppBottomBar(
-                            onItemSelected = { item -> navigator.replaceAll(item.route) },
+                            onItemSelected = { item -> navigator.switchTab(item.route) },
                         )
                     }
                 },
@@ -79,9 +79,7 @@ fun App(viewModel: MainViewModel = koinViewModel()) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(
-                            bottom = if (isTabScreen) innerPadding.calculateBottomPadding() else 0.dp
-                        )
+                        .padding(bottom = innerPadding.calculateBottomPadding())
                 ) {
                     // Background image – only visible on auth screens
                     if (isAuthScreen) {

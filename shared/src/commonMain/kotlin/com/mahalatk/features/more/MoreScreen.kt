@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,6 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.mahalatk.common.component.utilis.noRippleClickable
+import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.MahalatkTheme
 import com.mahalatk.theme.PaddingDimensions
 import com.mahalatk.theme.SpacingDimensions
@@ -60,6 +62,13 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
     val state by viewModel.uiState.collectAsState()
+    val navigator = com.mahalatk.navigation.LocalNavigator.current
+
+    val headerGradient = remember {
+        Brush.linearGradient(
+            colors = listOf(AppColor.Primary, AppColor.Primary.copy(alpha = 0.8f)),
+        )
+    }
 
     Box(modifier = Modifier.fillMaxSize().background(MahalatkTheme.white)) {
 
@@ -69,12 +78,7 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
                 .fillMaxWidth()
                 .height(200.dp)
                 .background(
-                    brush = Brush.linearGradient(
-                        colors = listOf(
-                            MahalatkTheme.primary,
-                            MahalatkTheme.primary.copy(alpha = 0.8f),
-                        ),
-                    ),
+                    brush = headerGradient,
                     shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp),
                 ),
         ) {
@@ -93,7 +97,7 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
                     modifier = Modifier.weight(1f),
                 )
 
-                IconButton(onClick = { }) {
+                IconButton(onClick = { navigator.push(com.mahalatk.navigation.Route.Notifications) }) {
                     Icon(
                         imageVector = vectorResource(Res.drawable.ic_notification),
                         contentDescription = null,

@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -65,6 +66,13 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
     val state by viewModel.uiState.collectAsState()
+    val navigator = com.mahalatk.navigation.LocalNavigator.current
+
+    val headerGradient = remember {
+        Brush.verticalGradient(
+            colors = listOf(AppColor.Primary, AppColor.Primary.copy(alpha = 0.85f)),
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -76,12 +84,7 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            AppColor.Primary,
-                            AppColor.Primary.copy(alpha = 0.85f),
-                        ),
-                    ),
+                    brush = headerGradient,
                     shape = RoundedCornerShape(
                         bottomStart = 28.dp,
                         bottomEnd = 28.dp,
@@ -100,7 +103,7 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
             ) {
                 // Notification bell
                 IconButton(
-                    onClick = { },
+                    onClick = { navigator.push(com.mahalatk.navigation.Route.Notifications) },
                     modifier = Modifier
                         .size(42.dp)
                         .background(
