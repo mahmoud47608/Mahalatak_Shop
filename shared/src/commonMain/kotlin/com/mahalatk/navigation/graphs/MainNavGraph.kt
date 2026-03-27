@@ -8,10 +8,7 @@ import com.mahalatk.features.orders.OrdersScreen
 import com.mahalatk.features.products.ProductsScreen
 import com.mahalatk.navigation.Route
 
-/**
- * Main screens routing (bottom nav tabs).
- * No navigator needed - tabs are switched from AppBottomBar directly.
- */
+/** Main tab screens — only renders the 5 bottom nav destinations. */
 @Composable
 fun MainNavGraph(route: Route) {
     when (route) {
@@ -20,6 +17,6 @@ fun MainNavGraph(route: Route) {
         is Route.Orders -> OrdersScreen()
         is Route.Chat -> ChatScreen()
         is Route.Account -> MoreScreen()
-        else -> HomeScreen()
+        else -> error("Unexpected route in MainNavGraph: $route")
     }
 }

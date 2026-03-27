@@ -118,8 +118,8 @@ fun NavigationHost() {
                 }
 
                 // ─── Main Tabs ───────────────────────────
-                is Route.Home, is Route.Products, is Route.Orders, is Route.Chat, is Route.Account,
-                is Route.More -> NavEntry(route) {
+                is Route.Home, is Route.Products, is Route.Orders, is Route.Chat,
+                is Route.Account -> NavEntry(route) {
                     MainNavGraph(route = route)
                 }
             }

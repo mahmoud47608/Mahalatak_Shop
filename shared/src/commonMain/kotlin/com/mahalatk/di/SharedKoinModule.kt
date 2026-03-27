@@ -1,5 +1,6 @@
 package com.mahalatk.di
 
+import com.mahalatk.base.UserDataProvider
 import com.mahalatk.base.managers.LoadingManager
 import com.mahalatk.base.managers.MessageManager
 import com.mahalatk.base.managers.SessionManager
@@ -22,17 +23,21 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val sharedModule = module {
+
+    // ─── Managers (singletons) ──────────
     single { LoadingManager() }
     single { MessageManager() }
     single { SessionManager() }
     single { FcmEventHandler(get(), get()) }
+    single { UserDataProvider(get()) }
 
+    // ─── ViewModels ─────────────────────
     viewModel { MainViewModel(get(), get(), get()) }
     viewModel { SplashViewModel(get(), get(), get()) }
     viewModel { LoginViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { RegisterViewModel(get(), get()) }
-    viewModel { MoreViewModel(get()) }
     viewModel { HomeViewModel(get()) }
+    viewModel { MoreViewModel(get()) }
     viewModel { ProductsViewModel() }
     viewModel { OrdersViewModel() }
     viewModel { ChatViewModel() }
