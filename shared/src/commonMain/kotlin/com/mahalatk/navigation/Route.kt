@@ -9,7 +9,6 @@ sealed interface Route {
     data object PickLocation : Route
     data class Activation(val phoneNumber: String, val isFromForgotPassword: Boolean = false) :
         Route
-
     data object ForgotPassword : Route
     data class ResetPassword(val phoneNumber: String) : Route
 
@@ -24,3 +23,13 @@ sealed interface Route {
     data class ChatDetail(val chatId: String, val customerName: String) : Route
     data object Notifications : Route
 }
+
+/** True for screens that show the auth background image. */
+val Route.isAuthScreen: Boolean
+    get() = when (this) {
+        is Route.Splash, is Route.Login, is Route.Register,
+        is Route.PickLocation, is Route.ForgotPassword,
+        is Route.ResetPassword -> true
+
+        else -> false
+    }

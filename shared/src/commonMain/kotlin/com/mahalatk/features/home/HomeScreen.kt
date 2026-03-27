@@ -1,6 +1,5 @@
 package com.mahalatk.features.home
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -39,7 +38,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.mahalatk.common.component.animation.AnimatedListItem
+import com.mahalatk.common.component.image.UserAvatar
 import com.mahalatk.theme.AppColor
+import com.mahalatk.theme.AppShapes
 import com.mahalatk.theme.CornerDimensions
 import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
@@ -52,7 +53,6 @@ import mahalatk.shared.generated.resources.ic_check_circle
 import mahalatk.shared.generated.resources.ic_delivery
 import mahalatk.shared.generated.resources.ic_notification
 import mahalatk.shared.generated.resources.ic_orders
-import mahalatk.shared.generated.resources.ic_profile
 import mahalatk.shared.generated.resources.new_orders
 import mahalatk.shared.generated.resources.receive_new_orders
 import mahalatk.shared.generated.resources.self_delivery
@@ -86,10 +86,7 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
                 .fillMaxWidth()
                 .background(
                     brush = headerGradient,
-                    shape = RoundedCornerShape(
-                        bottomStart = 28.dp,
-                        bottomEnd = 28.dp,
-                    ),
+                    shape = AppShapes.Header,
                 )
                 .padding(
                     top = 50.dp,
@@ -143,28 +140,11 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
                 Spacer(modifier = Modifier.width(12.dp))
 
                 // Profile avatar
-                Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clip(CircleShape)
-                        .background(Color.White.copy(alpha = 0.2f)),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    if (state.userImage.isNotEmpty()) {
-                        AsyncImage(
-                            model = state.userImage,
-                            contentDescription = null,
-                            modifier = Modifier.fillMaxSize().clip(CircleShape),
-                            contentScale = ContentScale.Crop,
-                        )
-                    } else {
-                        Image(
-                            painter = painterResource(Res.drawable.ic_profile),
-                            contentDescription = null,
-                            modifier = Modifier.size(30.dp).padding(top = 4.dp),
-                        )
-                    }
-                }
+                UserAvatar(
+                    imageUrl = state.userImage,
+                    size = 48.dp,
+                    backgroundColor = Color.White.copy(alpha = 0.2f),
+                )
             }
         }
 
