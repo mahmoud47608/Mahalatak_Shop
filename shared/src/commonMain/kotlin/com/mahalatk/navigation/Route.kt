@@ -18,10 +18,9 @@ sealed interface Route {
 
     data object Chat : Route
 
-    data object Account : Route
+    data class ChatDetail(val chatId: String, val customerName: String) : Route
 
-    // Legacy – kept so existing references don't break
-    data object Parts : Route
+    data object Account : Route
 
     data object More : Route
 }

@@ -43,6 +43,10 @@ fun App(viewModel: MainViewModel = koinViewModel()) {
         val snackbarHostState = remember { SnackbarHostState() }
 
         val isTabScreen = BottomNavItem.fromRoute(navigator.currentRoute) != null
+        val isAuthScreen = navigator.currentRoute is com.mahalatk.navigation.Route.Splash
+                || navigator.currentRoute is com.mahalatk.navigation.Route.Login
+                || navigator.currentRoute is com.mahalatk.navigation.Route.Register
+                || navigator.currentRoute is com.mahalatk.navigation.Route.PickLocation
 
         // Snackbar messages
         LaunchedEffect(Unit) {
@@ -79,15 +83,17 @@ fun App(viewModel: MainViewModel = koinViewModel()) {
                             bottom = if (isTabScreen) innerPadding.calculateBottomPadding() else 0.dp
                         )
                 ) {
-                    // Background image
-                    Image(
-                        painter = painterResource(Res.drawable.ic_background),
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .align(Alignment.TopCenter),
-                    )
+                    // Background image – only visible on auth screens
+                    if (isAuthScreen) {
+                        Image(
+                            painter = painterResource(Res.drawable.ic_background),
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .align(Alignment.TopCenter),
+                        )
+                    }
 
                     // Screen routing
                     NavigationHost()

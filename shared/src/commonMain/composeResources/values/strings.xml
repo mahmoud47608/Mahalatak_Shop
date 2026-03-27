@@ -186,6 +186,15 @@
     <string name="delete">Delete</string>
     <string name="currency">EGP</string>
 
+    <!-- Chat Screen -->
+    <string name="messages">Messages</string>
+    <string name="active_tab">Active</string>
+    <string name="closed_tab">Closed</string>
+    <string name="no_messages">No messages yet</string>
+    <string name="type_message">Type a message…</string>
+    <string name="online">Online</string>
+    <string name="offline">Offline</string>
+
     <!-- Orders Screen -->
     <string name="my_orders">My Orders</string>
     <string name="new_tab">New</string>

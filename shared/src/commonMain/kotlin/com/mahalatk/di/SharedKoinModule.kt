@@ -6,6 +6,8 @@ import com.mahalatk.base.managers.SessionManager
 import com.mahalatk.fcm.FcmEventHandler
 import com.mahalatk.features.auth.login.LoginViewModel
 import com.mahalatk.features.auth.register.RegisterViewModel
+import com.mahalatk.features.chat.ChatDetailViewModel
+import com.mahalatk.features.chat.ChatViewModel
 import com.mahalatk.features.home.HomeViewModel
 import com.mahalatk.features.main.MainViewModel
 import com.mahalatk.features.more.MoreViewModel
@@ -29,4 +31,6 @@ val sharedModule = module {
     viewModel { HomeViewModel(get()) }
     viewModel { ProductsViewModel() }
     viewModel { OrdersViewModel() }
+    viewModel { ChatViewModel() }
+    viewModel { ChatDetailViewModel() }
 }

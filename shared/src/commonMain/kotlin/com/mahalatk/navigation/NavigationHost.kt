@@ -9,6 +9,7 @@ import com.mahalatk.features.auth.login.LoginScreen
 import com.mahalatk.features.auth.register.LocationResultHolder
 import com.mahalatk.features.auth.register.PickLocationScreen
 import com.mahalatk.features.auth.register.RegisterScreen
+import com.mahalatk.features.chat.ChatDetailScreen
 import com.mahalatk.features.splash.SplashScreen
 import com.mahalatk.navigation.graphs.MainNavGraph
 
@@ -57,9 +58,18 @@ fun NavigationHost() {
                     )
                 }
 
+                // ─── Chat Detail ──────────────────────────
+                is Route.ChatDetail -> NavEntry(route) {
+                    ChatDetailScreen(
+                        chatId = route.chatId,
+                        customerName = route.customerName,
+                        onBack = { navigator.pop() },
+                    )
+                }
+
                 // ─── Main ────────────────────────────────
                 is Route.Home, is Route.Products, is Route.Orders, is Route.Chat, is Route.Account,
-                is Route.Parts, is Route.More -> NavEntry(route) {
+                is Route.More -> NavEntry(route) {
                     MainNavGraph(route = route)
                 }
             }
