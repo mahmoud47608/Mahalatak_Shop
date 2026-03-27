@@ -11,6 +11,7 @@ import com.mahalatk.domain.repository.PreferenceRepository
 import com.mahalatk.domain.usecase.auth.LoginUseCase
 import com.mahalatk.domain.util.DataState
 import com.mahalatk.domain.util.TokenCacheManager
+import com.mahalatk.domain.util.toJson
 import com.mahalatk.util.applyCommonSideEffects
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -81,14 +82,17 @@ class LoginViewModel(
                             this@LoginViewModel,
                             showLoading = true
                         ) { response ->
-                            response.data?.user?.token?.let { token ->
-                                viewModelScope.launch {
-                                    preferenceRepository.setToken(token)
-                                    preferenceRepository.setIsLogin(true)
-                                    tokenCacheManager.refreshTokenCache()
+                            response.data?.let { authData ->
+                                authData.token?.let { token ->
+                                    viewModelScope.launch {
+                                        preferenceRepository.setToken(token)
+                                        preferenceRepository.setUserData(authData.toJson())
+                                        preferenceRepository.setIsLogin(true)
+                                        tokenCacheManager.refreshTokenCache()
+                                    }
                                 }
+                                _authData.value = authData
                             }
-                            _authData.value = response.data
                         }
                     }
                 }

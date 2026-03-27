@@ -22,7 +22,6 @@ fun HttpClient.installTokenInterceptor(tokenProvider: TokenHeaderProvider): Http
         if (token.isNotEmpty()) {
             request.headers[NetworkConstants.AUTHORIZATION] = token
         }
-        // Dynamic language header - updates on every request
         request.headers[NetworkConstants.LANGUAGE] = getPlatformLanguage()
         execute(request)
     }

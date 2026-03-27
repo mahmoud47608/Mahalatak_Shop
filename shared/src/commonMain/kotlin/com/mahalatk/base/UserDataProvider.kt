@@ -12,22 +12,24 @@ import kotlinx.coroutines.flow.firstOrNull
 class UserDataProvider(
     private val preferenceRepository: PreferenceRepository,
 ) {
-    suspend fun getUser(): AuthData.User? {
+    suspend fun getAuthData(): AuthData? {
         val raw = preferenceRepository.getUserData().firstOrNull()
         if (raw.isNullOrEmpty()) return null
         return try {
-            appJson.decodeFromString<AuthData>(raw).user
+            appJson.decodeFromString<AuthData>(raw)
         } catch (_: Exception) {
             null
         }
     }
 
     suspend fun getUserName(): String {
-        val user = getUser() ?: return ""
-        return "${user.firstName.orEmpty()} ${user.lastName.orEmpty()}".trim()
+        val data = getAuthData() ?: return ""
+        // API returns "name" field directly, or fallback to firstName + lastName
+        return data.name
+            ?: "${data.firstName.orEmpty()} ${data.lastName.orEmpty()}".trim()
     }
 
     suspend fun getUserImage(): String {
-        return getUser()?.image.orEmpty()
+        return getAuthData()?.image.orEmpty()
     }
 }
