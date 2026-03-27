@@ -36,6 +36,7 @@ import com.mahalatk.common.component.animation.AnimatedListItem
 import com.mahalatk.common.component.header.ScreenHeader
 import com.mahalatk.common.component.tabs.FilterTabs
 import com.mahalatk.theme.AppColor
+import com.mahalatk.theme.AppShapes
 import com.mahalatk.theme.CornerDimensions
 import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
@@ -188,36 +189,38 @@ private fun OrderCard(order: Order) {
 
 @Composable
 private fun StatusBadge(status: OrderStatus) {
-    val (bgColor, textColor, label) = when (status) {
-        OrderStatus.New -> Triple(AppColor.Primary.copy(alpha = 0.1f), AppColor.Primary, "New")
-        OrderStatus.Preparing -> Triple(
-            AppColor.Warning.copy(alpha = 0.15f),
-            Color(0xFFE6A700),
-            "Preparing"
-        )
+    val (bgColor, textColor, label) = remember(status) {
+        when (status) {
+            OrderStatus.New -> Triple(AppColor.Primary.copy(alpha = 0.1f), AppColor.Primary, "New")
+            OrderStatus.Preparing -> Triple(
+                AppColor.Warning.copy(alpha = 0.15f),
+                Color(0xFFE6A700),
+                "Preparing"
+            )
 
-        OrderStatus.Delivered -> Triple(
-            AppColor.Success.copy(alpha = 0.1f),
-            AppColor.Success,
-            "Delivered"
-        )
+            OrderStatus.Delivered -> Triple(
+                AppColor.Success.copy(alpha = 0.1f),
+                AppColor.Success,
+                "Delivered"
+            )
 
-        OrderStatus.Returned -> Triple(
-            AppColor.Error.copy(alpha = 0.1f),
-            AppColor.Error,
-            "Returned"
-        )
+            OrderStatus.Returned -> Triple(
+                AppColor.Error.copy(alpha = 0.1f),
+                AppColor.Error,
+                "Returned"
+            )
 
-        OrderStatus.Cancelled -> Triple(
-            AppColor.Error.copy(alpha = 0.1f),
-            AppColor.Error,
-            "Cancelled"
+            OrderStatus.Cancelled -> Triple(
+                AppColor.Error.copy(alpha = 0.1f),
+                AppColor.Error,
+                "Cancelled"
         )
+        }
     }
 
     Box(
         modifier = Modifier
-            .background(color = bgColor, shape = RoundedCornerShape(8.dp))
+            .background(color = bgColor, shape = AppShapes.Small)
             .padding(horizontal = 12.dp, vertical = 5.dp),
     ) {
         Text(

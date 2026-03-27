@@ -66,7 +66,10 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.viewmodel.koinViewModel
 
-private data class MenuItem(val icon: DrawableResource, val title: String)
+private data class MenuItem(
+    val icon: DrawableResource,
+    val titleRes: org.jetbrains.compose.resources.StringResource
+)
 
 @Composable
 fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
@@ -79,15 +82,17 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
         )
     }
 
-    val menuItems = listOf(
-        MenuItem(Res.drawable.ic_profile, stringResource(Res.string.profile)),
-        MenuItem(Res.drawable.ic_settings, stringResource(Res.string.settings)),
-        MenuItem(Res.drawable.ic_rating, stringResource(Res.string.my_ratings)),
-        MenuItem(Res.drawable.ic_complaint, stringResource(Res.string.complaints)),
-        MenuItem(Res.drawable.ic_about, stringResource(Res.string.about_app)),
-        MenuItem(Res.drawable.ic_terms, stringResource(Res.string.terms_conditions)),
-        MenuItem(Res.drawable.ic_privacy, stringResource(Res.string.privacy_policy)),
-    )
+    val menuItems = remember {
+        listOf(
+            MenuItem(Res.drawable.ic_profile, Res.string.profile),
+            MenuItem(Res.drawable.ic_settings, Res.string.settings),
+            MenuItem(Res.drawable.ic_rating, Res.string.my_ratings),
+            MenuItem(Res.drawable.ic_complaint, Res.string.complaints),
+            MenuItem(Res.drawable.ic_about, Res.string.about_app),
+            MenuItem(Res.drawable.ic_terms, Res.string.terms_conditions),
+            MenuItem(Res.drawable.ic_privacy, Res.string.privacy_policy),
+        )
+    }
 
     Box(modifier = Modifier.fillMaxSize().background(AppColor.ScreenBackground)) {
 
@@ -149,7 +154,7 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
                 AnimatedListItem(index + 1) {
                     MoreMenuItem(
                         icon = item.icon,
-                        title = item.title,
+                        title = stringResource(item.titleRes),
                         onClick = { },
                     )
                 }
