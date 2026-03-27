@@ -238,11 +238,11 @@ private fun MoreMenuItem(icon: DrawableResource, title: String, onClick: () -> U
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 14.dp),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 14.dp, vertical = 10.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Box(
-                modifier = Modifier.size(40.dp)
+                modifier = Modifier.size(32.dp)
                     .background(AppColor.Primary.copy(alpha = 0.1f), CircleShape),
                 contentAlignment = Alignment.Center,
             ) {
@@ -250,20 +250,20 @@ private fun MoreMenuItem(icon: DrawableResource, title: String, onClick: () -> U
                     painterResource(icon),
                     null,
                     tint = AppColor.Primary,
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(16.dp)
                 )
             }
-            Spacer(modifier = Modifier.width(SpacingDimensions.sp4))
+            Spacer(modifier = Modifier.width(SpacingDimensions.sp2))
             Text(
                 text = title,
-                style = MahalatkTheme.bodyLarge,
+                style = MahalatkTheme.bodyMedium,
                 color = AppColor.TextPrimary,
                 fontWeight = FontWeight.Medium,
                 modifier = Modifier.weight(1f),
             )
             Icon(
                 Icons.AutoMirrored.Filled.KeyboardArrowRight, null,
-                tint = AppColor.TextHint, modifier = Modifier.size(22.dp),
+                tint = AppColor.TextHint, modifier = Modifier.size(18.dp),
             )
         }
     }
