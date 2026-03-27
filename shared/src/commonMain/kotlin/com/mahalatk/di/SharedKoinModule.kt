@@ -5,6 +5,8 @@ import com.mahalatk.base.managers.MessageManager
 import com.mahalatk.base.managers.SessionManager
 import com.mahalatk.fcm.FcmEventHandler
 import com.mahalatk.features.auth.activation.ActivationViewModel
+import com.mahalatk.features.auth.forgotpassword.ForgotPasswordViewModel
+import com.mahalatk.features.auth.forgotpassword.ResetPasswordViewModel
 import com.mahalatk.features.auth.login.LoginViewModel
 import com.mahalatk.features.auth.register.RegisterViewModel
 import com.mahalatk.features.chat.ChatDetailViewModel
@@ -37,4 +39,6 @@ val sharedModule = module {
     viewModel { ChatDetailViewModel() }
     viewModel { NotificationsViewModel() }
     viewModel { ActivationViewModel() }
+    viewModel { ForgotPasswordViewModel() }
+    viewModel { ResetPasswordViewModel() }
 }

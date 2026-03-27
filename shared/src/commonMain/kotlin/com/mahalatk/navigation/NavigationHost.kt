@@ -6,6 +6,8 @@ import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.mahalatk.features.auth.activation.ActivationScreen
+import com.mahalatk.features.auth.forgotpassword.ForgotPasswordScreen
+import com.mahalatk.features.auth.forgotpassword.ResetPasswordScreen
 import com.mahalatk.features.auth.login.LoginScreen
 import com.mahalatk.features.auth.register.LocationResultHolder
 import com.mahalatk.features.auth.register.PickLocationScreen
@@ -40,6 +42,7 @@ fun NavigationHost() {
                     LoginScreen(
                         onNavigateToHome = { navigator.replaceAll(Route.Home) },
                         onNavigateToSignUp = { navigator.push(Route.Register) },
+                        onNavigateToForgotPassword = { navigator.push(Route.ForgotPassword) },
                     )
                 }
 
@@ -47,14 +50,46 @@ fun NavigationHost() {
                     RegisterScreen(
                         onNavigateToLogin = { navigator.pop() },
                         onNavigateToPickLocation = { navigator.push(Route.PickLocation) },
-                        onNavigateToActivation = { phone -> navigator.push(Route.Activation(phone)) },
+                        onNavigateToActivation = { phone ->
+                            navigator.push(Route.Activation(phone))
+                        },
                     )
                 }
 
                 is Route.Activation -> NavEntry(route) {
-                    ActivationScreen(
-                        phoneNumber = route.phoneNumber,
-                        onVerified = { navigator.replaceAll(Route.Home) },
+                    if (route.isFromForgotPassword) {
+                        // Forgot password flow → go to ResetPassword
+                        ActivationScreen(
+                            phoneNumber = route.phoneNumber,
+                            onVerified = {
+                                navigator.replace(Route.ResetPassword(route.phoneNumber))
+                            },
+                        )
+                    } else {
+                        // Registration flow → show success then go Home
+                        ActivationScreen(
+                            phoneNumber = route.phoneNumber,
+                            showSuccessOnVerify = true,
+                            successMessage = "Registration request sent successfully!",
+                            onVerified = { navigator.replaceAll(Route.Home) },
+                        )
+                    }
+                }
+
+                // ─── Forgot Password Flow ────────────────
+                is Route.ForgotPassword -> NavEntry(route) {
+                    ForgotPasswordScreen(
+                        onSendCode = { phone ->
+                            navigator.push(
+                                Route.Activation(phone, isFromForgotPassword = true)
+                            )
+                        },
+                    )
+                }
+
+                is Route.ResetPassword -> NavEntry(route) {
+                    ResetPasswordScreen(
+                        onSuccess = { navigator.replaceAll(Route.Login) },
                     )
                 }
 
@@ -68,12 +103,12 @@ fun NavigationHost() {
                     )
                 }
 
-                // ─── Notifications ───────────────────────────
+                // ─── Notifications ───────────────────────
                 is Route.Notifications -> NavEntry(route) {
                     NotificationsScreen(onBack = { navigator.pop() })
                 }
 
-                // ─── Chat Detail ──────────────────────────
+                // ─── Chat Detail ─────────────────────────
                 is Route.ChatDetail -> NavEntry(route) {
                     ChatDetailScreen(
                         chatId = route.chatId,
@@ -82,7 +117,7 @@ fun NavigationHost() {
                     )
                 }
 
-                // ─── Main ────────────────────────────────
+                // ─── Main Tabs ───────────────────────────
                 is Route.Home, is Route.Products, is Route.Orders, is Route.Chat, is Route.Account,
                 is Route.More -> NavEntry(route) {
                     MainNavGraph(route = route)

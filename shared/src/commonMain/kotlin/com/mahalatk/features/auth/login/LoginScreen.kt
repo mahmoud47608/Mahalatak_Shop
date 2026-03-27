@@ -59,6 +59,7 @@ fun LoginScreen(
     viewModel: LoginViewModel = koinViewModel(),
     onNavigateToHome: () -> Unit = {},
     onNavigateToSignUp: () -> Unit = {},
+    onNavigateToForgotPassword: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -166,7 +167,7 @@ fun LoginScreen(
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier
                     .align(Alignment.End)
-                    .noRippleClickable { }
+                    .noRippleClickable { onNavigateToForgotPassword() }
             )
 
             Spacer(modifier = Modifier.height(60.dp))

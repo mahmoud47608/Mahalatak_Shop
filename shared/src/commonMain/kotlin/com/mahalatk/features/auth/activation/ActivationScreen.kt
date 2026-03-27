@@ -25,7 +25,9 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,6 +47,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mahalatk.common.component.bottomsheet.SuccessBottomSheet
 import com.mahalatk.common.component.button.DefaultButton
 import com.mahalatk.common.component.utilis.noRippleClickable
 import com.mahalatk.theme.AppColor
@@ -63,24 +66,32 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun ActivationScreen(
     phoneNumber: String,
+    showSuccessOnVerify: Boolean = false,
+    successMessage: String = "",
     onVerified: () -> Unit,
     viewModel: ActivationViewModel = koinViewModel(),
 ) {
     val state by viewModel.uiState.collectAsState()
     val focusRequester = remember { FocusRequester() }
+    var showSuccess by remember { mutableStateOf(false) }
 
     LaunchedEffect(phoneNumber) {
         viewModel.setPhoneNumber(phoneNumber)
     }
 
-    // Auto-focus the hidden input
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
     }
 
-    // Auto-verify when code is complete
+    // When verification completes
     LaunchedEffect(state.isVerifying) {
-        if (state.isVerifying) onVerified()
+        if (state.isVerifying) {
+            if (showSuccessOnVerify) {
+                showSuccess = true
+            } else {
+                onVerified()
+            }
+        }
     }
 
     Column(
@@ -174,6 +185,18 @@ fun ActivationScreen(
             enabled = state.isCodeComplete && !state.isVerifying,
             onClick = { viewModel.verify() },
             modifier = Modifier.fillMaxWidth(),
+        )
+    }
+
+    // Success bottom sheet (for registration flow)
+    if (showSuccessOnVerify) {
+        SuccessBottomSheet(
+            message = successMessage,
+            visible = showSuccess,
+            onDismiss = {
+                showSuccess = false
+                onVerified()
+            },
         )
     }
 }

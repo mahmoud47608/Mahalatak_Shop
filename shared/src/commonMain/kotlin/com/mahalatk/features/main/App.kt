@@ -47,6 +47,8 @@ fun App(viewModel: MainViewModel = koinViewModel()) {
                 || navigator.currentRoute is com.mahalatk.navigation.Route.Login
                 || navigator.currentRoute is com.mahalatk.navigation.Route.Register
                 || navigator.currentRoute is com.mahalatk.navigation.Route.PickLocation
+                || navigator.currentRoute is com.mahalatk.navigation.Route.ForgotPassword
+                || navigator.currentRoute is com.mahalatk.navigation.Route.ResetPassword
 
         // Snackbar messages
         LaunchedEffect(Unit) {
