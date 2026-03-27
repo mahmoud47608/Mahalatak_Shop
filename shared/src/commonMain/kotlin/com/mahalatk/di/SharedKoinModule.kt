@@ -9,6 +9,7 @@ import com.mahalatk.features.auth.register.RegisterViewModel
 import com.mahalatk.features.home.HomeViewModel
 import com.mahalatk.features.main.MainViewModel
 import com.mahalatk.features.more.MoreViewModel
+import com.mahalatk.features.orders.OrdersViewModel
 import com.mahalatk.features.products.ProductsViewModel
 import com.mahalatk.features.splash.SplashViewModel
 import org.koin.core.module.dsl.viewModel
@@ -27,4 +28,5 @@ val sharedModule = module {
     viewModel { MoreViewModel(get()) }
     viewModel { HomeViewModel(get()) }
     viewModel { ProductsViewModel() }
+    viewModel { OrdersViewModel() }
 }

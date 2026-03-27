@@ -186,6 +186,15 @@
     <string name="delete">Delete</string>
     <string name="currency">EGP</string>
 
+    <!-- Orders Screen -->
+    <string name="my_orders">My Orders</string>
+    <string name="new_tab">New</string>
+    <string name="current_tab">Current</string>
+    <string name="completed_tab">Completed</string>
+    <string name="returns_tab">Returns</string>
+    <string name="no_orders">No orders yet</string>
+    <string name="items_count">%d items</string>
+
     <!-- More Screen -->
     <string name="profile">Profile</string>
     <string name="my_ratings">My Ratings</string>
