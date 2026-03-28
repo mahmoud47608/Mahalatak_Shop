@@ -23,6 +23,7 @@ sealed interface Route {
     data class ChatDetail(val chatId: String, val customerName: String) : Route
     data class OrderDetail(val orderId: String) : Route
     data object Notifications : Route
+    data object AddProduct : Route
 }
 
 /** True for screens that show the auth background image. */

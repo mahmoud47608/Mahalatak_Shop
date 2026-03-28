@@ -5,11 +5,14 @@ import com.mahalatk.data.platform.AppConfig
 import com.mahalatk.data.platform.createPlatformHttpClient
 import com.mahalatk.data.platform.installTokenInterceptor
 import com.mahalatk.data.remote.AuthEndPoint
+import com.mahalatk.data.remote.CommonEndPoint
 import com.mahalatk.data.repository.AuthRepositoryImpl
+import com.mahalatk.data.repository.CommonRepositoryImpl
 import com.mahalatk.data.repository.PreferenceRepositoryImpl
 import com.mahalatk.data.util.TokenHeaderProvider
 import com.mahalatk.domain.datasource.PreferenceDataSource
 import com.mahalatk.domain.repository.AuthRepository
+import com.mahalatk.domain.repository.CommonRepository
 import com.mahalatk.domain.repository.PreferenceRepository
 import com.mahalatk.domain.util.TokenCacheManager
 import com.russhwolf.settings.Settings
@@ -44,4 +47,7 @@ val commonDataModule = module {
     // Endpoints & Repositories
     single { AuthEndPoint(get()) }
     single<AuthRepository> { AuthRepositoryImpl(get()) }
+
+    single { CommonEndPoint(get()) }
+    single<CommonRepository> { CommonRepositoryImpl(get()) }
 }

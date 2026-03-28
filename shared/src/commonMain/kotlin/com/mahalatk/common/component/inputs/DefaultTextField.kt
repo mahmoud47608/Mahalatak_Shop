@@ -31,6 +31,7 @@ fun DefaultTextField(
     maxLength: Int? = null,
     maxLines: Int = 1,
     minLines: Int = 1,
+    fieldHeight:Int=56,
     isEnabled: Boolean = true,
     keyboardType: KeyboardType = KeyboardType.Text,
     imeAction: ImeAction = ImeAction.Default,
@@ -55,7 +56,7 @@ fun DefaultTextField(
             ),
             modifier = Modifier
                 .fillMaxWidth()
-                .height(56.dp)
+                .height(fieldHeight.dp)
                 .clip(shape)
                 .border(
                     width = 1.dp,

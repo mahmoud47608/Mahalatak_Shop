@@ -5,6 +5,10 @@
     <string name="please_enter_password">الرجاء إدخال كلمة المرور</string>
 
     <string name="home">الرئيسية</string>
+    <string name="products">المنتجات</string>
+    <string name="orders">الطلبات</string>
+    <string name="chat">المحادثات</string>
+    <string name="account">حسابي</string>
     <string name="parts">القطع</string>
     <string name="more">المزيد</string>
     <string name="empty_string"></string>
@@ -155,6 +159,138 @@
     <string name="select_shop">اختر المحل</string>
     <string name="please_enter_employee_name">الرجاء إدخال اسم الموظف</string>
     <string name="please_select_shop">الرجاء اختيار المحل</string>
+
+    <!-- Activation Screen -->
+    <string name="activation_code">رمز التفعيل</string>
+    <string name="activation_subtitle">يرجى إدخا�� الرمز المرسل إلى</string>
+    <string name="verify">تحقق</string>
+    <string name="resend_code">إعادة إرسال الرمز</string>
+    <string name="didnt_receive_code">لم تستلم الرمز؟</string>
+
+    <!-- Forgot/Reset Password -->
+    <string name="forgot_password_title">نسيت كلمة المرور</string>
+    <string name="forgot_password_subtitle">أدخل رقم هاتفك لاستلام رمز ا��تحقق</string>
+    <string name="phone_number">رقم الهاتف</string>
+    <string name="send_code">إرسال الرمز</string>
+    <string name="reset_password">إعادة تعيين كلمة المرور</string>
+    <string name="reset_password_subtitle">أدخل كلمة مرور جديدة لاستعادة حسابك</string>
+    <string name="new_password">كلمة المرور الجديدة</string>
+    <string name="confirm_new_password">تأكيد كلمة المرور الجديدة</string>
+
+    <!-- Success Messages -->
+    <string name="registration_success">تم إرسال طلب التسجيل بنجاح!</string>
+    <string name="password_reset_success">تم إعادة تعيين كلمة المرور بنجاح!</string>
+
+    <!-- Notifications Screen -->
+    <string name="notifications">الإشعارات</string>
+    <string name="no_notifications">لا توجد إشعارات بعد</string>
+    <string name="clear_all_notifications">مسح الكل</string>
+    <string name="just_now">الآن</string>
+
+    <!-- Home Screen -->
+    <string name="hello">مرحبًا</string>
+    <string name="receive_new_orders">استقبال طلبات جديدة</string>
+    <string name="available">متاح</string>
+    <string name="unavailable">غير متاح</string>
+    <string name="self_delivery">توصيل ذاتي</string>
+    <string name="statistics">الإحصائيات</string>
+    <string name="completed_orders">الطلبات المكتملة</string>
+    <string name="cancelled_orders">الطلبات الملغاة</string>
+    <string name="new_orders">الطلبات الجديدة</string>
+    <string name="order_number">طلب #%s</string>
+    <string name="today">اليوم</string>
+
+    <!-- Products Screen -->
+    <string name="my_products">منتجاتي</string>
+    <string name="edit">تعديل</string>
+    <string name="delete">حذف</string>
+    <string name="currency">ج.م</string>
+
+    <!-- Add Product Screen -->
+    <string name="add_product">إضافة منتج</string>
+    <string name="product_name_ar">اسم المنتج (عربي)</string>
+    <string name="product_name_en">اسم المنتج (إنجليزي)</string>
+    <string name="description_ar">الوصف (عربي)</string>
+    <string name="description_en">الوصف (إنجليزي)</string>
+    <string name="product_images">صور المنتج</string>
+    <string name="product_video">فيديو المنتج</string>
+    <string name="add_images">إضافة صور</string>
+    <string name="add_video">إضافة فيديو</string>
+    <string name="select_category">اختر التصنيف</string>
+    <string name="select_sub_category">اختر التصنيف الفرعي</string>
+    <string name="price">السعر</string>
+    <string name="discount">الخصم</string>
+    <string name="discount_type">نوع الخصم</string>
+    <string name="discount_value">قيمة الخصم</string>
+    <string name="no_discount">بدون خصم</string>
+    <string name="fixed_price_discount">مبلغ ثابت</string>
+    <string name="percentage_discount">نسبة مئوية</string>
+    <string name="max_images_reached">الحد الأقصى 6 صور</string>
+    <string name="please_enter_product_name_ar">الرجاء إدخال اسم المنتج بالعربي</string>
+    <string name="please_enter_product_name_en">الرجاء إدخال اسم المنتج بالإنجليزي</string>
+    <string name="please_enter_description_ar">الرجاء إدخال الوصف بالعربي</string>
+    <string name="please_enter_description_en">الرجاء إدخال الوصف بالإنجليزي</string>
+    <string name="please_add_image">الرجاء إضافة صورة واحدة على الأقل</string>
+    <string name="please_enter_price">الرجاء إدخال السعر</string>
+    <string name="please_enter_discount_value">الرجاء إدخال قيمة الخصم</string>
+    <string name="please_select_discount_type">الرجاء اختيار نوع الخصم</string>
+
+    <!-- Chat Screen -->
+    <string name="messages">الرسائل</string>
+    <string name="active_tab">نشط</string>
+    <string name="closed_tab">مغلق</string>
+    <string name="no_messages">لا توجد رسائل بعد</string>
+    <string name="type_message">اكتب رسالة…</string>
+    <string name="online">متصل</string>
+    <string name="offline">غير متصل</string>
+
+    <!-- Orders Screen -->
+    <string name="my_orders">طلباتي</string>
+    <string name="new_tab">جديد</string>
+    <string name="current_tab">حالي</string>
+    <string name="completed_tab">مكتمل</string>
+    <string name="returns_tab">مرتجعات</string>
+    <string name="no_orders">لا توجد طلبات بعد</string>
+    <string name="items_count">%d عناصر</string>
+
+    <!-- Order Detail Screen -->
+    <string name="order_details">تفاصيل الطلب</string>
+    <string name="order_info">معلومات الطلب</string>
+    <string name="payment_info">معلومات الدفع</string>
+    <string name="delivery_info">معلومات التوصيل</string>
+    <string name="products_section">المنتجات</string>
+    <string name="delivery_address">عنوان التوصيل</string>
+    <string name="payment_method">طريقة الدفع</string>
+    <string name="coupon_code">رمز الكوبون</string>
+    <string name="order_type">نوع الطلب</string>
+    <string name="normal_order">طلب عادي</string>
+    <string name="products_total">إجمالي المنتجات</string>
+    <string name="delivery_fee">رسوم التوصيل</string>
+    <string name="vat_amount">الضريبة</string>
+    <string name="total_amount">الإجمالي</string>
+    <string name="waiting_payment">في انتظار دفع العميل</string>
+    <string name="status_preparing">قيد التحضير</string>
+    <string name="status_ready">جاهز</string>
+    <string name="status_delivered_driver">تم التسليم للسائق</string>
+    <string name="mark_prepared">تم التحضير</string>
+    <string name="mark_delivered_driver">تم التسليم للسائق</string>
+    <string name="customer_rating">تقييم العميل</string>
+    <string name="driver_rating">تقييم السائق</string>
+    <string name="submit_rating">إرسال</string>
+    <string name="recommend_dealing">أنصح بالتعامل مع</string>
+    <string name="sar">ر.س</string>
+    <string name="cash">نقدي</string>
+    <string name="electronic">إلكتروني</string>
+    <string name="driver_name">اسم السائق</string>
+    <string name="driver_phone">هاتف السائق</string>
+
+    <!-- More/Account Screen -->
+    <string name="profile">الملف الشخصي</string>
+    <string name="my_ratings">تقييماتي</string>
+    <string name="complaints">الشكاوى</string>
+    <string name="about_app">عن التطبيق</string>
+    <string name="terms_conditions">الشروط والأحكام</string>
+    <string name="privacy_policy">سياسة الخصوصية</string>
 
     <!-- Map Tracking -->
     <string name="map_tracking">تتبع الخريطة</string>

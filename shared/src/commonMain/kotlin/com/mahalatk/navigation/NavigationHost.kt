@@ -14,6 +14,7 @@ import com.mahalatk.features.auth.register.PickLocationScreen
 import com.mahalatk.features.auth.register.RegisterScreen
 import com.mahalatk.features.chat.ChatDetailScreen
 import com.mahalatk.features.notifications.NotificationsScreen
+import com.mahalatk.features.products.add.AddProductScreen
 import com.mahalatk.features.splash.SplashScreen
 import com.mahalatk.navigation.graphs.MainNavGraph
 
@@ -123,6 +124,11 @@ fun NavigationHost() {
                         customerName = route.customerName,
                         onBack = { navigator.pop() },
                     )
+                }
+
+                // ─── Add Product ────────────────────────
+                is Route.AddProduct -> NavEntry(route) {
+                    AddProductScreen(onBack = { navigator.pop() })
                 }
 
                 // ─── Main Tabs ───────────────────────────

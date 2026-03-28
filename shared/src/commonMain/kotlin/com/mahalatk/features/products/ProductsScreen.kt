@@ -54,7 +54,10 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun ProductsScreen(viewModel: ProductsViewModel = koinViewModel()) {
+fun ProductsScreen(
+    viewModel: ProductsViewModel = koinViewModel(),
+    onAddProduct: () -> Unit = {},
+) {
     val state by viewModel.uiState.collectAsState()
 
     Box(
@@ -84,7 +87,7 @@ fun ProductsScreen(viewModel: ProductsViewModel = koinViewModel()) {
                 .shadow(elevation = 8.dp, shape = CircleShape)
                 .clip(CircleShape)
                 .background(AppColor.Primary)
-                .noRippleClickable { },
+                .noRippleClickable { onAddProduct() },
             contentAlignment = Alignment.Center,
         ) {
             Icon(

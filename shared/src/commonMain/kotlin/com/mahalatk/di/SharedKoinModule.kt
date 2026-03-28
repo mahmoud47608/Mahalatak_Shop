@@ -19,6 +19,7 @@ import com.mahalatk.features.notifications.NotificationsViewModel
 import com.mahalatk.features.orders.OrdersViewModel
 import com.mahalatk.features.orders.detail.OrderDetailViewModel
 import com.mahalatk.features.products.ProductsViewModel
+import com.mahalatk.features.products.add.AddProductViewModel
 import com.mahalatk.features.splash.SplashViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -40,6 +41,7 @@ val sharedModule = module {
     viewModel { HomeViewModel(get()) }
     viewModel { MoreViewModel(get(), get(), get()) }
     viewModel { ProductsViewModel() }
+    viewModel { AddProductViewModel(get(), get(), get(), get()) }
     viewModel { OrdersViewModel() }
     viewModel { ChatViewModel() }
     viewModel { ChatDetailViewModel() }

@@ -18,7 +18,9 @@ fun MainNavGraph(route: Route) {
         is Route.Home -> HomeScreen(
             onOrderClick = { orderId -> navigator.push(Route.OrderDetail(orderId)) },
         )
-        is Route.Products -> ProductsScreen()
+        is Route.Products -> ProductsScreen(
+            onAddProduct = { navigator.push(Route.AddProduct) },
+        )
         is Route.Orders -> OrdersScreen(
             onOrderClick = { orderId -> navigator.push(Route.OrderDetail(orderId)) },
         )

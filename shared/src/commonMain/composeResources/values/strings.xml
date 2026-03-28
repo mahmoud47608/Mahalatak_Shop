@@ -213,6 +213,35 @@
     <string name="delete">Delete</string>
     <string name="currency">EGP</string>
 
+    <!-- Add Product Screen -->
+    <string name="add_product">Add Product</string>
+    <string name="product_name_ar">Product Name (Arabic)</string>
+    <string name="product_name_en">Product Name (English)</string>
+    <string name="description_ar">Description (Arabic)</string>
+    <string name="description_en">Description (English)</string>
+    <string name="product_images">Product Images</string>
+    <string name="product_video">Product Video</string>
+    <string name="add_images">Add Images</string>
+    <string name="add_video">Add Video</string>
+    <string name="select_category">Select Category</string>
+    <string name="select_sub_category">Select Sub Category</string>
+    <string name="price">Price</string>
+    <string name="discount">Discount</string>
+    <string name="discount_type">Discount Type</string>
+    <string name="discount_value">Discount Value</string>
+    <string name="no_discount">No Discount</string>
+    <string name="fixed_price_discount">Fixed Price</string>
+    <string name="percentage_discount">Percentage</string>
+    <string name="max_images_reached">Maximum 6 images allowed</string>
+    <string name="please_enter_product_name_ar">Please enter product name in Arabic</string>
+    <string name="please_enter_product_name_en">Please enter product name in English</string>
+    <string name="please_enter_description_ar">Please enter description in Arabic</string>
+    <string name="please_enter_description_en">Please enter description in English</string>
+    <string name="please_add_image">Please add at least one image</string>
+    <string name="please_enter_price">Please enter price</string>
+    <string name="please_enter_discount_value">Please enter discount value</string>
+    <string name="please_select_discount_type">Please select discount type</string>
+
     <!-- Chat Screen -->
     <string name="messages">Messages</string>
     <string name="active_tab">Active</string>
