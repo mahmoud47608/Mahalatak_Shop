@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import com.mahalatk.common.component.animation.AnimatedListItem
 import com.mahalatk.common.component.header.ScreenHeader
 import com.mahalatk.common.component.tabs.FilterTabs
+import com.mahalatk.common.component.utilis.noRippleClickable
 import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.AppShapes
 import com.mahalatk.theme.CornerDimensions
@@ -53,7 +54,10 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun OrdersScreen(viewModel: OrdersViewModel = koinViewModel()) {
+fun OrdersScreen(
+    viewModel: OrdersViewModel = koinViewModel(),
+    onOrderClick: (String) -> Unit = {},
+) {
     val state by viewModel.uiState.collectAsState()
     val filteredOrders by remember { derivedStateOf { state.filteredOrders } }
 
@@ -88,7 +92,12 @@ fun OrdersScreen(viewModel: OrdersViewModel = koinViewModel()) {
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 itemsIndexed(filteredOrders, key = { _, o -> o.id }) { index, order ->
-                    AnimatedListItem(index) { OrderCard(order = order) }
+                    AnimatedListItem(index) {
+                        OrderCard(
+                            order = order,
+                            onClick = { onOrderClick(order.id) },
+                        )
+                    }
                 }
                 item { Spacer(modifier = Modifier.height(16.dp)) }
             }
@@ -117,9 +126,9 @@ private fun EmptyOrdersPlaceholder() {
 }
 
 @Composable
-private fun OrderCard(order: Order) {
+private fun OrderCard(order: Order, onClick: () -> Unit = {}) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().noRippleClickable { onClick() },
         shape = RoundedCornerShape(CornerDimensions.lg),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),

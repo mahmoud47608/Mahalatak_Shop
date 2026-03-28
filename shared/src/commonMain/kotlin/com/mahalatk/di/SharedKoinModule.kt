@@ -17,6 +17,7 @@ import com.mahalatk.features.main.MainViewModel
 import com.mahalatk.features.more.MoreViewModel
 import com.mahalatk.features.notifications.NotificationsViewModel
 import com.mahalatk.features.orders.OrdersViewModel
+import com.mahalatk.features.orders.detail.OrderDetailViewModel
 import com.mahalatk.features.products.ProductsViewModel
 import com.mahalatk.features.splash.SplashViewModel
 import org.koin.core.module.dsl.viewModel
@@ -46,4 +47,5 @@ val sharedModule = module {
     viewModel { ActivationViewModel() }
     viewModel { ForgotPasswordViewModel() }
     viewModel { ResetPasswordViewModel() }
+    viewModel { OrderDetailViewModel() }
 }

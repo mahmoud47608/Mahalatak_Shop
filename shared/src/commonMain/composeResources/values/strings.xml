@@ -231,6 +231,37 @@
     <string name="no_orders">No orders yet</string>
     <string name="items_count">%d items</string>
 
+    <!-- Order Detail Screen -->
+    <string name="order_details">Order Details</string>
+    <string name="order_info">Order Info</string>
+    <string name="payment_info">Payment Info</string>
+    <string name="delivery_info">Delivery Info</string>
+    <string name="products_section">Products</string>
+    <string name="delivery_address">Delivery Address</string>
+    <string name="payment_method">Payment Method</string>
+    <string name="coupon_code">Coupon Code</string>
+    <string name="order_type">Order Type</string>
+    <string name="normal_order">Normal Order</string>
+    <string name="products_total">Products Total</string>
+    <string name="delivery_fee">Delivery Fee</string>
+    <string name="vat_amount">VAT</string>
+    <string name="total_amount">Total</string>
+    <string name="waiting_payment">Waiting for customer payment</string>
+    <string name="status_preparing">Preparing</string>
+    <string name="status_ready">Ready</string>
+    <string name="status_delivered_driver">Delivered to driver</string>
+    <string name="mark_prepared">Done Preparing</string>
+    <string name="mark_delivered_driver">Delivered to Driver</string>
+    <string name="customer_rating">Customer Rating</string>
+    <string name="driver_rating">Driver Rating</string>
+    <string name="submit_rating">Submit</string>
+    <string name="recommend_dealing">Recommend dealing with</string>
+    <string name="sar">SAR</string>
+    <string name="cash">Cash</string>
+    <string name="electronic">Electronic</string>
+    <string name="driver_name">Driver Name</string>
+    <string name="driver_phone">Driver Phone</string>
+
     <!-- More/Account Screen -->
     <string name="profile">Profile</string>
     <string name="my_ratings">My Ratings</string>

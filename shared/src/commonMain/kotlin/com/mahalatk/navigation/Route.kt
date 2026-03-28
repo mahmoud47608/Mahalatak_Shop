@@ -21,6 +21,7 @@ sealed interface Route {
 
     // ─── Detail Screens ────────────────
     data class ChatDetail(val chatId: String, val customerName: String) : Route
+    data class OrderDetail(val orderId: String) : Route
     data object Notifications : Route
 }
 

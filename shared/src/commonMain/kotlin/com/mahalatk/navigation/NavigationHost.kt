@@ -108,6 +108,14 @@ fun NavigationHost() {
                     NotificationsScreen(onBack = { navigator.pop() })
                 }
 
+                // ─── Order Detail ───────────────────────
+                is Route.OrderDetail -> NavEntry(route) {
+                    com.mahalatk.features.orders.detail.OrderDetailScreen(
+                        orderId = route.orderId,
+                        onBack = { navigator.pop() },
+                    )
+                }
+
                 // ─── Chat Detail ─────────────────────────
                 is Route.ChatDetail -> NavEntry(route) {
                     ChatDetailScreen(

@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.mahalatk.common.component.animation.AnimatedListItem
 import com.mahalatk.common.component.image.UserAvatar
+import com.mahalatk.common.component.utilis.noRippleClickable
 import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.AppShapes
 import com.mahalatk.theme.CornerDimensions
@@ -65,13 +66,16 @@ import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
+fun HomeScreen(
+    viewModel: HomeViewModel = koinViewModel(),
+    onOrderClick: (String) -> Unit = {},
+) {
     val state by viewModel.uiState.collectAsState()
     val navigator = com.mahalatk.navigation.LocalNavigator.current
 
     val headerGradient = remember {
         Brush.verticalGradient(
-            colors = listOf(AppColor.Primary, AppColor.Primary.copy(alpha = 0.85f)),
+            colors = listOf(AppColor.Primary, AppColor.Primary),
         )
     }
 
@@ -225,7 +229,9 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
             }
 
             itemsIndexed(state.newOrders, key = { _, o -> o.id }) { index, order ->
-                AnimatedListItem(index) { OrderCard(order = order) }
+                AnimatedListItem(index) {
+                    OrderCard(order = order, onClick = { onOrderClick(order.id) })
+                }
             }
 
             item { Spacer(modifier = Modifier.height(16.dp)) }
@@ -364,9 +370,9 @@ private fun StatCard(
 // Order Card Component
 // ──────────────────────────────────────────────
 @Composable
-private fun OrderCard(order: OrderItem) {
+private fun OrderCard(order: OrderItem, onClick: () -> Unit = {}) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().noRippleClickable { onClick() },
         shape = RoundedCornerShape(CornerDimensions.lg),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),

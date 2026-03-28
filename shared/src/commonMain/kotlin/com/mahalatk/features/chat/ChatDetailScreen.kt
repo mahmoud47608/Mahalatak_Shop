@@ -23,7 +23,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -81,7 +81,7 @@ fun ChatDetailScreen(
     ) {
         val headerGradient = remember {
             Brush.verticalGradient(
-                colors = listOf(AppColor.Primary, AppColor.Primary.copy(alpha = 0.85f)),
+                colors = listOf(AppColor.Primary, AppColor.Primary),
             )
         }
 
@@ -90,22 +90,36 @@ fun ChatDetailScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(brush = headerGradient)
-                .padding(top = 40.dp, bottom = 14.dp, start = 8.dp, end = 16.dp),
+                .padding(top = 40.dp, bottom = 14.dp, start = 16.dp, end = 16.dp),
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 // Back button
-                IconButton(onClick = onBack) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = null,
-                        tint = Color.White,
-                    )
+                Box(
+                    modifier = Modifier
+                        .size(34.dp)
+                        .background(
+                            color = Color.White.copy(alpha = 0.25f),
+                            shape = CircleShape,
+                        ),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    IconButton(
+                        onClick = onBack,
+                        modifier = Modifier.size(34.dp),
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                            contentDescription = null,
+                            tint = Color.White,
+                            modifier = Modifier.size(22.dp),
+                        )
+                    }
                 }
 
-                Spacer(modifier = Modifier.width(4.dp))
+                Spacer(modifier = Modifier.width(12.dp))
 
                 // Avatar
                 Box(

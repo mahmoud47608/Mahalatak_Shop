@@ -17,7 +17,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -60,7 +60,7 @@ fun NotificationsScreen(
 
     val headerGradient = remember {
         Brush.verticalGradient(
-            colors = listOf(AppColor.Primary, AppColor.Primary.copy(alpha = 0.85f)),
+            colors = listOf(AppColor.Primary, AppColor.Primary),
         )
     }
 
@@ -72,19 +72,35 @@ fun NotificationsScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(brush = headerGradient)
-                .padding(top = 40.dp, bottom = 14.dp, start = 4.dp, end = 16.dp),
+                .padding(top = 40.dp, bottom = 14.dp, start = 16.dp, end = 16.dp),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                IconButton(onClick = onBack) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = null,
-                        tint = Color.White,
-                    )
+                Box(
+                    modifier = Modifier
+                        .size(34.dp)
+                        .background(
+                            color = Color.White.copy(alpha = 0.25f),
+                            shape = CircleShape,
+                        ),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    IconButton(
+                        onClick = onBack,
+                        modifier = Modifier.size(34.dp),
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                            contentDescription = null,
+                            tint = Color.White,
+                            modifier = Modifier.size(22.dp),
+                        )
+                    }
                 }
+
+                Spacer(modifier = Modifier.width(10.dp))
 
                 Text(
                     text = stringResource(Res.string.notifications),
