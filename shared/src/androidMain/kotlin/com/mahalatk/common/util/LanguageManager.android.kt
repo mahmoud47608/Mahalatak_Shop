@@ -10,7 +10,13 @@ import androidx.core.os.LocaleListCompat
 import java.util.Locale
 
 actual fun getCurrentLanguageCode(): String {
-    return Locale.getDefault().language
+    // Read from AppCompat locales first (app-level override), then fall back to system
+    val appLocales = AppCompatDelegate.getApplicationLocales()
+    return if (!appLocales.isEmpty) {
+        appLocales[0]?.language ?: Locale.getDefault().language
+    } else {
+        Locale.getDefault().language
+    }
 }
 
 @Composable

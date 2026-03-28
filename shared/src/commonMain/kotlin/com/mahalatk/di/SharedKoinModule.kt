@@ -38,7 +38,7 @@ val sharedModule = module {
     viewModel { LoginViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { RegisterViewModel(get(), get()) }
     viewModel { HomeViewModel(get()) }
-    viewModel { MoreViewModel(get()) }
+    viewModel { MoreViewModel(get(), get(), get()) }
     viewModel { ProductsViewModel() }
     viewModel { OrdersViewModel() }
     viewModel { ChatViewModel() }

@@ -77,6 +77,12 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
     val state by viewModel.uiState.collectAsState()
     val navigator = com.mahalatk.navigation.LocalNavigator.current
 
+    androidx.compose.runtime.LaunchedEffect(Unit) {
+        viewModel.loggedOut.collect {
+            navigator.replaceAll(com.mahalatk.navigation.Route.Login)
+        }
+    }
+
     val headerGradient = remember {
         Brush.linearGradient(
             colors = listOf(AppColor.Primary, AppColor.Primary.copy(alpha = 0.8f)),
@@ -176,7 +182,7 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
             // ── Logout ──
             item {
                 AnimatedListItem(3) {
-                    LogoutButton(onClick = { })
+                    LogoutButton(onClick = viewModel::logout)
                 }
             }
 

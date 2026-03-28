@@ -63,7 +63,7 @@ fun ResetPasswordScreen(
             .padding(horizontal = 24.dp, vertical = 48.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(80.dp))
 
         Image(
             painter = painterResource(Res.drawable.app_icon),
