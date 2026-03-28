@@ -109,7 +109,7 @@ fun LoginScreen(
                         painter = painterResource(Res.drawable.ic_phone),
                         contentDescription = null,
                         modifier = Modifier.size(24.dp),
-                        tint = MahalatkTheme.hint
+                        tint = MahalatkTheme.primary
                     )
                 },
                 modifier = Modifier.fillMaxWidth()
@@ -139,7 +139,7 @@ fun LoginScreen(
                         painter = painterResource(Res.drawable.ic_lock),
                         contentDescription = null,
                         modifier = Modifier.size(24.dp),
-                        tint = MahalatkTheme.hint
+                        tint = MahalatkTheme.primary
                     )
                 },
                 trailingIcon = {
@@ -150,7 +150,7 @@ fun LoginScreen(
                             imageVector = if (uiState.passwordVisible) Icons.Filled.Visibility
                             else Icons.Filled.VisibilityOff,
                             contentDescription = null,
-                            tint = MahalatkTheme.hint
+                            tint = MahalatkTheme.primary
                         )
                     }
                 },

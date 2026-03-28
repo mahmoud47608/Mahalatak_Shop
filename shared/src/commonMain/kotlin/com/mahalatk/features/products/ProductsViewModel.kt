@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 @Immutable
 data class ProductItem(
@@ -13,6 +14,7 @@ data class ProductItem(
     val description: String,
     val price: Double,
     val imageUrl: String = "",
+    val isAvailable: Boolean = true,
 )
 
 @Immutable
@@ -49,4 +51,15 @@ class ProductsViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(ProductsState())
     val uiState: StateFlow<ProductsState> = _uiState.asStateFlow()
+
+    fun toggleProductAvailability(productId: String) {
+        _uiState.update { state ->
+            state.copy(
+                products = state.products.map { product ->
+                    if (product.id == productId) product.copy(isAvailable = !product.isAvailable)
+                    else product
+                },
+            )
+        }
+    }
 }

@@ -85,6 +85,6 @@ val LocalNavigator = compositionLocalOf<AppNavigator> {
 }
 
 @Composable
-fun rememberAppNavigator(initialRoute: Route = Route.Home): AppNavigator {
+fun rememberAppNavigator(initialRoute: Route = Route.Splash): AppNavigator {
     return remember { AppNavigator(initialRoute) }
 }

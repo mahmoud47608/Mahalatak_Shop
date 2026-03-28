@@ -154,7 +154,7 @@ fun AddProductScreen(
                     Icon(
                         imageVector = Icons.Filled.KeyboardArrowDown,
                         contentDescription = null,
-                        tint = MahalatkTheme.hint,
+                        tint = MahalatkTheme.primary,
                     )
                 },
                 modifier = Modifier.fillMaxWidth(),
@@ -175,14 +175,14 @@ fun AddProductScreen(
                     Icon(
                         Icons.Filled.Category,
                         null,
-                        tint = MahalatkTheme.hint,
+                        tint = MahalatkTheme.primary,
                     )
                 },
                 trailingIcon = {
                     Icon(
                         imageVector = Icons.Filled.KeyboardArrowDown,
                         contentDescription = null,
-                        tint = MahalatkTheme.hint,
+                        tint = MahalatkTheme.primary,
                     )
                 },
                 modifier = Modifier.fillMaxWidth(),
@@ -205,14 +205,14 @@ fun AddProductScreen(
                     Icon(
                         Icons.Filled.Category,
                         null,
-                        tint = MahalatkTheme.hint,
+                        tint = MahalatkTheme.primary,
                     )
                 },
                 trailingIcon = {
                     Icon(
                         imageVector = Icons.Filled.KeyboardArrowDown,
                         contentDescription = null,
-                        tint = MahalatkTheme.hint,
+                        tint = MahalatkTheme.primary,
                     )
                 },
                 modifier = Modifier.fillMaxWidth(),
@@ -330,7 +330,7 @@ fun AddProductScreen(
                     Icon(
                         imageVector = Icons.Filled.KeyboardArrowDown,
                         contentDescription = null,
-                        tint = MahalatkTheme.hint,
+                        tint = MahalatkTheme.primary,
                     )
                 },
                 modifier = Modifier.fillMaxWidth(),
@@ -350,7 +350,7 @@ fun AddProductScreen(
                     Icon(
                         imageVector = Icons.Filled.KeyboardArrowDown,
                         contentDescription = null,
-                        tint = MahalatkTheme.hint,
+                        tint = MahalatkTheme.primary,
                     )
                 },
                 modifier = Modifier.fillMaxWidth(),
@@ -387,7 +387,7 @@ fun AddProductScreen(
                     Icon(
                         Icons.Filled.AttachMoney,
                         null,
-                        tint = MahalatkTheme.hint,
+                        tint = MahalatkTheme.primary,
                     )
                 },
                 modifier = Modifier.fillMaxWidth(),
@@ -458,7 +458,7 @@ fun AddProductScreen(
                             if (state.discountType == DiscountType.PERCENTAGE) Icons.Filled.Percent
                             else Icons.Filled.AttachMoney,
                             null,
-                            tint = MahalatkTheme.hint,
+                            tint = MahalatkTheme.primary,
                         )
                     },
                     modifier = Modifier.fillMaxWidth(),

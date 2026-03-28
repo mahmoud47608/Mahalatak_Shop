@@ -257,7 +257,7 @@ fun RegisterScreen(
                                     painter = painterResource(Res.drawable.ic_lock),
                                     contentDescription = null,
                                     modifier = Modifier.size(24.dp),
-                                    tint = MahalatkTheme.hint
+                                    tint = MahalatkTheme.primary
                                 )
                             },
                             trailingIcon = {
@@ -268,7 +268,7 @@ fun RegisterScreen(
                                         imageVector = if (uiState.passwordVisible) Icons.Filled.Visibility
                                         else Icons.Filled.VisibilityOff,
                                         contentDescription = null,
-                                        tint = MahalatkTheme.hint
+                                        tint = MahalatkTheme.primary
                                     )
                                 }
                             },
@@ -309,7 +309,7 @@ fun RegisterScreen(
                                         imageVector = if (uiState.confirmPasswordVisible) Icons.Filled.Visibility
                                         else Icons.Filled.VisibilityOff,
                                         contentDescription = null,
-                                        tint = MahalatkTheme.hint
+                                        tint = MahalatkTheme.primary
                                     )
                                 }
                             },
@@ -467,7 +467,7 @@ private fun ShopOwnerForm(
                 Icon(
                     Icons.Filled.Storefront,
                     null,
-                    tint = MahalatkTheme.hint
+                    tint = MahalatkTheme.primary
                 )
             },
             modifier = Modifier.fillMaxWidth()
@@ -495,7 +495,7 @@ private fun ShopOwnerForm(
                     painterResource(Res.drawable.ic_user),
                     null,
                     modifier = Modifier.size(24.dp),
-                    tint = MahalatkTheme.hint
+                    tint = MahalatkTheme.primary
                 )
             },
             modifier = Modifier.fillMaxWidth()
@@ -518,7 +518,7 @@ private fun ShopOwnerForm(
                     painterResource(Res.drawable.ic_phone),
                     null,
                     modifier = Modifier.size(24.dp),
-                    tint = MahalatkTheme.hint
+                    tint = MahalatkTheme.primary
                 )
             },
             modifier = Modifier.fillMaxWidth()
@@ -544,14 +544,14 @@ private fun ShopOwnerForm(
                 Icon(
                     Icons.Filled.LocalShipping,
                     null,
-                    tint = MahalatkTheme.hint
+                    tint = MahalatkTheme.primary
                 )
             },
             trailingIcon = {
                 Icon(
                     imageVector = Icons.Filled.KeyboardArrowDown,
                     contentDescription = null,
-                    tint = MahalatkTheme.hint,
+                    tint = MahalatkTheme.primary,
                 )
             },
             modifier = Modifier.fillMaxWidth()
@@ -572,14 +572,14 @@ private fun ShopOwnerForm(
                     painterResource(Res.drawable.ic_city),
                     null,
                     modifier = Modifier.size(24.dp),
-                    tint = MahalatkTheme.hint
+                    tint = MahalatkTheme.primary
                 )
             },
             trailingIcon = {
                 Icon(
                     imageVector = Icons.Filled.KeyboardArrowDown,
                     contentDescription = null,
-                    tint = MahalatkTheme.hint,
+                    tint = MahalatkTheme.primary,
                 )
             },
             modifier = Modifier.fillMaxWidth()
@@ -600,7 +600,7 @@ private fun ShopOwnerForm(
                     painter = painterResource(Res.drawable.ic_location),
                     contentDescription = null,
                     modifier = Modifier.size(24.dp),
-                    tint = if (uiState.locationLat != null) MahalatkTheme.primary else MahalatkTheme.hint,
+                    tint = MahalatkTheme.primary,
                 )
             },
             modifier = Modifier.fillMaxWidth()
@@ -622,14 +622,14 @@ private fun ShopOwnerForm(
                 Icon(
                     Icons.Filled.Storefront,
                     null,
-                    tint = MahalatkTheme.hint
+                    tint = MahalatkTheme.primary
                 )
             },
             trailingIcon = {
                 Icon(
                     imageVector = Icons.Filled.KeyboardArrowDown,
                     contentDescription = null,
-                    tint = MahalatkTheme.hint,
+                    tint = MahalatkTheme.primary,
                 )
             },
             modifier = Modifier.fillMaxWidth()
@@ -680,7 +680,7 @@ private fun EmployeeForm(
                     painterResource(Res.drawable.ic_user),
                     null,
                     modifier = Modifier.size(24.dp),
-                    tint = MahalatkTheme.hint
+                    tint = MahalatkTheme.primary
                 )
             },
             modifier = Modifier.fillMaxWidth()
@@ -703,7 +703,7 @@ private fun EmployeeForm(
                     painterResource(Res.drawable.ic_phone),
                     null,
                     modifier = Modifier.size(24.dp),
-                    tint = MahalatkTheme.hint
+                    tint = MahalatkTheme.primary
                 )
             },
             modifier = Modifier.fillMaxWidth()
@@ -723,7 +723,7 @@ private fun EmployeeForm(
                 Icon(
                     imageVector = Icons.Filled.KeyboardArrowDown,
                     contentDescription = null,
-                    tint = MahalatkTheme.hint,
+                    tint = MahalatkTheme.primary,
                 )
             },
             modifier = Modifier.fillMaxWidth()

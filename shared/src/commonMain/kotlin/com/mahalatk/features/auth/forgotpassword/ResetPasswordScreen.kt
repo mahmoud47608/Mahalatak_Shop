@@ -106,7 +106,7 @@ fun ResetPasswordScreen(
                     painter = painterResource(Res.drawable.ic_lock),
                     contentDescription = null,
                     modifier = Modifier.size(24.dp),
-                    tint = MahalatkTheme.hint,
+                    tint = MahalatkTheme.primary,
                 )
             },
             trailingIcon = {
@@ -115,7 +115,7 @@ fun ResetPasswordScreen(
                         imageVector = if (state.passwordVisible) Icons.Filled.Visibility
                         else Icons.Filled.VisibilityOff,
                         contentDescription = null,
-                        tint = MahalatkTheme.hint,
+                        tint = MahalatkTheme.primary,
                     )
                 }
             },
@@ -139,7 +139,7 @@ fun ResetPasswordScreen(
                     painter = painterResource(Res.drawable.ic_lock),
                     contentDescription = null,
                     modifier = Modifier.size(24.dp),
-                    tint = MahalatkTheme.hint,
+                    tint = MahalatkTheme.primary,
                 )
             },
             trailingIcon = {
@@ -148,7 +148,7 @@ fun ResetPasswordScreen(
                         imageVector = if (state.confirmPasswordVisible) Icons.Filled.Visibility
                         else Icons.Filled.VisibilityOff,
                         contentDescription = null,
-                        tint = MahalatkTheme.hint,
+                        tint = MahalatkTheme.primary,
                     )
                 }
             },

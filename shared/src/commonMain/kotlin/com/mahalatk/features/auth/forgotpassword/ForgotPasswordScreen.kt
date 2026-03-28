@@ -91,7 +91,7 @@ fun ForgotPasswordScreen(
                     painter = painterResource(Res.drawable.ic_phone),
                     contentDescription = null,
                     modifier = Modifier.size(24.dp),
-                    tint = MahalatkTheme.hint,
+                    tint = MahalatkTheme.primary,
                 )
             },
             modifier = Modifier.fillMaxWidth(),

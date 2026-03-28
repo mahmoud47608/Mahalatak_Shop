@@ -213,6 +213,9 @@
     <string name="delete">Delete</string>
     <string name="currency">EGP</string>
 
+    <string name="product_available">Available</string>
+    <string name="product_unavailable">Unavailable</string>
+
     <!-- Add Product Screen -->
     <string name="add_product">Add Product</string>
     <string name="product_name_ar">Product Name (Arabic)</string>
