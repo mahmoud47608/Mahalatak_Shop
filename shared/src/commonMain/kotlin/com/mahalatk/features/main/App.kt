@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -50,9 +51,18 @@ fun App(viewModel: MainViewModel = koinViewModel()) {
             )
         }
 
-        val currentRoute = navigator.currentRoute
-        val isTabScreen = BottomNavItem.fromRoute(currentRoute) != null
-        val showAuthBg = currentRoute.isAuthScreen
+        // derivedStateOf prevents recomposition of the whole tree on every backstack change
+        val isTabScreen by remember {
+            derivedStateOf { BottomNavItem.fromRoute(navigator.currentRoute) != null }
+        }
+        val showAuthBg by remember {
+            derivedStateOf { navigator.currentRoute.isAuthScreen }
+        }
+
+        // Stable lambda — won't cause BottomBar to recompose
+        val onTabSelected = remember<(BottomNavItem) -> Unit> {
+            { item -> navigator.switchTab(item.route) }
+        }
 
         LaunchedEffect(Unit) {
             viewModel.uiMessages.collectLatest { message ->
@@ -74,9 +84,7 @@ fun App(viewModel: MainViewModel = koinViewModel()) {
                 },
                 bottomBar = {
                     if (isTabScreen) {
-                        AppBottomBar(
-                            onItemSelected = { item -> navigator.switchTab(item.route) },
-                        )
+                        AppBottomBar(onItemSelected = onTabSelected)
                     }
                 },
             ) { innerPadding ->

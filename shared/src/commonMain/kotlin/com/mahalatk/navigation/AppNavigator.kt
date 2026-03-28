@@ -53,9 +53,20 @@ class AppNavigator(initialRoute: Route = Route.Splash) {
      */
     fun switchTab(route: Route) {
         if (backStack.lastOrNull() == route) return
-        // Remove everything above the root, then replace root
-        backStack.clear()
-        backStack.add(route)
+        // Pop any detail screens back to the tab level, then swap the tab
+        val tabIndex =
+            backStack.indexOfFirst { it is Route.Home || it is Route.Products || it is Route.Orders || it is Route.Chat || it is Route.Account }
+        if (tabIndex >= 0) {
+            // Remove everything above the tab entry
+            while (backStack.size > tabIndex + 1) {
+                backStack.removeAt(backStack.lastIndex)
+            }
+            // Replace the tab
+            backStack[tabIndex] = route
+        } else {
+            backStack.clear()
+            backStack.add(route)
+        }
     }
 
     fun popUntil(predicate: (Route) -> Boolean) {
