@@ -32,6 +32,7 @@ actual fun PlatformMapView(
         }
     }
 
+    @Suppress("DEPRECATION")
     UIKitView(
         modifier = modifier,
         factory = {
