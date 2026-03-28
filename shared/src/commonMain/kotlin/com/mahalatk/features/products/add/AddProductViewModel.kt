@@ -1,28 +1,24 @@
 package com.mahalatk.features.products.add
 
-import androidx.lifecycle.viewModelScope
 import com.mahalatk.base.BaseViewModel
 import com.mahalatk.base.managers.LoadingManager
 import com.mahalatk.base.managers.MessageManager
 import com.mahalatk.domain.entity.CategoryData
 import com.mahalatk.domain.entity.SubCategoryData
-import com.mahalatk.domain.exceptions.ValidationException
 import com.mahalatk.domain.repository.CommonRepository
 import com.mahalatk.domain.usecase.product.AddProductUseCase
-import com.mahalatk.domain.util.DataState
-import com.mahalatk.util.applyCommonSideEffects
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.please_add_image
-import mahalatk.shared.generated.resources.please_enter_description_ar
-import mahalatk.shared.generated.resources.please_enter_description_en
+import mahalatk.shared.generated.resources.please_enter_description
 import mahalatk.shared.generated.resources.please_enter_discount_value
 import mahalatk.shared.generated.resources.please_enter_price
 import mahalatk.shared.generated.resources.please_enter_product_name_ar
 import mahalatk.shared.generated.resources.please_enter_product_name_en
+import mahalatk.shared.generated.resources.please_enter_quantity
 import mahalatk.shared.generated.resources.please_select_category
-import mahalatk.shared.generated.resources.please_select_discount_type
+import mahalatk.shared.generated.resources.please_select_color
+import mahalatk.shared.generated.resources.please_select_season
+import mahalatk.shared.generated.resources.please_select_size
 
 private const val MAX_IMAGES = 6
 
@@ -37,46 +33,46 @@ class AddProductViewModel(
     messageManager,
 ) {
 
-    init {
-        loadCategories()
+    // TODO: Re-enable API calls when backend is ready
+    // init {
+    //     loadCategories()
+    // }
+
+    // ── Part 1: Product Info ──
+
+    fun selectSeason(season: String) {
+        updateState { copy(selectedSeason = season, seasonError = null) }
     }
 
-    private fun loadCategories() {
-        viewModelScope.launch {
-            commonRepository.getCategories().collect { state ->
-                state.applyCommonSideEffects(this@AddProductViewModel) { response ->
-                    response.data?.let { categories ->
-                        updateState { copy(availableCategories = categories) }
-                    }
-                }
-            }
+    fun selectCategory(category: CategoryData) {
+        updateState {
+            copy(
+                selectedCategory = category,
+                categoryError = null,
+                availableSubCategories = DEFAULT_SUB_CATEGORIES.filter { it.categoryId == category.id },
+                selectedSubCategory = null,
+                subCategoryError = null,
+            )
         }
     }
 
-    private fun loadSubCategories(categoryIds: List<Int>) {
-        viewModelScope.launch {
-            val allSubCategories = mutableListOf<SubCategoryData>()
-            categoryIds.forEach { categoryId ->
-                commonRepository.getSubCategories(categoryId).collect { state ->
-                    state.applyCommonSideEffects(
-                        this@AddProductViewModel,
-                        showLoading = false,
-                    ) { response ->
-                        response.data?.let { subCategories ->
-                            allSubCategories.addAll(subCategories)
-                        }
-                    }
-                }
-            }
-            updateState {
-                copy(
-                    availableSubCategories = allSubCategories,
-                    selectedSubCategories = selectedSubCategories.filter { sub ->
-                        categoryIds.contains(sub.categoryId)
-                    },
-                )
-            }
+    fun selectSubCategory(subCategory: SubCategoryData) {
+        updateState {
+            copy(
+                selectedSubCategory = subCategory,
+                subCategoryError = null,
+            )
         }
+    }
+
+    // ── Part 2: Piece Attributes ──
+
+    fun selectColor(color: String) {
+        updateState { copy(color = color, colorError = null) }
+    }
+
+    fun selectSize(size: String) {
+        updateState { copy(size = size, sizeError = null) }
     }
 
     fun addImages(newImages: List<ByteArray>) {
@@ -103,39 +99,6 @@ class AddProductViewModel(
         updateState { copy(video = null) }
     }
 
-    fun toggleCategory(category: CategoryData) {
-        updateState {
-            val updated = if (selectedCategories.any { it.id == category.id }) {
-                selectedCategories.filter { it.id != category.id }
-            } else {
-                selectedCategories + category
-            }
-            copy(selectedCategories = updated, categoryError = null)
-        }
-        val categoryIds = uiState.value.selectedCategories.map { it.id }
-        if (categoryIds.isNotEmpty()) {
-            loadSubCategories(categoryIds)
-        } else {
-            updateState {
-                copy(
-                    availableSubCategories = emptyList(),
-                    selectedSubCategories = emptyList(),
-                )
-            }
-        }
-    }
-
-    fun toggleSubCategory(subCategory: SubCategoryData) {
-        updateState {
-            val updated = if (selectedSubCategories.any { it.id == subCategory.id }) {
-                selectedSubCategories.filter { it.id != subCategory.id }
-            } else {
-                selectedSubCategories + subCategory
-            }
-            copy(selectedSubCategories = updated, subCategoryError = null)
-        }
-    }
-
     fun setDiscountType(type: DiscountType) {
         updateState {
             copy(
@@ -146,95 +109,204 @@ class AddProductViewModel(
         }
     }
 
-    fun addProduct() {
-        // Clear previous errors
-        updateState {
-            copy(
-                nameArError = null,
-                nameEnError = null,
-                descriptionArError = null,
-                descriptionEnError = null,
-                imagesError = null,
-                categoryError = null,
-                priceError = null,
-                discountError = null,
-            )
+    fun dismissSuccessSheet() {
+        updateState { copy(showSuccessSheet = false) }
+    }
+
+    // ── Add Piece: validate Part 2, save piece, reset Part 2 ──
+
+    fun addPiece() {
+        val state = uiState.value
+        var hasError = false
+
+        // Validate Part 1 on first piece
+        if (state.pieces.isEmpty()) {
+            if (state.selectedSeason.isBlank()) {
+                updateState { copy(seasonError = Res.string.please_select_season) }
+                hasError = true
+            }
+            if (state.selectedCategory == null) {
+                updateState { copy(categoryError = Res.string.please_select_category) }
+                hasError = true
+            }
+            if (state.nameAr.isBlank()) {
+                updateState { copy(nameArError = Res.string.please_enter_product_name_ar) }
+                hasError = true
+            }
+            if (state.nameEn.isBlank()) {
+                updateState { copy(nameEnError = Res.string.please_enter_product_name_en) }
+                hasError = true
+            }
+            if (state.description.isBlank()) {
+                updateState { copy(descriptionError = Res.string.please_enter_description) }
+                hasError = true
+            }
         }
 
+        // Validate Part 2 fields
+        if (state.color.isBlank()) {
+            updateState { copy(colorError = Res.string.please_select_color) }
+            hasError = true
+        }
+        if (state.size.isBlank()) {
+            updateState { copy(sizeError = Res.string.please_select_size) }
+            hasError = true
+        }
+        if (state.quantity.isBlank()) {
+            updateState { copy(quantityError = Res.string.please_enter_quantity) }
+            hasError = true
+        }
+        if (state.price.isBlank()) {
+            updateState { copy(priceError = Res.string.please_enter_price) }
+            hasError = true
+        }
+        if (state.images.isEmpty()) {
+            updateState { copy(imagesError = Res.string.please_add_image) }
+            hasError = true
+        }
+        if (state.discountType != DiscountType.NONE && state.discountValue.isBlank()) {
+            updateState { copy(discountError = Res.string.please_enter_discount_value) }
+            hasError = true
+        }
+
+        if (hasError) return
+
+        val piece = ProductPiece(
+            color = state.color,
+            size = state.size,
+            quantity = state.quantity,
+            price = state.price,
+            discountType = state.discountType,
+            discountValue = state.discountValue,
+            images = state.images,
+            video = state.video,
+        )
+
+        // Save piece and reset Part 2
+        updateState {
+            copy(
+                pieces = pieces + piece,
+                color = "",
+                size = "",
+                quantity = "",
+                price = "",
+                discountType = DiscountType.NONE,
+                discountValue = "",
+                images = emptyList(),
+                video = null,
+                colorError = null,
+                sizeError = null,
+                quantityError = null,
+                priceError = null,
+                discountError = null,
+                imagesError = null,
+            )
+        }
+    }
+
+    // ── Finish: called when user presses "تم الانتهاء" ──
+
+    fun onFinishClicked() {
         val state = uiState.value
 
-        viewModelScope.launch {
-            val hasDiscount = state.discountType != DiscountType.NONE
-            addProductUseCase(
-                nameAr = state.nameAr,
-                nameEn = state.nameEn,
-                descriptionAr = state.descriptionAr,
-                descriptionEn = state.descriptionEn,
-                images = state.images,
-                video = state.video,
-                categoryIds = state.selectedCategories.map { it.id },
-                subCategoryIds = state.selectedSubCategories.map { it.id },
-                price = state.price,
-                hasDiscount = hasDiscount,
-                discountType = if (hasDiscount) state.discountType.name else null,
-                discountValue = state.discountValue,
-            ).collectLatest {
-                when (it) {
-                    is DataState.Error -> {
-                        when (val error = it.throwable) {
-                            is ValidationException.MultipleValidationException -> {
-                                error.errors.forEach { validationError ->
-                                    when (validationError) {
-                                        is ValidationException.EmptyProductNameArException ->
-                                            updateState { copy(nameArError = Res.string.please_enter_product_name_ar) }
+        if (state.pieces.isEmpty()) {
+            // No pieces yet — treat as first-time add (validate Part 1 + Part 2)
+            addPieceAndFinish()
+            return
+        }
 
-                                        is ValidationException.EmptyProductNameEnException ->
-                                            updateState { copy(nameEnError = Res.string.please_enter_product_name_en) }
+        // Has pieces already — check if Part 2 has pending unsaved data
+        if (state.hasPendingPieceData) {
+            updateState { copy(showWarningDialog = true) }
+        } else {
+            // Part 2 is clean — finish directly
+            updateState { copy(showSuccessSheet = true) }
+        }
+    }
 
-                                        is ValidationException.EmptyDescriptionArException ->
-                                            updateState { copy(descriptionArError = Res.string.please_enter_description_ar) }
+    fun dismissWarningDialog() {
+        updateState { copy(showWarningDialog = false) }
+    }
 
-                                        is ValidationException.EmptyDescriptionEnException ->
-                                            updateState { copy(descriptionEnError = Res.string.please_enter_description_en) }
+    fun confirmFinishAnyway() {
+        updateState { copy(showWarningDialog = false, showSuccessSheet = true) }
+    }
 
-                                        is ValidationException.EmptyImagesException ->
-                                            updateState { copy(imagesError = Res.string.please_add_image) }
+    /**
+     * Used when no pieces exist yet — validates Part 1 + Part 2,
+     * adds the piece, then shows success.
+     */
+    private fun addPieceAndFinish() {
+        val state = uiState.value
+        var hasError = false
 
-                                        is ValidationException.EmptyCategoryException ->
-                                            updateState { copy(categoryError = Res.string.please_select_category) }
+        // Validate Part 1
+        if (state.selectedSeason.isBlank()) {
+            updateState { copy(seasonError = Res.string.please_select_season) }
+            hasError = true
+        }
+        if (state.selectedCategory == null) {
+            updateState { copy(categoryError = Res.string.please_select_category) }
+            hasError = true
+        }
+        if (state.nameAr.isBlank()) {
+            updateState { copy(nameArError = Res.string.please_enter_product_name_ar) }
+            hasError = true
+        }
+        if (state.nameEn.isBlank()) {
+            updateState { copy(nameEnError = Res.string.please_enter_product_name_en) }
+            hasError = true
+        }
+        if (state.description.isBlank()) {
+            updateState { copy(descriptionError = Res.string.please_enter_description) }
+            hasError = true
+        }
 
-                                        is ValidationException.EmptyPriceException,
-                                        is ValidationException.InvalidPriceException ->
-                                            updateState { copy(priceError = Res.string.please_enter_price) }
+        // Validate Part 2
+        if (state.color.isBlank()) {
+            updateState { copy(colorError = Res.string.please_select_color) }
+            hasError = true
+        }
+        if (state.size.isBlank()) {
+            updateState { copy(sizeError = Res.string.please_select_size) }
+            hasError = true
+        }
+        if (state.quantity.isBlank()) {
+            updateState { copy(quantityError = Res.string.please_enter_quantity) }
+            hasError = true
+        }
+        if (state.price.isBlank()) {
+            updateState { copy(priceError = Res.string.please_enter_price) }
+            hasError = true
+        }
+        if (state.images.isEmpty()) {
+            updateState { copy(imagesError = Res.string.please_add_image) }
+            hasError = true
+        }
+        if (state.discountType != DiscountType.NONE && state.discountValue.isBlank()) {
+            updateState { copy(discountError = Res.string.please_enter_discount_value) }
+            hasError = true
+        }
 
-                                        is ValidationException.EmptyDiscountTypeException ->
-                                            updateState { copy(discountError = Res.string.please_select_discount_type) }
+        if (hasError) return
 
-                                        is ValidationException.EmptyDiscountValueException,
-                                        is ValidationException.InvalidDiscountValueException ->
-                                            updateState { copy(discountError = Res.string.please_enter_discount_value) }
+        // Save piece then show success (no API call temporarily)
+        val piece = ProductPiece(
+            color = state.color,
+            size = state.size,
+            quantity = state.quantity,
+            price = state.price,
+            discountType = state.discountType,
+            discountValue = state.discountValue,
+            images = state.images,
+            video = state.video,
+        )
 
-                                        else -> {}
-                                    }
-                                }
-                            }
-
-                            else -> it.applyCommonSideEffects<Any>(
-                                this@AddProductViewModel,
-                                showSuccessToast = true,
-                            )
-                        }
-                    }
-
-                    else -> {
-                        it.applyCommonSideEffects(
-                            this@AddProductViewModel,
-                            showLoading = true,
-                            showSuccessToast = true,
-                        ) { /* Product added successfully */ }
-                    }
-                }
-            }
+        updateState {
+            copy(
+                pieces = pieces + piece,
+                showSuccessSheet = true,
+            )
         }
     }
 }

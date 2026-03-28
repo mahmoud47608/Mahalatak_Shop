@@ -296,7 +296,7 @@ fun RegisterScreen(
                                     painter = painterResource(Res.drawable.ic_lock),
                                     contentDescription = null,
                                     modifier = Modifier.size(24.dp),
-                                    tint = MahalatkTheme.hint
+                                    tint = MahalatkTheme.primary
                                 )
                             },
                             trailingIcon = {

@@ -23,16 +23,19 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AttachMoney
-import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Percent
 import androidx.compose.material.icons.filled.RadioButtonChecked
 import androidx.compose.material.icons.filled.RadioButtonUnchecked
 import androidx.compose.material.icons.filled.Videocam
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -49,8 +52,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.mahalatk.common.component.bottomsheet.MultiSelectBottomSheet
+import com.mahalatk.common.component.bottomsheet.SingleSelectBottomSheet
+import com.mahalatk.common.component.bottomsheet.SuccessBottomSheet
+import com.mahalatk.common.component.button.ButtonStyle
 import com.mahalatk.common.component.button.DefaultButton
 import com.mahalatk.common.component.header.ScreenHeader
 import com.mahalatk.common.component.imagepicker.rememberMultiImagePickerLauncher
@@ -63,22 +67,33 @@ import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.add_images
+import mahalatk.shared.generated.resources.add_piece
 import mahalatk.shared.generated.resources.add_product
 import mahalatk.shared.generated.resources.add_video
-import mahalatk.shared.generated.resources.description_ar
-import mahalatk.shared.generated.resources.description_en
+import mahalatk.shared.generated.resources.confirm_finish
+import mahalatk.shared.generated.resources.continue_adding_piece
+import mahalatk.shared.generated.resources.description
 import mahalatk.shared.generated.resources.discount
 import mahalatk.shared.generated.resources.discount_value
+import mahalatk.shared.generated.resources.finish
 import mahalatk.shared.generated.resources.fixed_price_discount
 import mahalatk.shared.generated.resources.no_discount
 import mahalatk.shared.generated.resources.percentage_discount
+import mahalatk.shared.generated.resources.pieces_count
 import mahalatk.shared.generated.resources.price
+import mahalatk.shared.generated.resources.product_added_success
+import mahalatk.shared.generated.resources.product_attributes
 import mahalatk.shared.generated.resources.product_images
 import mahalatk.shared.generated.resources.product_name_ar
 import mahalatk.shared.generated.resources.product_name_en
 import mahalatk.shared.generated.resources.product_video
+import mahalatk.shared.generated.resources.quantity
 import mahalatk.shared.generated.resources.select_category
+import mahalatk.shared.generated.resources.select_color
+import mahalatk.shared.generated.resources.select_season
+import mahalatk.shared.generated.resources.select_size
 import mahalatk.shared.generated.resources.select_sub_category
+import mahalatk.shared.generated.resources.warning_piece_not_added
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -90,8 +105,11 @@ fun AddProductScreen(
     onBack: () -> Unit = {},
 ) {
     val state by viewModel.uiState.collectAsState()
+    var showSeasonSheet by remember { mutableStateOf(false) }
     var showCategorySheet by remember { mutableStateOf(false) }
     var showSubCategorySheet by remember { mutableStateOf(false) }
+    var showColorSheet by remember { mutableStateOf(false) }
+    var showSizeSheet by remember { mutableStateOf(false) }
 
     val pickImages = rememberMultiImagePickerLauncher { images ->
         viewModel.addImages(images)
@@ -118,101 +136,40 @@ fun AddProductScreen(
                 .padding(horizontal = 20.dp, vertical = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            // ── Product Name AR ──
+            // ════════════════════════════════════════════
+            // PART 1: Product Info
+            // ════════════════════════════════════════════
+
+            val part1Locked = state.isPart1Locked
+
+            // ── Season Selector (Single Select) ──
             DefaultTextField(
-                value = state.nameAr,
-                onValueChanged = {
-                    viewModel.updateState { copy(nameAr = it, nameArError = null) }
+                value = state.selectedSeason,
+                onValueChanged = {},
+                placeholderText = stringResource(Res.string.select_season),
+                isEnabled = false,
+                onClick = { if (!part1Locked) showSeasonSheet = true },
+                errorText = state.seasonError?.let { stringResource(it) },
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.KeyboardArrowDown,
+                        contentDescription = null,
+                        tint = MahalatkTheme.hint,
+                    )
                 },
-                placeholderText = stringResource(Res.string.product_name_ar),
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Next,
-                errorText = state.nameArError?.let { stringResource(it) },
                 modifier = Modifier.fillMaxWidth(),
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // ── Product Name EN ──
-            DefaultTextField(
-                value = state.nameEn,
-                onValueChanged = {
-                    viewModel.updateState { copy(nameEn = it, nameEnError = null) }
-                },
-                placeholderText = stringResource(Res.string.product_name_en),
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Next,
-                errorText = state.nameEnError?.let { stringResource(it) },
-                modifier = Modifier.fillMaxWidth(),
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // ── Description AR ──
-            DefaultTextField(
-                value = state.descriptionAr,
-                onValueChanged = {
-                    viewModel.updateState { copy(descriptionAr = it, descriptionArError = null) }
-                },
-                placeholderText = stringResource(Res.string.description_ar),
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Next,
-                maxLines = 8,
-                minLines = 5,
-                fieldHeight = 100,
-                errorText = state.descriptionArError?.let { stringResource(it) },
-                modifier = Modifier.fillMaxWidth(),
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // ── Description EN ──
-            DefaultTextField(
-                value = state.descriptionEn,
-                onValueChanged = {
-                    viewModel.updateState { copy(descriptionEn = it, descriptionEnError = null) }
-                },
-                placeholderText = stringResource(Res.string.description_en),
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Next,
-                maxLines = 8,
-                minLines = 5,
-                fieldHeight = 100,
-                errorText = state.descriptionEnError?.let { stringResource(it) },
-                modifier = Modifier.fillMaxWidth(),
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // ── Product Images ──
-            ImageGridSection(
-                images = state.images,
-                errorText = state.imagesError?.let { stringResource(it) },
-                onAddImages = {
-                    if (state.images.size < MAX_IMAGES) pickImages()
-                },
-                onRemoveImage = { viewModel.removeImage(it) },
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // ── Product Video ──
-            VideoSection(
-                hasVideo = state.video != null,
-                onPickVideo = pickVideo,
-                onRemoveVideo = { viewModel.removeVideo() },
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // ── Category Selector ──
-            val categoryLabel = state.selectedCategories.joinToString(", ") { it.name }
+            // ── Category Selector (Single Select) ──
+            val categoryLabel = state.selectedCategory?.name ?: ""
             DefaultTextField(
                 value = categoryLabel,
                 onValueChanged = {},
                 placeholderText = stringResource(Res.string.select_category),
                 isEnabled = false,
-                onClick = { showCategorySheet = true },
+                onClick = { if (!part1Locked) showCategorySheet = true },
                 errorText = state.categoryError?.let { stringResource(it) },
                 leadingIcon = {
                     Icon(
@@ -233,14 +190,16 @@ fun AddProductScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // ── Sub-Category Selector ──
-            val subCategoryLabel = state.selectedSubCategories.joinToString(", ") { it.name }
+            // ── Sub-Category Selector (Single Select, depends on Category) ──
+            val subCategoryLabel = state.selectedSubCategory?.name ?: ""
             DefaultTextField(
                 value = subCategoryLabel,
                 onValueChanged = {},
                 placeholderText = stringResource(Res.string.select_sub_category),
                 isEnabled = false,
-                onClick = { showSubCategorySheet = true },
+                onClick = {
+                    if (!part1Locked && state.selectedCategory != null) showSubCategorySheet = true
+                },
                 errorText = state.subCategoryError?.let { stringResource(it) },
                 leadingIcon = {
                     Icon(
@@ -256,6 +215,159 @@ fun AddProductScreen(
                         tint = MahalatkTheme.hint,
                     )
                 },
+                modifier = Modifier.fillMaxWidth(),
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // ── Product Name AR ──
+            DefaultTextField(
+                value = state.nameAr,
+                onValueChanged = {
+                    if (!part1Locked) viewModel.updateState {
+                        copy(
+                            nameAr = it,
+                            nameArError = null
+                        )
+                    }
+                },
+                placeholderText = stringResource(Res.string.product_name_ar),
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next,
+                isEnabled = !part1Locked,
+                errorText = state.nameArError?.let { stringResource(it) },
+                modifier = Modifier.fillMaxWidth(),
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // ── Product Name EN ──
+            DefaultTextField(
+                value = state.nameEn,
+                onValueChanged = {
+                    if (!part1Locked) viewModel.updateState {
+                        copy(
+                            nameEn = it,
+                            nameEnError = null
+                        )
+                    }
+                },
+                placeholderText = stringResource(Res.string.product_name_en),
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next,
+                isEnabled = !part1Locked,
+                errorText = state.nameEnError?.let { stringResource(it) },
+                modifier = Modifier.fillMaxWidth(),
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // ── Description (single field) ──
+            DefaultTextField(
+                value = state.description,
+                onValueChanged = {
+                    if (!part1Locked) viewModel.updateState {
+                        copy(
+                            description = it,
+                            descriptionError = null
+                        )
+                    }
+                },
+                placeholderText = stringResource(Res.string.description),
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next,
+                isEnabled = !part1Locked,
+                maxLines = 8,
+                minLines = 5,
+                fieldHeight = 100,
+                errorText = state.descriptionError?.let { stringResource(it) },
+                modifier = Modifier.fillMaxWidth(),
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // ── Divider between Part 1 and Part 2 ──
+            HorizontalDivider(
+                color = AppColor.TextHint.copy(alpha = 0.3f),
+                thickness = 1.dp,
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // ════════════════════════════════════════════
+            // PART 2: Piece Attributes
+            // ════════════════════════════════════════════
+
+            Text(
+                text = stringResource(Res.string.product_attributes),
+                style = MahalatkTheme.titleSmall,
+                color = AppColor.TextPrimary,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.fillMaxWidth(),
+            )
+
+            if (state.pieces.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = stringResource(Res.string.pieces_count, state.pieces.size),
+                    style = MahalatkTheme.bodySmall,
+                    color = AppColor.Success,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // ── Color Selector (Single Select) ──
+            DefaultTextField(
+                value = state.color,
+                onValueChanged = {},
+                placeholderText = stringResource(Res.string.select_color),
+                isEnabled = false,
+                onClick = { showColorSheet = true },
+                errorText = state.colorError?.let { stringResource(it) },
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.KeyboardArrowDown,
+                        contentDescription = null,
+                        tint = MahalatkTheme.hint,
+                    )
+                },
+                modifier = Modifier.fillMaxWidth(),
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // ── Size Selector (Single Select) ──
+            DefaultTextField(
+                value = state.size,
+                onValueChanged = {},
+                placeholderText = stringResource(Res.string.select_size),
+                isEnabled = false,
+                onClick = { showSizeSheet = true },
+                errorText = state.sizeError?.let { stringResource(it) },
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.KeyboardArrowDown,
+                        contentDescription = null,
+                        tint = MahalatkTheme.hint,
+                    )
+                },
+                modifier = Modifier.fillMaxWidth(),
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // ── Quantity ──
+            DefaultTextField(
+                value = state.quantity,
+                onValueChanged = {
+                    viewModel.updateState { copy(quantity = it, quantityError = null) }
+                },
+                placeholderText = stringResource(Res.string.quantity),
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Next,
+                errorText = state.quantityError?.let { stringResource(it) },
                 modifier = Modifier.fillMaxWidth(),
             )
 
@@ -353,12 +465,43 @@ fun AddProductScreen(
                 )
             }
 
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // ── Product Images ──
+            ImageGridSection(
+                images = state.images,
+                errorText = state.imagesError?.let { stringResource(it) },
+                onAddImages = {
+                    if (state.images.size < MAX_IMAGES) pickImages()
+                },
+                onRemoveImage = { viewModel.removeImage(it) },
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // ── Product Video ──
+            VideoSection(
+                hasVideo = state.video != null,
+                onPickVideo = pickVideo,
+                onRemoveVideo = { viewModel.removeVideo() },
+            )
+
             Spacer(modifier = Modifier.height(24.dp))
 
-            // ── Add Product Button ──
+            // ── Add Piece Button ──
             DefaultButton(
-                text = stringResource(Res.string.add_product),
-                onClick = { viewModel.addProduct() },
+                text = stringResource(Res.string.add_piece),
+                onClick = { viewModel.addPiece() },
+                style = ButtonStyle.OUTLINED,
+                modifier = Modifier.fillMaxWidth(),
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // ── Finish Button ──
+            DefaultButton(
+                text = stringResource(Res.string.finish),
+                onClick = { viewModel.onFinishClicked() },
                 modifier = Modifier.fillMaxWidth(),
             )
 
@@ -368,26 +511,98 @@ fun AddProductScreen(
 
     // ── Bottom Sheets ──
 
-    MultiSelectBottomSheet(
+    SingleSelectBottomSheet(
+        showBottomSheet = showSeasonSheet,
+        title = stringResource(Res.string.select_season),
+        items = state.availableSeasons,
+        selectedItem = state.selectedSeason.ifBlank { null },
+        itemLabel = { it },
+        onItemSelected = { viewModel.selectSeason(it) },
+        onDismiss = { showSeasonSheet = false },
+    )
+
+    SingleSelectBottomSheet(
         showBottomSheet = showCategorySheet,
         title = stringResource(Res.string.select_category),
         items = state.availableCategories,
-        selectedItems = state.selectedCategories.toSet(),
+        selectedItem = state.selectedCategory,
         itemLabel = { it.name },
-        onItemToggle = { viewModel.toggleCategory(it) },
+        onItemSelected = { viewModel.selectCategory(it) },
         onDismiss = { showCategorySheet = false },
+        isItemSelected = { item, selected -> item?.id == selected?.id },
     )
 
-    MultiSelectBottomSheet(
+    SingleSelectBottomSheet(
         showBottomSheet = showSubCategorySheet,
         title = stringResource(Res.string.select_sub_category),
         items = state.availableSubCategories,
-        selectedItems = state.selectedSubCategories.toSet(),
+        selectedItem = state.selectedSubCategory,
         itemLabel = { it.name },
-        onItemToggle = { viewModel.toggleSubCategory(it) },
+        onItemSelected = { viewModel.selectSubCategory(it) },
         onDismiss = { showSubCategorySheet = false },
+        isItemSelected = { item, selected -> item?.id == selected?.id },
     )
 
+    SingleSelectBottomSheet(
+        showBottomSheet = showColorSheet,
+        title = stringResource(Res.string.select_color),
+        items = state.availableColors,
+        selectedItem = state.color.ifBlank { null },
+        itemLabel = { it },
+        onItemSelected = { viewModel.selectColor(it) },
+        onDismiss = { showColorSheet = false },
+    )
+
+    SingleSelectBottomSheet(
+        showBottomSheet = showSizeSheet,
+        title = stringResource(Res.string.select_size),
+        items = state.availableSizes,
+        selectedItem = state.size.ifBlank { null },
+        itemLabel = { it },
+        onItemSelected = { viewModel.selectSize(it) },
+        onDismiss = { showSizeSheet = false },
+    )
+
+    // ── Warning Dialog: pending piece data ──
+    if (state.showWarningDialog) {
+        AlertDialog(
+            onDismissRequest = { viewModel.dismissWarningDialog() },
+            title = null,
+            text = {
+                Text(
+                    text = stringResource(Res.string.warning_piece_not_added),
+                    style = MahalatkTheme.bodyMedium,
+                    color = AppColor.TextPrimary,
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = { viewModel.confirmFinishAnyway() }) {
+                    Text(
+                        text = stringResource(Res.string.confirm_finish),
+                        color = AppColor.Error,
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { viewModel.dismissWarningDialog() }) {
+                    Text(
+                        text = stringResource(Res.string.continue_adding_piece),
+                        color = AppColor.Primary,
+                    )
+                }
+            },
+        )
+    }
+
+    // ── Product Added Success ──
+    SuccessBottomSheet(
+        message = stringResource(Res.string.product_added_success),
+        visible = state.showSuccessSheet,
+        onDismiss = {
+            viewModel.dismissSuccessSheet()
+            onBack()
+        },
+    )
 }
 
 // ──────────────────────────────────────────────
