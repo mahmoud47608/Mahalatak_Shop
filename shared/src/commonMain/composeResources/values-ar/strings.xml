@@ -316,6 +316,11 @@
     <string name="terms_conditions">الشروط والأحكام</string>
     <string name="privacy_policy">سياسة الخصوصية</string>
 
+    <!-- Profile Screen -->
+    <string name="edit_profile">تعديل الملف الشخصي</string>
+    <string name="save">حفظ</string>
+    <string name="logout">تسجيل الخروج</string>
+
     <!-- Map Tracking -->
     <string name="map_tracking">تتبع الخريطة</string>
     <string name="start_tracking">بدء التتبع</string>

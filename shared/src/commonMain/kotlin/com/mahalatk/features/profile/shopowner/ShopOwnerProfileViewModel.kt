@@ -1,0 +1,75 @@
+package com.mahalatk.features.profile.shopowner
+
+import androidx.lifecycle.viewModelScope
+import com.mahalatk.base.BaseViewModel
+import com.mahalatk.base.UserDataProvider
+import com.mahalatk.base.managers.LoadingManager
+import com.mahalatk.base.managers.MessageManager
+import com.mahalatk.features.auth.register.CityItem
+import com.mahalatk.features.auth.register.DeliveryType
+import com.mahalatk.features.auth.register.ShopCategory
+import kotlinx.coroutines.launch
+
+class ShopOwnerProfileViewModel(
+    loadingManager: LoadingManager,
+    messageManager: MessageManager,
+    private val userDataProvider: UserDataProvider,
+) : BaseViewModel<ShopOwnerProfileState>(
+    ShopOwnerProfileState(),
+    loadingManager,
+    messageManager,
+) {
+
+    init {
+        loadUserData()
+    }
+
+    private fun loadUserData() {
+        viewModelScope.launch {
+            val authData = userDataProvider.getAuthData() ?: return@launch
+            updateState {
+                copy(
+                    ownerName = authData.name
+                        ?: "${authData.firstName.orEmpty()} ${authData.lastName.orEmpty()}".trim(),
+                    mobile = authData.phone ?: authData.fullPhone.orEmpty(),
+                    shopImageUrl = authData.image.orEmpty(),
+                    selectedCity = authData.city?.let { CityItem(it.id ?: 0, it.name.orEmpty()) },
+                )
+            }
+        }
+    }
+
+    fun toggleCategory(category: ShopCategory) {
+        updateState {
+            val updated = if (category in selectedCategories) {
+                selectedCategories - category
+            } else {
+                selectedCategories + category
+            }
+            copy(selectedCategories = updated, categoryError = null)
+        }
+    }
+
+    fun selectDeliveryType(type: DeliveryType) {
+        updateState { copy(deliveryType = type, deliveryTypeError = null) }
+    }
+
+    fun selectCity(city: CityItem) {
+        updateState { copy(selectedCity = city, cityError = null) }
+    }
+
+    fun updateLocation(lat: Double, lng: Double, address: String) {
+        updateState {
+            copy(
+                locationLat = lat,
+                locationLng = lng,
+                locationAddress = address,
+                locationError = null,
+            )
+        }
+    }
+
+    fun saveProfile() {
+        // TODO: Add validation and API call to update shop owner profile
+    }
+}

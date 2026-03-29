@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
 data class MoreState(
     val userName: String = "",
     val userImage: String = "",
+    val isShopOwner: Boolean = true,
 )
 
 class MoreViewModel(
@@ -39,10 +40,13 @@ class MoreViewModel(
 
     private fun loadUserData() {
         viewModelScope.launch {
+            val authData = userDataProvider.getAuthData()
+            val isShopOwner = authData?.userType == "shop_owner" || authData?.type == "shop_owner"
             _uiState.update {
                 it.copy(
                     userName = userDataProvider.getUserName(),
                     userImage = userDataProvider.getUserImage(),
+                    isShopOwner = isShopOwner,
                 )
             }
         }

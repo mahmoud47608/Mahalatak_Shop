@@ -24,6 +24,8 @@ sealed interface Route {
     data class OrderDetail(val orderId: String) : Route
     data object Notifications : Route
     data object AddProduct : Route
+    data object ShopOwnerProfile : Route
+    data object EmployeeProfile : Route
 }
 
 /** True for screens that show the auth background image. */

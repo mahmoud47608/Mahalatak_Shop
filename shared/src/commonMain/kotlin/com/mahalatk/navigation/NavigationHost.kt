@@ -15,6 +15,8 @@ import com.mahalatk.features.auth.register.RegisterScreen
 import com.mahalatk.features.chat.ChatDetailScreen
 import com.mahalatk.features.notifications.NotificationsScreen
 import com.mahalatk.features.products.add.AddProductScreen
+import com.mahalatk.features.profile.employee.EmployeeProfileScreen
+import com.mahalatk.features.profile.shopowner.ShopOwnerProfileScreen
 import com.mahalatk.features.splash.SplashScreen
 import com.mahalatk.navigation.graphs.MainNavGraph
 
@@ -129,6 +131,20 @@ fun NavigationHost() {
                 // ─── Add Product ────────────────────────
                 is Route.AddProduct -> NavEntry(route) {
                     AddProductScreen(onBack = { navigator.pop() })
+                }
+
+                // ─── Shop Owner Profile ───────────────────
+                is Route.ShopOwnerProfile -> NavEntry(route) {
+                    ShopOwnerProfileScreen(
+                        onBack = { navigator.pop() },
+                    )
+                }
+
+                // ─── Employee Profile ─────────────────────
+                is Route.EmployeeProfile -> NavEntry(route) {
+                    EmployeeProfileScreen(
+                        onBack = { navigator.pop() },
+                    )
                 }
 
                 // ─── Main Tabs ───────────────────────────

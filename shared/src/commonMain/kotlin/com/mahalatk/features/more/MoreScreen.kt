@@ -164,7 +164,12 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
             // ── Main Menu Group ──
             item {
                 AnimatedListItem(1) {
-                    MenuGroup(items = mainMenuItems, onItemClick = { })
+                    MenuGroup(items = mainMenuItems, onItemClick = { index ->
+                        when (index) {
+                            // TODO: switch based on user type later
+                            0 -> navigator.push(com.mahalatk.navigation.Route.ShopOwnerProfile)
+                        }
+                    })
                 }
             }
 
