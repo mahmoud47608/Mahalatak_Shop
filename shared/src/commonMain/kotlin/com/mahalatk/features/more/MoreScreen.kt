@@ -168,6 +168,7 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
                         when (index) {
                             // TODO: switch based on user type later
                             0 -> navigator.push(com.mahalatk.navigation.Route.ShopOwnerProfile)
+                            1 -> navigator.push(com.mahalatk.navigation.Route.Settings)
                         }
                     })
                 }

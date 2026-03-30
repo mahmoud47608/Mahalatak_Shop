@@ -328,6 +328,13 @@
     <string name="save">Save</string>
     <string name="logout">Logout</string>
 
+    <!-- Settings Screen -->
+    <string name="general_settings">General Settings</string>
+    <string name="edit_profile_data">Edit Profile Data</string>
+    <string name="change_phone_number">Change Phone Number</string>
+    <string name="change_password">Change Password</string>
+    <string name="delete_account">Delete Account</string>
+
     <!-- Map Tracking -->
     <string name="map_tracking">Map Tracking</string>
     <string name="start_tracking">Start Tracking</string>

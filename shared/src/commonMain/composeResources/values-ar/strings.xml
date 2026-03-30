@@ -321,6 +321,13 @@
     <string name="save">حفظ</string>
     <string name="logout">تسجيل الخروج</string>
 
+    <!-- Settings Screen -->
+    <string name="general_settings">الاعدادات العامة</string>
+    <string name="edit_profile_data">تعديل بيانات الملف الشخصي</string>
+    <string name="change_phone_number">تغيير رقم الجوال</string>
+    <string name="change_password">تغيير الباسورد</string>
+    <string name="delete_account">حذف الحساب</string>
+
     <!-- Map Tracking -->
     <string name="map_tracking">تتبع الخريطة</string>
     <string name="start_tracking">بدء التتبع</string>

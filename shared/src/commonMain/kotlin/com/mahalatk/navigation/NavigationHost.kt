@@ -17,6 +17,7 @@ import com.mahalatk.features.notifications.NotificationsScreen
 import com.mahalatk.features.products.add.AddProductScreen
 import com.mahalatk.features.profile.employee.EmployeeProfileScreen
 import com.mahalatk.features.profile.shopowner.ShopOwnerProfileScreen
+import com.mahalatk.features.settings.SettingsScreen
 import com.mahalatk.features.splash.SplashScreen
 import com.mahalatk.navigation.graphs.MainNavGraph
 
@@ -144,6 +145,16 @@ fun NavigationHost() {
                 is Route.EmployeeProfile -> NavEntry(route) {
                     EmployeeProfileScreen(
                         onBack = { navigator.pop() },
+                    )
+                }
+
+                // ─── Settings ─────────────────────────────
+                is Route.Settings -> NavEntry(route) {
+                    SettingsScreen(
+                        onBack = { navigator.pop() },
+                        onEditProfile = {
+                            navigator.push(Route.ShopOwnerProfile)
+                        },
                     )
                 }
 

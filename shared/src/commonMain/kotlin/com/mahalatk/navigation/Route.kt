@@ -26,6 +26,7 @@ sealed interface Route {
     data object AddProduct : Route
     data object ShopOwnerProfile : Route
     data object EmployeeProfile : Route
+    data object Settings : Route
 }
 
 /** True for screens that show the auth background image. */
