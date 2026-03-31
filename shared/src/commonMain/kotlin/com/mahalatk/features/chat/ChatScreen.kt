@@ -43,11 +43,11 @@ import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.CornerDimensions
 import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
-import mahalatk.shared.generated.resources.active_tab
-import mahalatk.shared.generated.resources.closed_tab
 import mahalatk.shared.generated.resources.ic_nav_chat
+import mahalatk.shared.generated.resources.inquiries_chat
 import mahalatk.shared.generated.resources.messages
 import mahalatk.shared.generated.resources.no_messages
+import mahalatk.shared.generated.resources.orders_chat
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -67,8 +67,8 @@ fun ChatScreen(viewModel: ChatViewModel = koinViewModel()) {
 
         FilterTabs(
             tabs = listOf(
-                ChatTab.Active to stringResource(Res.string.active_tab),
-                ChatTab.Closed to stringResource(Res.string.closed_tab),
+                ChatTab.Orders to stringResource(Res.string.orders_chat),
+                ChatTab.Inquiries to stringResource(Res.string.inquiries_chat),
             ),
             selectedTab = state.selectedTab,
             onTabSelected = viewModel::selectTab,

@@ -284,6 +284,8 @@
     <string name="messages">Messages</string>
     <string name="active_tab">Active</string>
     <string name="closed_tab">Closed</string>
+    <string name="orders_chat">Orders Chat</string>
+    <string name="inquiries_chat">Inquiries Chat</string>
     <string name="no_messages">No messages yet</string>
     <string name="type_message">Type a message…</string>
     <string name="online">Online</string>

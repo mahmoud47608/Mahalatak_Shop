@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-enum class ChatTab { Active, Closed }
+enum class ChatTab { Orders, Inquiries }
 
 @Immutable
 data class ChatConversation(
@@ -17,7 +17,7 @@ data class ChatConversation(
     val time: String,
     val unreadCount: Int = 0,
     val isOnline: Boolean = false,
-    val isClosed: Boolean = false,
+    val isInquiry: Boolean = false,
     val imageUrl: String = "",
 )
 
@@ -31,7 +31,7 @@ data class ChatMessage(
 
 @Immutable
 data class ChatState(
-    val selectedTab: ChatTab = ChatTab.Active,
+    val selectedTab: ChatTab = ChatTab.Orders,
     val conversations: List<ChatConversation> = listOf(
         ChatConversation(
             "1",
@@ -39,7 +39,7 @@ data class ChatState(
             "I want to change the delivery address please",
             "02:30 PM",
             2,
-            true
+            true,
         ),
         ChatConversation(
             "2",
@@ -47,7 +47,7 @@ data class ChatState(
             "Is the order ready for pickup?",
             "01:45 PM",
             0,
-            true
+            true,
         ),
         ChatConversation(
             "3",
@@ -55,33 +55,33 @@ data class ChatState(
             "Thank you for the fast delivery!",
             "12:00 PM",
             1,
-            false
+            false,
         ),
         ChatConversation("4", "Sara Ahmed", "Can I add one more item?", "11:30 AM", 0, false),
         ChatConversation(
             "5",
             "Khalid Omar",
-            "Order was perfect, thanks!",
+            "What products do you have?",
             "Yesterday",
-            0,
+            1,
             false,
-            true
+            isInquiry = true,
         ),
         ChatConversation(
             "6",
             "Nour Hassan",
-            "Issue resolved, closing chat",
+            "Do you deliver to Jeddah?",
             "Mar 25",
             0,
-            false,
-            true
+            true,
+            isInquiry = true,
         ),
     ),
 ) {
     val filteredConversations: List<ChatConversation>
         get() = when (selectedTab) {
-            ChatTab.Active -> conversations.filter { !it.isClosed }
-            ChatTab.Closed -> conversations.filter { it.isClosed }
+            ChatTab.Orders -> conversations.filter { !it.isInquiry }
+            ChatTab.Inquiries -> conversations.filter { it.isInquiry }
         }
 }
 

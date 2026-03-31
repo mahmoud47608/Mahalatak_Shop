@@ -53,7 +53,6 @@ import com.mahalatk.common.component.utilis.noRippleClickable
 import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
-import mahalatk.shared.generated.resources.account
 import mahalatk.shared.generated.resources.chat
 import mahalatk.shared.generated.resources.home
 import mahalatk.shared.generated.resources.ic_nav_chat
@@ -66,6 +65,7 @@ import mahalatk.shared.generated.resources.ic_nav_orders
 import mahalatk.shared.generated.resources.ic_nav_orders_selected
 import mahalatk.shared.generated.resources.ic_nav_products
 import mahalatk.shared.generated.resources.ic_nav_products_selected
+import mahalatk.shared.generated.resources.more
 import mahalatk.shared.generated.resources.orders
 import mahalatk.shared.generated.resources.products
 import org.jetbrains.compose.resources.DrawableResource
@@ -98,7 +98,7 @@ enum class BottomNavItem(
     Account(
         Res.drawable.ic_nav_more,
         Res.drawable.ic_nav_more_selected,
-        Res.string.account,
+        Res.string.more,
         Route.Account
     );
 

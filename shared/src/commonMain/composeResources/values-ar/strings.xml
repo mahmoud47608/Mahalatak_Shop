@@ -277,6 +277,8 @@
     <string name="messages">الرسائل</string>
     <string name="active_tab">نشط</string>
     <string name="closed_tab">مغلق</string>
+    <string name="orders_chat">شات الطلبات</string>
+    <string name="inquiries_chat">شات الاستفسارات</string>
     <string name="no_messages">لا توجد رسائل بعد</string>
     <string name="type_message">اكتب رسالة…</string>
     <string name="online">متصل</string>
