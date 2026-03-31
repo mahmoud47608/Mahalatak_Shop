@@ -22,6 +22,8 @@ import com.mahalatk.features.more.AboutScreen
 import com.mahalatk.features.more.PrivacyPolicyScreen
 import com.mahalatk.features.more.TermsScreen
 import com.mahalatk.features.notifications.NotificationsScreen
+import com.mahalatk.features.offers.OffersScreen
+import com.mahalatk.features.offers.add.AddOfferScreen
 import com.mahalatk.features.products.add.AddProductScreen
 import com.mahalatk.features.profile.ProfileScreen
 import com.mahalatk.features.profile.employee.EditEmployeeProfileScreen
@@ -306,6 +308,18 @@ fun NavigationHost() {
                 // ─── Privacy Policy ──────────────────────
                 is Route.PrivacyPolicy -> NavEntry(route) {
                     PrivacyPolicyScreen(onBack = { navigator.pop() })
+                }
+
+                // ─── Offers ─────────────────────────────
+                is Route.Offers -> NavEntry(route) {
+                    OffersScreen(
+                        onBack = { navigator.pop() },
+                        onAddOffer = { navigator.push(Route.AddOffer) },
+                    )
+                }
+
+                is Route.AddOffer -> NavEntry(route) {
+                    AddOfferScreen(onBack = { navigator.pop() })
                 }
 
                 // ─── Main Tabs ───────────────────────────

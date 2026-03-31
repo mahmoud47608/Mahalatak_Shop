@@ -52,6 +52,7 @@ import mahalatk.shared.generated.resources.contact_us
 import mahalatk.shared.generated.resources.employees
 import mahalatk.shared.generated.resources.ic_about
 import mahalatk.shared.generated.resources.ic_complaint
+import mahalatk.shared.generated.resources.ic_delivery
 import mahalatk.shared.generated.resources.ic_notification
 import mahalatk.shared.generated.resources.ic_phone
 import mahalatk.shared.generated.resources.ic_privacy
@@ -62,6 +63,7 @@ import mahalatk.shared.generated.resources.ic_terms
 import mahalatk.shared.generated.resources.logout
 import mahalatk.shared.generated.resources.more
 import mahalatk.shared.generated.resources.my_ratings
+import mahalatk.shared.generated.resources.offers
 import mahalatk.shared.generated.resources.privacy_policy
 import mahalatk.shared.generated.resources.profile
 import mahalatk.shared.generated.resources.settings
@@ -99,6 +101,7 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
             MenuItem(Res.drawable.ic_profile, Res.string.profile),
             MenuItem(Res.drawable.ic_settings, Res.string.settings),
             MenuItem(Res.drawable.ic_profile, Res.string.employees),
+            MenuItem(Res.drawable.ic_delivery, Res.string.offers),
             MenuItem(Res.drawable.ic_rating, Res.string.my_ratings),
             MenuItem(Res.drawable.ic_complaint, Res.string.complaints),
         )
@@ -179,8 +182,9 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
                             0 -> navigator.push(com.mahalatk.navigation.Route.ShopOwnerProfile)
                             1 -> navigator.push(com.mahalatk.navigation.Route.Settings)
                             2 -> navigator.push(com.mahalatk.navigation.Route.Employees)
-                            3 -> navigator.push(com.mahalatk.navigation.Route.MyRatings)
-                            4 -> navigator.push(com.mahalatk.navigation.Route.Complaints)
+                            3 -> navigator.push(com.mahalatk.navigation.Route.Offers)
+                            4 -> navigator.push(com.mahalatk.navigation.Route.MyRatings)
+                            5 -> navigator.push(com.mahalatk.navigation.Route.Complaints)
                         }
                     })
                 }

@@ -20,6 +20,8 @@ import com.mahalatk.features.home.HomeViewModel
 import com.mahalatk.features.main.MainViewModel
 import com.mahalatk.features.more.MoreViewModel
 import com.mahalatk.features.notifications.NotificationsViewModel
+import com.mahalatk.features.offers.OffersViewModel
+import com.mahalatk.features.offers.add.AddOfferViewModel
 import com.mahalatk.features.orders.OrdersViewModel
 import com.mahalatk.features.orders.detail.OrderDetailViewModel
 import com.mahalatk.features.products.ProductsViewModel
@@ -68,4 +70,6 @@ val sharedModule = module {
     viewModel { AddEmployeeViewModel() }
     viewModel { MyRatingsViewModel() }
     viewModel { ComplaintsViewModel() }
+    viewModel { OffersViewModel() }
+    viewModel { AddOfferViewModel() }
 }

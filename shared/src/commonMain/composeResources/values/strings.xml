@@ -357,6 +357,45 @@
     <string name="accept">Accept</string>
     <string name="reject">Reject</string>
 
+    <!-- Offers -->
+    <string name="offers">Offers</string>
+    <string name="add_offer">Add Offer</string>
+    <string name="select_offer_type">Select Offer Type</string>
+    <string name="discount_offer">Discount</string>
+    <string name="discount_offer_desc">Percentage or fixed amount off</string>
+    <string name="buy_x_get_y_offer">Buy X Get Y</string>
+    <string name="buy_x_get_y_desc">Buy items and get free ones</string>
+    <string name="bundle_offer">Bundle</string>
+    <string name="bundle_offer_desc">Complete set at reduced price</string>
+    <string name="set_offer_logic">Set Offer Details</string>
+    <string name="discount_percentage">Discount Percentage</string>
+    <string name="discount_fixed">Fixed Amount</string>
+    <string name="min_cart_value">Minimum Cart Value (Optional)</string>
+    <string name="buy_how_many">Buy how many?</string>
+    <string name="get_how_many_free">Get how many free?</string>
+    <string name="bundle_price">Bundle Price</string>
+    <string name="package_offer">Package</string>
+    <string name="package_offer_desc">Select products and set a package price</string>
+    <string name="package_name">Package Name</string>
+    <string name="package_price">Package Price</string>
+    <string name="select_package_products">Select Package Products</string>
+    <string name="select_scope">Select Offer Scope</string>
+    <string name="all_products_scope">All Products</string>
+    <string name="categories_scope">Specific Categories</string>
+    <string name="products_scope">Specific Products</string>
+    <string name="select_products">Select Products</string>
+    <string name="duration_review">Duration &amp; Review</string>
+    <string name="start_date">Start Date</string>
+    <string name="end_date">End Date</string>
+    <string name="offer_summary">Offer Summary</string>
+    <string name="publish_offer">Publish Offer</string>
+    <string name="offer_published_success">Offer published successfully!</string>
+    <string name="no_offers">No offers yet</string>
+    <string name="next_step">Next</string>
+    <string name="previous_step">Back</string>
+    <string name="active_status">Active</string>
+    <string name="inactive_status">Inactive</string>
+
     <!-- Profile Screen -->
     <string name="edit_profile">Edit Profile</string>
     <string name="save">Save</string>

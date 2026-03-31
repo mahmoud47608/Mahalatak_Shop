@@ -350,6 +350,45 @@
     <string name="accept">قبول</string>
     <string name="reject">رفض</string>
 
+    <!-- Offers -->
+    <string name="offers">العروض</string>
+    <string name="add_offer">إضافة عرض</string>
+    <string name="select_offer_type">اختر نوع العرض</string>
+    <string name="discount_offer">خصم مباشر</string>
+    <string name="discount_offer_desc">نسبة مئوية أو مبلغ ثابت</string>
+    <string name="buy_x_get_y_offer">اشتري واحصل</string>
+    <string name="buy_x_get_y_desc">اشتري قطع واحصل على أخرى مجاناً</string>
+    <string name="bundle_offer">عرض الطقم</string>
+    <string name="bundle_offer_desc">طقم كامل بسعر مخفض</string>
+    <string name="set_offer_logic">تفاصيل العرض</string>
+    <string name="discount_percentage">نسبة الخصم</string>
+    <string name="discount_fixed">مبلغ ثابت</string>
+    <string name="min_cart_value">الحد الأدنى لقيمة السلة (اختياري)</string>
+    <string name="buy_how_many">اشتري كم قطعة؟</string>
+    <string name="get_how_many_free">احصل على كم مجاناً؟</string>
+    <string name="bundle_price">سعر الطقم</string>
+    <string name="package_offer">باكدج</string>
+    <string name="package_offer_desc">اختر منتجات وحدد سعر الباكدج</string>
+    <string name="package_name">اسم الباكدج</string>
+    <string name="package_price">سعر الباكدج</string>
+    <string name="select_package_products">اختر منتجات الباكدج</string>
+    <string name="select_scope">نطاق العرض</string>
+    <string name="all_products_scope">كل المنتجات</string>
+    <string name="categories_scope">أقسام معينة</string>
+    <string name="products_scope">منتجات مختارة</string>
+    <string name="select_products">اختر المنتجات</string>
+    <string name="duration_review">المدة والمراجعة</string>
+    <string name="start_date">تاريخ البداية</string>
+    <string name="end_date">تاريخ النهاية</string>
+    <string name="offer_summary">ملخص العرض</string>
+    <string name="publish_offer">نشر العرض</string>
+    <string name="offer_published_success">تم نشر العرض بنجاح!</string>
+    <string name="no_offers">لا توجد عروض بعد</string>
+    <string name="next_step">التالي</string>
+    <string name="previous_step">رجوع</string>
+    <string name="active_status">نشط</string>
+    <string name="inactive_status">غير نشط</string>
+
     <!-- Profile Screen -->
     <string name="edit_profile">تعديل الملف الشخصي</string>
     <string name="save">حفظ</string>
