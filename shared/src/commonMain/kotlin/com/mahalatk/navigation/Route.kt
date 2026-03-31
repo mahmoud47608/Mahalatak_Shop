@@ -37,6 +37,9 @@ sealed interface Route {
     data object EditEmployeeProfile : Route
     data object ChangePassword : Route
     data object Settings : Route
+    data object About : Route
+    data object Terms : Route
+    data object PrivacyPolicy : Route
 }
 
 /** True for screens that show the auth background image. */

@@ -13,6 +13,9 @@ import com.mahalatk.features.auth.register.LocationResultHolder
 import com.mahalatk.features.auth.register.PickLocationScreen
 import com.mahalatk.features.auth.register.RegisterScreen
 import com.mahalatk.features.chat.ChatDetailScreen
+import com.mahalatk.features.more.AboutScreen
+import com.mahalatk.features.more.PrivacyPolicyScreen
+import com.mahalatk.features.more.TermsScreen
 import com.mahalatk.features.notifications.NotificationsScreen
 import com.mahalatk.features.products.add.AddProductScreen
 import com.mahalatk.features.profile.ProfileScreen
@@ -245,6 +248,21 @@ fun NavigationHost() {
                         onChangePhoneNumber = { navigator.push(Route.ChangePhone) },
                         onChangePassword = { navigator.push(Route.ChangePassword) },
                     )
+                }
+
+                // ─── About ───────────────────────────────
+                is Route.About -> NavEntry(route) {
+                    AboutScreen(onBack = { navigator.pop() })
+                }
+
+                // ─── Terms & Conditions ──────────────────
+                is Route.Terms -> NavEntry(route) {
+                    TermsScreen(onBack = { navigator.pop() })
+                }
+
+                // ─── Privacy Policy ──────────────────────
+                is Route.PrivacyPolicy -> NavEntry(route) {
+                    PrivacyPolicyScreen(onBack = { navigator.pop() })
                 }
 
                 // ─── Main Tabs ───────────────────────────

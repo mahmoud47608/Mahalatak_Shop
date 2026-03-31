@@ -178,7 +178,13 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
             // ── Info Menu Group ──
             item {
                 AnimatedListItem(2) {
-                    MenuGroup(items = infoMenuItems, onItemClick = { })
+                    MenuGroup(items = infoMenuItems, onItemClick = { index ->
+                        when (index) {
+                            0 -> navigator.push(com.mahalatk.navigation.Route.About)
+                            1 -> navigator.push(com.mahalatk.navigation.Route.Terms)
+                            2 -> navigator.push(com.mahalatk.navigation.Route.PrivacyPolicy)
+                        }
+                    })
                 }
             }
 
