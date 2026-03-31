@@ -27,6 +27,19 @@ enum class DeliveryType {
     APP_DELIVERY
 }
 
+enum class ReturnPolicy {
+    EXCHANGE,
+    EXCHANGE_AND_RETURN,
+    NOT_AVAILABLE
+}
+
+enum class ReturnPeriod {
+    DAYS_2,
+    DAYS_3,
+    DAYS_7,
+    DAYS_14
+}
+
 data class CityItem(
     val id: Int,
     val name: String,
@@ -40,6 +53,8 @@ data class RegisterState(
     val shopName: String = "",
     val ownerName: String = "",
     val selectedCategories: Set<ShopCategory> = emptySet(),
+    val returnPolicy: ReturnPolicy = ReturnPolicy.EXCHANGE,
+    val returnPeriod: ReturnPeriod = ReturnPeriod.DAYS_2,
     val deliveryType: DeliveryType? = null,
     val shopImage: ByteArray? = null,
     val selectedCity: CityItem? = null,

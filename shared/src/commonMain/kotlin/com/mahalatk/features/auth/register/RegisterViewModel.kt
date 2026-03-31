@@ -51,6 +51,14 @@ class RegisterViewModel(
         }
     }
 
+    fun selectReturnPolicy(policy: ReturnPolicy) {
+        updateState { copy(returnPolicy = policy) }
+    }
+
+    fun selectReturnPeriod(period: ReturnPeriod) {
+        updateState { copy(returnPeriod = period) }
+    }
+
     fun selectShop(shop: String) {
         updateState { copy(selectedShop = shop, selectedShopError = null) }
     }

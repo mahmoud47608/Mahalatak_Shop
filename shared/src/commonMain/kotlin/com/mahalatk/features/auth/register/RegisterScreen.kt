@@ -70,6 +70,8 @@ import mahalatk.shared.generated.resources.app_delivery
 import mahalatk.shared.generated.resources.confirm_password
 import mahalatk.shared.generated.resources.employee
 import mahalatk.shared.generated.resources.employee_name
+import mahalatk.shared.generated.resources.exchange
+import mahalatk.shared.generated.resources.exchange_and_return
 import mahalatk.shared.generated.resources.ic_camera
 import mahalatk.shared.generated.resources.ic_city
 import mahalatk.shared.generated.resources.ic_location
@@ -77,6 +79,7 @@ import mahalatk.shared.generated.resources.ic_lock
 import mahalatk.shared.generated.resources.ic_phone
 import mahalatk.shared.generated.resources.ic_profile
 import mahalatk.shared.generated.resources.ic_user
+import mahalatk.shared.generated.resources.not_available_policy
 import mahalatk.shared.generated.resources.owner_name
 import mahalatk.shared.generated.resources.password
 import mahalatk.shared.generated.resources.phone
@@ -84,6 +87,8 @@ import mahalatk.shared.generated.resources.register
 import mahalatk.shared.generated.resources.select_city
 import mahalatk.shared.generated.resources.select_delivery_type
 import mahalatk.shared.generated.resources.select_location
+import mahalatk.shared.generated.resources.select_return_period
+import mahalatk.shared.generated.resources.select_return_policy
 import mahalatk.shared.generated.resources.select_shop
 import mahalatk.shared.generated.resources.shop_category
 import mahalatk.shared.generated.resources.shop_delivery
@@ -92,6 +97,10 @@ import mahalatk.shared.generated.resources.shop_owner
 import mahalatk.shared.generated.resources.sign_in
 import mahalatk.shared.generated.resources.upload_personal_photo
 import mahalatk.shared.generated.resources.upload_shop_logo
+import mahalatk.shared.generated.resources.within_14_days
+import mahalatk.shared.generated.resources.within_2_days
+import mahalatk.shared.generated.resources.within_3_days
+import mahalatk.shared.generated.resources.within_7_days
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -108,6 +117,8 @@ fun RegisterScreen(
     var showCitySheet by remember { mutableStateOf(false) }
     var showShopSheet by remember { mutableStateOf(false) }
     var showCategorySheet by remember { mutableStateOf(false) }
+    var showReturnPolicySheet by remember { mutableStateOf(false) }
+    var showReturnPeriodSheet by remember { mutableStateOf(false) }
 
     // Observe location result from PickLocationScreen
     val locationResult by LocationResultHolder.result.collectAsState()
@@ -220,6 +231,8 @@ fun RegisterScreen(
                             onShowDeliverySheet = { showDeliverySheet = true },
                             onShowCitySheet = { showCitySheet = true },
                             onShowCategorySheet = { showCategorySheet = true },
+                            onShowReturnPolicySheet = { showReturnPolicySheet = true },
+                            onShowReturnPeriodSheet = { showReturnPeriodSheet = true },
                             onPickLocation = onNavigateToPickLocation,
                         )
 
@@ -420,6 +433,39 @@ fun RegisterScreen(
         onItemToggle = { viewModel.toggleCategory(it) },
         onDismiss = { showCategorySheet = false }
     )
+
+    SingleSelectBottomSheet(
+        showBottomSheet = showReturnPolicySheet,
+        title = stringResource(Res.string.select_return_policy),
+        items = ReturnPolicy.entries.toList(),
+        selectedItem = uiState.returnPolicy,
+        itemLabel = { policy ->
+            when (policy) {
+                ReturnPolicy.EXCHANGE -> stringResource(Res.string.exchange)
+                ReturnPolicy.EXCHANGE_AND_RETURN -> stringResource(Res.string.exchange_and_return)
+                ReturnPolicy.NOT_AVAILABLE -> stringResource(Res.string.not_available_policy)
+            }
+        },
+        onItemSelected = { viewModel.selectReturnPolicy(it) },
+        onDismiss = { showReturnPolicySheet = false }
+    )
+
+    SingleSelectBottomSheet(
+        showBottomSheet = showReturnPeriodSheet,
+        title = stringResource(Res.string.select_return_period),
+        items = ReturnPeriod.entries.toList(),
+        selectedItem = uiState.returnPeriod,
+        itemLabel = { period ->
+            when (period) {
+                ReturnPeriod.DAYS_2 -> stringResource(Res.string.within_2_days)
+                ReturnPeriod.DAYS_3 -> stringResource(Res.string.within_3_days)
+                ReturnPeriod.DAYS_7 -> stringResource(Res.string.within_7_days)
+                ReturnPeriod.DAYS_14 -> stringResource(Res.string.within_14_days)
+            }
+        },
+        onItemSelected = { viewModel.selectReturnPeriod(it) },
+        onDismiss = { showReturnPeriodSheet = false }
+    )
 }
 
 // ─── Shop Owner Form ─────────────────────────────────────────────────
@@ -432,6 +478,8 @@ private fun ShopOwnerForm(
     onShowDeliverySheet: () -> Unit,
     onShowCitySheet: () -> Unit,
     onShowCategorySheet: () -> Unit,
+    onShowReturnPolicySheet: () -> Unit,
+    onShowReturnPeriodSheet: () -> Unit,
     onPickLocation: () -> Unit,
 ) {
     // Shop Logo
@@ -448,7 +496,7 @@ private fun ShopOwnerForm(
         modifier = Modifier.padding(horizontal = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Shop Name
+        // 1. Shop Name
         DefaultTextField(
             value = uiState.shopName,
             onValueChanged = {
@@ -475,7 +523,7 @@ private fun ShopOwnerForm(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Owner Name
+        // 2. Owner Name
         DefaultTextField(
             value = uiState.ownerName,
             onValueChanged = {
@@ -503,7 +551,7 @@ private fun ShopOwnerForm(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Mobile (moved here for shop owner to match spec order)
+        // 3. Phone
         DefaultTextField(
             value = uiState.mobile,
             onValueChanged = {
@@ -526,31 +574,19 @@ private fun ShopOwnerForm(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Delivery Type selector
-        val deliveryLabel = when (uiState.deliveryType) {
-            DeliveryType.SHOP_DELIVERY -> stringResource(Res.string.shop_delivery)
-            DeliveryType.APP_DELIVERY -> stringResource(Res.string.app_delivery)
-            null -> ""
-        }
-
+        // 4. Location
         DefaultTextField(
-            value = deliveryLabel,
+            value = uiState.locationAddress,
             onValueChanged = {},
-            placeholderText = stringResource(Res.string.select_delivery_type),
+            placeholderText = stringResource(Res.string.select_location),
             isEnabled = false,
-            onClick = { onShowDeliverySheet() },
-            errorText = uiState.deliveryTypeError?.let { stringResource(it) },
+            onClick = { onPickLocation() },
+            errorText = uiState.locationError?.let { stringResource(it) },
             leadingIcon = {
                 Icon(
-                    Icons.Filled.LocalShipping,
-                    null,
-                    tint = MahalatkTheme.primary
-                )
-            },
-            trailingIcon = {
-                Icon(
-                    imageVector = Icons.Filled.KeyboardArrowDown,
+                    painter = painterResource(Res.drawable.ic_location),
                     contentDescription = null,
+                    modifier = Modifier.size(24.dp),
                     tint = MahalatkTheme.primary,
                 )
             },
@@ -559,7 +595,7 @@ private fun ShopOwnerForm(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // City selector
+        // 5. City
         DefaultTextField(
             value = uiState.selectedCity?.name ?: "",
             onValueChanged = {},
@@ -587,28 +623,7 @@ private fun ShopOwnerForm(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Shop Location picker
-        DefaultTextField(
-            value = uiState.locationAddress,
-            onValueChanged = {},
-            placeholderText = stringResource(Res.string.select_location),
-            isEnabled = false,
-            onClick = { onPickLocation() },
-            errorText = uiState.locationError?.let { stringResource(it) },
-            leadingIcon = {
-                Icon(
-                    painter = painterResource(Res.drawable.ic_location),
-                    contentDescription = null,
-                    modifier = Modifier.size(24.dp),
-                    tint = MahalatkTheme.primary,
-                )
-            },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        // Shop Category selector
+        // 6. Shop Category
         val categoryNames = uiState.selectedCategories.map { stringResource(it.labelRes) }
         val categoryLabel = categoryNames.joinToString(", ")
         DefaultTextField(
@@ -621,6 +636,106 @@ private fun ShopOwnerForm(
             leadingIcon = {
                 Icon(
                     Icons.Filled.Storefront,
+                    null,
+                    tint = MahalatkTheme.primary
+                )
+            },
+            trailingIcon = {
+                Icon(
+                    imageVector = Icons.Filled.KeyboardArrowDown,
+                    contentDescription = null,
+                    tint = MahalatkTheme.primary,
+                )
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // 7. Return Policy dropdown
+        val returnPolicyLabel = when (uiState.returnPolicy) {
+            ReturnPolicy.EXCHANGE -> stringResource(Res.string.exchange)
+            ReturnPolicy.EXCHANGE_AND_RETURN -> stringResource(Res.string.exchange_and_return)
+            ReturnPolicy.NOT_AVAILABLE -> stringResource(Res.string.not_available_policy)
+        }
+
+        DefaultTextField(
+            value = returnPolicyLabel,
+            onValueChanged = {},
+            placeholderText = stringResource(Res.string.select_return_policy),
+            isEnabled = false,
+            onClick = { onShowReturnPolicySheet() },
+            leadingIcon = {
+                Icon(
+                    Icons.Filled.Storefront,
+                    null,
+                    tint = MahalatkTheme.primary
+                )
+            },
+            trailingIcon = {
+                Icon(
+                    imageVector = Icons.Filled.KeyboardArrowDown,
+                    contentDescription = null,
+                    tint = MahalatkTheme.primary,
+                )
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        // 8. Return Period dropdown (only visible when policy != NOT_AVAILABLE)
+        if (uiState.returnPolicy != ReturnPolicy.NOT_AVAILABLE) {
+            Spacer(modifier = Modifier.height(20.dp))
+
+            val returnPeriodLabel = when (uiState.returnPeriod) {
+                ReturnPeriod.DAYS_2 -> stringResource(Res.string.within_2_days)
+                ReturnPeriod.DAYS_3 -> stringResource(Res.string.within_3_days)
+                ReturnPeriod.DAYS_7 -> stringResource(Res.string.within_7_days)
+                ReturnPeriod.DAYS_14 -> stringResource(Res.string.within_14_days)
+            }
+
+            DefaultTextField(
+                value = returnPeriodLabel,
+                onValueChanged = {},
+                placeholderText = stringResource(Res.string.select_return_period),
+                isEnabled = false,
+                onClick = { onShowReturnPeriodSheet() },
+                leadingIcon = {
+                    Icon(
+                        Icons.Filled.Storefront,
+                        null,
+                        tint = MahalatkTheme.primary
+                    )
+                },
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.KeyboardArrowDown,
+                        contentDescription = null,
+                        tint = MahalatkTheme.primary,
+                    )
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // 9. Delivery Type
+        val deliveryLabel = when (uiState.deliveryType) {
+            DeliveryType.SHOP_DELIVERY -> stringResource(Res.string.shop_delivery)
+            DeliveryType.APP_DELIVERY -> stringResource(Res.string.app_delivery)
+            null -> ""
+        }
+
+        DefaultTextField(
+            value = deliveryLabel,
+            onValueChanged = {},
+            placeholderText = stringResource(Res.string.select_delivery_type),
+            isEnabled = false,
+            onClick = { onShowDeliverySheet() },
+            errorText = uiState.deliveryTypeError?.let { stringResource(it) },
+            leadingIcon = {
+                Icon(
+                    Icons.Filled.LocalShipping,
                     null,
                     tint = MahalatkTheme.primary
                 )

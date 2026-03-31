@@ -3,6 +3,8 @@ package com.mahalatk.features.profile.shopowner
 import androidx.compose.runtime.Immutable
 import com.mahalatk.features.auth.register.CityItem
 import com.mahalatk.features.auth.register.DeliveryType
+import com.mahalatk.features.auth.register.ReturnPeriod
+import com.mahalatk.features.auth.register.ReturnPolicy
 import com.mahalatk.features.auth.register.ShopCategory
 import org.jetbrains.compose.resources.StringResource
 
@@ -11,8 +13,9 @@ data class ShopOwnerProfileState(
     // Shop Owner fields
     val shopName: String = "",
     val ownerName: String = "",
-    val mobile: String = "",
     val selectedCategories: Set<ShopCategory> = emptySet(),
+    val returnPolicy: ReturnPolicy = ReturnPolicy.EXCHANGE,
+    val returnPeriod: ReturnPeriod = ReturnPeriod.DAYS_2,
     val deliveryType: DeliveryType? = null,
     val shopImage: ByteArray? = null,
     val shopImageUrl: String = "",
@@ -20,22 +23,15 @@ data class ShopOwnerProfileState(
     val locationAddress: String = "",
     val locationLat: Double? = null,
     val locationLng: Double? = null,
-    val password: String = "",
-    val confirmPassword: String = "",
-    val passwordVisible: Boolean = false,
-    val confirmPasswordVisible: Boolean = false,
 
     // Error fields
     val shopNameError: StringResource? = null,
     val ownerNameError: StringResource? = null,
-    val mobileError: StringResource? = null,
     val categoryError: StringResource? = null,
     val deliveryTypeError: StringResource? = null,
     val cityError: StringResource? = null,
     val locationError: StringResource? = null,
     val imageError: StringResource? = null,
-    val passwordError: StringResource? = null,
-    val confirmPasswordError: StringResource? = null,
 
     // Available data for dropdowns
     val availableCities: List<CityItem> = listOf(

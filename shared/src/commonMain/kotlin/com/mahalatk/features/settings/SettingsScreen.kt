@@ -18,15 +18,20 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.mahalatk.common.component.animation.AnimatedListItem
+import com.mahalatk.common.component.dialog.DeleteAccountDialog
 import com.mahalatk.common.component.header.ScreenHeader
 import com.mahalatk.common.component.utilis.noRippleClickable
 import com.mahalatk.theme.AppColor
@@ -64,6 +69,8 @@ fun SettingsScreen(
     onChangePassword: () -> Unit = {},
     onDeleteAccount: () -> Unit = {},
 ) {
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
     Column(modifier = Modifier.fillMaxSize().background(AppColor.ScreenBackground)) {
 
         // ── ScreenHeader ──
@@ -89,52 +96,68 @@ fun SettingsScreen(
             ) {
                 Column {
                     // 1 ─ Edit Profile Data
-                    SettingsMenuItem(
-                        icon = Res.drawable.ic_profile,
-                        iconColor = EditProfileColor,
-                        title = stringResource(Res.string.edit_profile_data),
-                        onClick = onEditProfile,
-                    )
-                    SettingsDivider()
+                    AnimatedListItem(0) {
+                        SettingsMenuItem(
+                            icon = Res.drawable.ic_profile,
+                            iconColor = EditProfileColor,
+                            title = stringResource(Res.string.edit_profile_data),
+                            onClick = onEditProfile,
+                        )
+                    }
 
                     // 2 ─ Change Phone Number
-                    SettingsMenuItem(
-                        icon = Res.drawable.ic_phone,
-                        iconColor = ChangePhoneColor,
-                        title = stringResource(Res.string.change_phone_number),
-                        onClick = onChangePhoneNumber,
-                    )
-                    SettingsDivider()
+                    AnimatedListItem(1) {
+                        SettingsMenuItem(
+                            icon = Res.drawable.ic_phone,
+                            iconColor = ChangePhoneColor,
+                            title = stringResource(Res.string.change_phone_number),
+                            onClick = onChangePhoneNumber,
+                        )
+                    }
 
-                    // 3 ─ Change Language
-                    SettingsMenuItem(
-                        icon = Res.drawable.ic_language,
-                        iconColor = ChangeLanguageColor,
-                        title = stringResource(Res.string.change_language),
-                        onClick = onChangeLanguage,
-                    )
-                    SettingsDivider()
+                    // 3 ─ Change Password
+                    AnimatedListItem(2) {
+                        SettingsMenuItem(
+                            icon = Res.drawable.ic_lock,
+                            iconColor = ChangePasswordColor,
+                            title = stringResource(Res.string.change_password),
+                            onClick = onChangePassword,
+                        )
+                    }
 
-                    // 4 ─ Change Password
-                    SettingsMenuItem(
-                        icon = Res.drawable.ic_lock,
-                        iconColor = ChangePasswordColor,
-                        title = stringResource(Res.string.change_password),
-                        onClick = onChangePassword,
-                    )
-                    SettingsDivider()
+                    // 4 ─ Change Language
+                    AnimatedListItem(3) {
+                        SettingsMenuItem(
+                            icon = Res.drawable.ic_language,
+                            iconColor = ChangeLanguageColor,
+                            title = stringResource(Res.string.change_language),
+                            onClick = onChangeLanguage,
+                        )
+                    }
 
                     // 5 ─ Delete Account
-                    SettingsMenuItem(
-                        icon = Res.drawable.ic_delete,
-                        iconColor = DeleteAccountColor,
-                        title = stringResource(Res.string.delete_account),
-                        onClick = onDeleteAccount,
-                    )
+                    AnimatedListItem(4) {
+                        SettingsMenuItem(
+                            icon = Res.drawable.ic_delete,
+                            iconColor = DeleteAccountColor,
+                            title = stringResource(Res.string.delete_account),
+                            onClick = { showDeleteDialog = true },
+                        )
+                    }
                 }
             }
         }
     }
+
+    // Delete Account Dialog
+    DeleteAccountDialog(
+        visible = showDeleteDialog,
+        onConfirm = {
+            showDeleteDialog = false
+            onDeleteAccount()
+        },
+        onDismiss = { showDeleteDialog = false },
+    )
 }
 
 // ─── Settings Menu Item ──────────────────────────────────
@@ -187,13 +210,3 @@ private fun SettingsMenuItem(
     }
 }
 
-// ─── Divider ─────────────────────────────────────────────
-
-@Composable
-private fun SettingsDivider() {
-    HorizontalDivider(
-        modifier = Modifier.padding(start = 52.dp, end = 16.dp),
-        thickness = 0.5.dp,
-        color = AppColor.Outline,
-    )
-}

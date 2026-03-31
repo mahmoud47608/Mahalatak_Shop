@@ -28,7 +28,6 @@ class EmployeeProfileViewModel(
                 copy(
                     employeeName = authData.name
                         ?: "${authData.firstName.orEmpty()} ${authData.lastName.orEmpty()}".trim(),
-                    mobile = authData.phone ?: authData.fullPhone.orEmpty(),
                     employeeImageUrl = authData.image.orEmpty(),
                 )
             }

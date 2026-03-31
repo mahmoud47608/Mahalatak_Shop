@@ -7,8 +7,12 @@ sealed interface Route {
     data object Login : Route
     data object Register : Route
     data object PickLocation : Route
-    data class Activation(val phoneNumber: String, val isFromForgotPassword: Boolean = false) :
-        Route
+    data class Activation(
+        val phoneNumber: String,
+        val isFromForgotPassword: Boolean = false,
+        val isFromChangePhone: Boolean = false,
+        val isFromNewPhone: Boolean = false,
+    ) : Route
     data object ForgotPassword : Route
     data class ResetPassword(val phoneNumber: String) : Route
 
@@ -24,8 +28,14 @@ sealed interface Route {
     data class OrderDetail(val orderId: String) : Route
     data object Notifications : Route
     data object AddProduct : Route
+    data object Profile : Route
     data object ShopOwnerProfile : Route
     data object EmployeeProfile : Route
+    data object ChangePhone : Route
+    data object NewPhone : Route
+    data object EditShopOwnerProfile : Route
+    data object EditEmployeeProfile : Route
+    data object ChangePassword : Route
     data object Settings : Route
 }
 
@@ -35,6 +45,8 @@ val Route.isAuthScreen: Boolean
         is Route.Splash, is Route.Login, is Route.Register,
         is Route.PickLocation, is Route.ForgotPassword,
         is Route.ResetPassword -> true
+
+        is Route.Activation -> !isFromChangePhone && !isFromNewPhone
 
         else -> false
     }

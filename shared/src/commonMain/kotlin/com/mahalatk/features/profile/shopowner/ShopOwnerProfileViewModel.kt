@@ -7,6 +7,8 @@ import com.mahalatk.base.managers.LoadingManager
 import com.mahalatk.base.managers.MessageManager
 import com.mahalatk.features.auth.register.CityItem
 import com.mahalatk.features.auth.register.DeliveryType
+import com.mahalatk.features.auth.register.ReturnPeriod
+import com.mahalatk.features.auth.register.ReturnPolicy
 import com.mahalatk.features.auth.register.ShopCategory
 import kotlinx.coroutines.launch
 
@@ -31,7 +33,6 @@ class ShopOwnerProfileViewModel(
                 copy(
                     ownerName = authData.name
                         ?: "${authData.firstName.orEmpty()} ${authData.lastName.orEmpty()}".trim(),
-                    mobile = authData.phone ?: authData.fullPhone.orEmpty(),
                     shopImageUrl = authData.image.orEmpty(),
                     selectedCity = authData.city?.let { CityItem(it.id ?: 0, it.name.orEmpty()) },
                 )
@@ -67,6 +68,14 @@ class ShopOwnerProfileViewModel(
                 locationError = null,
             )
         }
+    }
+
+    fun selectReturnPolicy(policy: ReturnPolicy) {
+        updateState { copy(returnPolicy = policy) }
+    }
+
+    fun selectReturnPeriod(period: ReturnPeriod) {
+        updateState { copy(returnPeriod = period) }
     }
 
     fun saveProfile() {

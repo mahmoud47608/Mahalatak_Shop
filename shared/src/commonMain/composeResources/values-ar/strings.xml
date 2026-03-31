@@ -153,6 +153,19 @@
     <string name="please_select_category">الرجاء اختيار تصنيف واحد على الأقل</string>
     <string name="please_select_delivery_type">الرجاء اختيار نوع التوصيل</string>
 
+    <!-- Return Policy -->
+    <string name="return_policy">سياسة الاستبدال</string>
+    <string name="select_return_policy">اختر سياسة الاستبدال</string>
+    <string name="exchange">استبدال</string>
+    <string name="exchange_and_return">استبدال واسترجاع</string>
+    <string name="not_available_policy">غير متاح</string>
+    <string name="return_period">مدة الاستبدال</string>
+    <string name="select_return_period">اختر مدة الاستبدال</string>
+    <string name="within_2_days">خلال 2 يوم</string>
+    <string name="within_3_days">خلال 3 يوم</string>
+    <string name="within_7_days">خلال 7 يوم</string>
+    <string name="within_14_days">خلال 14 يوم</string>
+
     <!-- Register Screen - Employee -->
     <string name="employee_name">اسم الموظف</string>
     <string name="employee_photo">صورة الموظف</string>
@@ -325,8 +338,20 @@
     <string name="general_settings">الاعدادات العامة</string>
     <string name="edit_profile_data">تعديل بيانات الملف الشخصي</string>
     <string name="change_phone_number">تغيير رقم الجوال</string>
-    <string name="change_password">تغيير الباسورد</string>
+    <string name="change_password">تغيير كلمة المرور</string>
     <string name="delete_account">حذف الحساب</string>
+    <string name="delete_account_confirmation">هل أنت متأكد من أنك تريد الحذف؟</string>
+
+    <!-- Change Phone Number -->
+    <string name="change_phone_title">تغيير رقم الجوال</string>
+    <string name="change_phone_subtitle">قم بإدخال رقم جوالك لإرسال رمز التفعيل</string>
+    <string name="new_phone_number">رقم الجوال الجديد</string>
+    <string name="enter_new_phone_subtitle">قم بإدخال رقم الجوال الجديد</string>
+    <string name="phone_changed_success">تم تغيير رقم الجوال بنجاح!</string>
+
+    <!-- Change Password -->
+    <string name="old_password">كلمة المرور القديمة</string>
+    <string name="password_changed_success">تم تغيير كلمة المرور بنجاح!</string>
 
     <!-- Map Tracking -->
     <string name="map_tracking">تتبع الخريطة</string>

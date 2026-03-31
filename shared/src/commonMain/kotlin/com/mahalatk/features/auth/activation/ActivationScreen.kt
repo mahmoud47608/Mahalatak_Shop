@@ -49,6 +49,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mahalatk.common.component.bottomsheet.SuccessBottomSheet
 import com.mahalatk.common.component.button.DefaultButton
+import com.mahalatk.common.component.header.ScreenHeader
 import com.mahalatk.common.component.utilis.noRippleClickable
 import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.MahalatkTheme
@@ -68,6 +69,8 @@ fun ActivationScreen(
     phoneNumber: String,
     showSuccessOnVerify: Boolean = false,
     successMessage: String = "",
+    headerTitle: String? = null,
+    onBack: (() -> Unit)? = null,
     onVerified: () -> Unit,
     viewModel: ActivationViewModel = koinViewModel(),
 ) {
@@ -97,95 +100,110 @@ fun ActivationScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 24.dp, vertical = 48.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+            .background(if (headerTitle != null) AppColor.ScreenBackground else Color.Transparent),
     ) {
-        Spacer(modifier = Modifier.height(40.dp))
-
-        // App Logo
-        Image(
-            painter = painterResource(Res.drawable.app_icon),
-            contentDescription = null,
-            contentScale = ContentScale.Fit,
-        )
-
-        Spacer(modifier = Modifier.height(40.dp))
-
-        // Title
-        Text(
-            text = stringResource(Res.string.activation_code),
-            style = MahalatkTheme.headlineSmall,
-            color = MahalatkTheme.primary,
-            fontWeight = FontWeight.Bold,
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Subtitle with phone number
-        Text(
-            text = "${stringResource(Res.string.activation_subtitle)} +${state.phoneNumber.ifEmpty { phoneNumber }}",
-            style = MahalatkTheme.bodyMedium,
-            color = MahalatkTheme.hint,
-            textAlign = TextAlign.Center,
-        )
-
-        Spacer(modifier = Modifier.height(40.dp))
-
-        // OTP Input - single hidden field + visual boxes
-        OtpInput(
-            code = state.fullCode,
-            codeLength = 4,
-            focusRequester = focusRequester,
-            onCodeChanged = { newCode ->
-                val digits = newCode.filter { it.isDigit() }.take(4)
-                digits.forEachIndexed { i, c -> viewModel.onDigitEntered(i, c.toString()) }
-                // Clear remaining
-                for (i in digits.length until 4) viewModel.onDigitEntered(i, "")
-            },
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // Timer
-        Text(
-            text = state.timerText,
-            style = MahalatkTheme.titleMedium,
-            color = MahalatkTheme.hint,
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Resend code
-        val resendText = buildAnnotatedString {
-            append("${stringResource(Res.string.didnt_receive_code)} ")
-            withStyle(
-                SpanStyle(
-                    color = if (state.canResend) AppColor.Primary else AppColor.TextHint,
-                    fontWeight = FontWeight.Bold,
-                )
-            ) {
-                append(stringResource(Res.string.resend_code))
-            }
+        if (headerTitle != null) {
+            ScreenHeader(
+                title = headerTitle,
+                onBackClick = onBack,
+            )
         }
-        Text(
-            text = resendText,
-            style = MahalatkTheme.bodyMedium,
-            color = MahalatkTheme.hint,
-            modifier = Modifier.noRippleClickable(enabled = state.canResend) {
-                viewModel.resendCode()
-            },
-        )
 
-        Spacer(modifier = Modifier.weight(1f))
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 24.dp, vertical = if (headerTitle != null) 24.dp else 48.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            if (headerTitle == null) {
+                Spacer(modifier = Modifier.height(40.dp))
 
-        // Verify button
-        DefaultButton(
-            text = stringResource(Res.string.verify),
-            enabled = state.isCodeComplete && !state.isVerifying,
-            onClick = { viewModel.verify() },
-            modifier = Modifier.fillMaxWidth(),
-        )
+                // App Logo
+                Image(
+                    painter = painterResource(Res.drawable.app_icon),
+                    contentDescription = null,
+                    contentScale = ContentScale.Fit,
+                )
+
+                Spacer(modifier = Modifier.height(40.dp))
+            }
+
+            // Title
+            Text(
+                text = stringResource(Res.string.activation_code),
+                style = MahalatkTheme.headlineSmall,
+                color = MahalatkTheme.primary,
+                fontWeight = FontWeight.Bold,
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Subtitle with phone number
+            Text(
+                text = "${stringResource(Res.string.activation_subtitle)} +${state.phoneNumber.ifEmpty { phoneNumber }}",
+                style = MahalatkTheme.bodyMedium,
+                color = MahalatkTheme.hint,
+                textAlign = TextAlign.Center,
+            )
+
+            Spacer(modifier = Modifier.height(40.dp))
+
+            // OTP Input - single hidden field + visual boxes
+            OtpInput(
+                code = state.fullCode,
+                codeLength = 4,
+                focusRequester = focusRequester,
+                onCodeChanged = { newCode ->
+                    val digits = newCode.filter { it.isDigit() }.take(4)
+                    digits.forEachIndexed { i, c -> viewModel.onDigitEntered(i, c.toString()) }
+                    // Clear remaining
+                    for (i in digits.length until 4) viewModel.onDigitEntered(i, "")
+                },
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Timer
+            Text(
+                text = state.timerText,
+                style = MahalatkTheme.titleMedium,
+                color = MahalatkTheme.hint,
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Resend code
+            val resendText = buildAnnotatedString {
+                append("${stringResource(Res.string.didnt_receive_code)} ")
+                withStyle(
+                    SpanStyle(
+                        color = if (state.canResend) AppColor.Primary else AppColor.TextHint,
+                        fontWeight = FontWeight.Bold,
+                    )
+                ) {
+                    append(stringResource(Res.string.resend_code))
+                }
+            }
+            Text(
+                text = resendText,
+                style = MahalatkTheme.bodyMedium,
+                color = MahalatkTheme.hint,
+                modifier = Modifier.noRippleClickable(enabled = state.canResend) {
+                    viewModel.resendCode()
+                },
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            // Verify button
+            DefaultButton(
+                text = stringResource(Res.string.verify),
+                enabled = state.isCodeComplete && !state.isVerifying,
+                onClick = { viewModel.verify() },
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
     }
 
     // Success bottom sheet (for registration flow)

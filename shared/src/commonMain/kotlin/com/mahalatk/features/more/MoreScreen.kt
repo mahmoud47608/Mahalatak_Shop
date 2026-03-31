@@ -20,7 +20,6 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -295,13 +294,6 @@ private fun MenuGroup(items: List<MenuItem>, onItemClick: (Int) -> Unit) {
                     title = stringResource(item.titleRes),
                     onClick = { onItemClick(index) },
                 )
-                if (index < items.lastIndex) {
-                    HorizontalDivider(
-                        modifier = Modifier.padding(start = 52.dp, end = 16.dp),
-                        thickness = 0.5.dp,
-                        color = AppColor.Outline,
-                    )
-                }
             }
         }
     }

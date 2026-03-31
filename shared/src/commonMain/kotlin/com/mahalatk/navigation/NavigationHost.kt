@@ -15,11 +15,20 @@ import com.mahalatk.features.auth.register.RegisterScreen
 import com.mahalatk.features.chat.ChatDetailScreen
 import com.mahalatk.features.notifications.NotificationsScreen
 import com.mahalatk.features.products.add.AddProductScreen
+import com.mahalatk.features.profile.ProfileScreen
+import com.mahalatk.features.profile.employee.EditEmployeeProfileScreen
 import com.mahalatk.features.profile.employee.EmployeeProfileScreen
+import com.mahalatk.features.profile.shopowner.EditShopOwnerProfileScreen
 import com.mahalatk.features.profile.shopowner.ShopOwnerProfileScreen
 import com.mahalatk.features.settings.SettingsScreen
+import com.mahalatk.features.settings.changepassword.ChangePasswordScreen
+import com.mahalatk.features.settings.changephone.ChangePhoneScreen
+import com.mahalatk.features.settings.changephone.NewPhoneScreen
 import com.mahalatk.features.splash.SplashScreen
 import com.mahalatk.navigation.graphs.MainNavGraph
+import mahalatk.shared.generated.resources.Res
+import mahalatk.shared.generated.resources.change_phone_title
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun NavigationHost() {
@@ -61,22 +70,52 @@ fun NavigationHost() {
                 }
 
                 is Route.Activation -> NavEntry(route) {
-                    if (route.isFromForgotPassword) {
-                        // Forgot password flow → go to ResetPassword
-                        ActivationScreen(
-                            phoneNumber = route.phoneNumber,
-                            onVerified = {
-                                navigator.replace(Route.ResetPassword(route.phoneNumber))
-                            },
-                        )
-                    } else {
-                        // Registration flow → show success then go Home
-                        ActivationScreen(
-                            phoneNumber = route.phoneNumber,
-                            showSuccessOnVerify = true,
-                            successMessage = "Registration request sent successfully!",
-                            onVerified = { navigator.replaceAll(Route.Home) },
-                        )
+                    when {
+                        route.isFromForgotPassword -> {
+                            ActivationScreen(
+                                phoneNumber = route.phoneNumber,
+                                onVerified = {
+                                    navigator.replace(Route.ResetPassword(route.phoneNumber))
+                                },
+                            )
+                        }
+
+                        route.isFromChangePhone -> {
+                            // Verified current phone → go to enter new phone
+                            ActivationScreen(
+                                phoneNumber = route.phoneNumber,
+                                headerTitle = stringResource(Res.string.change_phone_title),
+                                onBack = { navigator.pop() },
+                                onVerified = {
+                                    navigator.replace(Route.NewPhone)
+                                },
+                            )
+                        }
+
+                        route.isFromNewPhone -> {
+                            // Verified new phone → show success then go back to settings
+                            ActivationScreen(
+                                phoneNumber = route.phoneNumber,
+                                showSuccessOnVerify = true,
+                                successMessage = "Phone number changed successfully!",
+                                headerTitle = stringResource(Res.string.change_phone_title),
+                                onBack = { navigator.pop() },
+                                onVerified = {
+                                    // Pop back to settings
+                                    navigator.popUntil { it is Route.Settings }
+                                },
+                            )
+                        }
+
+                        else -> {
+                            // Registration flow → show success then go Home
+                            ActivationScreen(
+                                phoneNumber = route.phoneNumber,
+                                showSuccessOnVerify = true,
+                                successMessage = "Registration request sent successfully!",
+                                onVerified = { navigator.replaceAll(Route.Home) },
+                            )
+                        }
                     }
                 }
 
@@ -134,16 +173,66 @@ fun NavigationHost() {
                     AddProductScreen(onBack = { navigator.pop() })
                 }
 
-                // ─── Shop Owner Profile ───────────────────
+                // ─── Edit Profile (Unified with tabs) ────────
+                is Route.Profile -> NavEntry(route) {
+                    ProfileScreen(
+                        onBack = { navigator.pop() },
+                        onNavigateToPickLocation = { navigator.push(Route.PickLocation) },
+                    )
+                }
+
+                // ─── Shop Owner Profile (read-only) ──────────
                 is Route.ShopOwnerProfile -> NavEntry(route) {
                     ShopOwnerProfileScreen(
                         onBack = { navigator.pop() },
                     )
                 }
 
-                // ─── Employee Profile ─────────────────────
+                // ─── Employee Profile (read-only) ────────────
                 is Route.EmployeeProfile -> NavEntry(route) {
                     EmployeeProfileScreen(
+                        onBack = { navigator.pop() },
+                    )
+                }
+
+                // ─── Edit Shop Owner Profile ────────────────
+                is Route.EditShopOwnerProfile -> NavEntry(route) {
+                    EditShopOwnerProfileScreen(
+                        onBack = { navigator.pop() },
+                        onNavigateToPickLocation = { navigator.push(Route.PickLocation) },
+                    )
+                }
+
+                // ─── Edit Employee Profile ──────────────────
+                is Route.EditEmployeeProfile -> NavEntry(route) {
+                    EditEmployeeProfileScreen(
+                        onBack = { navigator.pop() },
+                    )
+                }
+
+                // ─── Change Phone ─────────────────────────
+                is Route.ChangePhone -> NavEntry(route) {
+                    ChangePhoneScreen(
+                        onBack = { navigator.pop() },
+                        onConfirm = { phone ->
+                            navigator.push(Route.Activation(phone, isFromChangePhone = true))
+                        },
+                    )
+                }
+
+                // ─── New Phone ────────────────────────────
+                is Route.NewPhone -> NavEntry(route) {
+                    NewPhoneScreen(
+                        onBack = { navigator.pop() },
+                        onConfirm = { newPhone ->
+                            navigator.push(Route.Activation(newPhone, isFromNewPhone = true))
+                        },
+                    )
+                }
+
+                // ─── Change Password ─────────────────────
+                is Route.ChangePassword -> NavEntry(route) {
+                    ChangePasswordScreen(
                         onBack = { navigator.pop() },
                     )
                 }
@@ -152,9 +241,9 @@ fun NavigationHost() {
                 is Route.Settings -> NavEntry(route) {
                     SettingsScreen(
                         onBack = { navigator.pop() },
-                        onEditProfile = {
-                            navigator.push(Route.ShopOwnerProfile)
-                        },
+                        onEditProfile = { navigator.push(Route.EditShopOwnerProfile) },
+                        onChangePhoneNumber = { navigator.push(Route.ChangePhone) },
+                        onChangePassword = { navigator.push(Route.ChangePassword) },
                     )
                 }
 

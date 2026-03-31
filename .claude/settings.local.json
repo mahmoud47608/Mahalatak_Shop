@@ -59,7 +59,8 @@
       "Bash(unzip -qo vm3.zip -d vm3_extract)",
       "Bash(pip show:*)",
       "Bash(magick --version)",
-      "Bash(convert --version)"
+      "Bash(convert --version)",
+      "Bash(find /d/project/Mahalatak/shared/src/commonMain -type f \\\\\\(-name *Navigation* -o -name *Route* \\\\\\))"
     ],
     "deny": [],
     "ask": []

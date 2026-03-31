@@ -19,24 +19,35 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.mahalatk.common.component.bottomsheet.MultiSelectBottomSheet
+import com.mahalatk.common.component.bottomsheet.SingleSelectBottomSheet
+import com.mahalatk.common.component.button.DefaultButton
 import com.mahalatk.common.component.header.ScreenHeader
+import com.mahalatk.common.component.imagepicker.rememberImagePickerLauncher
 import com.mahalatk.common.component.inputs.DefaultTextField
 import com.mahalatk.features.auth.register.DeliveryType
+import com.mahalatk.features.auth.register.LocationResultHolder
 import com.mahalatk.features.auth.register.ReturnPeriod
 import com.mahalatk.features.auth.register.ReturnPolicy
+import com.mahalatk.features.auth.register.ShopCategory
 import com.mahalatk.features.profile.component.ProfileImagePicker
 import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.app_delivery
+import mahalatk.shared.generated.resources.edit_profile
 import mahalatk.shared.generated.resources.exchange
 import mahalatk.shared.generated.resources.exchange_and_return
 import mahalatk.shared.generated.resources.ic_city
@@ -44,7 +55,7 @@ import mahalatk.shared.generated.resources.ic_location
 import mahalatk.shared.generated.resources.ic_user
 import mahalatk.shared.generated.resources.not_available_policy
 import mahalatk.shared.generated.resources.owner_name
-import mahalatk.shared.generated.resources.profile
+import mahalatk.shared.generated.resources.save
 import mahalatk.shared.generated.resources.select_city
 import mahalatk.shared.generated.resources.select_delivery_type
 import mahalatk.shared.generated.resources.select_location
@@ -63,29 +74,50 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun ShopOwnerProfileScreen(
+fun EditShopOwnerProfileScreen(
     viewModel: ShopOwnerProfileViewModel = koinViewModel(),
     onBack: () -> Unit = {},
+    onNavigateToPickLocation: () -> Unit = {},
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val state by viewModel.uiState.collectAsState()
+
+    // Bottom sheet states
+    var showDeliverySheet by remember { mutableStateOf(false) }
+    var showCitySheet by remember { mutableStateOf(false) }
+    var showCategorySheet by remember { mutableStateOf(false) }
+    var showReturnPolicySheet by remember { mutableStateOf(false) }
+    var showReturnPeriodSheet by remember { mutableStateOf(false) }
+
+    // Image picker
+    val pickImage = rememberImagePickerLauncher { bytes ->
+        viewModel.updateState { copy(shopImage = bytes, imageError = null) }
+    }
+
+    // Location result
+    val locationResult by LocationResultHolder.result.collectAsState()
+    LaunchedEffect(locationResult) {
+        locationResult?.let {
+            viewModel.updateLocation(it.lat, it.lng, it.address)
+            LocationResultHolder.consume()
+        }
+    }
 
     Column(modifier = Modifier.fillMaxSize().background(AppColor.ScreenBackground)) {
 
         ScreenHeader(
-            title = stringResource(Res.string.profile),
+            title = stringResource(Res.string.edit_profile),
             onBackClick = onBack,
         )
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
                 .padding(top = 16.dp, bottom = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .weight(1f)
                     .padding(horizontal = 16.dp),
                 shape = RoundedCornerShape(24.dp),
                 colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -93,14 +125,19 @@ fun ShopOwnerProfileScreen(
             ) {
                 Column(
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
                         .padding(vertical = 24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    // Shop Logo (display only)
+                    // Shop Logo (editable)
                     ProfileImagePicker(
-                        imageUrl = uiState.shopImageUrl,
+                        imageUrl = state.shopImageUrl,
+                        imageBytes = state.shopImage,
                         label = stringResource(Res.string.upload_shop_logo),
+                        errorText = state.imageError?.let { stringResource(it) },
+                        editable = true,
+                        onPickImage = pickImage,
                     )
 
                     Spacer(modifier = Modifier.height(24.dp))
@@ -109,14 +146,16 @@ fun ShopOwnerProfileScreen(
                         modifier = Modifier.padding(horizontal = 24.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
-                        // Shop Name
+                        // 1. Shop Name
                         DefaultTextField(
-                            value = uiState.shopName,
-                            onValueChanged = {},
+                            value = state.shopName,
+                            onValueChanged = {
+                                viewModel.updateState { copy(shopName = it, shopNameError = null) }
+                            },
                             placeholderText = stringResource(Res.string.shop_name),
                             keyboardType = KeyboardType.Text,
                             imeAction = ImeAction.Next,
-                            isEnabled = false,
+                            errorText = state.shopNameError?.let { stringResource(it) },
                             leadingIcon = {
                                 Icon(Icons.Filled.Storefront, null, tint = MahalatkTheme.primary)
                             },
@@ -125,14 +164,21 @@ fun ShopOwnerProfileScreen(
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        // Owner Name
+                        // 2. Owner Name
                         DefaultTextField(
-                            value = uiState.ownerName,
-                            onValueChanged = {},
+                            value = state.ownerName,
+                            onValueChanged = {
+                                viewModel.updateState {
+                                    copy(
+                                        ownerName = it,
+                                        ownerNameError = null
+                                    )
+                                }
+                            },
                             placeholderText = stringResource(Res.string.owner_name),
                             keyboardType = KeyboardType.Text,
                             imeAction = ImeAction.Next,
-                            isEnabled = false,
+                            errorText = state.ownerNameError?.let { stringResource(it) },
                             leadingIcon = {
                                 Icon(
                                     painterResource(Res.drawable.ic_user), null,
@@ -145,12 +191,14 @@ fun ShopOwnerProfileScreen(
 
                         Spacer(modifier = Modifier.height(20.dp))
 
-                        // Location
+                        // 3. Location
                         DefaultTextField(
-                            value = uiState.locationAddress,
+                            value = state.locationAddress,
                             onValueChanged = {},
                             placeholderText = stringResource(Res.string.select_location),
                             isEnabled = false,
+                            onClick = { onNavigateToPickLocation() },
+                            errorText = state.locationError?.let { stringResource(it) },
                             leadingIcon = {
                                 Icon(
                                     painter = painterResource(Res.drawable.ic_location),
@@ -164,12 +212,14 @@ fun ShopOwnerProfileScreen(
 
                         Spacer(modifier = Modifier.height(20.dp))
 
-                        // City
+                        // 4. City
                         DefaultTextField(
-                            value = uiState.selectedCity?.name ?: "",
+                            value = state.selectedCity?.name ?: "",
                             onValueChanged = {},
                             placeholderText = stringResource(Res.string.select_city),
                             isEnabled = false,
+                            onClick = { showCitySheet = true },
+                            errorText = state.cityError?.let { stringResource(it) },
                             leadingIcon = {
                                 Icon(
                                     painterResource(Res.drawable.ic_city), null,
@@ -189,15 +239,17 @@ fun ShopOwnerProfileScreen(
 
                         Spacer(modifier = Modifier.height(20.dp))
 
-                        // Shop Category
+                        // 5. Shop Category
                         val categoryNames =
-                            uiState.selectedCategories.map { stringResource(it.labelRes) }
+                            state.selectedCategories.map { stringResource(it.labelRes) }
                         val categoryLabel = categoryNames.joinToString(", ")
                         DefaultTextField(
                             value = categoryLabel,
                             onValueChanged = {},
                             placeholderText = stringResource(Res.string.shop_category),
                             isEnabled = false,
+                            onClick = { showCategorySheet = true },
+                            errorText = state.categoryError?.let { stringResource(it) },
                             leadingIcon = {
                                 Icon(Icons.Filled.Storefront, null, tint = MahalatkTheme.primary)
                             },
@@ -213,8 +265,8 @@ fun ShopOwnerProfileScreen(
 
                         Spacer(modifier = Modifier.height(20.dp))
 
-                        // Return Policy
-                        val returnPolicyLabel = when (uiState.returnPolicy) {
+                        // 6. Return Policy
+                        val returnPolicyLabel = when (state.returnPolicy) {
                             ReturnPolicy.EXCHANGE -> stringResource(Res.string.exchange)
                             ReturnPolicy.EXCHANGE_AND_RETURN -> stringResource(Res.string.exchange_and_return)
                             ReturnPolicy.NOT_AVAILABLE -> stringResource(Res.string.not_available_policy)
@@ -224,6 +276,7 @@ fun ShopOwnerProfileScreen(
                             onValueChanged = {},
                             placeholderText = stringResource(Res.string.select_return_policy),
                             isEnabled = false,
+                            onClick = { showReturnPolicySheet = true },
                             leadingIcon = {
                                 Icon(Icons.Filled.Storefront, null, tint = MahalatkTheme.primary)
                             },
@@ -237,11 +290,11 @@ fun ShopOwnerProfileScreen(
                             modifier = Modifier.fillMaxWidth(),
                         )
 
-                        // Return Period (conditional)
-                        if (uiState.returnPolicy != ReturnPolicy.NOT_AVAILABLE) {
+                        // 7. Return Period (conditional)
+                        if (state.returnPolicy != ReturnPolicy.NOT_AVAILABLE) {
                             Spacer(modifier = Modifier.height(20.dp))
 
-                            val returnPeriodLabel = when (uiState.returnPeriod) {
+                            val returnPeriodLabel = when (state.returnPeriod) {
                                 ReturnPeriod.DAYS_2 -> stringResource(Res.string.within_2_days)
                                 ReturnPeriod.DAYS_3 -> stringResource(Res.string.within_3_days)
                                 ReturnPeriod.DAYS_7 -> stringResource(Res.string.within_7_days)
@@ -252,6 +305,7 @@ fun ShopOwnerProfileScreen(
                                 onValueChanged = {},
                                 placeholderText = stringResource(Res.string.select_return_period),
                                 isEnabled = false,
+                                onClick = { showReturnPeriodSheet = true },
                                 leadingIcon = {
                                     Icon(
                                         Icons.Filled.Storefront,
@@ -272,8 +326,8 @@ fun ShopOwnerProfileScreen(
 
                         Spacer(modifier = Modifier.height(20.dp))
 
-                        // Delivery Type
-                        val deliveryLabel = when (uiState.deliveryType) {
+                        // 8. Delivery Type
+                        val deliveryLabel = when (state.deliveryType) {
                             DeliveryType.SHOP_DELIVERY -> stringResource(Res.string.shop_delivery)
                             DeliveryType.APP_DELIVERY -> stringResource(Res.string.app_delivery)
                             null -> ""
@@ -283,6 +337,8 @@ fun ShopOwnerProfileScreen(
                             onValueChanged = {},
                             placeholderText = stringResource(Res.string.select_delivery_type),
                             isEnabled = false,
+                            onClick = { showDeliverySheet = true },
+                            errorText = state.deliveryTypeError?.let { stringResource(it) },
                             leadingIcon = {
                                 Icon(Icons.Filled.LocalShipping, null, tint = MahalatkTheme.primary)
                             },
@@ -299,7 +355,87 @@ fun ShopOwnerProfileScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Save button
+            DefaultButton(
+                text = stringResource(Res.string.save),
+                onClick = { viewModel.saveProfile() },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+            )
         }
     }
+
+    // ─── Bottom Sheets ─────────────────────────────────────
+
+    SingleSelectBottomSheet(
+        showBottomSheet = showDeliverySheet,
+        title = stringResource(Res.string.select_delivery_type),
+        items = DeliveryType.entries.toList(),
+        selectedItem = state.deliveryType,
+        itemLabel = { type ->
+            when (type) {
+                DeliveryType.SHOP_DELIVERY -> stringResource(Res.string.shop_delivery)
+                DeliveryType.APP_DELIVERY -> stringResource(Res.string.app_delivery)
+            }
+        },
+        onItemSelected = { viewModel.selectDeliveryType(it) },
+        onDismiss = { showDeliverySheet = false },
+    )
+
+    SingleSelectBottomSheet(
+        showBottomSheet = showCitySheet,
+        title = stringResource(Res.string.select_city),
+        items = state.availableCities,
+        selectedItem = state.selectedCity,
+        itemLabel = { it.name },
+        onItemSelected = { viewModel.selectCity(it) },
+        onDismiss = { showCitySheet = false },
+        isItemSelected = { item, selected -> item.id == selected?.id },
+    )
+
+    MultiSelectBottomSheet(
+        showBottomSheet = showCategorySheet,
+        title = stringResource(Res.string.shop_category),
+        items = ShopCategory.entries.toList(),
+        selectedItems = state.selectedCategories,
+        itemLabel = { stringResource(it.labelRes) },
+        onItemToggle = { viewModel.toggleCategory(it) },
+        onDismiss = { showCategorySheet = false },
+    )
+
+    SingleSelectBottomSheet(
+        showBottomSheet = showReturnPolicySheet,
+        title = stringResource(Res.string.select_return_policy),
+        items = ReturnPolicy.entries.toList(),
+        selectedItem = state.returnPolicy,
+        itemLabel = { policy ->
+            when (policy) {
+                ReturnPolicy.EXCHANGE -> stringResource(Res.string.exchange)
+                ReturnPolicy.EXCHANGE_AND_RETURN -> stringResource(Res.string.exchange_and_return)
+                ReturnPolicy.NOT_AVAILABLE -> stringResource(Res.string.not_available_policy)
+            }
+        },
+        onItemSelected = { viewModel.selectReturnPolicy(it) },
+        onDismiss = { showReturnPolicySheet = false },
+    )
+
+    SingleSelectBottomSheet(
+        showBottomSheet = showReturnPeriodSheet,
+        title = stringResource(Res.string.select_return_period),
+        items = ReturnPeriod.entries.toList(),
+        selectedItem = state.returnPeriod,
+        itemLabel = { period ->
+            when (period) {
+                ReturnPeriod.DAYS_2 -> stringResource(Res.string.within_2_days)
+                ReturnPeriod.DAYS_3 -> stringResource(Res.string.within_3_days)
+                ReturnPeriod.DAYS_7 -> stringResource(Res.string.within_7_days)
+                ReturnPeriod.DAYS_14 -> stringResource(Res.string.within_14_days)
+            }
+        },
+        onItemSelected = { viewModel.selectReturnPeriod(it) },
+        onDismiss = { showReturnPeriodSheet = false },
+    )
 }
