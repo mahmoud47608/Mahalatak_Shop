@@ -1,5 +1,6 @@
 <resources>
     <string name="no_internet_connection">لا يوجد إتصال بالإنترنت</string>
+    <string name="field_required">هذا الحقل مطلوب</string>
     <string name="something_went_wrong">هناك شئ خاطئ، يرجى المحاولة فى وقت لاحق</string>
     <string name="please_enter_phone_number">الرجاء إدخال رقم الجوال</string>
     <string name="please_enter_password">الرجاء إدخال كلمة المرور</string>
@@ -324,6 +325,8 @@
     <!-- More/Account Screen -->
     <string name="profile">الملف الشخصي</string>
     <string name="my_ratings">تقييماتي</string>
+    <string name="no_ratings">لا توجد تقييمات بعد</string>
+    <string name="ratings_count">إجمالي التقييمات</string>
     <string name="complaints">الشكاوى</string>
     <string name="about_app">عن التطبيق</string>
     <string name="about_app_content">يُرجى قراءة هذه الاتفاقية بعناية قبل استخدام تطبيق [محلاتك]. باستخدامك للتطبيق، فإنك تقر بموافقتك الكاملة على هذه الشروط، وتلتزم بالامتثال لها.</string>
@@ -333,6 +336,13 @@
     <string name="privacy_policy_content">يُرجى قراءة هذه الاتفاقية بعناية قبل استخدام تطبيق [محلاتك]. باستخدامك للتطبيق، فإنك تقر بموافقتك الكاملة على هذه الشروط، وتلتزم بالامتثال لها.</string>
     <string name="employees">الموظفين</string>
     <string name="no_employees">لا يوجد طلبات موظفين</string>
+    <string name="employee_requests">طلبات الموظفين</string>
+    <string name="employees_list">الموظفين</string>
+    <string name="add_employee">إضافة موظف</string>
+    <string name="employee_phone">رقم الموظف</string>
+    <string name="employee_password">كلمة مرور الموظف</string>
+    <string name="no_current_employees">لا يوجد موظفين حالياً</string>
+    <string name="delete_employee_confirmation">هل تريد حذف هذا الموظف؟</string>
     <string name="accept">قبول</string>
     <string name="reject">رفض</string>
 

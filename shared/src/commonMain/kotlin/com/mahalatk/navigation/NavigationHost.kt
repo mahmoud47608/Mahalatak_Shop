@@ -13,6 +13,9 @@ import com.mahalatk.features.auth.register.LocationResultHolder
 import com.mahalatk.features.auth.register.PickLocationScreen
 import com.mahalatk.features.auth.register.RegisterScreen
 import com.mahalatk.features.chat.ChatDetailScreen
+import com.mahalatk.features.employees.AddEmployeeScreen
+import com.mahalatk.features.employees.EmployeesHubScreen
+import com.mahalatk.features.employees.EmployeesListScreen
 import com.mahalatk.features.employees.EmployeesScreen
 import com.mahalatk.features.more.AboutScreen
 import com.mahalatk.features.more.PrivacyPolicyScreen
@@ -24,6 +27,7 @@ import com.mahalatk.features.profile.employee.EditEmployeeProfileScreen
 import com.mahalatk.features.profile.employee.EmployeeProfileScreen
 import com.mahalatk.features.profile.shopowner.EditShopOwnerProfileScreen
 import com.mahalatk.features.profile.shopowner.ShopOwnerProfileScreen
+import com.mahalatk.features.ratings.MyRatingsScreen
 import com.mahalatk.features.settings.SettingsScreen
 import com.mahalatk.features.settings.changepassword.ChangePasswordScreen
 import com.mahalatk.features.settings.changephone.ChangePhoneScreen
@@ -251,9 +255,36 @@ fun NavigationHost() {
                     )
                 }
 
-                // ─── Employees ───────────────────────────
+                // ─── My Ratings ──────────────────────────
+                is Route.MyRatings -> NavEntry(route) {
+                    MyRatingsScreen(onBack = { navigator.pop() })
+                }
+
+                // ─── Employees Hub ───────────────────────
                 is Route.Employees -> NavEntry(route) {
+                    EmployeesHubScreen(
+                        onBack = { navigator.pop() },
+                        onEmployeeRequests = { navigator.push(Route.EmployeeRequests) },
+                        onEmployeesList = { navigator.push(Route.EmployeesList) },
+                    )
+                }
+
+                // ─── Employee Requests (applicants) ─────
+                is Route.EmployeeRequests -> NavEntry(route) {
                     EmployeesScreen(onBack = { navigator.pop() })
+                }
+
+                // ─── Employees List ─────────────────────
+                is Route.EmployeesList -> NavEntry(route) {
+                    EmployeesListScreen(
+                        onBack = { navigator.pop() },
+                        onAddEmployee = { navigator.push(Route.AddEmployee) },
+                    )
+                }
+
+                // ─── Add Employee ───────────────────────
+                is Route.AddEmployee -> NavEntry(route) {
+                    AddEmployeeScreen(onBack = { navigator.pop() })
                 }
 
                 // ─── About ───────────────────────────────

@@ -12,6 +12,8 @@ import com.mahalatk.features.auth.login.LoginViewModel
 import com.mahalatk.features.auth.register.RegisterViewModel
 import com.mahalatk.features.chat.ChatDetailViewModel
 import com.mahalatk.features.chat.ChatViewModel
+import com.mahalatk.features.employees.AddEmployeeViewModel
+import com.mahalatk.features.employees.EmployeesListViewModel
 import com.mahalatk.features.employees.EmployeesViewModel
 import com.mahalatk.features.home.HomeViewModel
 import com.mahalatk.features.main.MainViewModel
@@ -23,6 +25,7 @@ import com.mahalatk.features.products.ProductsViewModel
 import com.mahalatk.features.products.add.AddProductViewModel
 import com.mahalatk.features.profile.employee.EmployeeProfileViewModel
 import com.mahalatk.features.profile.shopowner.ShopOwnerProfileViewModel
+import com.mahalatk.features.ratings.MyRatingsViewModel
 import com.mahalatk.features.settings.changepassword.ChangePasswordViewModel
 import com.mahalatk.features.settings.changephone.ChangePhoneViewModel
 import com.mahalatk.features.splash.SplashViewModel
@@ -60,4 +63,7 @@ val sharedModule = module {
     viewModel { ChangePhoneViewModel(get(), get()) }
     viewModel { ChangePasswordViewModel(get(), get()) }
     viewModel { EmployeesViewModel() }
+    viewModel { EmployeesListViewModel() }
+    viewModel { AddEmployeeViewModel() }
+    viewModel { MyRatingsViewModel() }
 }

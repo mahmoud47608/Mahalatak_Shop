@@ -171,6 +171,7 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
                             0 -> navigator.push(com.mahalatk.navigation.Route.ShopOwnerProfile)
                             1 -> navigator.push(com.mahalatk.navigation.Route.Settings)
                             2 -> navigator.push(com.mahalatk.navigation.Route.Employees)
+                            3 -> navigator.push(com.mahalatk.navigation.Route.MyRatings)
                         }
                     })
                 }
