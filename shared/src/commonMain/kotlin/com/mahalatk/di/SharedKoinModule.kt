@@ -12,6 +12,7 @@ import com.mahalatk.features.auth.login.LoginViewModel
 import com.mahalatk.features.auth.register.RegisterViewModel
 import com.mahalatk.features.chat.ChatDetailViewModel
 import com.mahalatk.features.chat.ChatViewModel
+import com.mahalatk.features.employees.EmployeesViewModel
 import com.mahalatk.features.home.HomeViewModel
 import com.mahalatk.features.main.MainViewModel
 import com.mahalatk.features.more.MoreViewModel
@@ -58,4 +59,5 @@ val sharedModule = module {
     viewModel { EmployeeProfileViewModel(get(), get(), get()) }
     viewModel { ChangePhoneViewModel(get(), get()) }
     viewModel { ChangePasswordViewModel(get(), get()) }
+    viewModel { EmployeesViewModel() }
 }

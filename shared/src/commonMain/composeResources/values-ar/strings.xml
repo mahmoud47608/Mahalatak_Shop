@@ -331,6 +331,10 @@
     <string name="terms_conditions_content">يُرجى قراءة هذه الاتفاقية بعناية قبل استخدام تطبيق [محلاتك]. باستخدامك للتطبيق، فإنك تقر بموافقتك الكاملة على هذه الشروط، وتلتزم بالامتثال لها.</string>
     <string name="privacy_policy">سياسة الخصوصية</string>
     <string name="privacy_policy_content">يُرجى قراءة هذه الاتفاقية بعناية قبل استخدام تطبيق [محلاتك]. باستخدامك للتطبيق، فإنك تقر بموافقتك الكاملة على هذه الشروط، وتلتزم بالامتثال لها.</string>
+    <string name="employees">الموظفين</string>
+    <string name="no_employees">لا يوجد طلبات موظفين</string>
+    <string name="accept">قبول</string>
+    <string name="reject">رفض</string>
 
     <!-- Profile Screen -->
     <string name="edit_profile">تعديل الملف الشخصي</string>

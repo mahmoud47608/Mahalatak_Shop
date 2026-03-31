@@ -46,6 +46,7 @@ import com.mahalatk.theme.SpacingDimensions
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.about_app
 import mahalatk.shared.generated.resources.complaints
+import mahalatk.shared.generated.resources.employees
 import mahalatk.shared.generated.resources.ic_about
 import mahalatk.shared.generated.resources.ic_complaint
 import mahalatk.shared.generated.resources.ic_notification
@@ -92,6 +93,7 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
         listOf(
             MenuItem(Res.drawable.ic_profile, Res.string.profile),
             MenuItem(Res.drawable.ic_settings, Res.string.settings),
+            MenuItem(Res.drawable.ic_profile, Res.string.employees),
             MenuItem(Res.drawable.ic_rating, Res.string.my_ratings),
             MenuItem(Res.drawable.ic_complaint, Res.string.complaints),
         )
@@ -168,6 +170,7 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
                             // TODO: switch based on user type later
                             0 -> navigator.push(com.mahalatk.navigation.Route.ShopOwnerProfile)
                             1 -> navigator.push(com.mahalatk.navigation.Route.Settings)
+                            2 -> navigator.push(com.mahalatk.navigation.Route.Employees)
                         }
                     })
                 }
