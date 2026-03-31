@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.asSharedFlow
 class MessageManager {
 
     private val _messages = MutableSharedFlow<UIMessage>(
-        replay = 0,
-        extraBufferCapacity = 1
+        replay = 1,
+        extraBufferCapacity = 10
     )
     val messages: SharedFlow<UIMessage> = _messages.asSharedFlow()
 

@@ -10,6 +10,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -42,6 +43,9 @@ fun DefaultTextField(
 ) {
     val shape = com.mahalatk.theme.AppShapes.Large
 
+    // Stable click handler — avoids new lambda allocation every recomposition
+    val currentOnClick = rememberUpdatedState(onClick)
+
     Column(modifier = modifier.fillMaxWidth()) {
 
         OutlinedTextField(
@@ -66,7 +70,7 @@ fun DefaultTextField(
                         MahalatkTheme.border,
                     shape = shape
                 )
-                .noRippleClickable(onClick = { onClick?.invoke() }),
+                .noRippleClickable(onClick = { currentOnClick.value?.invoke() }),
             isError = !errorText.isNullOrEmpty(),
             placeholder = {
                 if (placeholderText.isNotEmpty()) {

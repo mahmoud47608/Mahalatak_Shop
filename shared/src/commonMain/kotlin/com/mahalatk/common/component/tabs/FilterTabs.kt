@@ -11,6 +11,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,6 +33,9 @@ fun <T> FilterTabs(
     onTabSelected: (T) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    // Stable reference so the lambda passed to noRippleClickable doesn't change
+    val currentOnTabSelected = rememberUpdatedState(onTabSelected)
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -49,11 +54,12 @@ fun <T> FilterTabs(
                 label = "tabText",
             )
 
+            val stableOnClick = remember(tab) { { currentOnTabSelected.value(tab) } }
             Box(
                 modifier = Modifier
                     .weight(1f)
                     .background(color = bgColor, shape = RoundedCornerShape(10.dp))
-                    .noRippleClickable { onTabSelected(tab) }
+                    .noRippleClickable(onClick = stableOnClick)
                     .padding(vertical = 10.dp),
                 contentAlignment = Alignment.Center,
             ) {

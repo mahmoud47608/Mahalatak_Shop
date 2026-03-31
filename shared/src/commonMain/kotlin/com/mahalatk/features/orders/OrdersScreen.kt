@@ -92,7 +92,10 @@ fun OrdersScreen(
                 contentPadding = PaddingValues(start = 20.dp, end = 20.dp, bottom = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                itemsIndexed(filteredOrders, key = { _, o -> o.id }) { index, order ->
+                itemsIndexed(
+                    filteredOrders,
+                    key = { _, o -> o.id },
+                    contentType = { _, _ -> "order" }) { index, order ->
                     AnimatedListItem(index) {
                         OrderCard(
                             order = order,

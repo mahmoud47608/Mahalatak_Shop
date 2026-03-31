@@ -89,7 +89,10 @@ fun EmployeesScreen(
                 ),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                itemsIndexed(state.employees, key = { _, e -> e.id }) { index, employee ->
+                itemsIndexed(
+                    state.employees,
+                    key = { _, e -> e.id },
+                    contentType = { _, _ -> "employee" }) { index, employee ->
                     AnimatedListItem(index) {
                         EmployeeCard(
                             employee = employee,

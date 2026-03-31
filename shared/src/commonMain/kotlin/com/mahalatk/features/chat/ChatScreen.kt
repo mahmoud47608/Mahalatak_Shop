@@ -85,7 +85,10 @@ fun ChatScreen(viewModel: ChatViewModel = koinViewModel()) {
                 modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp),
                 verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
-                itemsIndexed(filteredConversations, key = { _, c -> c.id }) { index, conversation ->
+                itemsIndexed(
+                    filteredConversations,
+                    key = { _, c -> c.id },
+                    contentType = { _, _ -> "chat" }) { index, conversation ->
                     AnimatedListItem(index) {
                         ChatItem(
                         conversation = conversation,

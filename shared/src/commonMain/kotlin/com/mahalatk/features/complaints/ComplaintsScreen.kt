@@ -83,7 +83,10 @@ fun ComplaintsScreen(
                 ),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                itemsIndexed(state.complaints, key = { _, c -> c.id }) { index, complaint ->
+                itemsIndexed(
+                    state.complaints,
+                    key = { _, c -> c.id },
+                    contentType = { _, _ -> "complaint" }) { index, complaint ->
                     AnimatedListItem(index) {
                         ComplaintCard(complaint = complaint)
                     }

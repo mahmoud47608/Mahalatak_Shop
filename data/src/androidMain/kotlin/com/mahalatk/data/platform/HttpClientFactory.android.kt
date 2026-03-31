@@ -2,6 +2,7 @@ package com.mahalatk.data.platform
 
 import com.ihsanbal.logging.Level
 import com.ihsanbal.logging.LoggingInterceptor
+import com.mahalatk.data.BuildConfig
 import com.mahalatk.data.util.NetworkConstants
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
@@ -31,14 +32,16 @@ actual fun createPlatformHttpClient(json: Json, baseUrl: String): HttpClient {
                 }
             })
 
-            addInterceptor(
-                LoggingInterceptor.Builder()
-                    .setLevel(Level.BASIC)
-                    .log(okhttp3.internal.platform.Platform.INFO)
-                    .request("Request")
-                    .response("Response")
-                    .build()
-            )
+            if (BuildConfig.DEBUG) {
+                addInterceptor(
+                    LoggingInterceptor.Builder()
+                        .setLevel(Level.BASIC)
+                        .log(okhttp3.internal.platform.Platform.INFO)
+                        .request("Request")
+                        .response("Response")
+                        .build()
+                )
+            }
         }
         installCommonPlugins(json, baseUrl)
     }

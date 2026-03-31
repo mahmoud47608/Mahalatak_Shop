@@ -28,8 +28,6 @@ import com.mahalatk.navigation.isAuthScreen
 import com.mahalatk.navigation.rememberAppNavigator
 import com.mahalatk.theme.MahalatkTheme
 import com.mahalatk.util.UIMessage
-import io.github.alexzhirkevich.compottie.LottieCompositionSpec
-import io.github.alexzhirkevich.compottie.rememberLottieComposition
 import kotlinx.coroutines.flow.collectLatest
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.ic_background
@@ -42,14 +40,6 @@ fun App(viewModel: MainViewModel = koinViewModel()) {
         val navigator = rememberAppNavigator()
         val isLoading by viewModel.isLoading.collectAsState()
         val snackbarHostState = remember { SnackbarHostState() }
-
-        // Preload Lottie so LoadingOverlay renders instantly
-        @OptIn(org.jetbrains.compose.resources.ExperimentalResourceApi::class)
-        rememberLottieComposition {
-            LottieCompositionSpec.JsonString(
-                Res.readBytes("files/loading.json").decodeToString()
-            )
-        }
 
         // derivedStateOf prevents recomposition of the whole tree on every backstack change
         val isTabScreen by remember {

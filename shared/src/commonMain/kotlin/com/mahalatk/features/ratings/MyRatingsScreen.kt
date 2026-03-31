@@ -95,7 +95,10 @@ fun MyRatingsScreen(
                 }
 
                 // ── Rating Cards ──
-                itemsIndexed(state.ratings, key = { _, r -> r.id }) { index, rating ->
+                itemsIndexed(
+                    state.ratings,
+                    key = { _, r -> r.id },
+                    contentType = { _, _ -> "rating" }) { index, rating ->
                     AnimatedListItem(index + 1) {
                         RatingCard(rating = rating)
                     }

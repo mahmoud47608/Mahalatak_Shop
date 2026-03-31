@@ -64,7 +64,10 @@ fun <T> SingleSelectBottomSheet(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                items(items) { item ->
+                items(
+                    items,
+                    key = { it.hashCode() },
+                    contentType = { "single_select_item" }) { item ->
                     val isSelected = isItemSelected(item, selectedItem)
                     val backgroundColor =
                         if (isSelected) MahalatkTheme.primary.copy(alpha = 0.08f)

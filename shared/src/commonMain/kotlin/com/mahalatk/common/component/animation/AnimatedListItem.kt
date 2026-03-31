@@ -20,7 +20,7 @@ fun AnimatedListItem(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
-    val animatable = remember { Animatable(0f) }
+    val animatable = remember(index) { Animatable(0f) }
 
     LaunchedEffect(Unit) {
         animatable.animateTo(

@@ -666,7 +666,7 @@ private fun ImageGridSection(
                         .aspectRatio(1f)
                         .clip(RoundedCornerShape(12.dp)),
                 ) {
-                    val bitmap = imageBytes.toImageBitmap()
+                    val bitmap = remember(imageBytes) { imageBytes.toImageBitmap() }
                     if (bitmap != null) {
                         Image(
                             painter = BitmapPainter(bitmap),

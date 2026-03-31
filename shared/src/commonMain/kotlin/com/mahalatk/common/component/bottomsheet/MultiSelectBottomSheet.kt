@@ -65,7 +65,10 @@ fun <T> MultiSelectBottomSheet(
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                items(items) { item ->
+                items(
+                    items,
+                    key = { it.hashCode() },
+                    contentType = { "multi_select_item" }) { item ->
                     val isSelected = item in selectedItems
                     val backgroundColor =
                         if (isSelected) MahalatkTheme.primary.copy(alpha = 0.08f)
