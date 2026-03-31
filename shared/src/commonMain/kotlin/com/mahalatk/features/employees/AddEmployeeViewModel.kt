@@ -5,17 +5,23 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import mahalatk.shared.generated.resources.Res
+import mahalatk.shared.generated.resources.field_required
+import mahalatk.shared.generated.resources.passwords_do_not_match
 import org.jetbrains.compose.resources.StringResource
 
 data class AddEmployeeState(
     val name: String = "",
     val phone: String = "",
     val password: String = "",
+    val confirmPassword: String = "",
     val passwordVisible: Boolean = false,
+    val confirmPasswordVisible: Boolean = false,
     val image: ByteArray? = null,
     val nameError: StringResource? = null,
     val phoneError: StringResource? = null,
     val passwordError: StringResource? = null,
+    val confirmPasswordError: StringResource? = null,
     val imageError: StringResource? = null,
 )
 
@@ -40,8 +46,16 @@ class AddEmployeeViewModel : ViewModel() {
         _uiState.update { it.copy(password = value, passwordError = null) }
     }
 
+    fun onConfirmPasswordChanged(value: String) {
+        _uiState.update { it.copy(confirmPassword = value, confirmPasswordError = null) }
+    }
+
     fun togglePasswordVisibility() {
         _uiState.update { it.copy(passwordVisible = !it.passwordVisible) }
+    }
+
+    fun toggleConfirmPasswordVisibility() {
+        _uiState.update { it.copy(confirmPasswordVisible = !it.confirmPasswordVisible) }
     }
 
     fun validate(): Boolean {
@@ -49,15 +63,22 @@ class AddEmployeeViewModel : ViewModel() {
         val state = _uiState.value
 
         if (state.name.isBlank()) {
-            _uiState.update { it.copy(nameError = mahalatk.shared.generated.resources.Res.string.field_required) }
+            _uiState.update { it.copy(nameError = Res.string.field_required) }
             valid = false
         }
         if (state.phone.isBlank() || state.phone.length < 9) {
-            _uiState.update { it.copy(phoneError = mahalatk.shared.generated.resources.Res.string.field_required) }
+            _uiState.update { it.copy(phoneError = Res.string.field_required) }
             valid = false
         }
         if (state.password.isBlank()) {
-            _uiState.update { it.copy(passwordError = mahalatk.shared.generated.resources.Res.string.field_required) }
+            _uiState.update { it.copy(passwordError = Res.string.field_required) }
+            valid = false
+        }
+        if (state.confirmPassword.isBlank()) {
+            _uiState.update { it.copy(confirmPasswordError = Res.string.field_required) }
+            valid = false
+        } else if (state.confirmPassword != state.password) {
+            _uiState.update { it.copy(confirmPasswordError = Res.string.passwords_do_not_match) }
             valid = false
         }
 

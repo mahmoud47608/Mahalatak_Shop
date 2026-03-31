@@ -13,6 +13,7 @@ import com.mahalatk.features.auth.register.LocationResultHolder
 import com.mahalatk.features.auth.register.PickLocationScreen
 import com.mahalatk.features.auth.register.RegisterScreen
 import com.mahalatk.features.chat.ChatDetailScreen
+import com.mahalatk.features.complaints.ComplaintsScreen
 import com.mahalatk.features.employees.AddEmployeeScreen
 import com.mahalatk.features.employees.EmployeesHubScreen
 import com.mahalatk.features.employees.EmployeesListScreen
@@ -253,6 +254,11 @@ fun NavigationHost() {
                         onChangePhoneNumber = { navigator.push(Route.ChangePhone) },
                         onChangePassword = { navigator.push(Route.ChangePassword) },
                     )
+                }
+
+                // ─── Complaints ──────────────────────────
+                is Route.Complaints -> NavEntry(route) {
+                    ComplaintsScreen(onBack = { navigator.pop() })
                 }
 
                 // ─── My Ratings ──────────────────────────

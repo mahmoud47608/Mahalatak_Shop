@@ -35,6 +35,7 @@ sealed interface Route {
     data object NewPhone : Route
     data object EditShopOwnerProfile : Route
     data object EditEmployeeProfile : Route
+    data object Complaints : Route
     data object MyRatings : Route
     data object Employees : Route
     data object EmployeeRequests : Route

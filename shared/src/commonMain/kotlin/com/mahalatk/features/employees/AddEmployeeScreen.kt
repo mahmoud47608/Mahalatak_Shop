@@ -38,6 +38,7 @@ import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.add_employee
+import mahalatk.shared.generated.resources.confirm_new_password
 import mahalatk.shared.generated.resources.employee_name
 import mahalatk.shared.generated.resources.employee_password
 import mahalatk.shared.generated.resources.employee_phone
@@ -150,7 +151,7 @@ fun AddEmployeeScreen(
                             onValueChanged = viewModel::onPasswordChanged,
                             placeholderText = stringResource(Res.string.employee_password),
                             keyboardType = KeyboardType.Password,
-                            imeAction = ImeAction.Done,
+                            imeAction = ImeAction.Next,
                             errorText = state.passwordError?.let { stringResource(it) },
                             visualTransformation = if (state.passwordVisible) VisualTransformation.None
                             else PasswordVisualTransformation(),
@@ -165,6 +166,38 @@ fun AddEmployeeScreen(
                                 IconButton(onClick = viewModel::togglePasswordVisibility) {
                                     Icon(
                                         imageVector = if (state.passwordVisible) Icons.Filled.Visibility
+                                        else Icons.Filled.VisibilityOff,
+                                        contentDescription = null,
+                                        tint = MahalatkTheme.primary,
+                                    )
+                                }
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        // Confirm Password
+                        DefaultTextField(
+                            value = state.confirmPassword,
+                            onValueChanged = viewModel::onConfirmPasswordChanged,
+                            placeholderText = stringResource(Res.string.confirm_new_password),
+                            keyboardType = KeyboardType.Password,
+                            imeAction = ImeAction.Done,
+                            errorText = state.confirmPasswordError?.let { stringResource(it) },
+                            visualTransformation = if (state.confirmPasswordVisible) VisualTransformation.None
+                            else PasswordVisualTransformation(),
+                            leadingIcon = {
+                                Icon(
+                                    painterResource(Res.drawable.ic_lock), null,
+                                    modifier = Modifier.size(24.dp),
+                                    tint = MahalatkTheme.primary,
+                                )
+                            },
+                            trailingIcon = {
+                                IconButton(onClick = viewModel::toggleConfirmPasswordVisibility) {
+                                    Icon(
+                                        imageVector = if (state.confirmPasswordVisible) Icons.Filled.Visibility
                                         else Icons.Filled.VisibilityOff,
                                         contentDescription = null,
                                         tint = MahalatkTheme.primary,

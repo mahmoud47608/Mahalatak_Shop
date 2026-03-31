@@ -33,6 +33,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -46,10 +47,12 @@ import com.mahalatk.theme.SpacingDimensions
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.about_app
 import mahalatk.shared.generated.resources.complaints
+import mahalatk.shared.generated.resources.contact_us
 import mahalatk.shared.generated.resources.employees
 import mahalatk.shared.generated.resources.ic_about
 import mahalatk.shared.generated.resources.ic_complaint
 import mahalatk.shared.generated.resources.ic_notification
+import mahalatk.shared.generated.resources.ic_phone
 import mahalatk.shared.generated.resources.ic_privacy
 import mahalatk.shared.generated.resources.ic_profile
 import mahalatk.shared.generated.resources.ic_rating
@@ -101,11 +104,14 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
 
     val infoMenuItems = remember {
         listOf(
+            MenuItem(Res.drawable.ic_phone, Res.string.contact_us),
             MenuItem(Res.drawable.ic_about, Res.string.about_app),
             MenuItem(Res.drawable.ic_terms, Res.string.terms_conditions),
             MenuItem(Res.drawable.ic_privacy, Res.string.privacy_policy),
         )
     }
+
+    val uriHandler = LocalUriHandler.current
 
     Box(modifier = Modifier.fillMaxSize().background(AppColor.ScreenBackground)) {
 
@@ -172,6 +178,7 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
                             1 -> navigator.push(com.mahalatk.navigation.Route.Settings)
                             2 -> navigator.push(com.mahalatk.navigation.Route.Employees)
                             3 -> navigator.push(com.mahalatk.navigation.Route.MyRatings)
+                            4 -> navigator.push(com.mahalatk.navigation.Route.Complaints)
                         }
                     })
                 }
@@ -184,9 +191,10 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
                 AnimatedListItem(2) {
                     MenuGroup(items = infoMenuItems, onItemClick = { index ->
                         when (index) {
-                            0 -> navigator.push(com.mahalatk.navigation.Route.About)
-                            1 -> navigator.push(com.mahalatk.navigation.Route.Terms)
-                            2 -> navigator.push(com.mahalatk.navigation.Route.PrivacyPolicy)
+                            0 -> uriHandler.openUri("https://wa.me/2001017156197")
+                            1 -> navigator.push(com.mahalatk.navigation.Route.About)
+                            2 -> navigator.push(com.mahalatk.navigation.Route.Terms)
+                            3 -> navigator.push(com.mahalatk.navigation.Route.PrivacyPolicy)
                         }
                     })
                 }

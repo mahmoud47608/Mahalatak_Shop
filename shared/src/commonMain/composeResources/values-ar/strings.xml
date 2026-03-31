@@ -328,6 +328,8 @@
     <string name="no_ratings">لا توجد تقييمات بعد</string>
     <string name="ratings_count">إجمالي التقييمات</string>
     <string name="complaints">الشكاوى</string>
+    <string name="no_complaints">لا توجد شكاوى بعد</string>
+    <string name="contact_us">اتصل بنا</string>
     <string name="about_app">عن التطبيق</string>
     <string name="about_app_content">يُرجى قراءة هذه الاتفاقية بعناية قبل استخدام تطبيق [محلاتك]. باستخدامك للتطبيق، فإنك تقر بموافقتك الكاملة على هذه الشروط، وتلتزم بالامتثال لها.</string>
     <string name="terms_conditions">الشروط والأحكام</string>

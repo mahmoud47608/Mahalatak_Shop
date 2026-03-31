@@ -87,7 +87,7 @@ fun EmployeesListScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues),
+                .padding(bottom = paddingValues.calculateBottomPadding()),
         ) {
             ScreenHeader(
                 title = stringResource(Res.string.employees_list),

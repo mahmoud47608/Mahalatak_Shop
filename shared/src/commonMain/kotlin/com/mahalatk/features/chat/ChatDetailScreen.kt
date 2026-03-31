@@ -1,5 +1,6 @@
 package com.mahalatk.features.chat
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -41,13 +42,16 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mahalatk.common.component.imagepicker.rememberImagePickerLauncher
 import com.mahalatk.common.component.utilis.noRippleClickable
 import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
+import mahalatk.shared.generated.resources.ic_camera
 import mahalatk.shared.generated.resources.ic_send
 import mahalatk.shared.generated.resources.online
 import mahalatk.shared.generated.resources.type_message
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -61,6 +65,10 @@ fun ChatDetailScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
     val listState = rememberLazyListState()
+
+    val pickImage = rememberImagePickerLauncher { bytes ->
+        // TODO: send image as message
+    }
 
     LaunchedEffect(customerName) {
         viewModel.setCustomerName(customerName)
@@ -177,9 +185,23 @@ fun ChatDetailScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.White)
-                .padding(horizontal = 16.dp, vertical = 10.dp),
+                .padding(horizontal = 12.dp, vertical = 10.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
+            // Camera button
+            IconButton(
+                onClick = { pickImage() },
+                modifier = Modifier.size(40.dp),
+            ) {
+                Image(
+                    painter = painterResource(Res.drawable.ic_camera),
+                    contentDescription = null,
+                    modifier = Modifier.size(36.dp),
+                )
+            }
+
+            Spacer(modifier = Modifier.width(8.dp))
+
             // Text input
             Box(
                 modifier = Modifier

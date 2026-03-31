@@ -335,6 +335,8 @@
     <string name="no_ratings">No ratings yet</string>
     <string name="ratings_count">Total ratings</string>
     <string name="complaints">Complaints</string>
+    <string name="no_complaints">No complaints yet</string>
+    <string name="contact_us">Contact Us</string>
     <string name="about_app">About App</string>
     <string name="about_app_content">Please read this agreement carefully before using the [Mahalatak] app. By using the app, you acknowledge your full agreement to these terms and commit to compliance.</string>
     <string name="terms_conditions">Terms &amp; Conditions</string>
