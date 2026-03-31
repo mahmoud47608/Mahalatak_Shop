@@ -16,7 +16,7 @@ class SessionManager {
     val isBlocked: StateFlow<Boolean> = _isBlocked.asStateFlow()
 
     private val _fcmUpdate = MutableSharedFlow<Map<String, String>>(
-        replay = 1,
+        replay = 0,
         extraBufferCapacity = 10
     )
     val fcmUpdate: SharedFlow<Map<String, String>> = _fcmUpdate.asSharedFlow()

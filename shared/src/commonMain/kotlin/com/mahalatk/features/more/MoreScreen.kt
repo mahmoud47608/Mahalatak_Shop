@@ -44,6 +44,7 @@ import com.mahalatk.common.component.utilis.noRippleClickable
 import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.MahalatkTheme
 import com.mahalatk.theme.PaddingDimensions
+import kotlinx.coroutines.flow.collectLatest
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.about_app
 import mahalatk.shared.generated.resources.complaints
@@ -82,7 +83,7 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
     val navigator = com.mahalatk.navigation.LocalNavigator.current
 
     androidx.compose.runtime.LaunchedEffect(Unit) {
-        viewModel.loggedOut.collect {
+        viewModel.loggedOut.collectLatest {
             navigator.replaceAll(com.mahalatk.navigation.Route.Login)
         }
     }

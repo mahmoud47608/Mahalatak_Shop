@@ -10,6 +10,7 @@ import androidx.core.app.NotificationCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -19,8 +20,13 @@ class NotificationHandler(
     private val notificationActivityClass: Class<*> = context::class.java,
 ) {
 
-    private var notificationManager: NotificationManager? = null
+    private val notificationManager: NotificationManager =
+        context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+
+    fun destroy() {
+        scope.cancel()
+    }
 
     companion object {
         private val notificationIdGenerator = AtomicInteger(1000)
@@ -74,7 +80,7 @@ class NotificationHandler(
         }
         return PendingIntent.getActivity(
             context,
-            System.currentTimeMillis().toInt(),
+            notificationIdGenerator.incrementAndGet(),
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
@@ -87,7 +93,7 @@ class NotificationHandler(
         }
         return PendingIntent.getActivity(
             context,
-            System.currentTimeMillis().toInt(),
+            notificationIdGenerator.incrementAndGet(),
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
@@ -100,7 +106,7 @@ class NotificationHandler(
         }
         return PendingIntent.getActivity(
             context,
-            System.currentTimeMillis().toInt(),
+            notificationIdGenerator.incrementAndGet(),
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
@@ -115,7 +121,7 @@ class NotificationHandler(
         }
         return PendingIntent.getActivity(
             context,
-            System.currentTimeMillis().toInt(),
+            notificationIdGenerator.incrementAndGet(),
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
@@ -135,9 +141,6 @@ class NotificationHandler(
             .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
             .setContentIntent(pendingIntent)
 
-        notificationManager =
-            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        notificationManager?.notify(notificationIdGenerator.incrementAndGet(), builder.build())
+        notificationManager.notify(notificationIdGenerator.incrementAndGet(), builder.build())
     }
 }

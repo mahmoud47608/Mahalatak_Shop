@@ -7,7 +7,11 @@ import com.mahalatk.base.managers.SessionManager
 import com.mahalatk.domain.entity.base.BaseResponse
 import com.mahalatk.domain.repository.PreferenceRepository
 import com.mahalatk.domain.util.TokenCacheManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 open class SessionAwareViewModel<UiState : Any>(
     initialState: UiState,
@@ -38,12 +42,17 @@ open class SessionAwareViewModel<UiState : Any>(
         }
     }
 
+    private var fcmObserverJob: Job? = null
+
     fun observeFcmUpdates(orderId: Int?, onUpdate: () -> Unit) {
-        viewModelScope.launch {
-            sessionManager.fcmUpdate.collect { data ->
+        fcmObserverJob?.cancel()
+        fcmObserverJob = viewModelScope.launch {
+            sessionManager.fcmUpdate.collectLatest { data ->
                 val fcmOrderId = data["order_id"]?.toIntOrNull()
                 if (fcmOrderId != null && fcmOrderId == orderId) {
-                    onUpdate()
+                    withContext(Dispatchers.Main) {
+                        onUpdate()
+                    }
                 }
             }
         }

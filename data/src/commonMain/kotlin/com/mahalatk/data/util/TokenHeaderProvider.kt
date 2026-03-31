@@ -5,10 +5,11 @@ import com.mahalatk.domain.util.TokenCacheManager
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlin.concurrent.Volatile
 
 class TokenHeaderProvider(
@@ -21,12 +22,12 @@ class TokenHeaderProvider(
     /** Signals when the first token load completes so [getToken] can await it. */
     private var initialLoad = CompletableDeferred<Unit>()
 
-    // App-lifetime scope (singleton via Koin). Cancelled in destroy() if needed.
+    /** Mutex to protect atomic read-modify-write of [initialLoad] and [cachedToken]. */
+    private val mutex = Mutex()
+
+    // App-lifetime scope (singleton via Koin). Cancelled in destroy().
     private val supervisorJob = SupervisorJob()
     private val scope = CoroutineScope(supervisorJob + Dispatchers.Default)
-
-    @Volatile
-    private var cacheJob: Job? = null
 
     fun destroy() {
         supervisorJob.cancel()
@@ -51,22 +52,22 @@ class TokenHeaderProvider(
     }
 
     override fun refreshTokenCache() {
-        if (cacheJob?.isActive == true) return
-        if (initialLoad.isCompleted) {
-            initialLoad = CompletableDeferred()
-        }
-        cacheJob = scope.launch {
-            cachedToken = preferenceRepository.getToken().first()
-            initialLoad.complete(Unit)
+        scope.launch {
+            mutex.withLock {
+                cachedToken = preferenceRepository.getToken().first()
+                if (!initialLoad.isCompleted) {
+                    initialLoad.complete(Unit)
+                }
+            }
         }
     }
 
     override fun removeToken() {
-        cachedToken = ""
-        // Reset the deferred so the next refresh is properly awaited
-        if (initialLoad.isCompleted) {
-            initialLoad = CompletableDeferred()
+        scope.launch {
+            mutex.withLock {
+                cachedToken = ""
+                initialLoad = CompletableDeferred()
+            }
         }
-        initialLoad.complete(Unit)
     }
 }
