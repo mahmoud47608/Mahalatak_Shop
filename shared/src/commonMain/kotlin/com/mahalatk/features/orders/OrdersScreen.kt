@@ -31,6 +31,8 @@ import com.mahalatk.common.component.animation.AnimatedListItem
 import com.mahalatk.common.component.empty.EmptyStatePlaceholder
 import com.mahalatk.common.component.header.ScreenHeader
 import com.mahalatk.common.component.image.UserAvatar
+import com.mahalatk.common.component.loading.ShimmerBox
+import com.mahalatk.common.component.loading.ShimmerCircle
 import com.mahalatk.common.component.tabs.FilterTabs
 import com.mahalatk.common.component.utilis.noRippleClickable
 import com.mahalatk.theme.AppColor
@@ -80,7 +82,22 @@ fun OrdersScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        if (filteredOrders.isEmpty()) {
+        if (state.isLoading) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(
+                    start = 20.dp,
+                    end = 20.dp,
+                    top = 4.dp,
+                    bottom = 16.dp
+                ),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                items(4) { index ->
+                    AnimatedListItem(index) { OrderCardSkeleton() }
+                }
+            }
+        } else if (filteredOrders.isEmpty()) {
             EmptyStatePlaceholder(
                 icon = Res.drawable.ic_check_circle,
                 message = stringResource(Res.string.no_orders),
@@ -214,5 +231,39 @@ private fun StatusBadge(status: OrderStatus) {
             color = textColor,
             fontWeight = FontWeight.SemiBold,
         )
+    }
+}
+
+@Composable
+private fun OrderCardSkeleton() {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(CornerDimensions.lg),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+    ) {
+        Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                ShimmerCircle(size = 48.dp)
+                Spacer(modifier = Modifier.width(12.dp))
+                Column(modifier = Modifier.weight(1f)) {
+                    ShimmerBox(width = 120.dp, height = 14.dp)
+                    Spacer(modifier = Modifier.height(6.dp))
+                    ShimmerBox(width = 80.dp, height = 10.dp)
+                }
+                ShimmerBox(width = 60.dp, height = 24.dp, shape = RoundedCornerShape(8.dp))
+            }
+            Spacer(modifier = Modifier.height(12.dp))
+            Box(modifier = Modifier.fillMaxWidth().height(1.dp).background(AppColor.Outline))
+            Spacer(modifier = Modifier.height(12.dp))
+            Row(modifier = Modifier.fillMaxWidth()) {
+                ShimmerBox(width = 80.dp, height = 14.dp)
+                Spacer(modifier = Modifier.weight(1f))
+                ShimmerBox(width = 100.dp, height = 10.dp)
+            }
+        }
     }
 }

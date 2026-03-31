@@ -3,6 +3,7 @@ package com.mahalatk.features.orders
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -10,6 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 enum class OrderTab { New, Current, Completed, Returns }
 
@@ -30,6 +32,7 @@ data class Order(
 
 @Immutable
 data class OrdersState(
+    val isLoading: Boolean = true,
     val selectedTab: OrderTab = OrderTab.New,
     val orders: List<Order> = listOf(
         Order("1", "Hader Al-Alawi", "088308", 3, 750.0, "02:30 PM", "Today", OrderStatus.New),
@@ -63,6 +66,13 @@ data class OrdersState(
 class OrdersViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(OrdersState())
+
+    init {
+        viewModelScope.launch {
+            delay(1000)
+            _uiState.update { it.copy(isLoading = false) }
+        }
+    }
     val uiState: StateFlow<OrdersState> = _uiState.asStateFlow()
 
     val filteredOrders: StateFlow<List<Order>> = _uiState.map { state ->

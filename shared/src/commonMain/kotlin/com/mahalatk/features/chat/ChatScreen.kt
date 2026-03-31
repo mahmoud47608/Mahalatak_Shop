@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,6 +33,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.mahalatk.common.component.animation.AnimatedListItem
 import com.mahalatk.common.component.empty.EmptyStatePlaceholder
+import com.mahalatk.common.component.loading.ShimmerBox
+import com.mahalatk.common.component.loading.ShimmerCircle
 import com.mahalatk.common.component.header.ScreenHeader
 import com.mahalatk.common.component.image.UserAvatar
 import com.mahalatk.common.component.tabs.FilterTabs
@@ -74,7 +78,22 @@ fun ChatScreen(viewModel: ChatViewModel = koinViewModel()) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        if (filteredConversations.isEmpty()) {
+        if (state.isLoading) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(
+                    start = 20.dp,
+                    end = 20.dp,
+                    top = 4.dp,
+                    bottom = 16.dp
+                ),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+            ) {
+                items(4) { index ->
+                    AnimatedListItem(index) { ChatItemSkeleton() }
+                }
+            }
+        } else if (filteredConversations.isEmpty()) {
             EmptyStatePlaceholder(
                 icon = Res.drawable.ic_nav_chat,
                 message = stringResource(Res.string.no_messages),
@@ -101,6 +120,35 @@ fun ChatScreen(viewModel: ChatViewModel = koinViewModel()) {
                     }
                 }
                 item { Spacer(modifier = Modifier.height(16.dp)) }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ChatItemSkeleton() {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(CornerDimensions.lg),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(14.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            ShimmerCircle(size = 50.dp)
+            Spacer(modifier = Modifier.width(12.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                ShimmerBox(width = 100.dp, height = 14.dp)
+                Spacer(modifier = Modifier.height(6.dp))
+                ShimmerBox(width = 160.dp, height = 10.dp)
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            Column(horizontalAlignment = Alignment.End) {
+                ShimmerBox(width = 40.dp, height = 10.dp)
+                Spacer(modifier = Modifier.height(6.dp))
+                ShimmerCircle(size = 22.dp)
             }
         }
     }

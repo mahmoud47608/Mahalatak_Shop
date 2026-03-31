@@ -2,10 +2,13 @@ package com.mahalatk.features.products
 
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 @Immutable
 data class ProductItem(
@@ -19,6 +22,7 @@ data class ProductItem(
 
 @Immutable
 data class ProductsState(
+    val isLoading: Boolean = true,
     val products: List<ProductItem> = listOf(
         ProductItem(
             id = "1",
@@ -51,6 +55,13 @@ class ProductsViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(ProductsState())
     val uiState: StateFlow<ProductsState> = _uiState.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            delay(1000)
+            _uiState.update { it.copy(isLoading = false) }
+        }
+    }
 
     fun toggleProductAvailability(productId: String) {
         _uiState.update { state ->

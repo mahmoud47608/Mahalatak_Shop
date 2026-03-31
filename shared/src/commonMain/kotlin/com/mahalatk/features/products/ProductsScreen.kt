@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.mahalatk.common.component.animation.AnimatedListItem
 import com.mahalatk.common.component.header.ScreenHeader
+import com.mahalatk.common.component.loading.ShimmerBox
 import com.mahalatk.common.component.utilis.noRippleClickable
 import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.CornerDimensions
@@ -66,15 +67,26 @@ fun ProductsScreen(
         Column(modifier = Modifier.fillMaxSize()) {
             ScreenHeader(title = stringResource(Res.string.my_products))
 
-            LazyColumn(
-                modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp),
-                verticalArrangement = Arrangement.spacedBy(14.dp),
-            ) {
-                item { Spacer(modifier = Modifier.height(6.dp)) }
-                itemsIndexed(state.products, key = { _, p -> p.id }) { index, product ->
-                    AnimatedListItem(index) { ProductCard(product = product) }
+            if (state.isLoading) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp),
+                    verticalArrangement = Arrangement.spacedBy(14.dp),
+                ) {
+                    item { Spacer(modifier = Modifier.height(6.dp)) }
+                    items(4) { ProductCardSkeleton() }
+                    item { Spacer(modifier = Modifier.height(80.dp)) }
                 }
-                item { Spacer(modifier = Modifier.height(80.dp)) }
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp),
+                    verticalArrangement = Arrangement.spacedBy(14.dp),
+                ) {
+                    item { Spacer(modifier = Modifier.height(6.dp)) }
+                    itemsIndexed(state.products, key = { _, p -> p.id }) { index, product ->
+                        AnimatedListItem(index) { ProductCard(product = product) }
+                    }
+                    item { Spacer(modifier = Modifier.height(80.dp)) }
+                }
             }
         }
 
@@ -166,6 +178,39 @@ private fun ProductCard(product: ProductItem) {
                     )
                 }
             }
+        }
+    }
+}
+
+// ──────────────────────────────────────────────
+// Product Card Skeleton
+// ──────────────────────────────────────────────
+@Composable
+private fun ProductCardSkeleton() {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(CornerDimensions.lg),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(14.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                ShimmerBox(width = 140.dp, height = 14.dp)
+                Spacer(modifier = Modifier.height(4.dp))
+                ShimmerBox(width = 180.dp, height = 10.dp)
+                Spacer(modifier = Modifier.height(10.dp))
+                ShimmerBox(width = 80.dp, height = 14.dp)
+                Spacer(modifier = Modifier.height(10.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                    ShimmerBox(width = 60.dp, height = 28.dp, shape = RoundedCornerShape(8.dp))
+                    ShimmerBox(width = 60.dp, height = 28.dp, shape = RoundedCornerShape(8.dp))
+                }
+            }
+            Spacer(modifier = Modifier.width(12.dp))
+            ShimmerBox(width = 90.dp, height = 90.dp, shape = RoundedCornerShape(14.dp))
         }
     }
 }

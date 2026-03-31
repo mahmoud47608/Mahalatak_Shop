@@ -28,7 +28,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -77,6 +77,7 @@ fun ChatDetailScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
     val listState = rememberLazyListState()
+    val initialMessageCount = remember { state.messages.size }
 
     val pickImage = rememberImagePickerLauncher { bytes ->
         // TODO: send image as message
@@ -96,8 +97,7 @@ fun ChatDetailScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(AppColor.ScreenBackground)
-            .windowInsetsPadding(WindowInsets.ime),
+            .background(AppColor.ScreenBackground),
     ) {
         val headerGradient = remember {
             Brush.verticalGradient(
@@ -186,8 +186,8 @@ fun ChatDetailScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             item { Spacer(modifier = Modifier.height(12.dp)) }
-            items(state.messages, key = { it.id }) { message ->
-                MessageBubble(message = message)
+            itemsIndexed(state.messages, key = { _, m -> m.id }) { index, message ->
+                MessageBubble(message = message, animate = index >= initialMessageCount)
             }
             item { Spacer(modifier = Modifier.height(8.dp)) }
         }
@@ -280,18 +280,8 @@ fun ChatDetailScreen(
 // Message Bubble
 // ──────────────────────────────────────────────
 @Composable
-private fun MessageBubble(message: ChatMessage) {
-    var visible by remember { mutableStateOf(false) }
-
-    LaunchedEffect(Unit) {
-        visible = true
-    }
-
-    AnimatedVisibility(
-        visible = visible,
-        enter = fadeIn(animationSpec = tween(300)) +
-                slideInVertically(initialOffsetY = { it / 4 }, animationSpec = tween(300)),
-    ) {
+private fun MessageBubble(message: ChatMessage, animate: Boolean = false) {
+    val content = @Composable {
         val isMe = message.isMe
         val bgColor = if (isMe) AppColor.Primary else Color.White
         val textColor = if (isMe) Color.White else AppColor.TextPrimary
@@ -329,5 +319,19 @@ private fun MessageBubble(message: ChatMessage) {
                 }
             }
         }
+    }
+
+    if (animate) {
+        var visible by remember { mutableStateOf(false) }
+        LaunchedEffect(Unit) { visible = true }
+        AnimatedVisibility(
+            visible = visible,
+            enter = fadeIn(animationSpec = tween(300)) +
+                    slideInVertically(initialOffsetY = { it / 4 }, animationSpec = tween(300)),
+        ) {
+            content()
+        }
+    } else {
+        content()
     }
 }
