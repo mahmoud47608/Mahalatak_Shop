@@ -1,7 +1,17 @@
 package com.mahalatk.features.chat
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,18 +42,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mahalatk.common.component.imagepicker.rememberImagePickerLauncher
-import com.mahalatk.common.component.utilis.noRippleClickable
 import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
@@ -231,12 +243,26 @@ fun ChatDetailScreen(
             Spacer(modifier = Modifier.width(10.dp))
 
             // Send button
+            val sendInteractionSource = remember { MutableInteractionSource() }
+            val isSendPressed by sendInteractionSource.collectIsPressedAsState()
+            val sendScale by animateFloatAsState(
+                targetValue = if (isSendPressed) 0.88f else 1f,
+                animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy),
+            )
+
             Box(
                 modifier = Modifier
                     .size(44.dp)
+                    .graphicsLayer {
+                        scaleX = sendScale
+                        scaleY = sendScale
+                    }
                     .clip(CircleShape)
                     .background(AppColor.Primary)
-                    .noRippleClickable { viewModel.sendMessage() },
+                    .clickable(
+                        interactionSource = sendInteractionSource,
+                        indication = null,
+                    ) { viewModel.sendMessage() },
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
@@ -255,40 +281,52 @@ fun ChatDetailScreen(
 // ──────────────────────────────────────────────
 @Composable
 private fun MessageBubble(message: ChatMessage) {
-    val isMe = message.isMe
-    val bgColor = if (isMe) AppColor.Primary else Color.White
-    val textColor = if (isMe) Color.White else AppColor.TextPrimary
-    val timeColor = if (isMe) Color.White.copy(alpha = 0.7f) else AppColor.TextHint
-    val shape = if (isMe) {
-        RoundedCornerShape(16.dp, 16.dp, 4.dp, 16.dp)
-    } else {
-        RoundedCornerShape(16.dp, 16.dp, 16.dp, 4.dp)
-    }
-    val alignment = if (isMe) Alignment.End else Alignment.Start
+    var visible by remember { mutableStateOf(false) }
 
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = alignment,
+    LaunchedEffect(Unit) {
+        visible = true
+    }
+
+    AnimatedVisibility(
+        visible = visible,
+        enter = fadeIn(animationSpec = tween(300)) +
+                slideInVertically(initialOffsetY = { it / 4 }, animationSpec = tween(300)),
     ) {
-        Box(
-            modifier = Modifier
-                .widthIn(max = 280.dp)
-                .background(color = bgColor, shape = shape)
-                .padding(horizontal = 14.dp, vertical = 10.dp),
+        val isMe = message.isMe
+        val bgColor = if (isMe) AppColor.Primary else Color.White
+        val textColor = if (isMe) Color.White else AppColor.TextPrimary
+        val timeColor = if (isMe) Color.White.copy(alpha = 0.7f) else AppColor.TextHint
+        val shape = if (isMe) {
+            RoundedCornerShape(16.dp, 16.dp, 4.dp, 16.dp)
+        } else {
+            RoundedCornerShape(16.dp, 16.dp, 16.dp, 4.dp)
+        }
+        val alignment = if (isMe) Alignment.End else Alignment.Start
+
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = alignment,
         ) {
-            Column {
-                Text(
-                    text = message.text,
-                    style = MahalatkTheme.bodyMedium,
-                    color = textColor,
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = message.time,
-                    style = MahalatkTheme.labelSmall,
-                    color = timeColor,
-                    modifier = Modifier.align(Alignment.End),
-                )
+            Box(
+                modifier = Modifier
+                    .widthIn(max = 280.dp)
+                    .background(color = bgColor, shape = shape)
+                    .padding(horizontal = 14.dp, vertical = 10.dp),
+            ) {
+                Column {
+                    Text(
+                        text = message.text,
+                        style = MahalatkTheme.bodyMedium,
+                        color = textColor,
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = message.time,
+                        style = MahalatkTheme.labelSmall,
+                        color = timeColor,
+                        modifier = Modifier.align(Alignment.End),
+                    )
+                }
             }
         }
     }

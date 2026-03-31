@@ -1,18 +1,26 @@
 package com.mahalatk.common.component.inputs
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -46,6 +54,16 @@ fun DefaultTextField(
     // Stable click handler — avoids new lambda allocation every recomposition
     val currentOnClick = rememberUpdatedState(onClick)
 
+    var isFocused by remember { mutableStateOf(false) }
+    val borderColor by animateColorAsState(
+        targetValue = when {
+            !errorText.isNullOrEmpty() -> MahalatkTheme.error
+            isFocused -> MahalatkTheme.primary
+            else -> MahalatkTheme.border
+        },
+        animationSpec = tween(200),
+    )
+
     Column(modifier = modifier.fillMaxWidth()) {
 
         OutlinedTextField(
@@ -64,12 +82,10 @@ fun DefaultTextField(
                 .clip(shape)
                 .border(
                     width = 1.dp,
-                    color = if (!errorText.isNullOrEmpty())
-                        MahalatkTheme.error
-                    else
-                        MahalatkTheme.border,
-                    shape = shape
+                    color = borderColor,
+                    shape = shape,
                 )
+                .onFocusChanged { isFocused = it.isFocused }
                 .noRippleClickable(onClick = { currentOnClick.value?.invoke() }),
             isError = !errorText.isNullOrEmpty(),
             placeholder = {
@@ -112,7 +128,7 @@ fun DefaultTextField(
                 text = errorText,
                 style = MaterialTheme.typography.bodySmall,
                 color = MahalatkTheme.error,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().padding(start = 12.dp, top = 4.dp)
             )
         }
     }
