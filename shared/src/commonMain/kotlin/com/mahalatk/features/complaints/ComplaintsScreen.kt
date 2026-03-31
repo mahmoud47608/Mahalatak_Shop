@@ -1,6 +1,5 @@
 package com.mahalatk.features.complaints
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,7 +17,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -33,13 +31,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.mahalatk.common.component.animation.AnimatedListItem
+import com.mahalatk.common.component.empty.EmptyStatePlaceholder
 import com.mahalatk.common.component.header.ScreenHeader
+import com.mahalatk.common.component.image.UserAvatar
 import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
@@ -68,23 +67,27 @@ fun ComplaintsScreen(
         )
 
         if (state.complaints.isEmpty()) {
-            EmptyComplaintsPlaceholder()
+            EmptyStatePlaceholder(
+                icon = Res.drawable.ic_complaint,
+                message = stringResource(Res.string.no_complaints),
+                iconBackgroundColor = AppColor.Error.copy(alpha = 0.08f),
+            )
         } else {
             LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp),
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(
+                    start = 16.dp,
+                    end = 16.dp,
+                    top = 4.dp,
+                    bottom = 16.dp
+                ),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                item { Spacer(modifier = Modifier.height(4.dp)) }
-
                 itemsIndexed(state.complaints, key = { _, c -> c.id }) { index, complaint ->
                     AnimatedListItem(index) {
                         ComplaintCard(complaint = complaint)
                     }
                 }
-
-                item { Spacer(modifier = Modifier.height(16.dp)) }
             }
         }
     }
@@ -111,29 +114,11 @@ private fun ComplaintCard(complaint: Complaint) {
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 // Avatar
-                Box(
-                    modifier = Modifier
-                        .size(44.dp)
-                        .clip(CircleShape)
-                        .background(AppColor.Primary.copy(alpha = 0.1f)),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    if (complaint.userImage.isNotEmpty()) {
-                        AsyncImage(
-                            model = complaint.userImage,
-                            contentDescription = null,
-                            modifier = Modifier.fillMaxSize().clip(CircleShape),
-                            contentScale = ContentScale.Crop,
-                        )
-                    } else {
-                        Text(
-                            text = complaint.userName.take(1),
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = AppColor.Primary,
-                        )
-                    }
-                }
+                UserAvatar(
+                    imageUrl = complaint.userImage,
+                    initials = complaint.userName,
+                    size = 44.dp,
+                )
 
                 Spacer(modifier = Modifier.width(12.dp))
 
@@ -208,31 +193,3 @@ private fun ComplaintCard(complaint: Complaint) {
     }
 }
 
-// ─── Empty State ─────────────────────────────────────────
-
-@Composable
-private fun EmptyComplaintsPlaceholder() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Box(
-                modifier = Modifier
-                    .size(80.dp)
-                    .background(AppColor.Error.copy(alpha = 0.08f), CircleShape),
-                contentAlignment = Alignment.Center,
-            ) {
-                Image(
-                    painter = painterResource(Res.drawable.ic_complaint),
-                    contentDescription = null,
-                    modifier = Modifier.size(40.dp),
-                )
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = stringResource(Res.string.no_complaints),
-                style = MahalatkTheme.bodyLarge,
-                color = AppColor.TextHint,
-                textAlign = TextAlign.Center,
-            )
-        }
-    }
-}

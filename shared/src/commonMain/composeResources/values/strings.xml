@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Base Compose 2025</string>
+    <string name="app_name" translatable="false">Mahalatak</string>
     <string name="no_internet_connection">No internet connection</string>
     <string name="field_required">This field is required</string>
     <string name="something_went_wrong">Something went wrong, please try again later</string>

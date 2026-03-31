@@ -1,11 +1,13 @@
 package com.mahalatk.features.employees
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
+@Immutable
 data class EmployeesListState(
     val employees: List<Employee> = emptyList(),
 )

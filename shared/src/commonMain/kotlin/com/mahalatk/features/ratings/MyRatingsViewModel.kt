@@ -1,10 +1,12 @@
 package com.mahalatk.features.ratings
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
+@Immutable
 data class Rating(
     val id: String,
     val customerName: String,
@@ -14,6 +16,7 @@ data class Rating(
     val date: String,
 )
 
+@Immutable
 data class MyRatingsState(
     val ratings: List<Rating> = emptyList(),
     val averageRating: Float = 0f,

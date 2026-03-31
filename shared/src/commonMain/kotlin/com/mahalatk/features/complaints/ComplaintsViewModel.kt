@@ -1,10 +1,12 @@
 package com.mahalatk.features.complaints
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
+@Immutable
 data class Complaint(
     val id: String,
     val userName: String,
@@ -14,6 +16,7 @@ data class Complaint(
     val date: String,
 )
 
+@Immutable
 data class ComplaintsState(
     val complaints: List<Complaint> = emptyList(),
 )

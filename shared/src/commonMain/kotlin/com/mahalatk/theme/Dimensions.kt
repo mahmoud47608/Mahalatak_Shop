@@ -119,3 +119,12 @@ object InputDimensions {
     val height = 48.dp
     val heightSmall = 40.dp
 }
+
+/**
+ * Elevation dimensions for consistent shadow/depth
+ */
+object ElevationDimensions {
+    val none = 0.dp
+    val low = 1.dp
+    val medium = 2.dp
+}

@@ -39,11 +39,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.mahalatk.common.component.animation.AnimatedListItem
+import com.mahalatk.common.component.menu.MenuItemRow
 import com.mahalatk.common.component.utilis.noRippleClickable
 import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.MahalatkTheme
 import com.mahalatk.theme.PaddingDimensions
-import com.mahalatk.theme.SpacingDimensions
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.about_app
 import mahalatk.shared.generated.resources.complaints
@@ -58,6 +58,7 @@ import mahalatk.shared.generated.resources.ic_profile
 import mahalatk.shared.generated.resources.ic_rating
 import mahalatk.shared.generated.resources.ic_settings
 import mahalatk.shared.generated.resources.ic_terms
+import mahalatk.shared.generated.resources.logout
 import mahalatk.shared.generated.resources.more
 import mahalatk.shared.generated.resources.my_ratings
 import mahalatk.shared.generated.resources.privacy_policy
@@ -307,50 +308,14 @@ private fun MenuGroup(items: List<MenuItem>, onItemClick: (Int) -> Unit) {
     ) {
         Column {
             items.forEachIndexed { index, item ->
-                MenuRow(
+                MenuItemRow(
                     icon = item.icon,
                     title = stringResource(item.titleRes),
                     onClick = { onItemClick(index) },
+                    iconColor = AppColor.Primary,
                 )
             }
         }
-    }
-}
-
-@Composable
-private fun MenuRow(icon: DrawableResource, title: String, onClick: () -> Unit) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .noRippleClickable { onClick() }
-            .padding(horizontal = 14.dp, vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Box(
-            modifier = Modifier
-                .size(32.dp)
-                .background(AppColor.Primary.copy(alpha = 0.08f), CircleShape),
-            contentAlignment = Alignment.Center,
-        ) {
-            Icon(
-                painterResource(icon), null,
-                tint = AppColor.Primary,
-                modifier = Modifier.size(16.dp),
-            )
-        }
-        Spacer(modifier = Modifier.width(SpacingDimensions.sp2))
-        Text(
-            text = title,
-            style = MahalatkTheme.bodyMedium,
-            color = AppColor.TextPrimary,
-            fontWeight = FontWeight.Medium,
-            modifier = Modifier.weight(1f),
-        )
-        Icon(
-            Icons.AutoMirrored.Filled.KeyboardArrowRight, null,
-            tint = AppColor.TextHint,
-            modifier = Modifier.size(18.dp),
-        )
     }
 }
 
@@ -375,7 +340,7 @@ private fun LogoutButton(onClick: () -> Unit) {
             horizontalArrangement = androidx.compose.foundation.layout.Arrangement.Center,
         ) {
             Text(
-                text = "Logout",
+                text = stringResource(Res.string.logout),
                 style = MahalatkTheme.bodyMedium,
                 color = AppColor.Error,
                 fontWeight = FontWeight.SemiBold,

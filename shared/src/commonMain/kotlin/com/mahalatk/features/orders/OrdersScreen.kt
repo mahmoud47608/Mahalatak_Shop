@@ -4,36 +4,33 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.mahalatk.common.component.animation.AnimatedListItem
+import com.mahalatk.common.component.empty.EmptyStatePlaceholder
 import com.mahalatk.common.component.header.ScreenHeader
+import com.mahalatk.common.component.image.UserAvatar
 import com.mahalatk.common.component.tabs.FilterTabs
 import com.mahalatk.common.component.utilis.noRippleClickable
 import com.mahalatk.theme.AppColor
@@ -49,7 +46,6 @@ import mahalatk.shared.generated.resources.my_orders
 import mahalatk.shared.generated.resources.new_tab
 import mahalatk.shared.generated.resources.no_orders
 import mahalatk.shared.generated.resources.returns_tab
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -59,7 +55,7 @@ fun OrdersScreen(
     onOrderClick: (String) -> Unit = {},
 ) {
     val state by viewModel.uiState.collectAsState()
-    val filteredOrders by remember { derivedStateOf { state.filteredOrders } }
+    val filteredOrders by viewModel.filteredOrders.collectAsState()
 
     Column(
         modifier = Modifier
@@ -85,10 +81,15 @@ fun OrdersScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         if (filteredOrders.isEmpty()) {
-            EmptyOrdersPlaceholder()
+            EmptyStatePlaceholder(
+                icon = Res.drawable.ic_check_circle,
+                message = stringResource(Res.string.no_orders),
+                iconTint = AppColor.TextHint.copy(alpha = 0.4f),
+            )
         } else {
             LazyColumn(
-                modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp),
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(start = 20.dp, end = 20.dp, bottom = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 itemsIndexed(filteredOrders, key = { _, o -> o.id }) { index, order ->
@@ -99,28 +100,7 @@ fun OrdersScreen(
                         )
                     }
                 }
-                item { Spacer(modifier = Modifier.height(16.dp)) }
             }
-        }
-    }
-}
-
-@Composable
-private fun EmptyOrdersPlaceholder() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(
-                painter = painterResource(Res.drawable.ic_check_circle),
-                contentDescription = null,
-                tint = AppColor.TextHint.copy(alpha = 0.4f),
-                modifier = Modifier.size(64.dp),
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(
-                text = stringResource(Res.string.no_orders),
-                style = MahalatkTheme.bodyLarge,
-                color = AppColor.TextHint,
-            )
         }
     }
 }
@@ -138,18 +118,11 @@ private fun OrderCard(order: Order, onClick: () -> Unit = {}) {
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Box(
-                    modifier = Modifier.size(48.dp).clip(CircleShape)
-                        .background(AppColor.Secondary.copy(alpha = 0.3f)),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        text = order.customerName.take(1).uppercase(),
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = AppColor.Primary,
-                    )
-                }
+                UserAvatar(
+                    initials = order.customerName,
+                    size = 48.dp,
+                    backgroundColor = AppColor.Secondary.copy(alpha = 0.3f),
+                )
 
                 Spacer(modifier = Modifier.width(12.dp))
 

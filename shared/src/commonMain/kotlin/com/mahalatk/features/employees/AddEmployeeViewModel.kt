@@ -1,5 +1,6 @@
 package com.mahalatk.features.employees
 
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -10,6 +11,7 @@ import mahalatk.shared.generated.resources.field_required
 import mahalatk.shared.generated.resources.passwords_do_not_match
 import org.jetbrains.compose.resources.StringResource
 
+@Stable
 data class AddEmployeeState(
     val name: String = "",
     val phone: String = "",

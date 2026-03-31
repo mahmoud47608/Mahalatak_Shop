@@ -2,9 +2,13 @@ package com.mahalatk.features.orders
 
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
 enum class OrderTab { New, Current, Completed, Returns }
@@ -54,20 +58,21 @@ data class OrdersState(
         Order("6", "Nour Hassan", "088313", 2, 600.0, "09:00 AM", "Mar 25", OrderStatus.Delivered),
         Order("7", "Youssef Kamal", "088314", 3, 900.0, "03:00 PM", "Mar 24", OrderStatus.Returned),
     ),
-) {
-    val filteredOrders: List<Order>
-        get() = when (selectedTab) {
-            OrderTab.New -> orders.filter { it.status == OrderStatus.New }
-            OrderTab.Current -> orders.filter { it.status == OrderStatus.Preparing }
-            OrderTab.Completed -> orders.filter { it.status == OrderStatus.Delivered }
-            OrderTab.Returns -> orders.filter { it.status == OrderStatus.Returned || it.status == OrderStatus.Cancelled }
-        }
-}
+)
 
 class OrdersViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(OrdersState())
     val uiState: StateFlow<OrdersState> = _uiState.asStateFlow()
+
+    val filteredOrders: StateFlow<List<Order>> = _uiState.map { state ->
+        when (state.selectedTab) {
+            OrderTab.New -> state.orders.filter { it.status == OrderStatus.New }
+            OrderTab.Current -> state.orders.filter { it.status == OrderStatus.Preparing }
+            OrderTab.Completed -> state.orders.filter { it.status == OrderStatus.Delivered }
+            OrderTab.Returns -> state.orders.filter { it.status == OrderStatus.Returned || it.status == OrderStatus.Cancelled }
+        }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     fun selectTab(tab: OrderTab) {
         _uiState.update { it.copy(selectedTab = tab) }

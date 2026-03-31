@@ -1,10 +1,10 @@
 package com.mahalatk.features.ratings
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
@@ -29,17 +28,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
 import com.mahalatk.common.component.animation.AnimatedListItem
+import com.mahalatk.common.component.empty.EmptyStatePlaceholder
 import com.mahalatk.common.component.header.ScreenHeader
+import com.mahalatk.common.component.image.UserAvatar
 import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
@@ -47,7 +44,6 @@ import mahalatk.shared.generated.resources.ic_rating
 import mahalatk.shared.generated.resources.my_ratings
 import mahalatk.shared.generated.resources.no_ratings
 import mahalatk.shared.generated.resources.ratings_count
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -72,17 +68,24 @@ fun MyRatingsScreen(
         )
 
         if (state.ratings.isEmpty()) {
-            EmptyRatingsPlaceholder()
+            EmptyStatePlaceholder(
+                icon = Res.drawable.ic_rating,
+                message = stringResource(Res.string.no_ratings),
+                iconBackgroundColor = StarGold.copy(alpha = 0.1f),
+            )
         } else {
             LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp),
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(
+                    start = 16.dp,
+                    end = 16.dp,
+                    top = 4.dp,
+                    bottom = 16.dp
+                ),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 // ── Summary Card ──
                 item {
-                    Spacer(modifier = Modifier.height(4.dp))
                     AnimatedListItem(0) {
                         RatingSummaryCard(
                             averageRating = state.averageRating,
@@ -97,8 +100,6 @@ fun MyRatingsScreen(
                         RatingCard(rating = rating)
                     }
                 }
-
-                item { Spacer(modifier = Modifier.height(16.dp)) }
             }
         }
     }
@@ -195,29 +196,11 @@ private fun RatingCard(rating: Rating) {
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 // Avatar
-                Box(
-                    modifier = Modifier
-                        .size(44.dp)
-                        .clip(CircleShape)
-                        .background(AppColor.Primary.copy(alpha = 0.1f)),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    if (rating.customerImage.isNotEmpty()) {
-                        AsyncImage(
-                            model = rating.customerImage,
-                            contentDescription = null,
-                            modifier = Modifier.fillMaxSize().clip(CircleShape),
-                            contentScale = ContentScale.Crop,
-                        )
-                    } else {
-                        Text(
-                            text = rating.customerName.take(1),
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = AppColor.Primary,
-                        )
-                    }
-                }
+                UserAvatar(
+                    imageUrl = rating.customerImage,
+                    initials = rating.customerName,
+                    size = 44.dp,
+                )
 
                 Spacer(modifier = Modifier.width(12.dp))
 
@@ -280,31 +263,3 @@ private fun RatingCard(rating: Rating) {
     }
 }
 
-// ─── Empty State ─────────────────────────────────────────
-
-@Composable
-private fun EmptyRatingsPlaceholder() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Box(
-                modifier = Modifier
-                    .size(80.dp)
-                    .background(StarGold.copy(alpha = 0.1f), CircleShape),
-                contentAlignment = Alignment.Center,
-            ) {
-                Image(
-                    painter = painterResource(Res.drawable.ic_rating),
-                    contentDescription = null,
-                    modifier = Modifier.size(40.dp),
-                )
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = stringResource(Res.string.no_ratings),
-                style = MahalatkTheme.bodyLarge,
-                color = AppColor.TextHint,
-                textAlign = TextAlign.Center,
-            )
-        }
-    }
-}

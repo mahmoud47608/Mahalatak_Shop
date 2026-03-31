@@ -2,9 +2,13 @@ package com.mahalatk.features.chat
 
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
 enum class ChatTab { Orders, Inquiries }
@@ -77,13 +81,7 @@ data class ChatState(
             isInquiry = true,
         ),
     ),
-) {
-    val filteredConversations: List<ChatConversation>
-        get() = when (selectedTab) {
-            ChatTab.Orders -> conversations.filter { !it.isInquiry }
-            ChatTab.Inquiries -> conversations.filter { it.isInquiry }
-        }
-}
+)
 
 @Immutable
 data class ChatDetailState(
@@ -104,6 +102,13 @@ data class ChatDetailState(
 class ChatViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(ChatState())
     val uiState: StateFlow<ChatState> = _uiState.asStateFlow()
+
+    val filteredConversations: StateFlow<List<ChatConversation>> = _uiState.map { state ->
+        when (state.selectedTab) {
+            ChatTab.Orders -> state.conversations.filter { !it.isInquiry }
+            ChatTab.Inquiries -> state.conversations.filter { it.isInquiry }
+        }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     fun selectTab(tab: ChatTab) {
         _uiState.update { it.copy(selectedTab = tab) }

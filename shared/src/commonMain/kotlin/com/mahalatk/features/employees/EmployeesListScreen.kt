@@ -6,11 +6,9 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -43,23 +41,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
 import com.mahalatk.common.component.animation.AnimatedListItem
+import com.mahalatk.common.component.empty.EmptyStatePlaceholder
 import com.mahalatk.common.component.header.ScreenHeader
+import com.mahalatk.common.component.image.UserAvatar
 import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.employees_list
 import mahalatk.shared.generated.resources.ic_profile
 import mahalatk.shared.generated.resources.no_current_employees
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -95,38 +90,21 @@ fun EmployeesListScreen(
             )
 
             if (state.employees.isEmpty()) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Box(
-                            modifier = Modifier
-                                .size(80.dp)
-                                .background(AppColor.Primary.copy(alpha = 0.08f), CircleShape),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            Image(
-                                painter = painterResource(Res.drawable.ic_profile),
-                                contentDescription = null,
-                                modifier = Modifier.size(40.dp),
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Text(
-                            text = stringResource(Res.string.no_current_employees),
-                            style = MahalatkTheme.bodyLarge,
-                            color = AppColor.TextHint,
-                            textAlign = TextAlign.Center,
-                        )
-                    }
-                }
+                EmptyStatePlaceholder(
+                    icon = Res.drawable.ic_profile,
+                    message = stringResource(Res.string.no_current_employees),
+                )
             } else {
                 LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 16.dp),
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(
+                        start = 16.dp,
+                        end = 16.dp,
+                        top = 4.dp,
+                        bottom = 80.dp
+                    ),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
-                    item { Spacer(modifier = Modifier.height(4.dp)) }
-
                     itemsIndexed(state.employees, key = { _, e -> e.id }) { index, employee ->
                         AnimatedListItem(index) {
                             CurrentEmployeeCard(
@@ -135,8 +113,6 @@ fun EmployeesListScreen(
                             )
                         }
                     }
-
-                    item { Spacer(modifier = Modifier.height(80.dp)) }
                 }
             }
         }
@@ -173,29 +149,11 @@ private fun CurrentEmployeeCard(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 // Avatar
-                Box(
-                    modifier = Modifier
-                        .size(50.dp)
-                        .clip(CircleShape)
-                        .background(AppColor.Primary.copy(alpha = 0.1f)),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    if (employee.imageUrl.isNotEmpty()) {
-                        AsyncImage(
-                            model = employee.imageUrl,
-                            contentDescription = null,
-                            modifier = Modifier.fillMaxSize().clip(CircleShape),
-                            contentScale = ContentScale.Crop,
-                        )
-                    } else {
-                        Text(
-                            text = employee.name.take(1),
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = AppColor.Primary,
-                        )
-                    }
-                }
+                UserAvatar(
+                    imageUrl = employee.imageUrl,
+                    initials = employee.name,
+                    size = 50.dp,
+                )
 
                 Spacer(modifier = Modifier.width(12.dp))
 
