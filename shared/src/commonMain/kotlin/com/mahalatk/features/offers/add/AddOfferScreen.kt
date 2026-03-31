@@ -28,7 +28,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.CalendarMonth
-import androidx.compose.material.icons.rounded.Inventory2
+import androidx.compose.material.icons.rounded.LocalShipping
 import androidx.compose.material.icons.rounded.Percent
 import androidx.compose.material.icons.rounded.ShoppingCart
 import androidx.compose.material.icons.rounded.ViewInAr
@@ -72,9 +72,6 @@ import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.add_offer
 import mahalatk.shared.generated.resources.all_products_scope
-import mahalatk.shared.generated.resources.bundle_offer
-import mahalatk.shared.generated.resources.bundle_offer_desc
-import mahalatk.shared.generated.resources.bundle_price
 import mahalatk.shared.generated.resources.buy_how_many
 import mahalatk.shared.generated.resources.buy_x_get_y_desc
 import mahalatk.shared.generated.resources.buy_x_get_y_offer
@@ -87,6 +84,8 @@ import mahalatk.shared.generated.resources.discount_offer_desc
 import mahalatk.shared.generated.resources.discount_percentage
 import mahalatk.shared.generated.resources.duration_review
 import mahalatk.shared.generated.resources.end_date
+import mahalatk.shared.generated.resources.free_shipping_offer
+import mahalatk.shared.generated.resources.free_shipping_offer_desc
 import mahalatk.shared.generated.resources.get_how_many_free
 import mahalatk.shared.generated.resources.min_cart_value
 import mahalatk.shared.generated.resources.next_step
@@ -248,12 +247,12 @@ private fun Step1OfferTypeSelection(state: AddOfferState, viewModel: AddOfferVie
 
         OfferTypeCard(
             index = 2,
-            icon = Icons.Rounded.Inventory2,
+            icon = Icons.Rounded.LocalShipping,
             iconColor = AppColor.Info,
-            title = stringResource(Res.string.bundle_offer),
-            description = stringResource(Res.string.bundle_offer_desc),
-            isSelected = state.offerType == OfferType.BUNDLE,
-            onClick = { viewModel.selectOfferType(OfferType.BUNDLE) },
+            title = stringResource(Res.string.free_shipping_offer),
+            description = stringResource(Res.string.free_shipping_offer_desc),
+            isSelected = state.offerType == OfferType.FREE_SHIPPING,
+            onClick = { viewModel.selectOfferType(OfferType.FREE_SHIPPING) },
         )
 
         OfferTypeCard(
@@ -363,7 +362,7 @@ private fun Step2LogicSetup(state: AddOfferState, viewModel: AddOfferViewModel) 
                 when (offerType) {
                     OfferType.DISCOUNT -> DiscountLogicFields(state, viewModel)
                     OfferType.BUY_X_GET_Y -> BuyXGetYLogicFields(state, viewModel)
-                    OfferType.BUNDLE -> BundleLogicFields(state, viewModel)
+                    OfferType.FREE_SHIPPING -> FreeShippingLogicFields(state, viewModel)
                     OfferType.PACKAGE -> PackageLogicFields(state, viewModel)
                     null -> {}
                 }
@@ -426,11 +425,11 @@ private fun BuyXGetYLogicFields(state: AddOfferState, viewModel: AddOfferViewMod
 }
 
 @Composable
-private fun BundleLogicFields(state: AddOfferState, viewModel: AddOfferViewModel) {
+private fun FreeShippingLogicFields(state: AddOfferState, viewModel: AddOfferViewModel) {
     DefaultTextField(
-        value = state.bundlePrice,
-        onValueChanged = viewModel::updateBundlePrice,
-        placeholderText = stringResource(Res.string.bundle_price),
+        value = state.freeShippingMinCart,
+        onValueChanged = viewModel::updateFreeShippingMinCart,
+        placeholderText = stringResource(Res.string.min_cart_value),
         keyboardType = KeyboardType.Number,
     )
 }
@@ -505,26 +504,65 @@ private fun Step3Scope(state: AddOfferState, viewModel: AddOfferViewModel) {
             )
         }
 
-        // Products list
+        // Products: categories first, then filtered products
         AnimatedVisibility(
             visible = state.scopeType == OfferScopeType.SPECIFIC_PRODUCTS,
             enter = expandVertically() + fadeIn(),
             exit = shrinkVertically() + fadeOut(),
         ) {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(CornerDimensions.lg),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
-                elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
-            ) {
-                Column(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
-                    state.availableProducts.forEach { product ->
-                        ProductCheckRow(
-                            product = product,
-                            isChecked = product.id in state.selectedProductIds,
-                            onToggle = { viewModel.toggleProduct(product.id) },
-                        )
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                // Select categories to filter products
+                Text(
+                    text = stringResource(Res.string.categories_scope),
+                    style = MahalatkTheme.bodySmall,
+                    color = AppColor.TextHint,
+                    modifier = Modifier.padding(top = 4.dp),
+                )
+
+                ChipCloud(
+                    items = state.availableCategories,
+                    selectedItems = state.filterCategories,
+                    label = { it },
+                    onToggle = viewModel::toggleFilterCategory,
+                )
+
+                // Show filtered products
+                val filteredProducts = if (state.filterCategories.isEmpty()) {
+                    emptyList()
+                } else {
+                    state.availableProducts.filter { it.category in state.filterCategories }
+                }
+
+                AnimatedVisibility(
+                    visible = filteredProducts.isNotEmpty(),
+                    enter = expandVertically() + fadeIn(),
+                    exit = shrinkVertically() + fadeOut(),
+                ) {
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(CornerDimensions.lg),
+                        colors = CardDefaults.cardColors(containerColor = Color.White),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+                    ) {
+                        Column(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
+                            filteredProducts.forEach { product ->
+                                ProductCheckRow(
+                                    product = product,
+                                    isChecked = product.id in state.selectedProductIds,
+                                    onToggle = { viewModel.toggleProduct(product.id) },
+                                )
+                            }
+                        }
                     }
+                }
+
+                if (state.selectedProductIds.isNotEmpty()) {
+                    Text(
+                        text = "${state.selectedProductIds.size} منتجات مختارة",
+                        style = MahalatkTheme.bodySmall,
+                        color = AppColor.Primary,
+                        fontWeight = FontWeight.SemiBold,
+                    )
                 }
             }
         }
@@ -663,39 +701,62 @@ private fun Step3PackageProducts(state: AddOfferState, viewModel: AddOfferViewMo
             .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        SectionLabel(text = stringResource(Res.string.select_package_products))
+        // 1. Select categories first
+        SectionLabel(text = stringResource(Res.string.categories_scope))
 
-        Spacer(modifier = Modifier.height(4.dp))
+        ChipCloud(
+            items = state.availableCategories,
+            selectedItems = state.filterCategories,
+            label = { it },
+            onToggle = { viewModel.togglePackageFilterCategory(it) },
+        )
 
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(CornerDimensions.lg),
-            colors = CardDefaults.cardColors(containerColor = Color.White),
-            elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+        // 2. Show products from selected categories
+        val filteredProducts = if (state.filterCategories.isEmpty()) {
+            emptyList()
+        } else {
+            state.availableProducts.filter { it.category in state.filterCategories }
+        }
+
+        AnimatedVisibility(
+            visible = filteredProducts.isNotEmpty(),
+            enter = expandVertically() + fadeIn(),
+            exit = shrinkVertically() + fadeOut(),
         ) {
-            Column(modifier = Modifier.padding(8.dp)) {
-                state.availableProducts.forEachIndexed { index, product ->
-                    val isChecked = product.id in state.packageProductIds
-                    AnimatedListItem(index) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .noRippleClickable { viewModel.togglePackageProduct(product.id) }
-                                .padding(horizontal = 8.dp, vertical = 4.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Checkbox(
-                                checked = isChecked,
-                                onCheckedChange = { viewModel.togglePackageProduct(product.id) },
-                                colors = CheckboxDefaults.colors(checkedColor = AppColor.Primary),
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = product.name,
-                                style = MahalatkTheme.bodyMedium,
-                                color = AppColor.TextPrimary,
-                                fontWeight = if (isChecked) FontWeight.SemiBold else FontWeight.Normal,
-                            )
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                SectionLabel(text = stringResource(Res.string.select_package_products))
+
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(CornerDimensions.lg),
+                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+                ) {
+                    Column(modifier = Modifier.padding(8.dp)) {
+                        filteredProducts.forEachIndexed { index, product ->
+                            val isChecked = product.id in state.packageProductIds
+                            AnimatedListItem(index) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .noRippleClickable { viewModel.togglePackageProduct(product.id) }
+                                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    Checkbox(
+                                        checked = isChecked,
+                                        onCheckedChange = { viewModel.togglePackageProduct(product.id) },
+                                        colors = CheckboxDefaults.colors(checkedColor = AppColor.Primary),
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        text = product.name,
+                                        style = MahalatkTheme.bodyMedium,
+                                        color = AppColor.TextPrimary,
+                                        fontWeight = if (isChecked) FontWeight.SemiBold else FontWeight.Normal,
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -870,8 +931,12 @@ private fun buildSummaryText(state: AddOfferState): String {
         OfferType.BUY_X_GET_Y ->
             "\u0627\u0634\u062A\u0631\u064A ${state.buyQuantity} \u0648\u0627\u062D\u0635\u0644 \u0639\u0644\u0649 ${state.getQuantity} \u0645\u062C\u0627\u0646\u0627\u064B"
 
-        OfferType.BUNDLE ->
-            "\u0637\u0642\u0645 \u0628\u0633\u0639\u0631 ${state.bundlePrice}"
+        OfferType.FREE_SHIPPING -> {
+            val minCart = if (state.freeShippingMinCart.isNotBlank()) {
+                " \u0639\u0646\u062F \u0627\u0644\u0634\u0631\u0627\u0621 \u0628\u0640 ${state.freeShippingMinCart}"
+            } else ""
+            "\u0634\u062D\u0646 \u0645\u062C\u0627\u0646\u064A$minCart"
+        }
 
         OfferType.PACKAGE ->
             "\u0628\u0627\u0643\u062F\u062C ${state.packageName} \u0628\u0633\u0639\u0631 ${state.packagePrice} (${state.packageProductIds.size} \u0645\u0646\u062A\u062C\u0627\u062A)"

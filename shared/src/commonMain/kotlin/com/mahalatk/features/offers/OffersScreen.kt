@@ -28,7 +28,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.Inventory2
+import androidx.compose.material.icons.rounded.LocalShipping
 import androidx.compose.material.icons.rounded.ShoppingCart
 import androidx.compose.material.icons.rounded.Storefront
 import androidx.compose.material.icons.rounded.ViewInAr
@@ -181,7 +181,7 @@ private fun OfferCard(offer: Offer, onToggleActive: () -> Unit = {}) {
         when (offer.type) {
             OfferType.DISCOUNT -> Icons.Rounded.Storefront to AppColor.Primary
             OfferType.BUY_X_GET_Y -> Icons.Rounded.ShoppingCart to AppColor.Success
-            OfferType.BUNDLE -> Icons.Rounded.Inventory2 to AppColor.Info
+            OfferType.FREE_SHIPPING -> Icons.Rounded.LocalShipping to AppColor.Info
             OfferType.PACKAGE -> Icons.Rounded.ViewInAr to AppColor.Warning
         }
     }

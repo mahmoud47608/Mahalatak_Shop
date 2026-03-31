@@ -32,8 +32,8 @@ class OffersViewModel : ViewModel() {
                 ),
                 Offer(
                     "3",
-                    OfferType.BUNDLE,
-                    "طقم كامل بسعر 500 ج - قميص وبنطلون",
+                    OfferType.PACKAGE,
+                    "باكدج طقم العريس - قميص وبنطلون وكرافتة بـ 800 ج",
                     "10/04/2026",
                     "30/04/2026",
                     false

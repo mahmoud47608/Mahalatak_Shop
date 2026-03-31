@@ -374,6 +374,8 @@
     <string name="buy_how_many">Buy how many?</string>
     <string name="get_how_many_free">Get how many free?</string>
     <string name="bundle_price">Bundle Price</string>
+    <string name="free_shipping_offer">Free Shipping</string>
+    <string name="free_shipping_offer_desc">Free delivery on qualifying orders</string>
     <string name="package_offer">Package</string>
     <string name="package_offer_desc">Select products and set a package price</string>
     <string name="package_name">Package Name</string>
@@ -395,6 +397,14 @@
     <string name="previous_step">Back</string>
     <string name="active_status">Active</string>
     <string name="inactive_status">Inactive</string>
+
+    <!-- Coupons -->
+    <string name="coupons">Coupons</string>
+    <string name="add_coupon">Add Coupon</string>
+    <string name="max_uses">Max Uses (Optional)</string>
+    <string name="no_coupons">No coupons yet</string>
+    <string name="coupon_duration">Coupon Duration</string>
+    <string name="coupon_added_success">Coupon added successfully!</string>
 
     <!-- Profile Screen -->
     <string name="edit_profile">Edit Profile</string>

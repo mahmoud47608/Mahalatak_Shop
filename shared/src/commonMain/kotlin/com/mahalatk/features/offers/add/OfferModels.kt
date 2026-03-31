@@ -3,7 +3,7 @@ package com.mahalatk.features.offers.add
 import androidx.compose.runtime.Immutable
 import org.jetbrains.compose.resources.StringResource
 
-enum class OfferType { DISCOUNT, BUY_X_GET_Y, BUNDLE, PACKAGE }
+enum class OfferType { DISCOUNT, BUY_X_GET_Y, PACKAGE, FREE_SHIPPING }
 enum class DiscountMode { PERCENTAGE, FIXED_AMOUNT }
 enum class OfferScopeType { ALL_PRODUCTS, CATEGORIES, SPECIFIC_PRODUCTS }
 
@@ -11,6 +11,7 @@ enum class OfferScopeType { ALL_PRODUCTS, CATEGORIES, SPECIFIC_PRODUCTS }
 data class ProductItem(
     val id: String,
     val name: String,
+    val category: String = "",
     val imageUrl: String = "",
 )
 
@@ -26,8 +27,8 @@ data class AddOfferState(
     // Step 2 - Buy X Get Y
     val buyQuantity: String = "",
     val getQuantity: String = "",
-    // Step 2 - Bundle
-    val bundlePrice: String = "",
+    // Step 2 - Free Shipping
+    val freeShippingMinCart: String = "",
     // Step 2 - Package
     val packageName: String = "",
     val packagePrice: String = "",
@@ -36,6 +37,7 @@ data class AddOfferState(
     val scopeType: OfferScopeType = OfferScopeType.ALL_PRODUCTS,
     val selectedCategories: Set<String> = emptySet(),
     val selectedProductIds: Set<String> = emptySet(),
+    val filterCategories: Set<String> = emptySet(),
     val availableCategories: List<String> = listOf(
         "رجالي",
         "حريمي",
@@ -44,12 +46,14 @@ data class AddOfferState(
         "أحذية حريمي"
     ),
     val availableProducts: List<ProductItem> = listOf(
-        ProductItem("1", "قميص رجالي كلاسيك"),
-        ProductItem("2", "بنطلون جينز"),
-        ProductItem("3", "تيشيرت قطن"),
-        ProductItem("4", "حذاء رياضي"),
-        ProductItem("5", "جاكيت شتوي"),
-        ProductItem("6", "فستان سهرة"),
+        ProductItem("1", "قميص رجالي كلاسيك", "رجالي"),
+        ProductItem("2", "بنطلون جينز", "رجالي"),
+        ProductItem("3", "تيشيرت قطن", "رجالي"),
+        ProductItem("4", "حذاء رياضي", "أحذية رجالي"),
+        ProductItem("5", "جاكيت شتوي", "حريمي"),
+        ProductItem("6", "فستان سهرة", "حريمي"),
+        ProductItem("7", "بلوزة أطفال", "أطفالي"),
+        ProductItem("8", "حذاء حريمي", "أحذية حريمي"),
     ),
     // Step 4
     val startDate: String = "",

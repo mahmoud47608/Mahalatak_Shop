@@ -36,8 +36,8 @@ class AddOfferViewModel : ViewModel() {
         _uiState.update { it.copy(getQuantity = v, stepError = null) }
     }
 
-    fun updateBundlePrice(v: String) {
-        _uiState.update { it.copy(bundlePrice = v, stepError = null) }
+    fun updateFreeShippingMinCart(v: String) {
+        _uiState.update { it.copy(freeShippingMinCart = v, stepError = null) }
     }
 
     fun updatePackageName(v: String) {
@@ -73,6 +73,45 @@ class AddOfferViewModel : ViewModel() {
             val newSet = state.selectedCategories.toMutableSet()
             if (cat in newSet) newSet.remove(cat) else newSet.add(cat)
             state.copy(selectedCategories = newSet, stepError = null)
+        }
+    }
+
+    fun toggleFilterCategory(cat: String) {
+        _uiState.update { state ->
+            val newSet = state.filterCategories.toMutableSet()
+            if (cat in newSet) newSet.remove(cat) else newSet.add(cat)
+            // Clear selected products that no longer belong to selected filter categories
+            val filteredIds = if (newSet.isEmpty()) {
+                state.selectedProductIds
+            } else {
+                val validIds = state.availableProducts
+                    .filter { it.category in newSet }
+                    .map { it.id }
+                    .toSet()
+                state.selectedProductIds.intersect(validIds)
+            }
+            state.copy(
+                filterCategories = newSet,
+                selectedProductIds = filteredIds,
+                stepError = null
+            )
+        }
+    }
+
+    fun togglePackageFilterCategory(cat: String) {
+        _uiState.update { state ->
+            val newSet = state.filterCategories.toMutableSet()
+            if (cat in newSet) newSet.remove(cat) else newSet.add(cat)
+            val filteredIds = if (newSet.isEmpty()) {
+                state.packageProductIds
+            } else {
+                val validIds = state.availableProducts
+                    .filter { it.category in newSet }
+                    .map { it.id }
+                    .toSet()
+                state.packageProductIds.intersect(validIds)
+            }
+            state.copy(filterCategories = newSet, packageProductIds = filteredIds, stepError = null)
         }
     }
 
@@ -131,9 +170,7 @@ class AddOfferViewModel : ViewModel() {
                     }
                 }
 
-                OfferType.BUNDLE -> state.bundlePrice.isNotBlank()
-                    .also { if (!it) _uiState.update { s -> s.copy(stepError = Res.string.field_required) } }
-
+                OfferType.FREE_SHIPPING -> true // min cart is optional
                 OfferType.PACKAGE -> (state.packageName.isNotBlank() && state.packagePrice.isNotBlank()).also {
                     if (!it) _uiState.update { s ->
                         s.copy(

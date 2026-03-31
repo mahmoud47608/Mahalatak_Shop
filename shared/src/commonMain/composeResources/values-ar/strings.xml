@@ -367,6 +367,8 @@
     <string name="buy_how_many">اشتري كم قطعة؟</string>
     <string name="get_how_many_free">احصل على كم مجاناً؟</string>
     <string name="bundle_price">سعر الطقم</string>
+    <string name="free_shipping_offer">شحن مجاني</string>
+    <string name="free_shipping_offer_desc">توصيل مجاني على الطلبات المؤهلة</string>
     <string name="package_offer">باكدج</string>
     <string name="package_offer_desc">اختر منتجات وحدد سعر الباكدج</string>
     <string name="package_name">اسم الباكدج</string>
@@ -388,6 +390,14 @@
     <string name="previous_step">رجوع</string>
     <string name="active_status">نشط</string>
     <string name="inactive_status">غير نشط</string>
+
+    <!-- Coupons -->
+    <string name="coupons">الكوبونات</string>
+    <string name="add_coupon">إضافة كوبون</string>
+    <string name="max_uses">الحد الأقصى للاستخدام (اختياري)</string>
+    <string name="no_coupons">لا توجد كوبونات بعد</string>
+    <string name="coupon_duration">مدة الكوبون</string>
+    <string name="coupon_added_success">تم إضافة الكوبون بنجاح!</string>
 
     <!-- Profile Screen -->
     <string name="edit_profile">تعديل الملف الشخصي</string>

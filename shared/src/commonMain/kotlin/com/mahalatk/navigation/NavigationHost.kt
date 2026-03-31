@@ -14,6 +14,8 @@ import com.mahalatk.features.auth.register.PickLocationScreen
 import com.mahalatk.features.auth.register.RegisterScreen
 import com.mahalatk.features.chat.ChatDetailScreen
 import com.mahalatk.features.complaints.ComplaintsScreen
+import com.mahalatk.features.coupons.AddCouponScreen
+import com.mahalatk.features.coupons.CouponsScreen
 import com.mahalatk.features.employees.AddEmployeeScreen
 import com.mahalatk.features.employees.EmployeesHubScreen
 import com.mahalatk.features.employees.EmployeesListScreen
@@ -320,6 +322,18 @@ fun NavigationHost() {
 
                 is Route.AddOffer -> NavEntry(route) {
                     AddOfferScreen(onBack = { navigator.pop() })
+                }
+
+                // ─── Coupons ────────────────────────────
+                is Route.Coupons -> NavEntry(route) {
+                    CouponsScreen(
+                        onBack = { navigator.pop() },
+                        onAddCoupon = { navigator.push(Route.AddCoupon) },
+                    )
+                }
+
+                is Route.AddCoupon -> NavEntry(route) {
+                    AddCouponScreen(onBack = { navigator.pop() })
                 }
 
                 // ─── Main Tabs ───────────────────────────
