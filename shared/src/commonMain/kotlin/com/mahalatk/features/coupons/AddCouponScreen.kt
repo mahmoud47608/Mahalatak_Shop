@@ -41,6 +41,7 @@ import com.mahalatk.common.component.inputs.DefaultTextField
 import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.CornerDimensions
 import com.mahalatk.theme.MahalatkTheme
+import com.mahalatk.util.DateUtils
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.add_coupon
 import mahalatk.shared.generated.resources.cancel
@@ -204,7 +205,7 @@ fun AddCouponScreen(
                 TextButton(onClick = {
                     datePickerState.selectedDateMillis?.let {
                         viewModel.updateStartDate(
-                            formatDateMillis(it)
+                            DateUtils.formatDateMillis(it)
                         )
                     }
                     showStartDatePicker = false
@@ -226,7 +227,7 @@ fun AddCouponScreen(
                 TextButton(onClick = {
                     datePickerState.selectedDateMillis?.let {
                         viewModel.updateEndDate(
-                            formatDateMillis(it)
+                            DateUtils.formatDateMillis(it)
                         )
                     }
                     showEndDatePicker = false
@@ -258,35 +259,3 @@ private fun SectionTitle(text: String) {
     )
 }
 
-private fun formatDateMillis(millis: Long): String {
-    val totalDays = (millis / 86400000L).toInt()
-    var y = 1970
-    var remaining = totalDays
-    while (true) {
-        val daysInYear = if (y % 4 == 0 && (y % 100 != 0 || y % 400 == 0)) 366 else 365
-        if (remaining < daysInYear) break
-        remaining -= daysInYear
-        y++
-    }
-    val monthDays = intArrayOf(
-        31,
-        if (y % 4 == 0 && (y % 100 != 0 || y % 400 == 0)) 29 else 28,
-        31,
-        30,
-        31,
-        30,
-        31,
-        31,
-        30,
-        31,
-        30,
-        31
-    )
-    var m = 0
-    while (m < 12 && remaining >= monthDays[m]) {
-        remaining -= monthDays[m]
-        m++
-    }
-    val d = remaining + 1
-    return "${d.toString().padStart(2, '0')}/${(m + 1).toString().padStart(2, '0')}/$y"
-}

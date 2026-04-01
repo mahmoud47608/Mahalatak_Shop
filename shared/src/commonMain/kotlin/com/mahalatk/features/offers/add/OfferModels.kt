@@ -3,9 +3,15 @@ package com.mahalatk.features.offers.add
 import androidx.compose.runtime.Immutable
 import org.jetbrains.compose.resources.StringResource
 
+// ─── Enums ───────────────────────────────────────────────────────────────────
+
 enum class OfferType { DISCOUNT, BUY_X_GET_Y, PACKAGE, FREE_SHIPPING }
+
 enum class DiscountMode { PERCENTAGE, FIXED_AMOUNT }
+
 enum class OfferScopeType { ALL_PRODUCTS, CATEGORIES, SPECIFIC_PRODUCTS }
+
+// ─── Domain Models ───────────────────────────────────────────────────────────
 
 @Immutable
 data class ProductItem(
@@ -16,54 +22,6 @@ data class ProductItem(
 )
 
 @Immutable
-data class AddOfferState(
-    val currentStep: Int = 0,
-    // Step 1
-    val offerType: OfferType? = null,
-    // Step 2 - Discount
-    val discountMode: DiscountMode = DiscountMode.PERCENTAGE,
-    val discountValue: String = "",
-    val minCartValue: String = "",
-    // Step 2 - Buy X Get Y
-    val buyQuantity: String = "",
-    val getQuantity: String = "",
-    // Step 2 - Free Shipping
-    val freeShippingMinCart: String = "",
-    // Step 2 - Package
-    val packageName: String = "",
-    val packagePrice: String = "",
-    val packageProductIds: Set<String> = emptySet(),
-    // Step 3
-    val scopeType: OfferScopeType = OfferScopeType.ALL_PRODUCTS,
-    val selectedCategories: Set<String> = emptySet(),
-    val selectedProductIds: Set<String> = emptySet(),
-    val filterCategories: Set<String> = emptySet(),
-    val availableCategories: List<String> = listOf(
-        "رجالي",
-        "حريمي",
-        "أطفالي",
-        "أحذية رجالي",
-        "أحذية حريمي"
-    ),
-    val availableProducts: List<ProductItem> = listOf(
-        ProductItem("1", "قميص رجالي كلاسيك", "رجالي"),
-        ProductItem("2", "بنطلون جينز", "رجالي"),
-        ProductItem("3", "تيشيرت قطن", "رجالي"),
-        ProductItem("4", "حذاء رياضي", "أحذية رجالي"),
-        ProductItem("5", "جاكيت شتوي", "حريمي"),
-        ProductItem("6", "فستان سهرة", "حريمي"),
-        ProductItem("7", "بلوزة أطفال", "أطفالي"),
-        ProductItem("8", "حذاء حريمي", "أحذية حريمي"),
-    ),
-    // Step 4
-    val startDate: String = "",
-    val endDate: String = "",
-    // Errors
-    val stepError: StringResource? = null,
-    val showSuccess: Boolean = false,
-)
-
-@Immutable
 data class Offer(
     val id: String,
     val type: OfferType,
@@ -71,6 +29,49 @@ data class Offer(
     val startDate: String,
     val endDate: String,
     val isActive: Boolean = true,
+)
+
+// ─── UI State ────────────────────────────────────────────────────────────────
+
+@Immutable
+data class AddOfferState(
+    val currentStep: Int = 0,
+
+    // Step 0 - Offer Type
+    val offerType: OfferType? = null,
+
+    // Step 1 - Discount
+    val discountMode: DiscountMode = DiscountMode.PERCENTAGE,
+    val discountValue: String = "",
+    val minCartValue: String = "",
+
+    // Step 1 - Buy X Get Y
+    val buyQuantity: String = "",
+    val getQuantity: String = "",
+
+    // Step 1 - Free Shipping
+    val freeShippingMinCart: String = "",
+
+    // Step 1 - Package
+    val packageName: String = "",
+    val packagePrice: String = "",
+    val packageProductIds: Set<String> = emptySet(),
+
+    // Step 2 - Scope
+    val scopeType: OfferScopeType = OfferScopeType.ALL_PRODUCTS,
+    val selectedCategories: Set<String> = emptySet(),
+    val selectedProductIds: Set<String> = emptySet(),
+    val filterCategories: Set<String> = emptySet(),
+    val availableCategories: List<String> = emptyList(),
+    val availableProducts: List<ProductItem> = emptyList(),
+
+    // Step 3 - Duration
+    val startDate: String = "",
+    val endDate: String = "",
+
+    // Feedback
+    val stepError: StringResource? = null,
+    val showSuccess: Boolean = false,
 )
 
 @Immutable
