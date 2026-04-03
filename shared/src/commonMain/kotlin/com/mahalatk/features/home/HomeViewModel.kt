@@ -31,7 +31,11 @@ data class HomeState(
         OrderItem("2", "Fahd Al-Shehri", "088309", "02:30 PM"),
         OrderItem("3", "Hader Al-Alawi", "088310", "01:15 PM"),
     ),
-)
+) {
+    val totalOrders: Int get() = completedOrders + cancelledOrders
+    val completedProgress: Float get() = if (totalOrders > 0) completedOrders.toFloat() / totalOrders else 0f
+    val cancelledProgress: Float get() = if (totalOrders > 0) cancelledOrders.toFloat() / totalOrders else 0f
+}
 
 class HomeViewModel(
     private val userDataProvider: UserDataProvider,

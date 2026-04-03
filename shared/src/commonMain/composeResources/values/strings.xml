@@ -215,6 +215,7 @@
     <string name="unavailable">Unavailable</string>
     <string name="self_delivery">Self Delivery</string>
     <string name="statistics">Statistics</string>
+    <string name="total_orders">Total Orders</string>
     <string name="completed_orders">Completed Orders</string>
     <string name="cancelled_orders">Cancelled Orders</string>
     <string name="new_orders">New Orders</string>

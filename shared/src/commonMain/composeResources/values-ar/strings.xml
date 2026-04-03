@@ -208,6 +208,7 @@
     <string name="unavailable">غير متاح</string>
     <string name="self_delivery">توصيل ذاتي</string>
     <string name="statistics">الإحصائيات</string>
+    <string name="total_orders">إجمالي الطلبات</string>
     <string name="completed_orders">الطلبات المكتملة</string>
     <string name="cancelled_orders">الطلبات الملغاة</string>
     <string name="new_orders">الطلبات الجديدة</string>
