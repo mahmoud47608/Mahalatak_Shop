@@ -30,6 +30,7 @@ import com.mahalatk.common.component.header.ScreenHeader
 import com.mahalatk.common.component.inputs.DefaultTextField
 import com.mahalatk.features.auth.register.ReturnPeriod
 import com.mahalatk.features.auth.register.ReturnPolicy
+import com.mahalatk.features.auth.register.ShopType
 import com.mahalatk.features.profile.component.ProfileImagePicker
 import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.MahalatkTheme
@@ -40,12 +41,15 @@ import mahalatk.shared.generated.resources.ic_city
 import mahalatk.shared.generated.resources.ic_location
 import mahalatk.shared.generated.resources.ic_user
 import mahalatk.shared.generated.resources.not_available_policy
+import mahalatk.shared.generated.resources.online_shop
 import mahalatk.shared.generated.resources.owner_name
+import mahalatk.shared.generated.resources.physical_shop
 import mahalatk.shared.generated.resources.profile
 import mahalatk.shared.generated.resources.select_city
 import mahalatk.shared.generated.resources.select_location
 import mahalatk.shared.generated.resources.select_return_period
 import mahalatk.shared.generated.resources.select_return_policy
+import mahalatk.shared.generated.resources.select_shop_type
 import mahalatk.shared.generated.resources.shop_category
 import mahalatk.shared.generated.resources.shop_name
 import mahalatk.shared.generated.resources.upload_shop_logo
@@ -140,6 +144,32 @@ fun ShopOwnerProfileScreen(
 
                         Spacer(modifier = Modifier.height(20.dp))
 
+                        // Shop Type
+                        val shopTypeLabel = when (uiState.shopType) {
+                            ShopType.PHYSICAL -> stringResource(Res.string.physical_shop)
+                            ShopType.ONLINE -> stringResource(Res.string.online_shop)
+                        }
+                        DefaultTextField(
+                            value = shopTypeLabel,
+                            onValueChanged = {},
+                            placeholderText = stringResource(Res.string.select_shop_type),
+                            isEnabled = false,
+                            leadingIcon = {
+                                Icon(Icons.Filled.Storefront, null, tint = MahalatkTheme.primary)
+                            },
+                            trailingIcon = {
+                                Icon(
+                                    Icons.Filled.KeyboardArrowDown,
+                                    null,
+                                    tint = MahalatkTheme.primary
+                                )
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+
+                        if (uiState.shopType == ShopType.PHYSICAL) {
+                        Spacer(modifier = Modifier.height(20.dp))
+
                         // Location
                         DefaultTextField(
                             value = uiState.locationAddress,
@@ -182,6 +212,8 @@ fun ShopOwnerProfileScreen(
                             modifier = Modifier.fillMaxWidth(),
                         )
 
+                        } // end if PHYSICAL (location + city)
+
                         Spacer(modifier = Modifier.height(20.dp))
 
                         // Shop Category
@@ -206,6 +238,7 @@ fun ShopOwnerProfileScreen(
                             modifier = Modifier.fillMaxWidth(),
                         )
 
+                        if (uiState.shopType == ShopType.PHYSICAL) {
                         Spacer(modifier = Modifier.height(20.dp))
 
                         // Return Policy
@@ -264,6 +297,7 @@ fun ShopOwnerProfileScreen(
                                 modifier = Modifier.fillMaxWidth(),
                             )
                         }
+                        } // end if PHYSICAL (return policy + period)
 
                     }
                 }

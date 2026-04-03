@@ -77,15 +77,18 @@ import mahalatk.shared.generated.resources.ic_phone
 import mahalatk.shared.generated.resources.ic_profile
 import mahalatk.shared.generated.resources.ic_user
 import mahalatk.shared.generated.resources.not_available_policy
+import mahalatk.shared.generated.resources.online_shop
 import mahalatk.shared.generated.resources.owner_name
 import mahalatk.shared.generated.resources.password
 import mahalatk.shared.generated.resources.phone
+import mahalatk.shared.generated.resources.physical_shop
 import mahalatk.shared.generated.resources.register
 import mahalatk.shared.generated.resources.select_city
 import mahalatk.shared.generated.resources.select_location
 import mahalatk.shared.generated.resources.select_return_period
 import mahalatk.shared.generated.resources.select_return_policy
 import mahalatk.shared.generated.resources.select_shop
+import mahalatk.shared.generated.resources.select_shop_type
 import mahalatk.shared.generated.resources.shop_category
 import mahalatk.shared.generated.resources.shop_name
 import mahalatk.shared.generated.resources.shop_owner
@@ -108,6 +111,7 @@ fun RegisterScreen(
     onNavigateToActivation: (phoneNumber: String) -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    var showShopTypeSheet by remember { mutableStateOf(false) }
     var showCitySheet by remember { mutableStateOf(false) }
     var showShopSheet by remember { mutableStateOf(false) }
     var showCategorySheet by remember { mutableStateOf(false) }
@@ -222,6 +226,7 @@ fun RegisterScreen(
                             uiState = uiState,
                             viewModel = viewModel,
                             onPickImage = pickImage,
+                            onShowShopTypeSheet = { showShopTypeSheet = true },
                             onShowCitySheet = { showCitySheet = true },
                             onShowCategorySheet = { showCategorySheet = true },
                             onShowReturnPolicySheet = { showReturnPolicySheet = true },
@@ -371,6 +376,21 @@ fun RegisterScreen(
 
     // Bottom Sheets
     SingleSelectBottomSheet(
+        showBottomSheet = showShopTypeSheet,
+        title = stringResource(Res.string.select_shop_type),
+        items = ShopType.entries.toList(),
+        selectedItem = uiState.shopType,
+        itemLabel = { type ->
+            when (type) {
+                ShopType.PHYSICAL -> stringResource(Res.string.physical_shop)
+                ShopType.ONLINE -> stringResource(Res.string.online_shop)
+            }
+        },
+        onItemSelected = { viewModel.selectShopType(it) },
+        onDismiss = { showShopTypeSheet = false },
+    )
+
+    SingleSelectBottomSheet(
         showBottomSheet = showCitySheet,
         title = stringResource(Res.string.select_city),
         items = uiState.availableCities,
@@ -442,6 +462,7 @@ private fun ShopOwnerForm(
     uiState: RegisterState,
     viewModel: RegisterViewModel,
     onPickImage: () -> Unit,
+    onShowShopTypeSheet: () -> Unit,
     onShowCitySheet: () -> Unit,
     onShowCategorySheet: () -> Unit,
     onShowReturnPolicySheet: () -> Unit,
@@ -540,40 +561,21 @@ private fun ShopOwnerForm(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // 4. Location
+        // 4. Shop Type
+        val shopTypeLabel = when (uiState.shopType) {
+            ShopType.PHYSICAL -> stringResource(Res.string.physical_shop)
+            ShopType.ONLINE -> stringResource(Res.string.online_shop)
+        }
         DefaultTextField(
-            value = uiState.locationAddress,
+            value = shopTypeLabel,
             onValueChanged = {},
-            placeholderText = stringResource(Res.string.select_location),
+            placeholderText = stringResource(Res.string.select_shop_type),
             isEnabled = false,
-            onClick = { onPickLocation() },
-            errorText = uiState.locationError?.let { stringResource(it) },
+            onClick = { onShowShopTypeSheet() },
             leadingIcon = {
                 Icon(
-                    painter = painterResource(Res.drawable.ic_location),
-                    contentDescription = null,
-                    modifier = Modifier.size(24.dp),
-                    tint = MahalatkTheme.primary,
-                )
-            },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        // 5. City
-        DefaultTextField(
-            value = uiState.selectedCity?.name ?: "",
-            onValueChanged = {},
-            placeholderText = stringResource(Res.string.select_city),
-            isEnabled = false,
-            onClick = { onShowCitySheet() },
-            errorText = uiState.cityError?.let { stringResource(it) },
-            leadingIcon = {
-                Icon(
-                    painterResource(Res.drawable.ic_city),
+                    Icons.Filled.Storefront,
                     null,
-                    modifier = Modifier.size(24.dp),
                     tint = MahalatkTheme.primary
                 )
             },
@@ -587,9 +589,61 @@ private fun ShopOwnerForm(
             modifier = Modifier.fillMaxWidth()
         )
 
+        // Fields only visible for physical shops
+        if (uiState.shopType == ShopType.PHYSICAL) {
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // 5. Location
+            DefaultTextField(
+                value = uiState.locationAddress,
+                onValueChanged = {},
+                placeholderText = stringResource(Res.string.select_location),
+                isEnabled = false,
+                onClick = { onPickLocation() },
+                errorText = uiState.locationError?.let { stringResource(it) },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_location),
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp),
+                        tint = MahalatkTheme.primary,
+                    )
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // 6. City
+            DefaultTextField(
+                value = uiState.selectedCity?.name ?: "",
+                onValueChanged = {},
+                placeholderText = stringResource(Res.string.select_city),
+                isEnabled = false,
+                onClick = { onShowCitySheet() },
+                errorText = uiState.cityError?.let { stringResource(it) },
+                leadingIcon = {
+                    Icon(
+                        painterResource(Res.drawable.ic_city),
+                        null,
+                        modifier = Modifier.size(24.dp),
+                        tint = MahalatkTheme.primary
+                    )
+                },
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.KeyboardArrowDown,
+                        contentDescription = null,
+                        tint = MahalatkTheme.primary,
+                    )
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+
         Spacer(modifier = Modifier.height(20.dp))
 
-        // 6. Shop Category
+        // 7. Shop Category
         val categoryNames = uiState.selectedCategories.map { stringResource(it.labelRes) }
         val categoryLabel = categoryNames.joinToString(", ")
         DefaultTextField(
@@ -616,55 +670,23 @@ private fun ShopOwnerForm(
             modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(20.dp))
-
-        // 7. Return Policy dropdown
-        val returnPolicyLabel = when (uiState.returnPolicy) {
-            ReturnPolicy.EXCHANGE -> stringResource(Res.string.exchange)
-            ReturnPolicy.EXCHANGE_AND_RETURN -> stringResource(Res.string.exchange_and_return)
-            ReturnPolicy.NOT_AVAILABLE -> stringResource(Res.string.not_available_policy)
-        }
-
-        DefaultTextField(
-            value = returnPolicyLabel,
-            onValueChanged = {},
-            placeholderText = stringResource(Res.string.select_return_policy),
-            isEnabled = false,
-            onClick = { onShowReturnPolicySheet() },
-            leadingIcon = {
-                Icon(
-                    Icons.Filled.Storefront,
-                    null,
-                    tint = MahalatkTheme.primary
-                )
-            },
-            trailingIcon = {
-                Icon(
-                    imageVector = Icons.Filled.KeyboardArrowDown,
-                    contentDescription = null,
-                    tint = MahalatkTheme.primary,
-                )
-            },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        // 8. Return Period dropdown (only visible when policy != NOT_AVAILABLE)
-        if (uiState.returnPolicy != ReturnPolicy.NOT_AVAILABLE) {
+        // Return Policy & Period only for physical shops
+        if (uiState.shopType == ShopType.PHYSICAL) {
             Spacer(modifier = Modifier.height(20.dp))
 
-            val returnPeriodLabel = when (uiState.returnPeriod) {
-                ReturnPeriod.DAYS_2 -> stringResource(Res.string.within_2_days)
-                ReturnPeriod.DAYS_3 -> stringResource(Res.string.within_3_days)
-                ReturnPeriod.DAYS_7 -> stringResource(Res.string.within_7_days)
-                ReturnPeriod.DAYS_14 -> stringResource(Res.string.within_14_days)
+            // 8. Return Policy dropdown
+            val returnPolicyLabel = when (uiState.returnPolicy) {
+                ReturnPolicy.EXCHANGE -> stringResource(Res.string.exchange)
+                ReturnPolicy.EXCHANGE_AND_RETURN -> stringResource(Res.string.exchange_and_return)
+                ReturnPolicy.NOT_AVAILABLE -> stringResource(Res.string.not_available_policy)
             }
 
             DefaultTextField(
-                value = returnPeriodLabel,
+                value = returnPolicyLabel,
                 onValueChanged = {},
-                placeholderText = stringResource(Res.string.select_return_period),
+                placeholderText = stringResource(Res.string.select_return_policy),
                 isEnabled = false,
-                onClick = { onShowReturnPeriodSheet() },
+                onClick = { onShowReturnPolicySheet() },
                 leadingIcon = {
                     Icon(
                         Icons.Filled.Storefront,
@@ -681,6 +703,41 @@ private fun ShopOwnerForm(
                 },
                 modifier = Modifier.fillMaxWidth()
             )
+
+            // 9. Return Period dropdown (only visible when policy != NOT_AVAILABLE)
+            if (uiState.returnPolicy != ReturnPolicy.NOT_AVAILABLE) {
+                Spacer(modifier = Modifier.height(20.dp))
+
+                val returnPeriodLabel = when (uiState.returnPeriod) {
+                    ReturnPeriod.DAYS_2 -> stringResource(Res.string.within_2_days)
+                    ReturnPeriod.DAYS_3 -> stringResource(Res.string.within_3_days)
+                    ReturnPeriod.DAYS_7 -> stringResource(Res.string.within_7_days)
+                    ReturnPeriod.DAYS_14 -> stringResource(Res.string.within_14_days)
+                }
+
+                DefaultTextField(
+                    value = returnPeriodLabel,
+                    onValueChanged = {},
+                    placeholderText = stringResource(Res.string.select_return_period),
+                    isEnabled = false,
+                    onClick = { onShowReturnPeriodSheet() },
+                    leadingIcon = {
+                        Icon(
+                            Icons.Filled.Storefront,
+                            null,
+                            tint = MahalatkTheme.primary
+                        )
+                    },
+                    trailingIcon = {
+                        Icon(
+                            imageVector = Icons.Filled.KeyboardArrowDown,
+                            contentDescription = null,
+                            tint = MahalatkTheme.primary,
+                        )
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         }
 
     }

@@ -63,7 +63,6 @@ import mahalatk.shared.generated.resources.new_orders
 import mahalatk.shared.generated.resources.receive_new_orders
 import mahalatk.shared.generated.resources.statistics
 import mahalatk.shared.generated.resources.today
-import mahalatk.shared.generated.resources.total_orders
 import mahalatk.shared.generated.resources.unavailable
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -192,20 +191,13 @@ fun HomeScreen(
             item {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
-                    StatCard(
-                        modifier = Modifier.weight(1f),
-                        count = state.totalOrders,
-                        label = stringResource(Res.string.total_orders),
-                        accentColor = AppColor.Primary,
-                        progress = 1f,
-                    )
                     StatCard(
                         modifier = Modifier.weight(1f),
                         count = state.completedOrders,
                         label = stringResource(Res.string.completed_orders),
-                        accentColor = AppColor.Success,
+                        accentColor = AppColor.Primary,
                         progress = state.completedProgress,
                     )
                     StatCard(

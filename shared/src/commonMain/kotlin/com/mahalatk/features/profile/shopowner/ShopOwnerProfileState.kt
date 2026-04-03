@@ -5,6 +5,7 @@ import com.mahalatk.features.auth.register.CityItem
 import com.mahalatk.features.auth.register.ReturnPeriod
 import com.mahalatk.features.auth.register.ReturnPolicy
 import com.mahalatk.features.auth.register.ShopCategory
+import com.mahalatk.features.auth.register.ShopType
 import org.jetbrains.compose.resources.StringResource
 
 @Immutable
@@ -12,6 +13,7 @@ data class ShopOwnerProfileState(
     // Shop Owner fields
     val shopName: String = "",
     val ownerName: String = "",
+    val shopType: ShopType = ShopType.PHYSICAL,
     val selectedCategories: Set<ShopCategory> = emptySet(),
     val returnPolicy: ReturnPolicy = ReturnPolicy.EXCHANGE,
     val returnPeriod: ReturnPeriod = ReturnPeriod.DAYS_2,

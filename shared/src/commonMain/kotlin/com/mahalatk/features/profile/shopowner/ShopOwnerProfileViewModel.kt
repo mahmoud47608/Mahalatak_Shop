@@ -9,6 +9,7 @@ import com.mahalatk.features.auth.register.CityItem
 import com.mahalatk.features.auth.register.ReturnPeriod
 import com.mahalatk.features.auth.register.ReturnPolicy
 import com.mahalatk.features.auth.register.ShopCategory
+import com.mahalatk.features.auth.register.ShopType
 import kotlinx.coroutines.launch
 
 class ShopOwnerProfileViewModel(
@@ -48,6 +49,10 @@ class ShopOwnerProfileViewModel(
             }
             copy(selectedCategories = updated, categoryError = null)
         }
+    }
+
+    fun selectShopType(type: ShopType) {
+        updateState { copy(shopType = type) }
     }
 
     fun selectCity(city: CityItem) {

@@ -45,6 +45,7 @@ import com.mahalatk.features.auth.register.LocationResultHolder
 import com.mahalatk.features.auth.register.ReturnPeriod
 import com.mahalatk.features.auth.register.ReturnPolicy
 import com.mahalatk.features.auth.register.ShopCategory
+import com.mahalatk.features.auth.register.ShopType
 import com.mahalatk.features.profile.component.ProfileImagePicker
 import com.mahalatk.features.profile.employee.EmployeeProfileViewModel
 import com.mahalatk.features.profile.shopowner.ShopOwnerProfileViewModel
@@ -59,7 +60,9 @@ import mahalatk.shared.generated.resources.ic_city
 import mahalatk.shared.generated.resources.ic_location
 import mahalatk.shared.generated.resources.ic_user
 import mahalatk.shared.generated.resources.not_available_policy
+import mahalatk.shared.generated.resources.online_shop
 import mahalatk.shared.generated.resources.owner_name
+import mahalatk.shared.generated.resources.physical_shop
 import mahalatk.shared.generated.resources.profile
 import mahalatk.shared.generated.resources.save
 import mahalatk.shared.generated.resources.select_city
@@ -67,6 +70,7 @@ import mahalatk.shared.generated.resources.select_location
 import mahalatk.shared.generated.resources.select_return_period
 import mahalatk.shared.generated.resources.select_return_policy
 import mahalatk.shared.generated.resources.select_shop
+import mahalatk.shared.generated.resources.select_shop_type
 import mahalatk.shared.generated.resources.shop_category
 import mahalatk.shared.generated.resources.shop_name
 import mahalatk.shared.generated.resources.shop_owner
@@ -93,6 +97,7 @@ fun ProfileScreen(
     var selectedTabIndex by remember { mutableStateOf(0) } // 0 = Shop Owner (default)
 
     // Bottom sheet states
+    var showShopTypeSheet by remember { mutableStateOf(false) }
     var showCitySheet by remember { mutableStateOf(false) }
     var showCategorySheet by remember { mutableStateOf(false) }
     var showReturnPolicySheet by remember { mutableStateOf(false) }
@@ -184,6 +189,7 @@ fun ProfileScreen(
                                 state = shopOwnerState,
                                 viewModel = shopOwnerViewModel,
                                 onPickImage = shopPickImage,
+                                onShowShopTypeSheet = { showShopTypeSheet = true },
                                 onShowCitySheet = { showCitySheet = true },
                                 onShowCategorySheet = { showCategorySheet = true },
                                 onShowReturnPolicySheet = { showReturnPolicySheet = true },
@@ -221,6 +227,21 @@ fun ProfileScreen(
     }
 
     // ─── Bottom Sheets ─────────────────────────────────────
+
+    SingleSelectBottomSheet(
+        showBottomSheet = showShopTypeSheet,
+        title = stringResource(Res.string.select_shop_type),
+        items = ShopType.entries.toList(),
+        selectedItem = shopOwnerState.shopType,
+        itemLabel = { type ->
+            when (type) {
+                ShopType.PHYSICAL -> stringResource(Res.string.physical_shop)
+                ShopType.ONLINE -> stringResource(Res.string.online_shop)
+            }
+        },
+        onItemSelected = { shopOwnerViewModel.selectShopType(it) },
+        onDismiss = { showShopTypeSheet = false },
+    )
 
     SingleSelectBottomSheet(
         showBottomSheet = showCitySheet,
@@ -294,6 +315,7 @@ private fun ShopOwnerProfileForm(
     state: com.mahalatk.features.profile.shopowner.ShopOwnerProfileState,
     viewModel: ShopOwnerProfileViewModel,
     onPickImage: () -> Unit,
+    onShowShopTypeSheet: () -> Unit,
     onShowCitySheet: () -> Unit,
     onShowCategorySheet: () -> Unit,
     onShowReturnPolicySheet: () -> Unit,
@@ -356,7 +378,30 @@ private fun ShopOwnerProfileForm(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // 3. Location
+        // 3. Shop Type
+        val shopTypeLabel = when (state.shopType) {
+            ShopType.PHYSICAL -> stringResource(Res.string.physical_shop)
+            ShopType.ONLINE -> stringResource(Res.string.online_shop)
+        }
+        DefaultTextField(
+            value = shopTypeLabel,
+            onValueChanged = {},
+            placeholderText = stringResource(Res.string.select_shop_type),
+            isEnabled = false,
+            onClick = { onShowShopTypeSheet() },
+            leadingIcon = {
+                Icon(Icons.Filled.Storefront, null, tint = MahalatkTheme.primary)
+            },
+            trailingIcon = {
+                Icon(Icons.Filled.KeyboardArrowDown, null, tint = MahalatkTheme.primary)
+            },
+            modifier = Modifier.fillMaxWidth(),
+        )
+
+        if (state.shopType == ShopType.PHYSICAL) {
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // 4. Location
         DefaultTextField(
             value = state.locationAddress,
             onValueChanged = {},
@@ -398,9 +443,11 @@ private fun ShopOwnerProfileForm(
             modifier = Modifier.fillMaxWidth(),
         )
 
+        } // end if PHYSICAL (location + city)
+
         Spacer(modifier = Modifier.height(20.dp))
 
-        // 5. Shop Category
+        // 6. Shop Category
         val categoryNames = state.selectedCategories.map { stringResource(it.labelRes) }
         val categoryLabel = categoryNames.joinToString(", ")
         DefaultTextField(
@@ -419,9 +466,10 @@ private fun ShopOwnerProfileForm(
             modifier = Modifier.fillMaxWidth(),
         )
 
+        if (state.shopType == ShopType.PHYSICAL) {
         Spacer(modifier = Modifier.height(20.dp))
 
-        // 6. Return Policy
+            // 7. Return Policy
         val returnPolicyLabel = when (state.returnPolicy) {
             ReturnPolicy.EXCHANGE -> stringResource(Res.string.exchange)
             ReturnPolicy.EXCHANGE_AND_RETURN -> stringResource(Res.string.exchange_and_return)
@@ -442,7 +490,7 @@ private fun ShopOwnerProfileForm(
             modifier = Modifier.fillMaxWidth(),
         )
 
-        // 7. Return Period (conditional)
+            // 8. Return Period (conditional)
         if (state.returnPolicy != ReturnPolicy.NOT_AVAILABLE) {
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -467,6 +515,7 @@ private fun ShopOwnerProfileForm(
                 modifier = Modifier.fillMaxWidth(),
             )
         }
+        } // end if PHYSICAL (return policy + period)
 
     }
 }

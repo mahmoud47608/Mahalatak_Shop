@@ -152,6 +152,10 @@
     <string name="category_kids">Kids</string>
     <string name="category_men_shoes">Men Shoes</string>
     <string name="category_women_shoes">Women Shoes</string>
+    <string name="shop_type">Shop Type</string>
+    <string name="physical_shop">Physical Shop</string>
+    <string name="online_shop">Online</string>
+    <string name="select_shop_type">Select Shop Type</string>
     <string name="delivery_type">Delivery Type</string>
     <string name="shop_delivery">Shop Delivery</string>
     <string name="app_delivery">App Delivery</string>

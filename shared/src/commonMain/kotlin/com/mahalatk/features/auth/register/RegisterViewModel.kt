@@ -32,6 +32,10 @@ class RegisterViewModel(
         }
     }
 
+    fun selectShopType(type: ShopType) {
+        updateState { copy(shopType = type) }
+    }
+
     fun selectCity(city: CityItem) {
         updateState { copy(selectedCity = city, cityError = null) }
     }

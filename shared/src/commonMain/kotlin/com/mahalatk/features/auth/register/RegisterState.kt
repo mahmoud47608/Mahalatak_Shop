@@ -22,6 +22,11 @@ enum class ShopCategory(val labelRes: StringResource) {
     WOMEN_SHOES(Res.string.category_women_shoes),
 }
 
+enum class ShopType {
+    PHYSICAL,
+    ONLINE
+}
+
 enum class ReturnPolicy {
     EXCHANGE,
     EXCHANGE_AND_RETURN,
@@ -47,6 +52,7 @@ data class RegisterState(
     // Shop Owner fields
     val shopName: String = "",
     val ownerName: String = "",
+    val shopType: ShopType = ShopType.PHYSICAL,
     val selectedCategories: Set<ShopCategory> = emptySet(),
     val returnPolicy: ReturnPolicy = ReturnPolicy.EXCHANGE,
     val returnPeriod: ReturnPeriod = ReturnPeriod.DAYS_2,

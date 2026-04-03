@@ -145,6 +145,10 @@
     <string name="category_kids">أطفال</string>
     <string name="category_men_shoes">أحذية رجالي</string>
     <string name="category_women_shoes">أحذية حريمي</string>
+    <string name="shop_type">نوع المحل</string>
+    <string name="physical_shop">محل</string>
+    <string name="online_shop">أون لاين</string>
+    <string name="select_shop_type">اختر نوع المحل</string>
     <string name="delivery_type">نوع التوصيل</string>
     <string name="shop_delivery">توصيل عن طريق المحل</string>
     <string name="app_delivery">توصيل عن طريق التطبيق</string>
