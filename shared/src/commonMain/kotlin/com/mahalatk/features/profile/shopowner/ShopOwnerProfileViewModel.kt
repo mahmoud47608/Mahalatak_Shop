@@ -6,7 +6,6 @@ import com.mahalatk.base.UserDataProvider
 import com.mahalatk.base.managers.LoadingManager
 import com.mahalatk.base.managers.MessageManager
 import com.mahalatk.features.auth.register.CityItem
-import com.mahalatk.features.auth.register.DeliveryType
 import com.mahalatk.features.auth.register.ReturnPeriod
 import com.mahalatk.features.auth.register.ReturnPolicy
 import com.mahalatk.features.auth.register.ShopCategory
@@ -49,10 +48,6 @@ class ShopOwnerProfileViewModel(
             }
             copy(selectedCategories = updated, categoryError = null)
         }
-    }
-
-    fun selectDeliveryType(type: DeliveryType) {
-        updateState { copy(deliveryType = type, deliveryTypeError = null) }
     }
 
     fun selectCity(city: CityItem) {

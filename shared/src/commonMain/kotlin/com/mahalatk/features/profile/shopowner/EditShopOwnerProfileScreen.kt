@@ -13,7 +13,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.LocalShipping
 import androidx.compose.material.icons.filled.Storefront
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -37,7 +36,6 @@ import com.mahalatk.common.component.button.DefaultButton
 import com.mahalatk.common.component.header.ScreenHeader
 import com.mahalatk.common.component.imagepicker.rememberImagePickerLauncher
 import com.mahalatk.common.component.inputs.DefaultTextField
-import com.mahalatk.features.auth.register.DeliveryType
 import com.mahalatk.features.auth.register.LocationResultHolder
 import com.mahalatk.features.auth.register.ReturnPeriod
 import com.mahalatk.features.auth.register.ReturnPolicy
@@ -46,7 +44,6 @@ import com.mahalatk.features.profile.component.ProfileImagePicker
 import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
-import mahalatk.shared.generated.resources.app_delivery
 import mahalatk.shared.generated.resources.edit_profile
 import mahalatk.shared.generated.resources.exchange
 import mahalatk.shared.generated.resources.exchange_and_return
@@ -57,12 +54,10 @@ import mahalatk.shared.generated.resources.not_available_policy
 import mahalatk.shared.generated.resources.owner_name
 import mahalatk.shared.generated.resources.save
 import mahalatk.shared.generated.resources.select_city
-import mahalatk.shared.generated.resources.select_delivery_type
 import mahalatk.shared.generated.resources.select_location
 import mahalatk.shared.generated.resources.select_return_period
 import mahalatk.shared.generated.resources.select_return_policy
 import mahalatk.shared.generated.resources.shop_category
-import mahalatk.shared.generated.resources.shop_delivery
 import mahalatk.shared.generated.resources.shop_name
 import mahalatk.shared.generated.resources.upload_shop_logo
 import mahalatk.shared.generated.resources.within_14_days
@@ -82,7 +77,6 @@ fun EditShopOwnerProfileScreen(
     val state by viewModel.uiState.collectAsState()
 
     // Bottom sheet states
-    var showDeliverySheet by remember { mutableStateOf(false) }
     var showCitySheet by remember { mutableStateOf(false) }
     var showCategorySheet by remember { mutableStateOf(false) }
     var showReturnPolicySheet by remember { mutableStateOf(false) }
@@ -324,33 +318,6 @@ fun EditShopOwnerProfileScreen(
                             )
                         }
 
-                        Spacer(modifier = Modifier.height(20.dp))
-
-                        // 8. Delivery Type
-                        val deliveryLabel = when (state.deliveryType) {
-                            DeliveryType.SHOP_DELIVERY -> stringResource(Res.string.shop_delivery)
-                            DeliveryType.APP_DELIVERY -> stringResource(Res.string.app_delivery)
-                            null -> ""
-                        }
-                        DefaultTextField(
-                            value = deliveryLabel,
-                            onValueChanged = {},
-                            placeholderText = stringResource(Res.string.select_delivery_type),
-                            isEnabled = false,
-                            onClick = { showDeliverySheet = true },
-                            errorText = state.deliveryTypeError?.let { stringResource(it) },
-                            leadingIcon = {
-                                Icon(Icons.Filled.LocalShipping, null, tint = MahalatkTheme.primary)
-                            },
-                            trailingIcon = {
-                                Icon(
-                                    Icons.Filled.KeyboardArrowDown,
-                                    null,
-                                    tint = MahalatkTheme.primary
-                                )
-                            },
-                            modifier = Modifier.fillMaxWidth(),
-                        )
                     }
                 }
             }
@@ -369,21 +336,6 @@ fun EditShopOwnerProfileScreen(
     }
 
     // ─── Bottom Sheets ─────────────────────────────────────
-
-    SingleSelectBottomSheet(
-        showBottomSheet = showDeliverySheet,
-        title = stringResource(Res.string.select_delivery_type),
-        items = DeliveryType.entries.toList(),
-        selectedItem = state.deliveryType,
-        itemLabel = { type ->
-            when (type) {
-                DeliveryType.SHOP_DELIVERY -> stringResource(Res.string.shop_delivery)
-                DeliveryType.APP_DELIVERY -> stringResource(Res.string.app_delivery)
-            }
-        },
-        onItemSelected = { viewModel.selectDeliveryType(it) },
-        onDismiss = { showDeliverySheet = false },
-    )
 
     SingleSelectBottomSheet(
         showBottomSheet = showCitySheet,

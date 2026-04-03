@@ -17,9 +17,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.LocalShipping
 import androidx.compose.material.icons.filled.Storefront
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -66,7 +64,6 @@ import com.mahalatk.common.component.utilis.noRippleClickable
 import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.already_have_account
-import mahalatk.shared.generated.resources.app_delivery
 import mahalatk.shared.generated.resources.confirm_password
 import mahalatk.shared.generated.resources.employee
 import mahalatk.shared.generated.resources.employee_name
@@ -85,13 +82,11 @@ import mahalatk.shared.generated.resources.password
 import mahalatk.shared.generated.resources.phone
 import mahalatk.shared.generated.resources.register
 import mahalatk.shared.generated.resources.select_city
-import mahalatk.shared.generated.resources.select_delivery_type
 import mahalatk.shared.generated.resources.select_location
 import mahalatk.shared.generated.resources.select_return_period
 import mahalatk.shared.generated.resources.select_return_policy
 import mahalatk.shared.generated.resources.select_shop
 import mahalatk.shared.generated.resources.shop_category
-import mahalatk.shared.generated.resources.shop_delivery
 import mahalatk.shared.generated.resources.shop_name
 import mahalatk.shared.generated.resources.shop_owner
 import mahalatk.shared.generated.resources.sign_in
@@ -113,7 +108,6 @@ fun RegisterScreen(
     onNavigateToActivation: (phoneNumber: String) -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    var showDeliverySheet by remember { mutableStateOf(false) }
     var showCitySheet by remember { mutableStateOf(false) }
     var showShopSheet by remember { mutableStateOf(false) }
     var showCategorySheet by remember { mutableStateOf(false) }
@@ -228,7 +222,6 @@ fun RegisterScreen(
                             uiState = uiState,
                             viewModel = viewModel,
                             onPickImage = pickImage,
-                            onShowDeliverySheet = { showDeliverySheet = true },
                             onShowCitySheet = { showCitySheet = true },
                             onShowCategorySheet = { showCategorySheet = true },
                             onShowReturnPolicySheet = { showReturnPolicySheet = true },
@@ -378,32 +371,6 @@ fun RegisterScreen(
 
     // Bottom Sheets
     SingleSelectBottomSheet(
-        showBottomSheet = showDeliverySheet,
-        title = stringResource(Res.string.select_delivery_type),
-        items = DeliveryType.entries.toList(),
-        selectedItem = uiState.deliveryType,
-        itemLabel = { type ->
-            when (type) {
-                DeliveryType.SHOP_DELIVERY -> stringResource(Res.string.shop_delivery)
-                DeliveryType.APP_DELIVERY -> stringResource(Res.string.app_delivery)
-            }
-        },
-        onItemSelected = { viewModel.selectDeliveryType(it) },
-        onDismiss = { showDeliverySheet = false },
-        leadingIcon = { type, isSelected ->
-            val icon = when (type) {
-                DeliveryType.SHOP_DELIVERY -> Icons.Filled.LocalShipping
-                DeliveryType.APP_DELIVERY -> Icons.Filled.DirectionsCar
-            }
-            Icon(
-                icon, null,
-                modifier = Modifier.size(28.dp),
-                tint = if (isSelected) MahalatkTheme.primary else MahalatkTheme.hint
-            )
-        }
-    )
-
-    SingleSelectBottomSheet(
         showBottomSheet = showCitySheet,
         title = stringResource(Res.string.select_city),
         items = uiState.availableCities,
@@ -475,7 +442,6 @@ private fun ShopOwnerForm(
     uiState: RegisterState,
     viewModel: RegisterViewModel,
     onPickImage: () -> Unit,
-    onShowDeliverySheet: () -> Unit,
     onShowCitySheet: () -> Unit,
     onShowCategorySheet: () -> Unit,
     onShowReturnPolicySheet: () -> Unit,
@@ -717,38 +683,6 @@ private fun ShopOwnerForm(
             )
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
-
-        // 9. Delivery Type
-        val deliveryLabel = when (uiState.deliveryType) {
-            DeliveryType.SHOP_DELIVERY -> stringResource(Res.string.shop_delivery)
-            DeliveryType.APP_DELIVERY -> stringResource(Res.string.app_delivery)
-            null -> ""
-        }
-
-        DefaultTextField(
-            value = deliveryLabel,
-            onValueChanged = {},
-            placeholderText = stringResource(Res.string.select_delivery_type),
-            isEnabled = false,
-            onClick = { onShowDeliverySheet() },
-            errorText = uiState.deliveryTypeError?.let { stringResource(it) },
-            leadingIcon = {
-                Icon(
-                    Icons.Filled.LocalShipping,
-                    null,
-                    tint = MahalatkTheme.primary
-                )
-            },
-            trailingIcon = {
-                Icon(
-                    imageVector = Icons.Filled.KeyboardArrowDown,
-                    contentDescription = null,
-                    tint = MahalatkTheme.primary,
-                )
-            },
-            modifier = Modifier.fillMaxWidth()
-        )
     }
 }
 

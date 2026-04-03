@@ -22,11 +22,6 @@ enum class ShopCategory(val labelRes: StringResource) {
     WOMEN_SHOES(Res.string.category_women_shoes),
 }
 
-enum class DeliveryType {
-    SHOP_DELIVERY,
-    APP_DELIVERY
-}
-
 enum class ReturnPolicy {
     EXCHANGE,
     EXCHANGE_AND_RETURN,
@@ -55,7 +50,6 @@ data class RegisterState(
     val selectedCategories: Set<ShopCategory> = emptySet(),
     val returnPolicy: ReturnPolicy = ReturnPolicy.EXCHANGE,
     val returnPeriod: ReturnPeriod = ReturnPeriod.DAYS_2,
-    val deliveryType: DeliveryType? = null,
     val shopImage: ByteArray? = null,
     val selectedCity: CityItem? = null,
     val locationAddress: String = "",
@@ -78,7 +72,6 @@ data class RegisterState(
     val shopNameError: StringResource? = null,
     val ownerNameError: StringResource? = null,
     val categoryError: StringResource? = null,
-    val deliveryTypeError: StringResource? = null,
     val cityError: StringResource? = null,
     val locationError: StringResource? = null,
     val employeeNameError: StringResource? = null,

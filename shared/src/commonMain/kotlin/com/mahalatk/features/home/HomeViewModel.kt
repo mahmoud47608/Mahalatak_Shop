@@ -24,7 +24,6 @@ data class HomeState(
     val userName: String = "Ahmed Mohamed",
     val userImage: String = "",
     val receiveNewOrders: Boolean = true,
-    val selfDelivery: Boolean = false,
     val completedOrders: Int = 35,
     val cancelledOrders: Int = 18,
     val newOrders: List<OrderItem> = listOf(
@@ -62,7 +61,4 @@ class HomeViewModel(
         _uiState.update { it.copy(receiveNewOrders = enabled) }
     }
 
-    fun toggleSelfDelivery(enabled: Boolean) {
-        _uiState.update { it.copy(selfDelivery = enabled) }
-    }
 }

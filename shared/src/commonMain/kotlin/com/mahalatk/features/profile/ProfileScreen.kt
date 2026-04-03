@@ -13,7 +13,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.LocalShipping
 import androidx.compose.material.icons.filled.Storefront
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -42,7 +41,6 @@ import com.mahalatk.common.component.button.DefaultButton
 import com.mahalatk.common.component.header.ScreenHeader
 import com.mahalatk.common.component.imagepicker.rememberImagePickerLauncher
 import com.mahalatk.common.component.inputs.DefaultTextField
-import com.mahalatk.features.auth.register.DeliveryType
 import com.mahalatk.features.auth.register.LocationResultHolder
 import com.mahalatk.features.auth.register.ReturnPeriod
 import com.mahalatk.features.auth.register.ReturnPolicy
@@ -53,7 +51,6 @@ import com.mahalatk.features.profile.shopowner.ShopOwnerProfileViewModel
 import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
-import mahalatk.shared.generated.resources.app_delivery
 import mahalatk.shared.generated.resources.employee
 import mahalatk.shared.generated.resources.employee_name
 import mahalatk.shared.generated.resources.exchange
@@ -66,13 +63,11 @@ import mahalatk.shared.generated.resources.owner_name
 import mahalatk.shared.generated.resources.profile
 import mahalatk.shared.generated.resources.save
 import mahalatk.shared.generated.resources.select_city
-import mahalatk.shared.generated.resources.select_delivery_type
 import mahalatk.shared.generated.resources.select_location
 import mahalatk.shared.generated.resources.select_return_period
 import mahalatk.shared.generated.resources.select_return_policy
 import mahalatk.shared.generated.resources.select_shop
 import mahalatk.shared.generated.resources.shop_category
-import mahalatk.shared.generated.resources.shop_delivery
 import mahalatk.shared.generated.resources.shop_name
 import mahalatk.shared.generated.resources.shop_owner
 import mahalatk.shared.generated.resources.upload_personal_photo
@@ -98,7 +93,6 @@ fun ProfileScreen(
     var selectedTabIndex by remember { mutableStateOf(0) } // 0 = Shop Owner (default)
 
     // Bottom sheet states
-    var showDeliverySheet by remember { mutableStateOf(false) }
     var showCitySheet by remember { mutableStateOf(false) }
     var showCategorySheet by remember { mutableStateOf(false) }
     var showReturnPolicySheet by remember { mutableStateOf(false) }
@@ -190,7 +184,6 @@ fun ProfileScreen(
                                 state = shopOwnerState,
                                 viewModel = shopOwnerViewModel,
                                 onPickImage = shopPickImage,
-                                onShowDeliverySheet = { showDeliverySheet = true },
                                 onShowCitySheet = { showCitySheet = true },
                                 onShowCategorySheet = { showCategorySheet = true },
                                 onShowReturnPolicySheet = { showReturnPolicySheet = true },
@@ -228,21 +221,6 @@ fun ProfileScreen(
     }
 
     // ─── Bottom Sheets ─────────────────────────────────────
-
-    SingleSelectBottomSheet(
-        showBottomSheet = showDeliverySheet,
-        title = stringResource(Res.string.select_delivery_type),
-        items = DeliveryType.entries.toList(),
-        selectedItem = shopOwnerState.deliveryType,
-        itemLabel = { type ->
-            when (type) {
-                DeliveryType.SHOP_DELIVERY -> stringResource(Res.string.shop_delivery)
-                DeliveryType.APP_DELIVERY -> stringResource(Res.string.app_delivery)
-            }
-        },
-        onItemSelected = { shopOwnerViewModel.selectDeliveryType(it) },
-        onDismiss = { showDeliverySheet = false },
-    )
 
     SingleSelectBottomSheet(
         showBottomSheet = showCitySheet,
@@ -316,7 +294,6 @@ private fun ShopOwnerProfileForm(
     state: com.mahalatk.features.profile.shopowner.ShopOwnerProfileState,
     viewModel: ShopOwnerProfileViewModel,
     onPickImage: () -> Unit,
-    onShowDeliverySheet: () -> Unit,
     onShowCitySheet: () -> Unit,
     onShowCategorySheet: () -> Unit,
     onShowReturnPolicySheet: () -> Unit,
@@ -491,29 +468,6 @@ private fun ShopOwnerProfileForm(
             )
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
-
-        // 8. Delivery Type
-        val deliveryLabel = when (state.deliveryType) {
-            DeliveryType.SHOP_DELIVERY -> stringResource(Res.string.shop_delivery)
-            DeliveryType.APP_DELIVERY -> stringResource(Res.string.app_delivery)
-            null -> ""
-        }
-        DefaultTextField(
-            value = deliveryLabel,
-            onValueChanged = {},
-            placeholderText = stringResource(Res.string.select_delivery_type),
-            isEnabled = false,
-            onClick = { onShowDeliverySheet() },
-            errorText = state.deliveryTypeError?.let { stringResource(it) },
-            leadingIcon = {
-                Icon(Icons.Filled.LocalShipping, null, tint = MahalatkTheme.primary)
-            },
-            trailingIcon = {
-                Icon(Icons.Filled.KeyboardArrowDown, null, tint = MahalatkTheme.primary)
-            },
-            modifier = Modifier.fillMaxWidth(),
-        )
     }
 }
 

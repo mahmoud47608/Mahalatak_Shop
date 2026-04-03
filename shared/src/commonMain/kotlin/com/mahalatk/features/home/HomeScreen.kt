@@ -51,12 +51,10 @@ import mahalatk.shared.generated.resources.completed_orders
 import mahalatk.shared.generated.resources.hello
 import mahalatk.shared.generated.resources.ic_cancel_circle
 import mahalatk.shared.generated.resources.ic_check_circle
-import mahalatk.shared.generated.resources.ic_delivery
 import mahalatk.shared.generated.resources.ic_notification
 import mahalatk.shared.generated.resources.ic_orders
 import mahalatk.shared.generated.resources.new_orders
 import mahalatk.shared.generated.resources.receive_new_orders
-import mahalatk.shared.generated.resources.self_delivery
 import mahalatk.shared.generated.resources.statistics
 import mahalatk.shared.generated.resources.today
 import mahalatk.shared.generated.resources.unavailable
@@ -170,17 +168,6 @@ fun HomeScreen(
                     else stringResource(Res.string.unavailable),
                     isChecked = state.receiveNewOrders,
                     onToggle = viewModel::toggleReceiveOrders,
-                )
-            }
-
-            item {
-                ToggleCard(
-                    icon = Res.drawable.ic_delivery,
-                    title = stringResource(Res.string.self_delivery),
-                    subtitle = if (state.selfDelivery) stringResource(Res.string.available)
-                    else stringResource(Res.string.unavailable),
-                    isChecked = state.selfDelivery,
-                    onToggle = viewModel::toggleSelfDelivery,
                 )
             }
 

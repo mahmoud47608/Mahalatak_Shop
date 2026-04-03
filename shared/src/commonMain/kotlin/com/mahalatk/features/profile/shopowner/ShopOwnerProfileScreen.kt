@@ -13,7 +13,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.LocalShipping
 import androidx.compose.material.icons.filled.Storefront
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -29,14 +28,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.mahalatk.common.component.header.ScreenHeader
 import com.mahalatk.common.component.inputs.DefaultTextField
-import com.mahalatk.features.auth.register.DeliveryType
 import com.mahalatk.features.auth.register.ReturnPeriod
 import com.mahalatk.features.auth.register.ReturnPolicy
 import com.mahalatk.features.profile.component.ProfileImagePicker
 import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
-import mahalatk.shared.generated.resources.app_delivery
 import mahalatk.shared.generated.resources.exchange
 import mahalatk.shared.generated.resources.exchange_and_return
 import mahalatk.shared.generated.resources.ic_city
@@ -46,12 +43,10 @@ import mahalatk.shared.generated.resources.not_available_policy
 import mahalatk.shared.generated.resources.owner_name
 import mahalatk.shared.generated.resources.profile
 import mahalatk.shared.generated.resources.select_city
-import mahalatk.shared.generated.resources.select_delivery_type
 import mahalatk.shared.generated.resources.select_location
 import mahalatk.shared.generated.resources.select_return_period
 import mahalatk.shared.generated.resources.select_return_policy
 import mahalatk.shared.generated.resources.shop_category
-import mahalatk.shared.generated.resources.shop_delivery
 import mahalatk.shared.generated.resources.shop_name
 import mahalatk.shared.generated.resources.upload_shop_logo
 import mahalatk.shared.generated.resources.within_14_days
@@ -270,31 +265,6 @@ fun ShopOwnerProfileScreen(
                             )
                         }
 
-                        Spacer(modifier = Modifier.height(20.dp))
-
-                        // Delivery Type
-                        val deliveryLabel = when (uiState.deliveryType) {
-                            DeliveryType.SHOP_DELIVERY -> stringResource(Res.string.shop_delivery)
-                            DeliveryType.APP_DELIVERY -> stringResource(Res.string.app_delivery)
-                            null -> ""
-                        }
-                        DefaultTextField(
-                            value = deliveryLabel,
-                            onValueChanged = {},
-                            placeholderText = stringResource(Res.string.select_delivery_type),
-                            isEnabled = false,
-                            leadingIcon = {
-                                Icon(Icons.Filled.LocalShipping, null, tint = MahalatkTheme.primary)
-                            },
-                            trailingIcon = {
-                                Icon(
-                                    Icons.Filled.KeyboardArrowDown,
-                                    null,
-                                    tint = MahalatkTheme.primary
-                                )
-                            },
-                            modifier = Modifier.fillMaxWidth(),
-                        )
                     }
                 }
             }

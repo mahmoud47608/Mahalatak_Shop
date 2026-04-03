@@ -2,7 +2,6 @@ package com.mahalatk.features.profile.shopowner
 
 import androidx.compose.runtime.Immutable
 import com.mahalatk.features.auth.register.CityItem
-import com.mahalatk.features.auth.register.DeliveryType
 import com.mahalatk.features.auth.register.ReturnPeriod
 import com.mahalatk.features.auth.register.ReturnPolicy
 import com.mahalatk.features.auth.register.ShopCategory
@@ -16,7 +15,6 @@ data class ShopOwnerProfileState(
     val selectedCategories: Set<ShopCategory> = emptySet(),
     val returnPolicy: ReturnPolicy = ReturnPolicy.EXCHANGE,
     val returnPeriod: ReturnPeriod = ReturnPeriod.DAYS_2,
-    val deliveryType: DeliveryType? = null,
     val shopImage: ByteArray? = null,
     val shopImageUrl: String = "",
     val selectedCity: CityItem? = null,
@@ -28,7 +26,6 @@ data class ShopOwnerProfileState(
     val shopNameError: StringResource? = null,
     val ownerNameError: StringResource? = null,
     val categoryError: StringResource? = null,
-    val deliveryTypeError: StringResource? = null,
     val cityError: StringResource? = null,
     val locationError: StringResource? = null,
     val imageError: StringResource? = null,

@@ -32,10 +32,6 @@ class RegisterViewModel(
         }
     }
 
-    fun selectDeliveryType(type: DeliveryType) {
-        updateState { copy(deliveryType = type, deliveryTypeError = null) }
-    }
-
     fun selectCity(city: CityItem) {
         updateState { copy(selectedCity = city, cityError = null) }
     }
