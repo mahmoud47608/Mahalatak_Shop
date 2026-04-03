@@ -142,26 +142,6 @@ fun AddProductScreen(
 
             val part1Locked = state.isPart1Locked
 
-            // ── Season Selector (Single Select) ──
-            DefaultTextField(
-                value = state.selectedSeason,
-                onValueChanged = {},
-                placeholderText = stringResource(Res.string.select_season),
-                isEnabled = false,
-                onClick = { if (!part1Locked) showSeasonSheet = true },
-                errorText = state.seasonError?.let { stringResource(it) },
-                trailingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.KeyboardArrowDown,
-                        contentDescription = null,
-                        tint = MahalatkTheme.primary,
-                    )
-                },
-                modifier = Modifier.fillMaxWidth(),
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
             // ── Category Selector (Single Select) ──
             val categoryLabel = state.selectedCategory?.name ?: ""
             DefaultTextField(
@@ -217,6 +197,29 @@ fun AddProductScreen(
                 },
                 modifier = Modifier.fillMaxWidth(),
             )
+
+            // ── Season Selector (only for non-shoes categories) ──
+            val showSeason = state.selectedCategory?.id != 4
+            if (showSeason) {
+                Spacer(modifier = Modifier.height(16.dp))
+
+                DefaultTextField(
+                    value = state.selectedSeason,
+                    onValueChanged = {},
+                    placeholderText = stringResource(Res.string.select_season),
+                    isEnabled = false,
+                    onClick = { if (!part1Locked) showSeasonSheet = true },
+                    errorText = state.seasonError?.let { stringResource(it) },
+                    trailingIcon = {
+                        Icon(
+                            imageVector = Icons.Filled.KeyboardArrowDown,
+                            contentDescription = null,
+                            tint = MahalatkTheme.primary,
+                        )
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
 

@@ -52,7 +52,7 @@ data class AddProductState(
     // ── Data from repository ──
     val availableCategories: List<CategoryData> = DEFAULT_CATEGORIES,
     val availableSubCategories: List<SubCategoryData> = emptyList(),
-    val availableSeasons: List<String> = listOf("صيفي", "شتوي"),
+    val availableSeasons: List<String> = listOf("صيفي", "شتوي", "كلاهما"),
     val availableColors: List<String> = listOf(
         "أحمر", "أزرق", "أسود", "أبيض", "أخضر", "أصفر", "بني", "رمادي", "برتقالي", "وردي",
     ),
@@ -91,9 +91,9 @@ data class AddProductState(
 // ── Default dummy data ──
 
 private val DEFAULT_CATEGORIES = listOf(
-    CategoryData(id = 1, name = "رجالي"),
-    CategoryData(id = 2, name = "حريمي"),
-    CategoryData(id = 3, name = "أطفالي"),
+    CategoryData(id = 1, name = "ملابس رجالي"),
+    CategoryData(id = 2, name = "ملابس حريمي"),
+    CategoryData(id = 3, name = "ملابس أطفالي"),
     CategoryData(id = 4, name = "أحذية"),
 )
 

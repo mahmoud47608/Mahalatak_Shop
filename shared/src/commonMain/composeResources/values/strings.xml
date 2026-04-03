@@ -147,9 +147,9 @@
     <string name="owner_name">Owner Name</string>
     <string name="shop_logo">Shop Logo</string>
     <string name="shop_category">Shop Category</string>
-    <string name="category_men">Men</string>
-    <string name="category_women">Women</string>
-    <string name="category_kids">Kids</string>
+    <string name="category_men">Men Clothing</string>
+    <string name="category_women">Women Clothing</string>
+    <string name="category_kids">Kids Clothing</string>
     <string name="category_men_shoes">Men Shoes</string>
     <string name="category_women_shoes">Women Shoes</string>
     <string name="shop_type">Shop Type</string>

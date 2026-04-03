@@ -140,9 +140,9 @@
     <string name="owner_name">اسم صاحب المحل</string>
     <string name="shop_logo">لوجو المحل</string>
     <string name="shop_category">تصنيف المحل</string>
-    <string name="category_men">رجالي</string>
-    <string name="category_women">حريمي</string>
-    <string name="category_kids">أطفال</string>
+    <string name="category_men">ملابس رجالي</string>
+    <string name="category_women">ملابس حريمي</string>
+    <string name="category_kids">ملابس أطفال</string>
     <string name="category_men_shoes">أحذية رجالي</string>
     <string name="category_women_shoes">أحذية حريمي</string>
     <string name="shop_type">نوع المحل</string>

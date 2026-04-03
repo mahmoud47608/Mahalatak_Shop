@@ -52,6 +52,9 @@ class AddProductViewModel(
                 availableSubCategories = DEFAULT_SUB_CATEGORIES.filter { it.categoryId == category.id },
                 selectedSubCategory = null,
                 subCategoryError = null,
+                // Clear season when switching to shoes (id=4)
+                selectedSeason = if (category.id == 4) "" else selectedSeason,
+                seasonError = null,
             )
         }
     }
@@ -121,7 +124,7 @@ class AddProductViewModel(
 
         // Validate Part 1 on first piece
         if (state.pieces.isEmpty()) {
-            if (state.selectedSeason.isBlank()) {
+            if (state.selectedCategory?.id != 4 && state.selectedSeason.isBlank()) {
                 updateState { copy(seasonError = Res.string.please_select_season) }
                 hasError = true
             }
@@ -241,7 +244,7 @@ class AddProductViewModel(
         var hasError = false
 
         // Validate Part 1
-        if (state.selectedSeason.isBlank()) {
+        if (state.selectedCategory?.id != 4 && state.selectedSeason.isBlank()) {
             updateState { copy(seasonError = Res.string.please_select_season) }
             hasError = true
         }
