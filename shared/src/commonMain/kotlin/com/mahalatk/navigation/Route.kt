@@ -52,6 +52,13 @@ sealed interface Route {
     data object PrivacyPolicy : Route
 }
 
+// ─── Route Helpers ──────────────────────
+
+/** True for the 5 bottom-nav tab routes. */
+val Route.isTabRoute: Boolean
+    get() = this is Route.Home || this is Route.Products ||
+            this is Route.Orders || this is Route.Chat || this is Route.Account
+
 /** True for screens that show the auth background image. */
 val Route.isAuthScreen: Boolean
     get() = when (this) {

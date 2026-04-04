@@ -26,6 +26,7 @@ import com.mahalatk.features.more.TermsScreen
 import com.mahalatk.features.notifications.NotificationsScreen
 import com.mahalatk.features.offers.OffersScreen
 import com.mahalatk.features.offers.add.AddOfferScreen
+import com.mahalatk.features.orders.detail.OrderDetailScreen
 import com.mahalatk.features.products.add.AddProductScreen
 import com.mahalatk.features.profile.ProfileScreen
 import com.mahalatk.features.profile.employee.EditEmployeeProfileScreen
@@ -56,292 +57,295 @@ fun NavigationHost() {
         ),
         entryProvider = { route ->
             when (route) {
-                // ─── Auth ────────────────────────────────
-                is Route.Splash -> NavEntry(route) {
-                    SplashScreen(
-                        onNavigateToLogin = { navigator.replaceAll(Route.Login) },
-                        onNavigateToHome = { navigator.replaceAll(Route.Home) },
-                    )
-                }
+                is Route.Splash, is Route.Login, is Route.Register,
+                is Route.Activation, is Route.ForgotPassword,
+                is Route.ResetPassword, is Route.PickLocation,
+                    -> authEntry(route, navigator)
 
-                is Route.Login -> NavEntry(route) {
-                    LoginScreen(
-                        onNavigateToHome = { navigator.replaceAll(Route.Home) },
-                        onNavigateToSignUp = { navigator.push(Route.Register) },
-                        onNavigateToForgotPassword = { navigator.push(Route.ForgotPassword) },
-                    )
-                }
+                is Route.OrderDetail, is Route.ChatDetail,
+                is Route.Notifications, is Route.AddProduct,
+                    -> detailEntry(route, navigator)
 
-                is Route.Register -> NavEntry(route) {
-                    RegisterScreen(
-                        onNavigateToLogin = { navigator.pop() },
-                        onNavigateToPickLocation = { navigator.push(Route.PickLocation) },
-                        onNavigateToActivation = { phone ->
-                            navigator.push(Route.Activation(phone))
-                        },
-                    )
-                }
+                is Route.Profile, is Route.ShopOwnerProfile,
+                is Route.EmployeeProfile, is Route.EditShopOwnerProfile,
+                is Route.EditEmployeeProfile,
+                    -> profileEntry(route, navigator)
 
-                is Route.Activation -> NavEntry(route) {
-                    when {
-                        route.isFromForgotPassword -> {
-                            ActivationScreen(
-                                phoneNumber = route.phoneNumber,
-                                onVerified = {
-                                    navigator.replace(Route.ResetPassword(route.phoneNumber))
-                                },
-                            )
-                        }
+                is Route.Settings, is Route.ChangePhone,
+                is Route.NewPhone, is Route.ChangePassword,
+                    -> settingsEntry(route, navigator)
 
-                        route.isFromChangePhone -> {
-                            // Verified current phone → go to enter new phone
-                            ActivationScreen(
-                                phoneNumber = route.phoneNumber,
-                                headerTitle = stringResource(Res.string.change_phone_title),
-                                onBack = { navigator.pop() },
-                                onVerified = {
-                                    navigator.replace(Route.NewPhone)
-                                },
-                            )
-                        }
+                is Route.Employees, is Route.EmployeeRequests,
+                is Route.EmployeesList, is Route.AddEmployee,
+                is Route.Complaints, is Route.MyRatings,
+                is Route.Offers, is Route.AddOffer,
+                is Route.Coupons, is Route.AddCoupon,
+                is Route.About, is Route.Terms, is Route.PrivacyPolicy,
+                    -> moreEntry(route, navigator)
 
-                        route.isFromNewPhone -> {
-                            // Verified new phone → show success then go back to settings
-                            ActivationScreen(
-                                phoneNumber = route.phoneNumber,
-                                showSuccessOnVerify = true,
-                                successMessage = "Phone number changed successfully!",
-                                headerTitle = stringResource(Res.string.change_phone_title),
-                                onBack = { navigator.pop() },
-                                onVerified = {
-                                    // Pop back to settings
-                                    navigator.popUntil { it is Route.Settings }
-                                },
-                            )
-                        }
-
-                        else -> {
-                            // Registration flow → show success then go Home
-                            ActivationScreen(
-                                phoneNumber = route.phoneNumber,
-                                showSuccessOnVerify = true,
-                                successMessage = "Registration request sent successfully!",
-                                onVerified = { navigator.replaceAll(Route.Home) },
-                            )
-                        }
-                    }
-                }
-
-                // ─── Forgot Password Flow ────────────────
-                is Route.ForgotPassword -> NavEntry(route) {
-                    ForgotPasswordScreen(
-                        onSendCode = { phone ->
-                            navigator.push(
-                                Route.Activation(phone, isFromForgotPassword = true)
-                            )
-                        },
-                    )
-                }
-
-                is Route.ResetPassword -> NavEntry(route) {
-                    ResetPasswordScreen(
-                        onSuccess = { navigator.replaceAll(Route.Login) },
-                    )
-                }
-
-                is Route.PickLocation -> NavEntry(route) {
-                    PickLocationScreen(
-                        onBackWithResult = { lat, lng, address ->
-                            LocationResultHolder.setResult(lat, lng, address)
-                            navigator.pop()
-                        },
-                        onBack = { navigator.pop() },
-                    )
-                }
-
-                // ─── Notifications ───────────────────────
-                is Route.Notifications -> NavEntry(route) {
-                    NotificationsScreen(onBack = { navigator.pop() })
-                }
-
-                // ─── Order Detail ───────────────────────
-                is Route.OrderDetail -> NavEntry(route) {
-                    com.mahalatk.features.orders.detail.OrderDetailScreen(
-                        orderId = route.orderId,
-                        onBack = { navigator.pop() },
-                    )
-                }
-
-                // ─── Chat Detail ─────────────────────────
-                is Route.ChatDetail -> NavEntry(route) {
-                    ChatDetailScreen(
-                        chatId = route.chatId,
-                        customerName = route.customerName,
-                        onBack = { navigator.pop() },
-                    )
-                }
-
-                // ─── Add Product ────────────────────────
-                is Route.AddProduct -> NavEntry(route) {
-                    AddProductScreen(onBack = { navigator.pop() })
-                }
-
-                // ─── Edit Profile (Unified with tabs) ────────
-                is Route.Profile -> NavEntry(route) {
-                    ProfileScreen(
-                        onBack = { navigator.pop() },
-                        onNavigateToPickLocation = { navigator.push(Route.PickLocation) },
-                    )
-                }
-
-                // ─── Shop Owner Profile (read-only) ──────────
-                is Route.ShopOwnerProfile -> NavEntry(route) {
-                    ShopOwnerProfileScreen(
-                        onBack = { navigator.pop() },
-                    )
-                }
-
-                // ─── Employee Profile (read-only) ────────────
-                is Route.EmployeeProfile -> NavEntry(route) {
-                    EmployeeProfileScreen(
-                        onBack = { navigator.pop() },
-                    )
-                }
-
-                // ─── Edit Shop Owner Profile ────────────────
-                is Route.EditShopOwnerProfile -> NavEntry(route) {
-                    EditShopOwnerProfileScreen(
-                        onBack = { navigator.pop() },
-                        onNavigateToPickLocation = { navigator.push(Route.PickLocation) },
-                    )
-                }
-
-                // ─── Edit Employee Profile ──────────────────
-                is Route.EditEmployeeProfile -> NavEntry(route) {
-                    EditEmployeeProfileScreen(
-                        onBack = { navigator.pop() },
-                    )
-                }
-
-                // ─── Change Phone ─────────────────────────
-                is Route.ChangePhone -> NavEntry(route) {
-                    ChangePhoneScreen(
-                        onBack = { navigator.pop() },
-                        onConfirm = { phone ->
-                            navigator.push(Route.Activation(phone, isFromChangePhone = true))
-                        },
-                    )
-                }
-
-                // ─── New Phone ────────────────────────────
-                is Route.NewPhone -> NavEntry(route) {
-                    NewPhoneScreen(
-                        onBack = { navigator.pop() },
-                        onConfirm = { newPhone ->
-                            navigator.push(Route.Activation(newPhone, isFromNewPhone = true))
-                        },
-                    )
-                }
-
-                // ─── Change Password ─────────────────────
-                is Route.ChangePassword -> NavEntry(route) {
-                    ChangePasswordScreen(
-                        onBack = { navigator.pop() },
-                    )
-                }
-
-                // ─── Settings ─────────────────────────────
-                is Route.Settings -> NavEntry(route) {
-                    SettingsScreen(
-                        onBack = { navigator.pop() },
-                        onEditProfile = { navigator.push(Route.EditShopOwnerProfile) },
-                        onChangePhoneNumber = { navigator.push(Route.ChangePhone) },
-                        onChangePassword = { navigator.push(Route.ChangePassword) },
-                    )
-                }
-
-                // ─── Complaints ──────────────────────────
-                is Route.Complaints -> NavEntry(route) {
-                    ComplaintsScreen(onBack = { navigator.pop() })
-                }
-
-                // ─── My Ratings ──────────────────────────
-                is Route.MyRatings -> NavEntry(route) {
-                    MyRatingsScreen(onBack = { navigator.pop() })
-                }
-
-                // ─── Employees Hub ───────────────────────
-                is Route.Employees -> NavEntry(route) {
-                    EmployeesHubScreen(
-                        onBack = { navigator.pop() },
-                        onEmployeeRequests = { navigator.push(Route.EmployeeRequests) },
-                        onEmployeesList = { navigator.push(Route.EmployeesList) },
-                    )
-                }
-
-                // ─── Employee Requests (applicants) ─────
-                is Route.EmployeeRequests -> NavEntry(route) {
-                    EmployeesScreen(onBack = { navigator.pop() })
-                }
-
-                // ─── Employees List ─────────────────────
-                is Route.EmployeesList -> NavEntry(route) {
-                    EmployeesListScreen(
-                        onBack = { navigator.pop() },
-                        onAddEmployee = { navigator.push(Route.AddEmployee) },
-                    )
-                }
-
-                // ─── Add Employee ───────────────────────
-                is Route.AddEmployee -> NavEntry(route) {
-                    AddEmployeeScreen(onBack = { navigator.pop() })
-                }
-
-                // ─── About ───────────────────────────────
-                is Route.About -> NavEntry(route) {
-                    AboutScreen(onBack = { navigator.pop() })
-                }
-
-                // ─── Terms & Conditions ──────────────────
-                is Route.Terms -> NavEntry(route) {
-                    TermsScreen(onBack = { navigator.pop() })
-                }
-
-                // ─── Privacy Policy ──────────────────────
-                is Route.PrivacyPolicy -> NavEntry(route) {
-                    PrivacyPolicyScreen(onBack = { navigator.pop() })
-                }
-
-                // ─── Offers ─────────────────────────────
-                is Route.Offers -> NavEntry(route) {
-                    OffersScreen(
-                        onBack = { navigator.pop() },
-                        onAddOffer = { navigator.push(Route.AddOffer) },
-                    )
-                }
-
-                is Route.AddOffer -> NavEntry(route) {
-                    AddOfferScreen(onBack = { navigator.pop() })
-                }
-
-                // ─── Coupons ────────────────────────────
-                is Route.Coupons -> NavEntry(route) {
-                    CouponsScreen(
-                        onBack = { navigator.pop() },
-                        onAddCoupon = { navigator.push(Route.AddCoupon) },
-                    )
-                }
-
-                is Route.AddCoupon -> NavEntry(route) {
-                    AddCouponScreen(onBack = { navigator.pop() })
-                }
-
-                // ─── Main Tabs ───────────────────────────
-                is Route.Home, is Route.Products, is Route.Orders, is Route.Chat,
-                is Route.Account -> NavEntry(route) {
-                    MainNavGraph(route = route)
-                }
+                is Route.Home, is Route.Products, is Route.Orders,
+                is Route.Chat, is Route.Account,
+                    -> NavEntry(route) { MainNavGraph() }
             }
-        }
+        },
     )
+}
+
+// ═══════════════════════════════════════════════════════
+// Auth
+// ═══════════════════════════════════════════════════════
+
+private fun authEntry(route: Route, nav: AppNavigator): NavEntry<Route> = when (route) {
+    is Route.Splash -> NavEntry(route) {
+        SplashScreen(
+            onNavigateToLogin = { nav.replaceAll(Route.Login) },
+            onNavigateToHome = { nav.replaceAll(Route.Home) },
+        )
+    }
+
+    is Route.Login -> NavEntry(route) {
+        LoginScreen(
+            onNavigateToHome = { nav.replaceAll(Route.Home) },
+            onNavigateToSignUp = { nav.push(Route.Register) },
+            onNavigateToForgotPassword = { nav.push(Route.ForgotPassword) },
+        )
+    }
+
+    is Route.Register -> NavEntry(route) {
+        RegisterScreen(
+            onNavigateToLogin = { nav.pop() },
+            onNavigateToPickLocation = { nav.push(Route.PickLocation) },
+            onNavigateToActivation = { phone -> nav.push(Route.Activation(phone)) },
+        )
+    }
+
+    is Route.Activation -> NavEntry(route) {
+        when {
+            route.isFromForgotPassword -> ActivationScreen(
+                phoneNumber = route.phoneNumber,
+                onVerified = { nav.replace(Route.ResetPassword(route.phoneNumber)) },
+            )
+
+            route.isFromChangePhone -> ActivationScreen(
+                phoneNumber = route.phoneNumber,
+                headerTitle = stringResource(Res.string.change_phone_title),
+                onBack = { nav.pop() },
+                onVerified = { nav.replace(Route.NewPhone) },
+            )
+
+            route.isFromNewPhone -> ActivationScreen(
+                phoneNumber = route.phoneNumber,
+                showSuccessOnVerify = true,
+                successMessage = "Phone number changed successfully!",
+                headerTitle = stringResource(Res.string.change_phone_title),
+                onBack = { nav.pop() },
+                onVerified = { nav.popUntil { it is Route.Settings } },
+            )
+
+            else -> ActivationScreen(
+                phoneNumber = route.phoneNumber,
+                showSuccessOnVerify = true,
+                successMessage = "Registration request sent successfully!",
+                onVerified = { nav.replaceAll(Route.Home) },
+            )
+        }
+    }
+
+    is Route.ForgotPassword -> NavEntry(route) {
+        ForgotPasswordScreen(
+            onSendCode = { phone ->
+                nav.push(Route.Activation(phone, isFromForgotPassword = true))
+            },
+        )
+    }
+
+    is Route.ResetPassword -> NavEntry(route) {
+        ResetPasswordScreen(onSuccess = { nav.replaceAll(Route.Login) })
+    }
+
+    is Route.PickLocation -> NavEntry(route) {
+        PickLocationScreen(
+            onBackWithResult = { lat, lng, address ->
+                LocationResultHolder.setResult(lat, lng, address)
+                nav.pop()
+            },
+            onBack = { nav.pop() },
+        )
+    }
+
+    else -> error("Unknown auth route: $route")
+}
+
+// ═══════════════════════════════════════════════════════
+// Detail Screens
+// ═══════════════════════════════════════════════════════
+
+private fun detailEntry(route: Route, nav: AppNavigator): NavEntry<Route> = when (route) {
+    is Route.OrderDetail -> NavEntry(route) {
+        OrderDetailScreen(orderId = route.orderId, onBack = { nav.pop() })
+    }
+
+    is Route.ChatDetail -> NavEntry(route) {
+        ChatDetailScreen(
+            chatId = route.chatId,
+            customerName = route.customerName,
+            onBack = { nav.pop() },
+        )
+    }
+
+    is Route.Notifications -> NavEntry(route) {
+        NotificationsScreen(onBack = { nav.pop() })
+    }
+
+    is Route.AddProduct -> NavEntry(route) {
+        AddProductScreen(onBack = { nav.pop() })
+    }
+
+    else -> error("Unknown detail route: $route")
+}
+
+// ═══════════════════════════════════════════════════════
+// Profile
+// ═══════════════════════════════════════════════════════
+
+private fun profileEntry(route: Route, nav: AppNavigator): NavEntry<Route> = when (route) {
+    is Route.Profile -> NavEntry(route) {
+        ProfileScreen(
+            onBack = { nav.pop() },
+            onNavigateToPickLocation = { nav.push(Route.PickLocation) },
+        )
+    }
+
+    is Route.ShopOwnerProfile -> NavEntry(route) {
+        ShopOwnerProfileScreen(onBack = { nav.pop() })
+    }
+
+    is Route.EmployeeProfile -> NavEntry(route) {
+        EmployeeProfileScreen(onBack = { nav.pop() })
+    }
+
+    is Route.EditShopOwnerProfile -> NavEntry(route) {
+        EditShopOwnerProfileScreen(
+            onBack = { nav.pop() },
+            onNavigateToPickLocation = { nav.push(Route.PickLocation) },
+        )
+    }
+
+    is Route.EditEmployeeProfile -> NavEntry(route) {
+        EditEmployeeProfileScreen(onBack = { nav.pop() })
+    }
+
+    else -> error("Unknown profile route: $route")
+}
+
+// ═══════════════════════════════════════════════════════
+// Settings
+// ═══════════════════════════════════════════════════════
+
+private fun settingsEntry(route: Route, nav: AppNavigator): NavEntry<Route> = when (route) {
+    is Route.Settings -> NavEntry(route) {
+        SettingsScreen(
+            onBack = { nav.pop() },
+            onEditProfile = { nav.push(Route.EditShopOwnerProfile) },
+            onChangePhoneNumber = { nav.push(Route.ChangePhone) },
+            onChangePassword = { nav.push(Route.ChangePassword) },
+        )
+    }
+
+    is Route.ChangePhone -> NavEntry(route) {
+        ChangePhoneScreen(
+            onBack = { nav.pop() },
+            onConfirm = { phone ->
+                nav.push(Route.Activation(phone, isFromChangePhone = true))
+            },
+        )
+    }
+
+    is Route.NewPhone -> NavEntry(route) {
+        NewPhoneScreen(
+            onBack = { nav.pop() },
+            onConfirm = { newPhone ->
+                nav.push(Route.Activation(newPhone, isFromNewPhone = true))
+            },
+        )
+    }
+
+    is Route.ChangePassword -> NavEntry(route) {
+        ChangePasswordScreen(onBack = { nav.pop() })
+    }
+
+    else -> error("Unknown settings route: $route")
+}
+
+// ═══════════════════════════════════════════════════════
+// More (Employees, Complaints, Offers, Coupons, etc.)
+// ═══════════════════════════════════════════════════════
+
+private fun moreEntry(route: Route, nav: AppNavigator): NavEntry<Route> = when (route) {
+    is Route.Employees -> NavEntry(route) {
+        EmployeesHubScreen(
+            onBack = { nav.pop() },
+            onEmployeeRequests = { nav.push(Route.EmployeeRequests) },
+            onEmployeesList = { nav.push(Route.EmployeesList) },
+        )
+    }
+
+    is Route.EmployeeRequests -> NavEntry(route) {
+        EmployeesScreen(onBack = { nav.pop() })
+    }
+
+    is Route.EmployeesList -> NavEntry(route) {
+        EmployeesListScreen(
+            onBack = { nav.pop() },
+            onAddEmployee = { nav.push(Route.AddEmployee) },
+        )
+    }
+
+    is Route.AddEmployee -> NavEntry(route) {
+        AddEmployeeScreen(onBack = { nav.pop() })
+    }
+
+    is Route.Complaints -> NavEntry(route) {
+        ComplaintsScreen(onBack = { nav.pop() })
+    }
+
+    is Route.MyRatings -> NavEntry(route) {
+        MyRatingsScreen(onBack = { nav.pop() })
+    }
+
+    is Route.Offers -> NavEntry(route) {
+        OffersScreen(
+            onBack = { nav.pop() },
+            onAddOffer = { nav.push(Route.AddOffer) },
+        )
+    }
+
+    is Route.AddOffer -> NavEntry(route) {
+        AddOfferScreen(onBack = { nav.pop() })
+    }
+
+    is Route.Coupons -> NavEntry(route) {
+        CouponsScreen(
+            onBack = { nav.pop() },
+            onAddCoupon = { nav.push(Route.AddCoupon) },
+        )
+    }
+
+    is Route.AddCoupon -> NavEntry(route) {
+        AddCouponScreen(onBack = { nav.pop() })
+    }
+
+    is Route.About -> NavEntry(route) {
+        AboutScreen(onBack = { nav.pop() })
+    }
+
+    is Route.Terms -> NavEntry(route) {
+        TermsScreen(onBack = { nav.pop() })
+    }
+
+    is Route.PrivacyPolicy -> NavEntry(route) {
+        PrivacyPolicyScreen(onBack = { nav.pop() })
+    }
+
+    else -> error("Unknown more route: $route")
 }

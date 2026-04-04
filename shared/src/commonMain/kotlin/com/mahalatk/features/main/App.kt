@@ -25,6 +25,7 @@ import com.mahalatk.navigation.BottomNavItem
 import com.mahalatk.navigation.LocalNavigator
 import com.mahalatk.navigation.NavigationHost
 import com.mahalatk.navigation.isAuthScreen
+import com.mahalatk.navigation.isTabRoute
 import com.mahalatk.navigation.rememberAppNavigator
 import com.mahalatk.theme.MahalatkTheme
 import com.mahalatk.util.UIMessage
@@ -43,7 +44,7 @@ fun App(viewModel: MainViewModel = koinViewModel()) {
 
         // derivedStateOf prevents recomposition of the whole tree on every backstack change
         val isTabScreen by remember {
-            derivedStateOf { BottomNavItem.fromRoute(navigator.currentRoute) != null }
+            derivedStateOf { navigator.currentRoute.isTabRoute }
         }
         val showAuthBg by remember {
             derivedStateOf { navigator.currentRoute.isAuthScreen }

@@ -3,28 +3,39 @@ package com.mahalatk.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 
 /**
- * Nav3-style navigator — you own the back stack.
+ * App-level navigator that owns the back stack.
  *
- * The [backStack] is a [SnapshotStateList] passed directly to NavDisplay.
- * NavDisplay + entryDecorators keep ViewModel & saveable state alive
- * for every entry that stays on the stack.
+ * **Tab screens** are tracked via [currentTab] — switching tabs only changes
+ * this state variable, so NavDisplay never destroys/recreates tab screens.
+ *
+ * **Detail screens** are pushed onto [backStack] normally and managed by NavDisplay.
  */
 @Stable
 class AppNavigator(initialRoute: Route = Route.Splash) {
 
-    /** The back stack — Nav3 NavDisplay reads this directly. */
+    /** The back stack — NavDisplay reads this directly. */
     val backStack: SnapshotStateList<Route> = mutableStateListOf(initialRoute)
 
+    /** Currently selected tab — survives tab switches without backStack churn. */
+    var currentTab: Route by mutableStateOf(Route.Home)
+        private set
+
+    /** The top-most route on the back stack. */
     val currentRoute: Route
         get() = backStack.last()
 
     val canGoBack: Boolean
         get() = backStack.size > 1
+
+    // ─── Stack Operations ───────────────────────────
 
     fun push(route: Route) {
         if (backStack.last() == route) return
@@ -44,29 +55,7 @@ class AppNavigator(initialRoute: Route = Route.Splash) {
     fun replaceAll(route: Route) {
         backStack.clear()
         backStack.add(route)
-    }
-
-    /**
-     * Switch bottom-nav tab without destroying other tab states.
-     * Keeps only the first entry (or replaces it) so NavDisplay
-     * can still hold saveable state for previously visited tabs.
-     */
-    fun switchTab(route: Route) {
-        if (backStack.lastOrNull() == route) return
-        // Pop any detail screens back to the tab level, then swap the tab
-        val tabIndex =
-            backStack.indexOfFirst { it is Route.Home || it is Route.Products || it is Route.Orders || it is Route.Chat || it is Route.Account }
-        if (tabIndex >= 0) {
-            // Remove everything above the tab entry
-            while (backStack.size > tabIndex + 1) {
-                backStack.removeAt(backStack.lastIndex)
-            }
-            // Replace the tab
-            backStack[tabIndex] = route
-        } else {
-            backStack.clear()
-            backStack.add(route)
-        }
+        if (route.isTabRoute) currentTab = route
     }
 
     fun popUntil(predicate: (Route) -> Boolean) {
@@ -74,12 +63,40 @@ class AppNavigator(initialRoute: Route = Route.Splash) {
             backStack.removeAt(backStack.lastIndex)
         }
     }
+
+    // ─── Tab Switching ──────────────────────────────
+
+    /**
+     * Switch between the 5 main tabs **without** touching the backStack entry.
+     *
+     * 1. Pop any detail screens above the tab level.
+     * 2. Update [currentTab] — MainNavGraph reads this to show/hide tabs.
+     * 3. Update the backStack entry so NavDisplay and `currentRoute` stay in sync.
+     *
+     * Because the backStack entry type stays a tab Route, NavDisplay reuses
+     * the same NavEntry → no destroy/recreate, no lag.
+     */
+    fun switchTab(route: Route) {
+        if (currentTab == route) return
+
+        // Pop detail screens back to tab level
+        val tabIndex = backStack.indexOfFirst { it.isTabRoute }
+        if (tabIndex >= 0) {
+            while (backStack.size > tabIndex + 1) {
+                backStack.removeAt(backStack.lastIndex)
+            }
+            backStack[tabIndex] = route
+        } else {
+            backStack.clear()
+            backStack.add(route)
+        }
+
+        currentTab = route
+    }
 }
 
-/**
- * Access the navigator from any composable without lambda drilling.
- * Usage: val navigator = LocalNavigator.current
- */
+// ─── CompositionLocal ───────────────────────────────
+
 val LocalNavigator = compositionLocalOf<AppNavigator> {
     error("No AppNavigator provided. Wrap your content with CompositionLocalProvider.")
 }

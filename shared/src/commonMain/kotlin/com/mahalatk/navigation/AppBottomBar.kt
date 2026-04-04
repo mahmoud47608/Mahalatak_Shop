@@ -120,7 +120,7 @@ enum class BottomNavItem(
 fun AppBottomBar(onItemSelected: (BottomNavItem) -> Unit) {
 
     val items = BottomNavItem.entries
-    val selectedItem = BottomNavItem.fromRoute(LocalNavigator.current.currentRoute)
+    val selectedItem = BottomNavItem.fromRoute(LocalNavigator.current.currentTab)
     val selectedIndex = items.indexOf(selectedItem).coerceAtLeast(0)
 
     val circleRadius = 26.dp
