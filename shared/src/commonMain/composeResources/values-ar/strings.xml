@@ -219,6 +219,12 @@
     <string name="order_number">طلب #%s</string>
     <string name="today">اليوم</string>
 
+    <string name="status_new">جديد</string>
+    <string name="status_delivered">تم التسليم</string>
+    <string name="status_returned">مرتجع</string>
+    <string name="status_cancelled">ملغي</string>
+    <string name="orders_count">%d طلبات</string>
+
     <!-- Products Screen -->
     <string name="my_products">منتجاتي</string>
     <string name="edit">تعديل</string>
