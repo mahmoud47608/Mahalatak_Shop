@@ -29,6 +29,7 @@ import mahalatk.shared.generated.resources.discount_offer
 import mahalatk.shared.generated.resources.discount_offer_desc
 import mahalatk.shared.generated.resources.free_shipping_offer
 import mahalatk.shared.generated.resources.free_shipping_offer_desc
+import mahalatk.shared.generated.resources.offer_step1_subtitle
 import mahalatk.shared.generated.resources.package_offer
 import mahalatk.shared.generated.resources.package_offer_desc
 import mahalatk.shared.generated.resources.select_offer_type
@@ -45,7 +46,7 @@ fun Step1OfferTypeSelection(state: AddOfferState, viewModel: AddOfferViewModel) 
     ) {
         SectionLabel(
             text = stringResource(Res.string.select_offer_type),
-            subtitle = "اختر نوع العرض المناسب لمنتجاتك",
+            subtitle = stringResource(Res.string.offer_step1_subtitle),
         )
 
         Spacer(modifier = Modifier.height(4.dp))

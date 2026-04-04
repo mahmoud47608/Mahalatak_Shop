@@ -1,6 +1,7 @@
 package com.mahalatk.features.settings
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -32,9 +33,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mahalatk.common.component.animation.AnimatedListItem
+import com.mahalatk.common.component.bottomsheet.SingleSelectBottomSheet
 import com.mahalatk.common.component.dialog.DeleteAccountDialog
 import com.mahalatk.common.component.header.ScreenHeader
 import com.mahalatk.common.component.menu.MenuItemRow
+import com.mahalatk.common.util.getCurrentLanguageCode
+import com.mahalatk.common.util.rememberLanguageChanger
 import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
@@ -47,6 +51,7 @@ import mahalatk.shared.generated.resources.ic_delete
 import mahalatk.shared.generated.resources.ic_language
 import mahalatk.shared.generated.resources.ic_lock
 import mahalatk.shared.generated.resources.ic_settings
+import mahalatk.shared.generated.resources.select_language
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -56,16 +61,27 @@ private val ChangePasswordColor = Color(0xFF42A5F5)
 private val DarkModeColor = Color(0xFF5C6BC0)
 private val DeleteAccountColor = Color(0xFFF44336)
 
+private data class LanguageOption(val code: String, val label: String)
+
 @Composable
 fun SettingsScreen(
     onBack: () -> Unit = {},
-    onChangeLanguage: () -> Unit = {},
     onChangePassword: () -> Unit = {},
     onDeleteAccount: () -> Unit = {},
     viewModel: SettingsViewModel = koinViewModel(),
 ) {
     var showDeleteDialog by remember { mutableStateOf(false) }
+    var showLanguageSheet by remember { mutableStateOf(false) }
     val isDarkMode by viewModel.isDarkMode.collectAsState()
+    val currentLang = getCurrentLanguageCode()
+    val changeLanguage = rememberLanguageChanger()
+
+    val languages = remember {
+        listOf(
+            LanguageOption("en", "English"),
+            LanguageOption("ar", "اللغة العربية"),
+        )
+    }
 
     Column(modifier = Modifier.fillMaxSize().background(AppColor.ScreenBackground)) {
 
@@ -105,7 +121,7 @@ fun SettingsScreen(
                             icon = Res.drawable.ic_language,
                             iconColor = ChangeLanguageColor,
                             title = stringResource(Res.string.change_language),
-                            onClick = onChangeLanguage,
+                            onClick = { showLanguageSheet = true },
                         )
                     }
 
@@ -139,6 +155,19 @@ fun SettingsScreen(
         },
         onDismiss = { showDeleteDialog = false },
     )
+
+    SingleSelectBottomSheet(
+        showBottomSheet = showLanguageSheet,
+        title = stringResource(Res.string.select_language),
+        items = languages,
+        selectedItem = languages.find { it.code == currentLang },
+        itemLabel = { it.label },
+        onItemSelected = {
+            showLanguageSheet = false
+            changeLanguage(it.code)
+        },
+        onDismiss = { showLanguageSheet = false },
+    )
 }
 
 @Composable
@@ -152,8 +181,7 @@ private fun DarkModeToggleRow(
             .padding(horizontal = 14.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        // Icon
-        androidx.compose.foundation.layout.Box(
+        Box(
             modifier = Modifier
                 .size(32.dp)
                 .clip(CircleShape)

@@ -30,11 +30,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -60,9 +58,15 @@ import mahalatk.shared.generated.resources.publish_offer
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
-private const val LAST_STEP = 3
+/** Step metadata — defined once, used for both stepper and banner. */
+private val Steps = listOf(
+    StepData(Icons.Rounded.Percent, "نوع العرض"),
+    StepData(Icons.Rounded.Tune, "تفاصيل العرض"),
+    StepData(Icons.Rounded.Category, "نطاق التطبيق"),
+    StepData(Icons.Rounded.CalendarMonth, "المدة والمراجعة"),
+)
 
-private data class StepMeta(val icon: ImageVector, val title: String)
+private val LAST_STEP = Steps.size - 1
 
 @Composable
 fun AddOfferScreen(
@@ -70,15 +74,7 @@ fun AddOfferScreen(
     onBack: () -> Unit = {},
 ) {
     val state by viewModel.uiState.collectAsState()
-
-    val steps = remember {
-        listOf(
-            StepMeta(Icons.Rounded.Percent, "نوع العرض"),
-            StepMeta(Icons.Rounded.Tune, "تفاصيل العرض"),
-            StepMeta(Icons.Rounded.Category, "نطاق التطبيق"),
-            StepMeta(Icons.Rounded.CalendarMonth, "المدة والمراجعة"),
-        )
-    }
+    val current = Steps[state.currentStep]
 
     Column(
         modifier = Modifier
@@ -91,16 +87,12 @@ fun AddOfferScreen(
         )
 
         StepIndicator(
-            totalSteps = 4,
+            totalSteps = Steps.size,
             currentStep = state.currentStep,
-            steps = steps.map { StepData(icon = it.icon, label = it.title) },
+            steps = Steps,
         )
 
-        // ── Step context banner ─────────────────────────────
-        StepBanner(
-            step = steps[state.currentStep],
-            number = state.currentStep + 1,
-        )
+        StepBanner(step = current, number = state.currentStep + 1)
 
         StepError(errorRes = state.stepError)
 
@@ -128,7 +120,7 @@ fun AddOfferScreen(
 // ── Step Banner ─────────────────────────────────────────────────────────────
 
 @Composable
-private fun StepBanner(step: StepMeta, number: Int) {
+private fun StepBanner(step: StepData, number: Int) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -157,13 +149,13 @@ private fun StepBanner(step: StepMeta, number: Int) {
 
         Column {
             Text(
-                text = "الخطوة $number من 4",
+                text = "الخطوة $number من ${Steps.size}",
                 style = MahalatkTheme.labelSmall,
                 color = AppColor.TextHint,
             )
             Spacer(modifier = Modifier.height(1.dp))
             Text(
-                text = step.title,
+                text = step.label,
                 style = MahalatkTheme.titleSmall,
                 color = AppColor.OnPrimaryContainer,
                 fontWeight = FontWeight.Bold,
@@ -183,9 +175,7 @@ private fun StepError(errorRes: org.jetbrains.compose.resources.StringResource?)
         text = stringResource(errorRes),
         style = MahalatkTheme.bodySmall,
         color = AppColor.Error,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp),
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
         textAlign = TextAlign.Center,
     )
     Spacer(modifier = Modifier.height(4.dp))
@@ -247,11 +237,8 @@ private fun BottomNavigation(
             )
         }
         DefaultButton(
-            text = if (currentStep == LAST_STEP) {
-                stringResource(Res.string.publish_offer)
-            } else {
-                stringResource(Res.string.next_step)
-            },
+            text = if (currentStep == LAST_STEP) stringResource(Res.string.publish_offer)
+            else stringResource(Res.string.next_step),
             modifier = Modifier.weight(1f),
             onClick = onNext,
         )

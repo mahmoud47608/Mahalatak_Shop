@@ -24,6 +24,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,6 +36,7 @@ import com.mahalatk.features.offers.add.AddOfferState
 import com.mahalatk.features.offers.add.AddOfferViewModel
 import com.mahalatk.features.offers.add.OfferScopeType
 import com.mahalatk.features.offers.add.OfferType
+import com.mahalatk.features.offers.add.ProductItem
 import com.mahalatk.features.offers.add.components.ProductCheckRow
 import com.mahalatk.features.offers.add.components.ScopeOptionCard
 import com.mahalatk.features.offers.add.components.SectionLabel
@@ -44,19 +46,24 @@ import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.all_products_scope
 import mahalatk.shared.generated.resources.categories_scope
+import mahalatk.shared.generated.resources.offer_step3_subtitle_categories
+import mahalatk.shared.generated.resources.offer_step3_subtitle_products
 import mahalatk.shared.generated.resources.products_scope
 import mahalatk.shared.generated.resources.select_package_products
 import mahalatk.shared.generated.resources.select_scope
+import mahalatk.shared.generated.resources.selected_products
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun Step3Scope(state: AddOfferState, viewModel: AddOfferViewModel) {
     if (state.offerType == OfferType.PACKAGE) {
-        PackageProductSelection(state = state, viewModel = viewModel)
+        PackageProductSelection(state, viewModel)
     } else {
-        ScopeSelection(state = state, viewModel = viewModel)
+        ScopeSelection(state, viewModel)
     }
 }
+
+// ── Scope Selection (non-Package) ───────────────────────────────────────────
 
 @Composable
 private fun ScopeSelection(state: AddOfferState, viewModel: AddOfferViewModel) {
@@ -69,7 +76,7 @@ private fun ScopeSelection(state: AddOfferState, viewModel: AddOfferViewModel) {
     ) {
         SectionLabel(
             text = stringResource(Res.string.select_scope),
-            subtitle = "حدد المنتجات اللي العرض هيتطبق عليها",
+            subtitle = stringResource(Res.string.offer_step3_subtitle_products),
         )
 
         ScopeOptionCard(
@@ -78,14 +85,12 @@ private fun ScopeSelection(state: AddOfferState, viewModel: AddOfferViewModel) {
             isSelected = state.scopeType == OfferScopeType.ALL_PRODUCTS,
             onClick = { viewModel.selectScopeType(OfferScopeType.ALL_PRODUCTS) },
         )
-
         ScopeOptionCard(
             index = 1,
             title = stringResource(Res.string.categories_scope),
             isSelected = state.scopeType == OfferScopeType.CATEGORIES,
             onClick = { viewModel.selectScopeType(OfferScopeType.CATEGORIES) },
         )
-
         ScopeOptionCard(
             index = 2,
             title = stringResource(Res.string.products_scope),
@@ -108,22 +113,25 @@ private fun ScopeSelection(state: AddOfferState, viewModel: AddOfferViewModel) {
             )
         }
 
-        // Product selection
+        // Product filter + selection
         AnimatedVisibility(
             visible = state.scopeType == OfferScopeType.SPECIFIC_PRODUCTS,
             enter = expandVertically() + fadeIn(),
             exit = shrinkVertically() + fadeOut(),
         ) {
-            ProductFilterSection(
-                state = state,
+            ProductPickerSection(
+                categories = state.availableCategories,
+                allProducts = state.availableProducts,
                 filterCategories = state.filterCategories,
-                selectedProductIds = state.selectedProductIds,
-                onToggleFilterCategory = viewModel::toggleFilterCategory,
+                selectedIds = state.selectedProductIds,
+                onToggleFilter = viewModel::toggleFilterCategory,
                 onToggleProduct = viewModel::toggleProduct,
             )
         }
     }
 }
+
+// ── Package Product Selection ───────────────────────────────────────────────
 
 @Composable
 private fun PackageProductSelection(state: AddOfferState, viewModel: AddOfferViewModel) {
@@ -136,21 +144,45 @@ private fun PackageProductSelection(state: AddOfferState, viewModel: AddOfferVie
     ) {
         SectionLabel(
             text = stringResource(Res.string.categories_scope),
-            subtitle = "اختر الأقسام اللي عايز تختار منها منتجات",
+            subtitle = stringResource(Res.string.offer_step3_subtitle_categories),
         )
 
+        ProductPickerSection(
+            categories = state.availableCategories,
+            allProducts = state.availableProducts,
+            filterCategories = state.filterCategories,
+            selectedIds = state.packageProductIds,
+            onToggleFilter = viewModel::togglePackageFilterCategory,
+            onToggleProduct = viewModel::togglePackageProduct,
+            sectionTitle = stringResource(Res.string.select_package_products),
+        )
+    }
+}
+
+// ── Shared: Product Picker (filter chips + product list) ────────────────────
+
+@Composable
+private fun ProductPickerSection(
+    categories: List<String>,
+    allProducts: List<ProductItem>,
+    filterCategories: Set<String>,
+    selectedIds: Set<String>,
+    onToggleFilter: (String) -> Unit,
+    onToggleProduct: (String) -> Unit,
+    sectionTitle: String? = null,
+) {
+    val filteredProducts = remember(filterCategories, allProducts) {
+        if (filterCategories.isEmpty()) emptyList()
+        else allProducts.filter { it.category in filterCategories }
+    }
+
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         ChipCloud(
-            items = state.availableCategories,
-            selectedItems = state.filterCategories,
+            items = categories,
+            selectedItems = filterCategories,
             label = { it },
-            onToggle = { viewModel.togglePackageFilterCategory(it) },
+            onToggle = onToggleFilter,
         )
-
-        val filteredProducts = if (state.filterCategories.isEmpty()) {
-            emptyList()
-        } else {
-            state.availableProducts.filter { it.category in state.filterCategories }
-        }
 
         AnimatedVisibility(
             visible = filteredProducts.isNotEmpty(),
@@ -158,7 +190,9 @@ private fun PackageProductSelection(state: AddOfferState, viewModel: AddOfferVie
             exit = shrinkVertically() + fadeOut(),
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                SectionLabel(text = stringResource(Res.string.select_package_products))
+                if (sectionTitle != null) {
+                    SectionLabel(text = sectionTitle)
+                }
 
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -174,8 +208,8 @@ private fun PackageProductSelection(state: AddOfferState, viewModel: AddOfferVie
                             AnimatedListItem(index) {
                                 ProductCheckRow(
                                     product = product,
-                                    isChecked = product.id in state.packageProductIds,
-                                    onToggle = { viewModel.togglePackageProduct(product.id) },
+                                    isChecked = product.id in selectedIds,
+                                    onToggle = { onToggleProduct(product.id) },
                                 )
                             }
                         }
@@ -184,71 +218,14 @@ private fun PackageProductSelection(state: AddOfferState, viewModel: AddOfferVie
             }
         }
 
-        SelectedProductCount(count = state.packageProductIds.size)
+        SelectedCount(count = selectedIds.size)
     }
 }
 
-@Composable
-private fun ProductFilterSection(
-    state: AddOfferState,
-    filterCategories: Set<String>,
-    selectedProductIds: Set<String>,
-    onToggleFilterCategory: (String) -> Unit,
-    onToggleProduct: (String) -> Unit,
-) {
-    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Text(
-            text = stringResource(Res.string.categories_scope),
-            style = MahalatkTheme.bodySmall,
-            color = AppColor.TextHint,
-            modifier = Modifier.padding(top = 4.dp),
-        )
-
-        ChipCloud(
-            items = state.availableCategories,
-            selectedItems = filterCategories,
-            label = { it },
-            onToggle = onToggleFilterCategory,
-        )
-
-        val filteredProducts = if (filterCategories.isEmpty()) {
-            emptyList()
-        } else {
-            state.availableProducts.filter { it.category in filterCategories }
-        }
-
-        AnimatedVisibility(
-            visible = filteredProducts.isNotEmpty(),
-            enter = expandVertically() + fadeIn(),
-            exit = shrinkVertically() + fadeOut(),
-        ) {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(CornerDimensions.lg),
-                colors = CardDefaults.cardColors(containerColor = AppColor.Surface),
-                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-            ) {
-                Column(
-                    modifier = Modifier.fillMaxWidth().padding(10.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
-                ) {
-                    filteredProducts.forEach { product ->
-                        ProductCheckRow(
-                            product = product,
-                            isChecked = product.id in selectedProductIds,
-                            onToggle = { onToggleProduct(product.id) },
-                        )
-                    }
-                }
-            }
-        }
-
-        SelectedProductCount(count = selectedProductIds.size)
-    }
-}
+// ── Selected count badge ────────────────────────────────────────────────────
 
 @Composable
-private fun SelectedProductCount(count: Int) {
+private fun SelectedCount(count: Int) {
     if (count <= 0) return
 
     Row(
@@ -274,7 +251,7 @@ private fun SelectedProductCount(count: Int) {
         }
         Spacer(modifier = Modifier.width(6.dp))
         Text(
-            text = "منتجات مختارة",
+            text = stringResource(Res.string.selected_products),
             style = MahalatkTheme.bodySmall,
             color = AppColor.OnPrimaryContainer,
             fontWeight = FontWeight.SemiBold,

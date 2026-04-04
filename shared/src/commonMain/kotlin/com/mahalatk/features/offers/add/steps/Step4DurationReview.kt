@@ -51,10 +51,22 @@ import com.mahalatk.util.DateUtils
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.cancel
 import mahalatk.shared.generated.resources.confirm
+import mahalatk.shared.generated.resources.currency
 import mahalatk.shared.generated.resources.duration_review
 import mahalatk.shared.generated.resources.end_date
+import mahalatk.shared.generated.resources.offer_step4_subtitle
 import mahalatk.shared.generated.resources.offer_summary
 import mahalatk.shared.generated.resources.start_date
+import mahalatk.shared.generated.resources.summary_buy_x_get_y
+import mahalatk.shared.generated.resources.summary_date_range
+import mahalatk.shared.generated.resources.summary_discount
+import mahalatk.shared.generated.resources.summary_free_shipping
+import mahalatk.shared.generated.resources.summary_free_shipping_min
+import mahalatk.shared.generated.resources.summary_package
+import mahalatk.shared.generated.resources.summary_scope_all
+import mahalatk.shared.generated.resources.summary_scope_categories
+import mahalatk.shared.generated.resources.summary_scope_products
+import mahalatk.shared.generated.resources.summary_your_offer
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
@@ -72,7 +84,7 @@ fun Step4DurationReview(state: AddOfferState, viewModel: AddOfferViewModel) {
     ) {
         SectionLabel(
             text = stringResource(Res.string.duration_review),
-            subtitle = "حدد مدة العرض وراجع التفاصيل",
+            subtitle = stringResource(Res.string.offer_step4_subtitle),
         )
 
         Spacer(modifier = Modifier.height(4.dp))
@@ -161,6 +173,8 @@ private fun OfferDatePickerDialog(
 
 @Composable
 private fun SummaryCard(state: AddOfferState) {
+    val summaryText = buildSummaryText(state)
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(CornerDimensions.lg),
@@ -195,7 +209,7 @@ private fun SummaryCard(state: AddOfferState) {
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
-                text = buildSummaryText(state),
+                text = summaryText,
                 style = MahalatkTheme.bodyMedium,
                 color = AppColor.TextPrimary,
                 lineHeight = MahalatkTheme.bodyMedium.lineHeight,
@@ -204,54 +218,70 @@ private fun SummaryCard(state: AddOfferState) {
     }
 }
 
+@Composable
 private fun buildSummaryText(state: AddOfferState): String {
-    val typeDesc = when (state.offerType) {
+    val type = buildTypeText(state)
+    val scope = buildScopeText(state)
+    val dates = buildDateText(state)
+    return stringResource(Res.string.summary_your_offer, type, scope, dates)
+}
+
+@Composable
+private fun buildTypeText(state: AddOfferState): String {
+    val currencyLabel = stringResource(Res.string.currency)
+    return when (state.offerType) {
         OfferType.DISCOUNT -> {
-            val value = when (state.discountMode) {
+            val v = when (state.discountMode) {
                 DiscountMode.PERCENTAGE -> "${state.discountValue}%"
-                DiscountMode.FIXED_AMOUNT -> "${state.discountValue} EGP"
+                DiscountMode.FIXED_AMOUNT -> "${state.discountValue} $currencyLabel"
             }
-            "\u062E\u0635\u0645 $value"
+            stringResource(Res.string.summary_discount, v)
         }
 
-        OfferType.BUY_X_GET_Y ->
-            "\u0627\u0634\u062A\u0631\u064A ${state.buyQuantity} \u0648\u0627\u062D\u0635\u0644 \u0639\u0644\u0649 ${state.getQuantity} \u0645\u062C\u0627\u0646\u0627\u064B"
+        OfferType.BUY_X_GET_Y -> stringResource(
+            Res.string.summary_buy_x_get_y,
+            state.buyQuantity,
+            state.getQuantity,
+        )
 
         OfferType.FREE_SHIPPING -> {
-            val minCart = if (state.freeShippingMinCart.isNotBlank()) {
-                " \u0639\u0646\u062F \u0627\u0644\u0634\u0631\u0627\u0621 \u0628\u0640 ${state.freeShippingMinCart}"
-            } else ""
-            "\u0634\u062D\u0646 \u0645\u062C\u0627\u0646\u064A$minCart"
+            if (state.freeShippingMinCart.isNotBlank()) {
+                stringResource(Res.string.summary_free_shipping_min, state.freeShippingMinCart)
+            } else {
+                stringResource(Res.string.summary_free_shipping)
+            }
         }
 
-        OfferType.PACKAGE ->
-            "\u0628\u0627\u0643\u062F\u062C ${state.packageName} \u0628\u0633\u0639\u0631 ${state.packagePrice} (${state.packageProductIds.size} \u0645\u0646\u062A\u062C\u0627\u062A)"
+        OfferType.PACKAGE -> stringResource(
+            Res.string.summary_package,
+            state.packageName,
+            state.packagePrice,
+            state.packageProductIds.size.toString(),
+        )
 
         null -> ""
     }
+}
 
-    val scopeDesc = if (state.offerType == OfferType.PACKAGE) {
-        ""
-    } else {
-        when (state.scopeType) {
-            OfferScopeType.ALL_PRODUCTS -> " \u0639\u0644\u0649 \u0643\u0644 \u0627\u0644\u0645\u0646\u062A\u062C\u0627\u062A"
-            OfferScopeType.CATEGORIES -> {
-                val cats = state.selectedCategories.joinToString(", ")
-                " \u0639\u0644\u0649 \u0623\u0642\u0633\u0627\u0645: $cats"
-            }
+@Composable
+private fun buildScopeText(state: AddOfferState): String {
+    if (state.offerType == OfferType.PACKAGE) return ""
+    return when (state.scopeType) {
+        OfferScopeType.ALL_PRODUCTS -> stringResource(Res.string.summary_scope_all)
+        OfferScopeType.CATEGORIES -> stringResource(
+            Res.string.summary_scope_categories,
+            state.selectedCategories.joinToString(", "),
+        )
 
-            OfferScopeType.SPECIFIC_PRODUCTS -> {
-                val count = state.selectedProductIds.size
-                " \u0639\u0644\u0649 $count \u0645\u0646\u062A\u062C\u0627\u062A \u0645\u062E\u062A\u0627\u0631\u0629"
-            }
-        }
+        OfferScopeType.SPECIFIC_PRODUCTS -> stringResource(
+            Res.string.summary_scope_products,
+            state.selectedProductIds.size.toString(),
+        )
     }
+}
 
-    val dateRange = if (state.startDate.isNotBlank() && state.endDate.isNotBlank()) {
-        "\u060C \u0645\u0646 ${state.startDate} \u0625\u0644\u0649 ${state.endDate}"
-    } else {
-        ""
-    }
-
-    return "\u0639\u0631\u0636\u0643: $typeDesc$scopeDesc$dateRange"
+@Composable
+private fun buildDateText(state: AddOfferState): String {
+    if (state.startDate.isBlank() || state.endDate.isBlank()) return ""
+    return stringResource(Res.string.summary_date_range, state.startDate, state.endDate)
 }

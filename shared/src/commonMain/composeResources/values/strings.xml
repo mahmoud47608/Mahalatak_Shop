@@ -452,4 +452,34 @@
     <string name="route_distance">Route Distance</string>
     <string name="route_duration">Est. Duration</string>
 
+    <!-- Localized UI Labels -->
+    <string name="section_account">Account</string>
+    <string name="section_support_legal">Support &amp; Legal</string>
+    <string name="select_language">Select Language</string>
+    <string name="map_selected_location">Location selected on map</string>
+
+    <!-- Coupon Labels -->
+    <string name="coupon_min_cart">• Min cart %1$s</string>
+    <string name="coupon_usage">Usage: %1$s</string>
+
+    <!-- Offer Steps -->
+    <string name="offer_step1_subtitle">Choose the right offer type for your products</string>
+    <string name="offer_step2_subtitle">Set offer details and logic</string>
+    <string name="offer_step4_subtitle">Set offer duration and review details</string>
+    <string name="offer_step3_subtitle_products">Select products the offer applies to</string>
+    <string name="offer_step3_subtitle_categories">Choose categories to select products from</string>
+    <string name="selected_products">Selected products</string>
+
+    <!-- Offer Summary -->
+    <string name="summary_your_offer">Your offer: %1$s%2$s%3$s</string>
+    <string name="summary_discount">Discount %1$s</string>
+    <string name="summary_buy_x_get_y">Buy %1$s get %2$s free</string>
+    <string name="summary_free_shipping">Free shipping</string>
+    <string name="summary_free_shipping_min">Free shipping on orders above %1$s</string>
+    <string name="summary_package">Package %1$s at %2$s (%3$s products)</string>
+    <string name="summary_scope_all"> on all products</string>
+    <string name="summary_scope_categories"> on categories: %1$s</string>
+    <string name="summary_scope_products"> on %1$s selected products</string>
+    <string name="summary_date_range">, from %1$s to %2$s</string>
+
 </resources>

@@ -28,6 +28,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.DeleteOutline
 import androidx.compose.material.icons.rounded.LocalShipping
 import androidx.compose.material.icons.rounded.ShoppingCart
 import androidx.compose.material.icons.rounded.Storefront
@@ -92,20 +93,16 @@ fun OffersScreen(
                 onBackClick = onBack,
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
-
             Crossfade(targetState = state.isLoading) { loading ->
                 when {
                     loading -> {
                         LazyColumn(
                             modifier = Modifier.fillMaxSize(),
                             contentPadding = PaddingValues(
-                                start = 20.dp,
-                                end = 20.dp,
-                                top = 4.dp,
-                                bottom = 16.dp,
+                                start = 20.dp, end = 20.dp,
+                                top = 16.dp, bottom = 16.dp,
                             ),
-                            verticalArrangement = Arrangement.spacedBy(12.dp),
+                            verticalArrangement = Arrangement.spacedBy(14.dp),
                         ) {
                             items(4) { index ->
                                 AnimatedListItem(index) { OfferCardSkeleton() }
@@ -126,12 +123,12 @@ fun OffersScreen(
                             state = listState,
                             modifier = Modifier.fillMaxSize(),
                             contentPadding = PaddingValues(
-                                start = 20.dp,
-                                end = 20.dp,
-                                bottom = 80.dp,
+                                start = 20.dp, end = 20.dp,
+                                top = 12.dp, bottom = 80.dp,
                             ),
-                            verticalArrangement = Arrangement.spacedBy(12.dp),
+                            verticalArrangement = Arrangement.spacedBy(14.dp),
                         ) {
+                            // ── Offer cards ──
                             itemsIndexed(
                                 items = state.offers,
                                 key = { _, offer -> offer.id },
@@ -141,6 +138,7 @@ fun OffersScreen(
                                     OfferCard(
                                         offer = offer,
                                         onToggleActive = { viewModel.toggleOfferActive(offer.id) },
+                                        onDelete = { viewModel.deleteOffer(offer.id) },
                                     )
                                 }
                             }
@@ -175,8 +173,14 @@ fun OffersScreen(
     }
 }
 
+// ── Offer Card ──────────────────────────────────────────────────────────────
+
 @Composable
-private fun OfferCard(offer: Offer, onToggleActive: () -> Unit = {}) {
+private fun OfferCard(
+    offer: Offer,
+    onToggleActive: () -> Unit,
+    onDelete: () -> Unit,
+) {
     val (icon, iconBg) = remember(offer.type, AppColor.isDark) {
         when (offer.type) {
             OfferType.DISCOUNT -> Icons.Rounded.Storefront to AppColor.Primary
@@ -235,31 +239,51 @@ private fun OfferCard(offer: Offer, onToggleActive: () -> Unit = {}) {
 
                 // Active/Inactive badge
                 ActiveBadge(isActive = offer.isActive, onClick = onToggleActive)
+
+                Spacer(modifier = Modifier.width(6.dp))
+
+                // Delete
+                Box(
+                    modifier = Modifier
+                        .size(30.dp)
+                        .clip(CircleShape)
+                        .background(AppColor.Error.copy(alpha = 0.08f))
+                        .noRippleClickable { onDelete() },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.DeleteOutline,
+                        contentDescription = null,
+                        tint = AppColor.Error,
+                        modifier = Modifier.size(16.dp),
+                    )
+                }
             }
         }
     }
 }
 
+// ── Active Badge ────────────────────────────────────────────────────────────
+
 @Composable
-private fun ActiveBadge(isActive: Boolean, onClick: () -> Unit = {}) {
+private fun ActiveBadge(isActive: Boolean, onClick: () -> Unit) {
     val bgColor by animateColorAsState(
-        targetValue = if (isActive) AppColor.Success.copy(alpha = 0.1f) else AppColor.Error.copy(
-            alpha = 0.1f
-        ),
+        targetValue = if (isActive) AppColor.Success.copy(alpha = 0.1f)
+        else AppColor.Error.copy(alpha = 0.1f),
         animationSpec = tween(300),
     )
     val textColor by animateColorAsState(
         targetValue = if (isActive) AppColor.Success else AppColor.Error,
         animationSpec = tween(300),
     )
-    val label =
-        if (isActive) stringResource(Res.string.active_status) else stringResource(Res.string.inactive_status)
+    val label = if (isActive) stringResource(Res.string.active_status)
+    else stringResource(Res.string.inactive_status)
 
     Box(
         modifier = Modifier
             .noRippleClickable { onClick() }
             .background(color = bgColor, shape = RoundedCornerShape(8.dp))
-            .padding(horizontal = 12.dp, vertical = 5.dp),
+            .padding(horizontal = 12.dp, vertical = 6.dp),
     ) {
         Text(
             text = label,
@@ -269,6 +293,8 @@ private fun ActiveBadge(isActive: Boolean, onClick: () -> Unit = {}) {
         )
     }
 }
+
+// ── Skeleton ────────────────────────────────────────────────────────────────
 
 @Composable
 private fun OfferCardSkeleton() {

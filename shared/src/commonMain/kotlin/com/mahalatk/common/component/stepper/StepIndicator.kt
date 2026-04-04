@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -37,9 +38,7 @@ import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.MahalatkTheme
 
 /**
- * Premium step indicator showing progress through a multi-step wizard.
- * Active = Primary filled, Completed = Primary with checkmark, Upcoming = gray outline.
- * Optional [steps] adds labels below each circle.
+ * Step indicator with animated circles, connecting lines, and optional labels.
  */
 @Composable
 fun StepIndicator(
@@ -56,96 +55,114 @@ fun StepIndicator(
         horizontalArrangement = Arrangement.Center,
     ) {
         for (i in 0 until totalSteps) {
-            val isCompleted = i < currentStep
-            val isActive = i == currentStep
-
-            val bgColor by animateColorAsState(
-                targetValue = when {
-                    isCompleted || isActive -> AppColor.Primary
-                    else -> AppColor.Outline
-                },
-                animationSpec = tween(300),
+            StepItem(
+                index = i,
+                isCompleted = i < currentStep,
+                isActive = i == currentStep,
+                label = steps?.getOrNull(i)?.label,
             )
 
-            val scale by animateFloatAsState(
-                targetValue = if (isActive) 1.1f else 1f,
-                animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy),
-            )
-
-            val label = steps?.getOrNull(i)?.label
-
-            // Step column (circle + label)
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(32.dp)
-                        .graphicsLayer { scaleX = scale; scaleY = scale }
-                        .clip(CircleShape)
-                        .background(bgColor),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    if (isCompleted) {
-                        Icon(
-                            Icons.Filled.Check, null,
-                            tint = Color.White,
-                            modifier = Modifier.size(18.dp),
-                        )
-                    } else {
-                        Text(
-                            text = "${i + 1}",
-                            fontSize = 13.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = if (isActive) Color.White else AppColor.TextHint,
-                        )
-                    }
-                }
-
-                if (label != null) {
-                    Spacer(modifier = Modifier.height(6.dp))
-
-                    val labelColor by animateColorAsState(
-                        targetValue = when {
-                            isActive -> AppColor.Primary
-                            isCompleted -> AppColor.TextSecondary
-                            else -> AppColor.TextHint
-                        },
-                        animationSpec = tween(300),
-                    )
-
-                    Text(
-                        text = label,
-                        style = MahalatkTheme.labelSmall,
-                        fontSize = 10.sp,
-                        color = labelColor,
-                        fontWeight = if (isActive) FontWeight.Bold else FontWeight.Normal,
-                        textAlign = TextAlign.Center,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                }
-            }
-
-            // Connecting line
             if (i < totalSteps - 1) {
-                val lineColor by animateColorAsState(
-                    targetValue = if (i < currentStep) AppColor.Primary else AppColor.Outline,
-                    animationSpec = tween(300),
-                )
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(top = 15.dp) // align with circle center
-                        .height(3.dp)
-                        .padding(horizontal = 8.dp)
-                        .clip(CircleShape)
-                        .background(lineColor),
-                )
+                ConnectingLine(isFilled = i < currentStep)
             }
         }
     }
 }
+
+// ── Single step (circle + label) — isolated to scope animations ─────────────
+
+@Composable
+private fun StepItem(
+    index: Int,
+    isCompleted: Boolean,
+    isActive: Boolean,
+    label: String?,
+) {
+    val bgColor by animateColorAsState(
+        targetValue = if (isCompleted || isActive) AppColor.Primary else AppColor.Outline,
+        animationSpec = tween(300),
+    )
+    val scale by animateFloatAsState(
+        targetValue = if (isActive) 1.1f else 1f,
+        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy),
+    )
+
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Box(
+            modifier = Modifier
+                .size(32.dp)
+                .graphicsLayer { scaleX = scale; scaleY = scale }
+                .clip(CircleShape)
+                .background(bgColor),
+            contentAlignment = Alignment.Center,
+        ) {
+            if (isCompleted) {
+                Icon(
+                    Icons.Filled.Check, null,
+                    tint = Color.White,
+                    modifier = Modifier.size(18.dp),
+                )
+            } else {
+                Text(
+                    text = "${index + 1}",
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = if (isActive) Color.White else AppColor.TextHint,
+                )
+            }
+        }
+
+        if (label != null) {
+            Spacer(modifier = Modifier.height(6.dp))
+            StepLabel(label = label, isActive = isActive, isCompleted = isCompleted)
+        }
+    }
+}
+
+// ── Label with animated color ───────────────────────────────────────────────
+
+@Composable
+private fun StepLabel(label: String, isActive: Boolean, isCompleted: Boolean) {
+    val color by animateColorAsState(
+        targetValue = when {
+            isActive -> AppColor.Primary
+            isCompleted -> AppColor.TextSecondary
+            else -> AppColor.TextHint
+        },
+        animationSpec = tween(300),
+    )
+    Text(
+        text = label,
+        style = MahalatkTheme.labelSmall,
+        fontSize = 10.sp,
+        color = color,
+        fontWeight = if (isActive) FontWeight.Bold else FontWeight.Normal,
+        textAlign = TextAlign.Center,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+    )
+}
+
+// ── Connecting line ─────────────────────────────────────────────────────────
+
+@Composable
+private fun RowScope.ConnectingLine(isFilled: Boolean) {
+    val color by animateColorAsState(
+        targetValue = if (isFilled) AppColor.Primary else AppColor.Outline,
+        animationSpec = tween(300),
+    )
+    Box(
+        modifier = Modifier
+            .weight(1f)
+            .padding(top = 15.dp)
+            .height(3.dp)
+            .padding(horizontal = 8.dp)
+            .clip(CircleShape)
+            .background(color),
+    )
+}
+
+// ── Data ─────────────────────────────────────────────────────────────────────
 
 data class StepData(
     val icon: ImageVector,

@@ -37,6 +37,7 @@ import kotlinx.coroutines.launch
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.confirm
 import mahalatk.shared.generated.resources.location_permission_required
+import mahalatk.shared.generated.resources.map_selected_location
 import mahalatk.shared.generated.resources.pick_location
 import org.jetbrains.compose.resources.stringResource
 
@@ -160,10 +161,11 @@ fun PickLocationScreen(
 
         // Confirm button
         if (permissionGranted) {
+            val fallbackAddress = stringResource(Res.string.map_selected_location)
             DefaultButton(
                 text = stringResource(Res.string.confirm),
                 onClick = {
-                    val address = currentAddress.ifBlank { "موقع محدد على الخريطة" }
+                    val address = currentAddress.ifBlank { fallbackAddress }
                     onBackWithResult(currentLat, currentLng, address)
                 },
                 modifier = Modifier

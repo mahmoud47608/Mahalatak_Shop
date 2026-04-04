@@ -34,7 +34,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -54,11 +53,6 @@ fun OfferTypeCard(
     isSelected: Boolean,
     onClick: () -> Unit,
 ) {
-    val scale by animateFloatAsState(
-        targetValue = if (isSelected) 1f else 1f,
-        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy),
-    )
-
     val containerBg by animateColorAsState(
         targetValue = if (isSelected) AppColor.PrimaryContainer else AppColor.Surface,
         animationSpec = tween(250),
@@ -78,7 +72,6 @@ fun OfferTypeCard(
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .graphicsLayer { scaleX = scale; scaleY = scale }
                 .noRippleClickable { onClick() },
             shape = RoundedCornerShape(CornerDimensions.lg),
             colors = CardDefaults.cardColors(containerColor = containerBg),

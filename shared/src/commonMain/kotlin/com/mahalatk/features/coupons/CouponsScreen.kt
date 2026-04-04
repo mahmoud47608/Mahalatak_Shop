@@ -59,7 +59,10 @@ import com.mahalatk.theme.CornerDimensions
 import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.active_status
+import mahalatk.shared.generated.resources.coupon_min_cart
+import mahalatk.shared.generated.resources.coupon_usage
 import mahalatk.shared.generated.resources.coupons
+import mahalatk.shared.generated.resources.currency
 import mahalatk.shared.generated.resources.ic_delivery
 import mahalatk.shared.generated.resources.inactive_status
 import mahalatk.shared.generated.resources.no_coupons
@@ -194,7 +197,7 @@ private fun CouponCard(coupon: Coupon, onToggleActive: () -> Unit) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 val discountText = when (coupon.discountType) {
                     CouponDiscountType.PERCENTAGE -> "${coupon.discountValue}%"
-                    CouponDiscountType.FIXED_AMOUNT -> "${coupon.discountValue} EGP"
+                    CouponDiscountType.FIXED_AMOUNT -> "${coupon.discountValue} ${stringResource(Res.string.currency)}"
                 }
                 Text(
                     text = discountText,
@@ -206,7 +209,7 @@ private fun CouponCard(coupon: Coupon, onToggleActive: () -> Unit) {
                 if (coupon.minCartValue.isNotBlank()) {
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "• حد أدنى ${coupon.minCartValue}",
+                        text = stringResource(Res.string.coupon_min_cart, coupon.minCartValue),
                         style = MahalatkTheme.labelSmall,
                         color = AppColor.TextHint,
                     )
@@ -260,7 +263,7 @@ private fun CouponCard(coupon: Coupon, onToggleActive: () -> Unit) {
                     "${coupon.usedCount}"
                 }
                 Text(
-                    text = "استخدام: $usageText",
+                    text = stringResource(Res.string.coupon_usage, usageText),
                     style = MahalatkTheme.labelSmall,
                     color = AppColor.TextHint,
                 )

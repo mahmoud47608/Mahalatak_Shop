@@ -26,6 +26,7 @@ import mahalatk.shared.generated.resources.discount_fixed
 import mahalatk.shared.generated.resources.discount_percentage
 import mahalatk.shared.generated.resources.get_how_many_free
 import mahalatk.shared.generated.resources.min_cart_value
+import mahalatk.shared.generated.resources.offer_step2_subtitle
 import mahalatk.shared.generated.resources.package_name
 import mahalatk.shared.generated.resources.package_price
 import mahalatk.shared.generated.resources.set_offer_logic
@@ -42,7 +43,7 @@ fun Step2LogicSetup(state: AddOfferState, viewModel: AddOfferViewModel) {
     ) {
         SectionLabel(
             text = stringResource(Res.string.set_offer_logic),
-            subtitle = "حدد تفاصيل ومنطق العرض",
+            subtitle = stringResource(Res.string.offer_step2_subtitle),
         )
 
         Spacer(modifier = Modifier.height(4.dp))

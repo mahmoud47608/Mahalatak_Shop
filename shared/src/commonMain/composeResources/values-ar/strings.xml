@@ -420,6 +420,7 @@
     <string name="edit_profile_data">تعديل بيانات الملف الشخصي</string>
     <string name="change_phone_number">تغيير رقم الجوال</string>
     <string name="change_password">تغيير كلمة المرور</string>
+    <string name="dark_mode">الوضع الداكن</string>
     <string name="delete_account">حذف الحساب</string>
     <string name="delete_account_confirmation">هل أنت متأكد من أنك تريد الحذف؟</string>
 
@@ -443,5 +444,35 @@
     <string name="speed">السرعة</string>
     <string name="route_distance">مسافة المسار</string>
     <string name="route_duration">الوقت المتوقع</string>
+
+    <!-- Localized UI Labels -->
+    <string name="section_account">الحساب</string>
+    <string name="section_support_legal">الدعم والقانون</string>
+    <string name="select_language">اختر اللغة</string>
+    <string name="map_selected_location">موقع محدد على الخريطة</string>
+
+    <!-- Coupon Labels -->
+    <string name="coupon_min_cart">• حد أدنى %1$s</string>
+    <string name="coupon_usage">استخدام: %1$s</string>
+
+    <!-- Offer Steps -->
+    <string name="offer_step1_subtitle">اختر نوع العرض المناسب لمنتجاتك</string>
+    <string name="offer_step2_subtitle">حدد تفاصيل ومنطق العرض</string>
+    <string name="offer_step4_subtitle">حدد مدة العرض وراجع التفاصيل</string>
+    <string name="offer_step3_subtitle_products">حدد المنتجات اللي العرض هيتطبق عليها</string>
+    <string name="offer_step3_subtitle_categories">اختر الأقسام اللي عايز تختار منها منتجات</string>
+    <string name="selected_products">منتجات مختارة</string>
+
+    <!-- Offer Summary -->
+    <string name="summary_your_offer">عرضك: %1$s%2$s%3$s</string>
+    <string name="summary_discount">خصم %1$s</string>
+    <string name="summary_buy_x_get_y">اشتري %1$s واحصل على %2$s مجاناً</string>
+    <string name="summary_free_shipping">شحن مجاني</string>
+    <string name="summary_free_shipping_min">شحن مجاني عند الشراء بـ %1$s</string>
+    <string name="summary_package">باكدج %1$s بسعر %2$s (%3$s منتجات)</string>
+    <string name="summary_scope_all"> على كل المنتجات</string>
+    <string name="summary_scope_categories"> على أقسام: %1$s</string>
+    <string name="summary_scope_products"> على %1$s منتجات مختارة</string>
+    <string name="summary_date_range">، من %1$s إلى %2$s</string>
 
 </resources>

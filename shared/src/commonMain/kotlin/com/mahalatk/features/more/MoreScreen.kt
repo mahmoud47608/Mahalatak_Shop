@@ -61,6 +61,7 @@ import mahalatk.shared.generated.resources.about_app
 import mahalatk.shared.generated.resources.complaints
 import mahalatk.shared.generated.resources.contact_us
 import mahalatk.shared.generated.resources.coupons
+import mahalatk.shared.generated.resources.employee
 import mahalatk.shared.generated.resources.employees
 import mahalatk.shared.generated.resources.ic_about
 import mahalatk.shared.generated.resources.ic_complaint
@@ -78,7 +79,10 @@ import mahalatk.shared.generated.resources.more
 import mahalatk.shared.generated.resources.my_ratings
 import mahalatk.shared.generated.resources.offers
 import mahalatk.shared.generated.resources.privacy_policy
+import mahalatk.shared.generated.resources.section_account
+import mahalatk.shared.generated.resources.section_support_legal
 import mahalatk.shared.generated.resources.settings
+import mahalatk.shared.generated.resources.shop_owner
 import mahalatk.shared.generated.resources.terms_conditions
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
@@ -179,7 +183,7 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
             item { Spacer(Modifier.height(18.dp)) }
 
             // Account section
-            item { AnimatedListItem(2) { SectionLabel("Account") } }
+            item { AnimatedListItem(2) { SectionLabel(stringResource(Res.string.section_account)) } }
             item {
                 AnimatedListItem(3) {
                     MenuCard {
@@ -200,7 +204,7 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
             item { Spacer(Modifier.height(14.dp)) }
 
             // Support section
-            item { AnimatedListItem(4) { SectionLabel("Support & Legal") } }
+            item { AnimatedListItem(4) { SectionLabel(stringResource(Res.string.section_support_legal)) } }
             item {
                 AnimatedListItem(5) {
                     MenuCard {
@@ -440,9 +444,9 @@ private fun ProfileCard(
                 )
                 Spacer(Modifier.height(3.dp))
                 // Tier badge
-                val (badgeBg, badgeText) = if (isShopOwner) AppColor.Primary to "Shop Owner" else Color(
-                    0xFF7C4DFF
-                ) to "Employee"
+                val badgeBg = if (isShopOwner) AppColor.Primary else Color(0xFF7C4DFF)
+                val badgeText =
+                    if (isShopOwner) stringResource(Res.string.shop_owner) else stringResource(Res.string.employee)
                 Box(
                     Modifier.clip(RoundedCornerShape(5.dp)).background(badgeBg.copy(alpha = 0.1f))
                         .padding(horizontal = 6.dp, vertical = 2.dp)
