@@ -40,7 +40,10 @@ fun Step2LogicSetup(state: AddOfferState, viewModel: AddOfferViewModel) {
             .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        SectionLabel(text = stringResource(Res.string.set_offer_logic))
+        SectionLabel(
+            text = stringResource(Res.string.set_offer_logic),
+            subtitle = "حدد تفاصيل ومنطق العرض",
+        )
 
         Spacer(modifier = Modifier.height(4.dp))
 

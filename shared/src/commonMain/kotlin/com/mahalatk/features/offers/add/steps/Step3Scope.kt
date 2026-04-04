@@ -5,30 +5,32 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mahalatk.common.component.animation.AnimatedListItem
 import com.mahalatk.common.component.chips.ChipCloud
-import com.mahalatk.common.component.utilis.noRippleClickable
 import com.mahalatk.features.offers.add.AddOfferState
 import com.mahalatk.features.offers.add.AddOfferViewModel
 import com.mahalatk.features.offers.add.OfferScopeType
@@ -65,7 +67,10 @@ private fun ScopeSelection(state: AddOfferState, viewModel: AddOfferViewModel) {
             .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        SectionLabel(text = stringResource(Res.string.select_scope))
+        SectionLabel(
+            text = stringResource(Res.string.select_scope),
+            subtitle = "حدد المنتجات اللي العرض هيتطبق عليها",
+        )
 
         ScopeOptionCard(
             index = 0,
@@ -103,7 +108,7 @@ private fun ScopeSelection(state: AddOfferState, viewModel: AddOfferViewModel) {
             )
         }
 
-        // Product selection (filter by category, then pick products)
+        // Product selection
         AnimatedVisibility(
             visible = state.scopeType == OfferScopeType.SPECIFIC_PRODUCTS,
             enter = expandVertically() + fadeIn(),
@@ -129,7 +134,10 @@ private fun PackageProductSelection(state: AddOfferState, viewModel: AddOfferVie
             .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        SectionLabel(text = stringResource(Res.string.categories_scope))
+        SectionLabel(
+            text = stringResource(Res.string.categories_scope),
+            subtitle = "اختر الأقسام اللي عايز تختار منها منتجات",
+        )
 
         ChipCloud(
             items = state.availableCategories,
@@ -156,32 +164,19 @@ private fun PackageProductSelection(state: AddOfferState, viewModel: AddOfferVie
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(CornerDimensions.lg),
                     colors = CardDefaults.cardColors(containerColor = AppColor.Surface),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
                 ) {
-                    Column(modifier = Modifier.padding(8.dp)) {
+                    Column(
+                        modifier = Modifier.padding(10.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                    ) {
                         filteredProducts.forEachIndexed { index, product ->
-                            val isChecked = product.id in state.packageProductIds
                             AnimatedListItem(index) {
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .noRippleClickable { viewModel.togglePackageProduct(product.id) }
-                                        .padding(horizontal = 8.dp, vertical = 4.dp),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                ) {
-                                    Checkbox(
-                                        checked = isChecked,
-                                        onCheckedChange = { viewModel.togglePackageProduct(product.id) },
-                                        colors = CheckboxDefaults.colors(checkedColor = AppColor.Primary),
-                                    )
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text(
-                                        text = product.name,
-                                        style = MahalatkTheme.bodyMedium,
-                                        color = AppColor.TextPrimary,
-                                        fontWeight = if (isChecked) FontWeight.SemiBold else FontWeight.Normal,
-                                    )
-                                }
+                                ProductCheckRow(
+                                    product = product,
+                                    isChecked = product.id in state.packageProductIds,
+                                    onToggle = { viewModel.togglePackageProduct(product.id) },
+                                )
                             }
                         }
                     }
@@ -231,9 +226,12 @@ private fun ProductFilterSection(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(CornerDimensions.lg),
                 colors = CardDefaults.cardColors(containerColor = AppColor.Surface),
-                elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
             ) {
-                Column(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
+                Column(
+                    modifier = Modifier.fillMaxWidth().padding(10.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                ) {
                     filteredProducts.forEach { product ->
                         ProductCheckRow(
                             product = product,
@@ -251,11 +249,34 @@ private fun ProductFilterSection(
 
 @Composable
 private fun SelectedProductCount(count: Int) {
-    if (count > 0) {
+    if (count <= 0) return
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .clip(RoundedCornerShape(CornerDimensions.sm))
+            .background(AppColor.PrimaryContainer)
+            .padding(horizontal = 10.dp, vertical = 6.dp),
+    ) {
+        Box(
+            modifier = Modifier
+                .size(20.dp)
+                .clip(CircleShape)
+                .background(AppColor.Primary),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(
+                text = "$count",
+                style = MahalatkTheme.labelSmall,
+                color = AppColor.OnPrimary,
+                fontWeight = FontWeight.Bold,
+            )
+        }
+        Spacer(modifier = Modifier.width(6.dp))
         Text(
-            text = "$count منتجات مختارة",
+            text = "منتجات مختارة",
             style = MahalatkTheme.bodySmall,
-            color = AppColor.Primary,
+            color = AppColor.OnPrimaryContainer,
             fontWeight = FontWeight.SemiBold,
         )
     }

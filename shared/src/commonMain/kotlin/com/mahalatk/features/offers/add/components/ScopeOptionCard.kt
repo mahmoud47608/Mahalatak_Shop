@@ -1,5 +1,10 @@
 package com.mahalatk.features.offers.add.components
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -15,10 +20,12 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mahalatk.common.component.animation.AnimatedListItem
@@ -34,38 +41,39 @@ fun ScopeOptionCard(
     isSelected: Boolean,
     onClick: () -> Unit,
 ) {
+    val containerBg by animateColorAsState(
+        targetValue = if (isSelected) AppColor.PrimaryContainer else AppColor.Surface,
+        animationSpec = tween(250),
+    )
+
+    val titleColor by animateColorAsState(
+        targetValue = if (isSelected) AppColor.OnPrimaryContainer else AppColor.TextPrimary,
+        animationSpec = tween(250),
+    )
+
     AnimatedListItem(index = index) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .then(
-                    if (isSelected) {
-                        Modifier.border(
-                            width = 2.dp,
-                            color = AppColor.Primary,
-                            shape = RoundedCornerShape(CornerDimensions.md),
-                        )
-                    } else {
-                        Modifier
-                    },
-                )
                 .noRippleClickable { onClick() },
             shape = RoundedCornerShape(CornerDimensions.md),
-            colors = CardDefaults.cardColors(containerColor = AppColor.Surface),
-            elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+            colors = CardDefaults.cardColors(containerColor = containerBg),
+            elevation = CardDefaults.cardElevation(
+                defaultElevation = if (isSelected) 0.dp else 1.dp,
+            ),
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                modifier = Modifier.fillMaxWidth().padding(14.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                RadioIndicator(isSelected = isSelected)
+                RadioDot(isSelected = isSelected)
 
                 Spacer(modifier = Modifier.width(12.dp))
 
                 Text(
                     text = title,
                     style = MahalatkTheme.titleSmall,
-                    color = AppColor.TextPrimary,
+                    color = titleColor,
                     fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,
                 )
             }
@@ -74,26 +82,31 @@ fun ScopeOptionCard(
 }
 
 @Composable
-private fun RadioIndicator(isSelected: Boolean) {
+private fun RadioDot(isSelected: Boolean) {
+    val outerColor by animateColorAsState(
+        targetValue = if (isSelected) AppColor.Primary else AppColor.Border,
+        animationSpec = tween(200),
+    )
+
+    val innerScale by animateFloatAsState(
+        targetValue = if (isSelected) 1f else 0f,
+        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy),
+    )
+
     Box(
         modifier = Modifier
             .size(20.dp)
             .clip(CircleShape)
             .background(if (isSelected) AppColor.Primary else Color.Transparent)
-            .border(
-                width = 2.dp,
-                color = if (isSelected) AppColor.Primary else AppColor.Border,
-                shape = CircleShape,
-            ),
+            .border(width = 2.dp, color = outerColor, shape = CircleShape),
         contentAlignment = Alignment.Center,
     ) {
-        if (isSelected) {
-            Box(
-                modifier = Modifier
-                    .size(8.dp)
-                    .clip(CircleShape)
-                    .background(Color.White),
-            )
-        }
+        Box(
+            modifier = Modifier
+                .size(8.dp)
+                .graphicsLayer { scaleX = innerScale; scaleY = innerScale }
+                .clip(CircleShape)
+                .background(Color.White),
+        )
     }
 }

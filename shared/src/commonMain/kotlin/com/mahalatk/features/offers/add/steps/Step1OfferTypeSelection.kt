@@ -43,7 +43,10 @@ fun Step1OfferTypeSelection(state: AddOfferState, viewModel: AddOfferViewModel) 
             .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        SectionLabel(text = stringResource(Res.string.select_offer_type))
+        SectionLabel(
+            text = stringResource(Res.string.select_offer_type),
+            subtitle = "اختر نوع العرض المناسب لمنتجاتك",
+        )
 
         Spacer(modifier = Modifier.height(4.dp))
 

@@ -8,6 +8,7 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,23 +16,40 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.CalendarMonth
+import androidx.compose.material.icons.rounded.Category
+import androidx.compose.material.icons.rounded.Percent
+import androidx.compose.material.icons.rounded.Tune
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mahalatk.common.component.bottomsheet.SuccessBottomSheet
 import com.mahalatk.common.component.button.ButtonStyle
 import com.mahalatk.common.component.button.DefaultButton
 import com.mahalatk.common.component.header.ScreenHeader
+import com.mahalatk.common.component.stepper.StepData
 import com.mahalatk.common.component.stepper.StepIndicator
 import com.mahalatk.features.offers.add.steps.Step1OfferTypeSelection
 import com.mahalatk.features.offers.add.steps.Step2LogicSetup
 import com.mahalatk.features.offers.add.steps.Step3Scope
 import com.mahalatk.features.offers.add.steps.Step4DurationReview
 import com.mahalatk.theme.AppColor
+import com.mahalatk.theme.CornerDimensions
 import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.add_offer
@@ -44,12 +62,23 @@ import org.koin.compose.viewmodel.koinViewModel
 
 private const val LAST_STEP = 3
 
+private data class StepMeta(val icon: ImageVector, val title: String)
+
 @Composable
 fun AddOfferScreen(
     viewModel: AddOfferViewModel = koinViewModel(),
     onBack: () -> Unit = {},
 ) {
     val state by viewModel.uiState.collectAsState()
+
+    val steps = remember {
+        listOf(
+            StepMeta(Icons.Rounded.Percent, "نوع العرض"),
+            StepMeta(Icons.Rounded.Tune, "تفاصيل العرض"),
+            StepMeta(Icons.Rounded.Category, "نطاق التطبيق"),
+            StepMeta(Icons.Rounded.CalendarMonth, "المدة والمراجعة"),
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -64,6 +93,13 @@ fun AddOfferScreen(
         StepIndicator(
             totalSteps = 4,
             currentStep = state.currentStep,
+            steps = steps.map { StepData(icon = it.icon, label = it.title) },
+        )
+
+        // ── Step context banner ─────────────────────────────
+        StepBanner(
+            step = steps[state.currentStep],
+            number = state.currentStep + 1,
         )
 
         StepError(errorRes = state.stepError)
@@ -89,6 +125,57 @@ fun AddOfferScreen(
     )
 }
 
+// ── Step Banner ─────────────────────────────────────────────────────────────
+
+@Composable
+private fun StepBanner(step: StepMeta, number: Int) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp)
+            .clip(RoundedCornerShape(CornerDimensions.md))
+            .background(AppColor.PrimaryContainer)
+            .padding(14.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Box(
+            modifier = Modifier
+                .size(38.dp)
+                .clip(CircleShape)
+                .background(AppColor.Primary.copy(alpha = 0.15f)),
+            contentAlignment = Alignment.Center,
+        ) {
+            Icon(
+                imageVector = step.icon,
+                contentDescription = null,
+                tint = AppColor.OnPrimaryContainer,
+                modifier = Modifier.size(18.dp),
+            )
+        }
+
+        Spacer(modifier = Modifier.width(12.dp))
+
+        Column {
+            Text(
+                text = "الخطوة $number من 4",
+                style = MahalatkTheme.labelSmall,
+                color = AppColor.TextHint,
+            )
+            Spacer(modifier = Modifier.height(1.dp))
+            Text(
+                text = step.title,
+                style = MahalatkTheme.titleSmall,
+                color = AppColor.OnPrimaryContainer,
+                fontWeight = FontWeight.Bold,
+            )
+        }
+    }
+
+    Spacer(modifier = Modifier.height(6.dp))
+}
+
+// ── Step Error ──────────────────────────────────────────────────────────────
+
 @Composable
 private fun StepError(errorRes: org.jetbrains.compose.resources.StringResource?) {
     if (errorRes == null) return
@@ -103,6 +190,8 @@ private fun StepError(errorRes: org.jetbrains.compose.resources.StringResource?)
     )
     Spacer(modifier = Modifier.height(4.dp))
 }
+
+// ── Step Content ────────────────────────────────────────────────────────────
 
 @Composable
 private fun StepContent(
@@ -134,6 +223,8 @@ private fun StepContent(
     }
 }
 
+// ── Bottom Navigation ───────────────────────────────────────────────────────
+
 @Composable
 private fun BottomNavigation(
     currentStep: Int,
@@ -144,7 +235,7 @@ private fun BottomNavigation(
         modifier = Modifier
             .fillMaxWidth()
             .background(AppColor.Surface)
-            .padding(horizontal = 20.dp, vertical = 12.dp),
+            .padding(horizontal = 20.dp, vertical = 14.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         if (currentStep > 0) {
