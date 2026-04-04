@@ -162,7 +162,7 @@ private fun CouponCard(coupon: Coupon, onToggleActive: () -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(CornerDimensions.lg),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = AppColor.Surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
     ) {
         Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
@@ -274,7 +274,7 @@ private fun CouponCardSkeleton() {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(CornerDimensions.lg),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = AppColor.Surface),
     ) {
         Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
             ShimmerBox(height = 44.dp, shape = RoundedCornerShape(10.dp))

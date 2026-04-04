@@ -31,7 +31,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -144,14 +143,14 @@ fun ProfileScreen(
                     .weight(1f)
                     .padding(horizontal = 16.dp),
                 shape = RoundedCornerShape(24.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
+                colors = CardDefaults.cardColors(containerColor = AppColor.Surface),
                 elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
             ) {
                 Column {
                     // Tab Row
                     TabRow(
                         selectedTabIndex = selectedTabIndex,
-                        containerColor = Color.White,
+                        containerColor = AppColor.Surface,
                         contentColor = MahalatkTheme.primary,
                         indicator = { tabPositions ->
                             SecondaryIndicator(

@@ -260,7 +260,7 @@ private fun OtpInput(
                         else -> AppColor.Border
                     }
                     val bgColor =
-                        if (digit.isNotEmpty()) AppColor.Primary.copy(alpha = 0.05f) else Color.White
+                        if (digit.isNotEmpty()) AppColor.Primary.copy(alpha = 0.05f) else AppColor.Surface
 
                     Box(
                         modifier = Modifier

@@ -38,5 +38,8 @@ interface PreferenceRepository {
     suspend fun getCountries(): Flow<String>
     suspend fun setCountries(countries: String)
 
+    suspend fun getDarkMode(): Flow<Boolean>
+    suspend fun setDarkMode(isDark: Boolean)
+
     suspend fun onLogout()
 }

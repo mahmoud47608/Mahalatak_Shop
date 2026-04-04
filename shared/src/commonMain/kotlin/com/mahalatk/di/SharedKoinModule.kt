@@ -31,6 +31,7 @@ import com.mahalatk.features.products.add.AddProductViewModel
 import com.mahalatk.features.profile.employee.EmployeeProfileViewModel
 import com.mahalatk.features.profile.shopowner.ShopOwnerProfileViewModel
 import com.mahalatk.features.ratings.MyRatingsViewModel
+import com.mahalatk.features.settings.SettingsViewModel
 import com.mahalatk.features.settings.changepassword.ChangePasswordViewModel
 import com.mahalatk.features.settings.changephone.ChangePhoneViewModel
 import com.mahalatk.features.splash.SplashViewModel
@@ -65,6 +66,7 @@ val sharedModule = module {
     viewModel { OrderDetailViewModel() }
     viewModel { ShopOwnerProfileViewModel(get(), get(), get()) }
     viewModel { EmployeeProfileViewModel(get(), get(), get()) }
+    viewModel { SettingsViewModel(get()) }
     viewModel { ChangePhoneViewModel(get(), get()) }
     viewModel { ChangePasswordViewModel(get(), get()) }
     viewModel { EmployeesViewModel() }

@@ -197,7 +197,7 @@ fun AppBottomBar(onItemSelected: (BottomNavItem) -> Unit) {
                 .graphicsLayer { shape = barShape; clip = true }
                 .fillMaxWidth()
                 .height(64.dp)
-                .background(Color.White),
+                .background(AppColor.Surface),
             horizontalArrangement = Arrangement.SpaceAround,
         ) {
             items.forEachIndexed { index, item ->

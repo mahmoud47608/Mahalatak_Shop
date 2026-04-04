@@ -427,6 +427,7 @@
     <string name="edit_profile_data">Edit Profile Data</string>
     <string name="change_phone_number">Change Phone Number</string>
     <string name="change_password">Change Password</string>
+    <string name="dark_mode">Dark Mode</string>
     <string name="delete_account">Delete Account</string>
     <string name="delete_account_confirmation">Are you sure you want to delete your account?</string>
 

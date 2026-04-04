@@ -58,7 +58,7 @@ fun OfferTypeCard(
                 )
                 .noRippleClickable { onClick() },
             shape = RoundedCornerShape(CornerDimensions.lg),
-            colors = CardDefaults.cardColors(containerColor = Color.White),
+            colors = CardDefaults.cardColors(containerColor = AppColor.Surface),
             elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
         ) {
             Row(

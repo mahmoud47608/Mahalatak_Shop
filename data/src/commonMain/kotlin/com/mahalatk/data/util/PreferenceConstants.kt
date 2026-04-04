@@ -12,4 +12,5 @@ object PreferenceConstants {
     const val IS_FIRST_TIME = "is_first_time"
     const val USER_TYPE = "user_type"
     const val NOTIFY_STATUS = "notify_status"
+    const val DARK_MODE = "dark_mode"
 }

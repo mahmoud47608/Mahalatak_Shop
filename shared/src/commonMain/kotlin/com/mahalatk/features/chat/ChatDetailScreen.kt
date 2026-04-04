@@ -17,16 +17,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -99,7 +96,7 @@ fun ChatDetailScreen(
             .fillMaxSize()
             .background(AppColor.ScreenBackground),
     ) {
-        val headerGradient = remember {
+        val headerGradient = remember(AppColor.isDark) {
             Brush.verticalGradient(
                 colors = listOf(AppColor.Primary, AppColor.Primary),
             )
@@ -196,7 +193,7 @@ fun ChatDetailScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.White)
+                .background(AppColor.Surface)
                 .padding(horizontal = 12.dp, vertical = 10.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -283,7 +280,7 @@ fun ChatDetailScreen(
 private fun MessageBubble(message: ChatMessage, animate: Boolean = false) {
     val content = @Composable {
         val isMe = message.isMe
-        val bgColor = if (isMe) AppColor.Primary else Color.White
+        val bgColor = if (isMe) AppColor.Primary else AppColor.Surface
         val textColor = if (isMe) Color.White else AppColor.TextPrimary
         val timeColor = if (isMe) Color.White.copy(alpha = 0.7f) else AppColor.TextHint
         val shape = if (isMe) {

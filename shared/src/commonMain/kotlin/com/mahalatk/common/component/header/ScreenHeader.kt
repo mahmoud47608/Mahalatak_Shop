@@ -12,7 +12,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -34,11 +33,9 @@ fun ScreenHeader(
     height: Dp = 90.dp,
     onBackClick: (() -> Unit)? = null,
 ) {
-    val gradient = remember {
-        Brush.verticalGradient(
-            colors = listOf(AppColor.Primary, AppColor.Primary),
-        )
-    }
+    val gradient = Brush.verticalGradient(
+        colors = listOf(AppColor.Primary, AppColor.Primary),
+    )
 
     Box(
         modifier = modifier

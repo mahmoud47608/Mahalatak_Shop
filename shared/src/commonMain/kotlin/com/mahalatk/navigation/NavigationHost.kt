@@ -193,7 +193,6 @@ fun NavigationHost() {
                 is Route.Settings -> NavEntry(route) {
                     SettingsScreen(
                         onBack = { navigator.pop() },
-                        onEditProfile = { navigator.push(Route.EditShopOwnerProfile) },
                         onChangePhoneNumber = { navigator.push(Route.ChangePhone) },
                         onChangePassword = { navigator.push(Route.ChangePassword) },
                     )

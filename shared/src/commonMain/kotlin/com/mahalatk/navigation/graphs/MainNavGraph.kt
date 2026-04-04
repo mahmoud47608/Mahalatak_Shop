@@ -83,14 +83,25 @@ fun MainNavGraph() {
 
 // ─── Helpers ────────────────────────────────────────
 
-/** Hides content without removing it from the composition tree. */
+/**
+ * Hides content without removing it from the composition tree.
+ *
+ * Hidden tabs are moved far off-screen via [offset] so they:
+ * 1. Cannot receive any touch events (outside hit-test bounds).
+ * 2. Stay composed — ViewModels, scroll positions, all state preserved.
+ * 3. No alpha/zIndex overlap issues.
+ */
 @Composable
 private fun TabSlot(visible: Boolean, content: @Composable () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .zIndex(if (visible) 1f else 0f)
-            .graphicsLayer { alpha = if (visible) 1f else 0f },
+            .graphicsLayer {
+                alpha = if (visible) 1f else 0f
+                // Move hidden tabs far off-screen so they can't receive touches
+                translationX = if (visible) 0f else 99999f
+            },
     ) {
         content()
     }

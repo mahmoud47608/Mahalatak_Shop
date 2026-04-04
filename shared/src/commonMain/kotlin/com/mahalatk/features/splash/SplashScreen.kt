@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import com.mahalatk.theme.AppColor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import mahalatk.shared.generated.resources.Res
@@ -32,7 +32,7 @@ fun SplashScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White),
+            .background(AppColor.Surface),
         contentAlignment = Alignment.Center
     ) {
         Image(

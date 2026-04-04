@@ -27,6 +27,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.mahalatk.common.component.utilis.noRippleClickable
+import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.MahalatkTheme
 
 
@@ -114,10 +115,10 @@ fun DefaultTextField(
                 unfocusedBorderColor = Color.Transparent,
                 disabledBorderColor = Color.Transparent,
                 errorBorderColor = Color.Transparent,
-                focusedContainerColor = MahalatkTheme.white,
-                unfocusedContainerColor = MahalatkTheme.white,
-                disabledContainerColor = MahalatkTheme.white,
-                errorContainerColor = MahalatkTheme.white,
+                focusedContainerColor = AppColor.Surface,
+                unfocusedContainerColor = AppColor.Surface,
+                disabledContainerColor = AppColor.Surface,
+                errorContainerColor = AppColor.Surface,
                 disabledTextColor = MahalatkTheme.black,
                 disabledPlaceholderColor = MahalatkTheme.hint
             )

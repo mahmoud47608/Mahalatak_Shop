@@ -77,7 +77,7 @@ fun HomeScreen(
     val state by viewModel.uiState.collectAsState()
     val navigator = com.mahalatk.navigation.LocalNavigator.current
 
-    val headerGradient = remember {
+    val headerGradient = remember(AppColor.isDark) {
         Brush.verticalGradient(
             colors = listOf(AppColor.Primary, AppColor.Primary),
         )
@@ -246,7 +246,7 @@ private fun ToggleCard(
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(CornerDimensions.lg),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = AppColor.Surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
     ) {
         Row(
@@ -330,7 +330,7 @@ private fun StatCard(
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(CornerDimensions.lg),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = AppColor.Surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
     ) {
         Column(
@@ -397,7 +397,7 @@ private fun OrderCard(order: OrderItem, onClick: () -> Unit = {}) {
     Card(
         modifier = Modifier.fillMaxWidth().noRippleClickable { onClick() },
         shape = RoundedCornerShape(CornerDimensions.lg),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = AppColor.Surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
     ) {
         Row(

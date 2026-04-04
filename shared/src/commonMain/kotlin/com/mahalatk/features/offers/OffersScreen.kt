@@ -177,7 +177,7 @@ fun OffersScreen(
 
 @Composable
 private fun OfferCard(offer: Offer, onToggleActive: () -> Unit = {}) {
-    val (icon, iconBg) = remember(offer.type) {
+    val (icon, iconBg) = remember(offer.type, AppColor.isDark) {
         when (offer.type) {
             OfferType.DISCOUNT -> Icons.Rounded.Storefront to AppColor.Primary
             OfferType.BUY_X_GET_Y -> Icons.Rounded.ShoppingCart to AppColor.Success
@@ -189,7 +189,7 @@ private fun OfferCard(offer: Offer, onToggleActive: () -> Unit = {}) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(CornerDimensions.lg),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = AppColor.Surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
     ) {
         Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
@@ -275,7 +275,7 @@ private fun OfferCardSkeleton() {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(CornerDimensions.lg),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = AppColor.Surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
     ) {
         Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {

@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,9 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -33,10 +32,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.mahalatk.common.component.animation.AnimatedListItem
 import com.mahalatk.common.component.empty.EmptyStatePlaceholder
-import com.mahalatk.common.component.loading.ShimmerBox
-import com.mahalatk.common.component.loading.ShimmerCircle
 import com.mahalatk.common.component.header.ScreenHeader
 import com.mahalatk.common.component.image.UserAvatar
+import com.mahalatk.common.component.loading.ShimmerBox
+import com.mahalatk.common.component.loading.ShimmerCircle
 import com.mahalatk.common.component.tabs.FilterTabs
 import com.mahalatk.common.component.utilis.noRippleClickable
 import com.mahalatk.navigation.LocalNavigator
@@ -130,7 +129,7 @@ private fun ChatItemSkeleton() {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(CornerDimensions.lg),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = AppColor.Surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
     ) {
         Row(
@@ -162,7 +161,7 @@ private fun ChatItem(
     Card(
         modifier = Modifier.fillMaxWidth().noRippleClickable { onClick() },
         shape = RoundedCornerShape(CornerDimensions.lg),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = AppColor.Surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
     ) {
         Row(
@@ -180,7 +179,7 @@ private fun ChatItem(
                 if (conversation.isOnline) {
                     Box(
                         modifier = Modifier.size(14.dp).clip(CircleShape)
-                            .background(Color.White).padding(2.dp)
+                            .background(AppColor.Surface).padding(2.dp)
                             .clip(CircleShape).background(AppColor.Success)
                             .align(Alignment.BottomEnd),
                     )

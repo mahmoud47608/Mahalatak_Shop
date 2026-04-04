@@ -39,7 +39,7 @@ fun <T> FilterTabs(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .background(color = Color.White, shape = RoundedCornerShape(14.dp))
+            .background(color = AppColor.Surface, shape = RoundedCornerShape(14.dp))
             .padding(4.dp),
         horizontalArrangement = Arrangement.SpaceEvenly,
     ) {

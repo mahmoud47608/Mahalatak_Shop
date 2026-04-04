@@ -7,7 +7,6 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -25,9 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-
-private val ShimmerColorLight = Color(0xFFE8E8E8)
-private val ShimmerColorHighlight = Color(0xFFF5F5F5)
+import com.mahalatk.theme.AppColor
 
 /**
  * Creates a shimmer brush that animates a gradient sweep left→right.
@@ -44,12 +41,11 @@ fun shimmerBrush(): Brush {
         ),
     )
 
+    val base = if (AppColor.isDark) Color(0xFF2A2A2A) else Color(0xFFE8E8E8)
+    val highlight = if (AppColor.isDark) Color(0xFF3A3A3A) else Color(0xFFF5F5F5)
+
     return Brush.linearGradient(
-        colors = listOf(
-            ShimmerColorLight,
-            ShimmerColorHighlight,
-            ShimmerColorLight,
-        ),
+        colors = listOf(base, highlight, base),
         start = Offset(translateAnim - 500f, 0f),
         end = Offset(translateAnim, 0f),
     )

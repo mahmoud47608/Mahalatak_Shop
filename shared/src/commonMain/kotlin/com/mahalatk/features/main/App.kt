@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.mahalatk.common.component.loading.LoadingOverlay
+import com.mahalatk.domain.repository.PreferenceRepository
 import com.mahalatk.navigation.AppBottomBar
 import com.mahalatk.navigation.BottomNavItem
 import com.mahalatk.navigation.LocalNavigator
@@ -33,11 +34,20 @@ import kotlinx.coroutines.flow.collectLatest
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.ic_background
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun App(viewModel: MainViewModel = koinViewModel()) {
-    MahalatkTheme {
+    val preferenceRepository: PreferenceRepository = koinInject()
+
+    // Load saved preference on first launch
+    LaunchedEffect(Unit) {
+        preferenceRepository.getDarkMode().collect { com.mahalatk.theme.AppColor.isDark = it }
+    }
+
+    // AppColor.isDark is mutableStateOf — reads here trigger recomposition instantly
+    MahalatkTheme(darkTheme = com.mahalatk.theme.AppColor.isDark) {
         val navigator = rememberAppNavigator()
         val isLoading by viewModel.isLoading.collectAsState()
         val snackbarHostState = remember { SnackbarHostState() }

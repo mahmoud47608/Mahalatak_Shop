@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.mahalatk.common.component.utilis.noRippleClickable
+import com.mahalatk.theme.AppColor
 import kotlinx.coroutines.delay
 
 @Composable
@@ -71,7 +72,7 @@ fun TopSlideDialog(
                     .padding(horizontal = 24.dp)
                     .noRippleClickable { /* prevent dismiss on card click */ },
                 shape = RoundedCornerShape(24.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
+                colors = CardDefaults.cardColors(containerColor = AppColor.Surface),
                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
             ) {
                 content()

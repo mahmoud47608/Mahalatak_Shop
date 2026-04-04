@@ -80,6 +80,12 @@ class PreferenceRepositoryImpl(
     override suspend fun setAvailabilityStatus(status: Boolean) =
         dataSource.setValue(PreferenceConstants.AVAILABILITY, status)
 
+    override suspend fun getDarkMode(): Flow<Boolean> =
+        getBoolean(PreferenceConstants.DARK_MODE, false)
+
+    override suspend fun setDarkMode(isDark: Boolean) =
+        dataSource.setValue(PreferenceConstants.DARK_MODE, isDark)
+
     // ─── Logout ─────────────────────────────
 
     override suspend fun onLogout() {

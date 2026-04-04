@@ -58,7 +58,7 @@ fun NotificationsScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
 
-    val headerGradient = remember {
+    val headerGradient = remember(AppColor.isDark) {
         Brush.verticalGradient(
             colors = listOf(AppColor.Primary, AppColor.Primary),
         )
@@ -183,7 +183,7 @@ private fun NotificationCard(
         modifier = Modifier.fillMaxWidth().noRippleClickable { onClick() },
         shape = RoundedCornerShape(CornerDimensions.lg),
         colors = CardDefaults.cardColors(
-            containerColor = if (!notification.isRead) AppColor.PrimaryContainer else Color.White,
+            containerColor = if (!notification.isRead) AppColor.PrimaryContainer else AppColor.Surface,
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
         border = null,
