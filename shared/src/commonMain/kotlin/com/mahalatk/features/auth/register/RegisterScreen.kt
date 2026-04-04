@@ -1,9 +1,12 @@
 package com.mahalatk.features.auth.register
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,10 +27,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
-import androidx.compose.material3.TabRowDefaults.SecondaryIndicator
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -39,6 +38,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.SpanStyle
@@ -60,6 +60,7 @@ import com.mahalatk.common.component.imagepicker.toImageBitmap
 import com.mahalatk.common.component.inputs.DefaultTextField
 import com.mahalatk.common.component.utilis.noRippleClickable
 import com.mahalatk.theme.AppColor
+import com.mahalatk.theme.CornerDimensions
 import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.already_have_account
@@ -163,9 +164,55 @@ fun RegisterScreen(
 
         val cardShape = RoundedCornerShape(24.dp)
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
-        // Card wrapping TabRow + Form
+        // Segmented toggle
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .clip(RoundedCornerShape(CornerDimensions.md))
+                .background(AppColor.SurfaceContainerHigh)
+                .padding(4.dp),
+        ) {
+            tabs.forEachIndexed { index, title ->
+                val isSelected = selectedTabIndex == index
+
+                val bgColor by animateColorAsState(
+                    targetValue = if (isSelected) AppColor.Primary else Color.Transparent,
+                    animationSpec = tween(250),
+                )
+                val textColor by animateColorAsState(
+                    targetValue = if (isSelected) Color.White else AppColor.TextHint,
+                    animationSpec = tween(250),
+                )
+
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .clip(RoundedCornerShape(CornerDimensions.sm))
+                        .background(bgColor)
+                        .noRippleClickable {
+                            val type =
+                                if (index == 0) AccountType.SHOP_OWNER else AccountType.EMPLOYEE
+                            if (uiState.accountType != type) viewModel.switchAccountType(type)
+                        }
+                        .padding(vertical = 10.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        text = title,
+                        style = MahalatkTheme.titleSmall,
+                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                        color = textColor,
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // Card wrapping Form
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -177,39 +224,6 @@ fun RegisterScreen(
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
         ) {
             Column {
-                TabRow(
-                    selectedTabIndex = selectedTabIndex,
-                    containerColor = MahalatkTheme.white,
-                    contentColor = MahalatkTheme.primary,
-                    indicator = { tabPositions ->
-                        SecondaryIndicator(
-                            modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
-                            color = MahalatkTheme.primary,
-                            height = 3.dp
-                        )
-                    }
-                ) {
-                    tabs.forEachIndexed { index, title ->
-                        Tab(
-                            selected = selectedTabIndex == index,
-                            onClick = {
-                                val type =
-                                    if (index == 0) AccountType.SHOP_OWNER else AccountType.EMPLOYEE
-                                if (uiState.accountType != type) {
-                                    viewModel.switchAccountType(type)
-                                }
-                            },
-                            text = {
-                                Text(
-                                    text = title,
-                                    style = MahalatkTheme.titleMedium,
-                                    color = if (selectedTabIndex == index) MahalatkTheme.primary else MahalatkTheme.hint,
-                                )
-                            }
-                        )
-                    }
-                }
-
                 // Scrollable Form Content inside the card
                 Column(
                     modifier = Modifier

@@ -17,7 +17,21 @@ class RegisterViewModel(
 
     fun switchAccountType(type: AccountType) {
         updateState {
-            RegisterState(accountType = type)
+            copy(
+                accountType = type,
+                // Clear errors only — keep shared fields (mobile, password, etc.)
+                imageError = null,
+                shopNameError = null,
+                ownerNameError = null,
+                employeeNameError = null,
+                selectedShopError = null,
+                categoryError = null,
+                locationError = null,
+                cityError = null,
+                mobileError = null,
+                passwordError = null,
+                confirmPasswordError = null,
+            )
         }
     }
 
