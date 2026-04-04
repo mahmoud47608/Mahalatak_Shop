@@ -4,20 +4,21 @@ import com.mahalatk.domain.entity.CategoryData
 import com.mahalatk.domain.entity.SubCategoryData
 import com.mahalatk.domain.entity.base.BaseResponse
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
 import io.ktor.client.request.forms.formData
 import io.ktor.client.request.forms.submitFormWithBinaryData
 import io.ktor.client.request.get
+import io.ktor.client.statement.readRawBytes
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
+import kotlinx.serialization.json.Json
 
-class CommonEndPoint(private val client: HttpClient) {
+class CommonEndPoint(private val client: HttpClient, private val json: Json) {
 
     suspend fun getCategories(): BaseResponse<List<CategoryData>> =
-        client.get("categories").body()
+        json.decodeFromString(client.get("categories").readRawBytes().decodeToString())
 
     suspend fun getSubCategories(categoryId: Int): BaseResponse<List<SubCategoryData>> =
-        client.get("categories/$categoryId/sub-categories").body()
+        json.decodeFromString(client.get("categories/$categoryId/sub-categories").readRawBytes().decodeToString())
 
     suspend fun addProduct(
         nameAr: String,
@@ -65,5 +66,5 @@ class CommonEndPoint(private val client: HttpClient) {
             discountType?.let { append("discount_type", it) }
             discountValue?.let { append("discount_value", it.toString()) }
         }
-    ).body()
+    ).readRawBytes().decodeToString().let { json.decodeFromString(it) }
 }

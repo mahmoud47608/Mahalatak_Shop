@@ -64,7 +64,12 @@
       "Bash(xargs -I {} grep -l \"CoroutineScope\\\\|GlobalScope\" {})",
       "Bash(find D:projectMahalatak -type f \\\\\\(-name *.kt -o -name *.ts -o -name *.tsx -o -name *.json \\\\\\) ! -path */build/* ! -path */.gradle/* ! -path */.idea/* -print0)",
       "Bash(xargs -0 grep -l cycle)",
-      "Bash(find D:projectMahalatak -path */offers* -type f \\\\\\(-name *.kt -o -name *.xml -o -name *.json \\\\\\) ! -path */build/* ! -path */.gradle/*)"
+      "Bash(find D:projectMahalatak -path */offers* -type f \\\\\\(-name *.kt -o -name *.xml -o -name *.json \\\\\\) ! -path */build/* ! -path */.gradle/*)",
+      "WebFetch(domain:slack-chats.kotlinlang.org)",
+      "WebFetch(domain:youtrack.jetbrains.com)",
+      "Bash(gh issue view:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:www.jetbrains.com)"
     ],
     "deny": [],
     "ask": []

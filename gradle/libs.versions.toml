@@ -41,7 +41,7 @@ material3 = "1.4.0"
 firebaseCrashlytics = "20.0.4"
 googleFirebaseCrashlytics = "3.0.6"
 # Compose Multiplatform
-composeMultiplatform = "1.8.1"
+composeMultiplatform = "1.10.3"
 # KMP dependencies
 ktor = "3.1.1"
 koin = "4.1.0"

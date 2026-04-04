@@ -45,9 +45,9 @@ val commonDataModule = module {
     }
 
     // Endpoints & Repositories
-    single { AuthEndPoint(get()) }
+    single { AuthEndPoint(get(), get()) }
     single<AuthRepository> { AuthRepositoryImpl(get()) }
 
-    single { CommonEndPoint(get()) }
+    single { CommonEndPoint(get(), get()) }
     single<CommonRepository> { CommonRepositoryImpl(get()) }
 }

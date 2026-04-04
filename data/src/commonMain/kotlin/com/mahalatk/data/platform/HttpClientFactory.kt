@@ -6,12 +6,10 @@ import com.mahalatk.domain.util.getPlatformLanguage
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.plugins.HttpSend
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.plugin
-import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
 expect fun createPlatformHttpClient(json: Json, baseUrl: String): HttpClient
@@ -29,8 +27,14 @@ fun HttpClient.installTokenInterceptor(tokenProvider: TokenHeaderProvider): Http
 }
 
 fun HttpClientConfig<*>.installCommonPlugins(json: Json, baseUrl: String) {
-    install(ContentNegotiation) { json(json) }
-    install(Logging) { level = LogLevel.BODY }
+    install(Logging) {
+        level = LogLevel.BODY
+        logger = object : io.ktor.client.plugins.logging.Logger {
+            override fun log(message: String) {
+                println("HTTP: $message")
+            }
+        }
+    }
     defaultRequest {
         url("$baseUrl/api/")
     }
