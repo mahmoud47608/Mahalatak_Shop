@@ -1,8 +1,5 @@
 package com.mahalatk.navigation
 
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavEntry
@@ -54,9 +51,6 @@ fun NavigationHost() {
     NavDisplay(
         backStack = navigator.backStack,
         onBack = { navigator.pop() },
-        // No animated transitions — instant switch, zero overhead
-        transitionSpec = { EnterTransition.None togetherWith ExitTransition.None },
-        popTransitionSpec = { EnterTransition.None togetherWith ExitTransition.None },
         entryDecorators = listOf(
             rememberSaveableStateHolderNavEntryDecorator(),
             rememberViewModelStoreNavEntryDecorator(),
@@ -121,6 +115,7 @@ fun NavigationHost() {
 
                 is Route.ForgotPassword -> NavEntry(route) {
                     ForgotPasswordScreen(
+                        onBack = { navigator.pop() },
                         onSendCode = { phone ->
                             navigator.push(Route.Activation(phone, isFromForgotPassword = true))
                         },
@@ -128,7 +123,10 @@ fun NavigationHost() {
                 }
 
                 is Route.ResetPassword -> NavEntry(route) {
-                    ResetPasswordScreen(onSuccess = { navigator.replaceAll(Route.Login) })
+                    ResetPasswordScreen(
+                        onBack = { navigator.pop() },
+                        onSuccess = { navigator.replaceAll(Route.Login) },
+                    )
                 }
 
                 is Route.PickLocation -> NavEntry(route) {

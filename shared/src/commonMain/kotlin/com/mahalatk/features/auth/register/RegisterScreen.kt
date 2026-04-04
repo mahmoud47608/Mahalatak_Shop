@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -37,7 +36,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -56,11 +54,12 @@ import androidx.compose.ui.unit.sp
 import com.mahalatk.common.component.bottomsheet.MultiSelectBottomSheet
 import com.mahalatk.common.component.bottomsheet.SingleSelectBottomSheet
 import com.mahalatk.common.component.button.DefaultButton
-import com.mahalatk.common.component.button.LanguageButton
+import com.mahalatk.common.component.header.ScreenHeader
 import com.mahalatk.common.component.imagepicker.rememberImagePickerLauncher
 import com.mahalatk.common.component.imagepicker.toImageBitmap
 import com.mahalatk.common.component.inputs.DefaultTextField
 import com.mahalatk.common.component.utilis.noRippleClickable
+import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.already_have_account
@@ -148,12 +147,11 @@ fun RegisterScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 48.dp, bottom = 16.dp)
+            .background(AppColor.ScreenBackground),
     ) {
-        LanguageButton(
-            modifier = Modifier
-                .align(AbsoluteAlignment.Left)
-                .padding(horizontal = 16.dp)
+        ScreenHeader(
+            title = stringResource(Res.string.register),
+            onBackClick = onNavigateToLogin,
         )
 
         // Tab Layout
@@ -165,10 +163,9 @@ fun RegisterScreen(
 
         val cardShape = RoundedCornerShape(24.dp)
 
-        // Proportional spacer - pushes card down relative to screen height
-        Spacer(modifier = Modifier.fillMaxHeight(0.08f))
+        Spacer(modifier = Modifier.height(16.dp))
 
-        // Card wrapping TabRow + Form (fixed position, content scrolls inside)
+        // Card wrapping TabRow + Form
         Card(
             modifier = Modifier
                 .fillMaxWidth()

@@ -1,6 +1,7 @@
 package com.mahalatk.features.auth.login
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,7 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -35,9 +35,10 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mahalatk.common.component.button.DefaultButton
-import com.mahalatk.common.component.button.LanguageButton
+import com.mahalatk.common.component.header.ScreenHeader
 import com.mahalatk.common.component.inputs.DefaultTextField
 import com.mahalatk.common.component.utilis.noRippleClickable
+import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.MahalatkTheme
 import kotlinx.coroutines.flow.collectLatest
 import mahalatk.shared.generated.resources.Res
@@ -66,39 +67,32 @@ fun LoginScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(vertical = 48.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .background(AppColor.ScreenBackground),
     ) {
-        // Language Button - always on the left
-        LanguageButton(
+        ScreenHeader(title = stringResource(Res.string.login))
+
+        Column(
             modifier = Modifier
-                .align(AbsoluteAlignment.Left)
-                .padding(horizontal = 16.dp)
-        )
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 24.dp, vertical = 24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Spacer(modifier = Modifier.height(24.dp))
 
-        Spacer(modifier = Modifier.height(68.dp))
+            Image(
+                painter = painterResource(Res.drawable.app_icon),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+            )
 
-        // Logo
-        Image(
-            painter = painterResource(Res.drawable.app_icon),
-            contentDescription = null,
-            contentScale = ContentScale.Crop
-        )
+            Spacer(modifier = Modifier.height(32.dp))
 
-        Spacer(modifier = Modifier.height(48.dp))
-
-        Column(modifier = Modifier.padding(horizontal = 24.dp)) {
             // Phone field
             DefaultTextField(
                 value = uiState.mobile,
                 onValueChanged = {
-                    viewModel.updateState {
-                        copy(
-                            mobile = it,
-                            mobileError = null
-                        )
-                    }
+                    viewModel.updateState { copy(mobile = it, mobileError = null) }
                 },
                 placeholderText = stringResource(Res.string.phone),
                 keyboardType = KeyboardType.Phone,
@@ -109,10 +103,10 @@ fun LoginScreen(
                         painter = painterResource(Res.drawable.ic_phone),
                         contentDescription = null,
                         modifier = Modifier.size(24.dp),
-                        tint = MahalatkTheme.primary
+                        tint = MahalatkTheme.primary,
                     )
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -121,12 +115,7 @@ fun LoginScreen(
             DefaultTextField(
                 value = uiState.password,
                 onValueChanged = {
-                    viewModel.updateState {
-                        copy(
-                            password = it,
-                            passwordError = null
-                        )
-                    }
+                    viewModel.updateState { copy(password = it, passwordError = null) }
                 },
                 placeholderText = stringResource(Res.string.password),
                 keyboardType = KeyboardType.Password,
@@ -139,7 +128,7 @@ fun LoginScreen(
                         painter = painterResource(Res.drawable.ic_lock),
                         contentDescription = null,
                         modifier = Modifier.size(24.dp),
-                        tint = MahalatkTheme.primary
+                        tint = MahalatkTheme.primary,
                     )
                 },
                 trailingIcon = {
@@ -150,11 +139,11 @@ fun LoginScreen(
                             imageVector = if (uiState.passwordVisible) Icons.Filled.Visibility
                             else Icons.Filled.VisibilityOff,
                             contentDescription = null,
-                            tint = MahalatkTheme.primary
+                            tint = MahalatkTheme.primary,
                         )
                     }
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -167,41 +156,41 @@ fun LoginScreen(
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier
                     .align(Alignment.End)
-                    .noRippleClickable { onNavigateToForgotPassword() }
+                    .noRippleClickable { onNavigateToForgotPassword() },
             )
 
-            Spacer(modifier = Modifier.height(60.dp))
+            Spacer(modifier = Modifier.height(48.dp))
 
             // Login Button
             DefaultButton(
                 text = stringResource(Res.string.login),
                 onClick = { viewModel.login() },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            // Create Account / Sign Up
+            val annotatedText = buildAnnotatedString {
+                append(stringResource(Res.string.create_account_prefix))
+                withStyle(
+                    style = SpanStyle(
+                        color = MahalatkTheme.primary,
+                        fontWeight = FontWeight.Bold,
+                    ),
+                ) {
+                    append(stringResource(Res.string.sign_up))
+                }
+            }
+            Text(
+                text = annotatedText,
+                fontSize = 14.sp,
+                color = MahalatkTheme.black,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .noRippleClickable { onNavigateToSignUp() },
             )
         }
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        // Create An Account / Sign Up
-        val annotatedText = buildAnnotatedString {
-            append(stringResource(Res.string.create_account_prefix))
-            withStyle(
-                style = SpanStyle(
-                    color = MahalatkTheme.primary,
-                    fontWeight = FontWeight.Bold
-                )
-            ) {
-                append(stringResource(Res.string.sign_up))
-            }
-        }
-        Text(
-            text = annotatedText,
-            fontSize = 14.sp,
-            color = MahalatkTheme.black,
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .noRippleClickable { onNavigateToSignUp() }
-        )
     }
 
     LaunchedEffect(Unit) {

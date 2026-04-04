@@ -1,6 +1,5 @@
 package com.mahalatk.features.auth.activation
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -35,7 +34,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.SpanStyle
@@ -56,11 +54,9 @@ import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.activation_code
 import mahalatk.shared.generated.resources.activation_subtitle
-import mahalatk.shared.generated.resources.app_icon
 import mahalatk.shared.generated.resources.didnt_receive_code
 import mahalatk.shared.generated.resources.resend_code
 import mahalatk.shared.generated.resources.verify
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -100,34 +96,21 @@ fun ActivationScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(if (headerTitle != null) AppColor.ScreenBackground else Color.Transparent),
+            .background(AppColor.ScreenBackground),
     ) {
-        if (headerTitle != null) {
-            ScreenHeader(
-                title = headerTitle,
-                onBackClick = onBack,
-            )
-        }
+        ScreenHeader(
+            title = headerTitle ?: stringResource(Res.string.activation_code),
+            onBackClick = onBack,
+        )
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 24.dp, vertical = if (headerTitle != null) 24.dp else 48.dp),
+                .padding(horizontal = 24.dp, vertical = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            if (headerTitle == null) {
-                Spacer(modifier = Modifier.height(40.dp))
-
-                // App Logo
-                Image(
-                    painter = painterResource(Res.drawable.app_icon),
-                    contentDescription = null,
-                    contentScale = ContentScale.Fit,
-                )
-
-                Spacer(modifier = Modifier.height(40.dp))
-            }
+            Spacer(modifier = Modifier.height(16.dp))
 
             // Title
             Text(
