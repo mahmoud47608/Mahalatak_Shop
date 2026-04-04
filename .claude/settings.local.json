@@ -69,7 +69,8 @@
       "WebFetch(domain:youtrack.jetbrains.com)",
       "Bash(gh issue view:*)",
       "WebFetch(domain:github.com)",
-      "WebFetch(domain:www.jetbrains.com)"
+      "WebFetch(domain:www.jetbrains.com)",
+      "Bash(xargs:*)"
     ],
     "deny": [],
     "ask": []
