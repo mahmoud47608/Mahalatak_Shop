@@ -1,12 +1,14 @@
 package com.mahalatk.navigation.graphs
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.zIndex
 import com.mahalatk.features.chat.ChatScreen
 import com.mahalatk.features.home.HomeScreen
 import com.mahalatk.features.more.MoreScreen
@@ -84,7 +86,12 @@ fun MainNavGraph() {
 /** Hides content without removing it from the composition tree. */
 @Composable
 private fun TabSlot(visible: Boolean, content: @Composable () -> Unit) {
-    Box(modifier = Modifier.graphicsLayer { alpha = if (visible) 1f else 0f }) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .zIndex(if (visible) 1f else 0f)
+            .graphicsLayer { alpha = if (visible) 1f else 0f },
+    ) {
         content()
     }
 }

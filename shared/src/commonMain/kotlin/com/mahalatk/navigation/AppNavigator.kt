@@ -79,18 +79,16 @@ class AppNavigator(initialRoute: Route = Route.Splash) {
     fun switchTab(route: Route) {
         if (currentTab == route) return
 
-        // Pop detail screens back to tab level
+        // Pop any detail screens back to tab level
         val tabIndex = backStack.indexOfFirst { it.isTabRoute }
         if (tabIndex >= 0) {
             while (backStack.size > tabIndex + 1) {
                 backStack.removeAt(backStack.lastIndex)
             }
-            backStack[tabIndex] = route
-        } else {
-            backStack.clear()
-            backStack.add(route)
+            // Do NOT update backStack[tabIndex] — NavDisplay stays idle, zero overhead
         }
 
+        // Only update currentTab — MainNavGraph reads this to show/hide tabs
         currentTab = route
     }
 }
