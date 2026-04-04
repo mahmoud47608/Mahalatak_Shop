@@ -285,7 +285,7 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
                 }
             }
 
-            item { Spacer(Modifier.height(80.dp)) }
+            item { Spacer(Modifier.fillParentMaxHeight()) }
         }
     }
 }
