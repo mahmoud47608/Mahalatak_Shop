@@ -184,10 +184,6 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
                 AnimatedListItem(3) {
                     MenuCard {
                         MenuRow(
-                            Res.drawable.ic_profile,
-                            Res.string.settings
-                        ) { navigator.push(Route.ShopOwnerProfile) }
-                        MenuRow(
                             Res.drawable.ic_settings,
                             Res.string.settings,
                             Color(0xFF546E7A)

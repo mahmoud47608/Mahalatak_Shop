@@ -13,6 +13,7 @@ data class ShopOwnerProfileState(
     // Shop Owner fields
     val shopName: String = "",
     val ownerName: String = "",
+    val phone: String = "",
     val shopType: ShopType = ShopType.PHYSICAL,
     val selectedCategories: Set<ShopCategory> = emptySet(),
     val returnPolicy: ReturnPolicy = ReturnPolicy.EXCHANGE,

@@ -33,6 +33,7 @@ class ShopOwnerProfileViewModel(
                 copy(
                     ownerName = authData.name
                         ?: "${authData.firstName.orEmpty()} ${authData.lastName.orEmpty()}".trim(),
+                    phone = authData.fullPhone ?: authData.phone.orEmpty(),
                     shopImageUrl = authData.image.orEmpty(),
                     selectedCity = authData.city?.let { CityItem(it.id ?: 0, it.name.orEmpty()) },
                 )

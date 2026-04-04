@@ -182,6 +182,7 @@ fun NavigationHost() {
                     EditShopOwnerProfileScreen(
                         onBack = { navigator.pop() },
                         onNavigateToPickLocation = { navigator.push(Route.PickLocation) },
+                        onChangePhone = { navigator.push(Route.ChangePhone) },
                     )
                 }
 
@@ -193,7 +194,6 @@ fun NavigationHost() {
                 is Route.Settings -> NavEntry(route) {
                     SettingsScreen(
                         onBack = { navigator.pop() },
-                        onChangePhoneNumber = { navigator.push(Route.ChangePhone) },
                         onChangePassword = { navigator.push(Route.ChangePassword) },
                     )
                 }

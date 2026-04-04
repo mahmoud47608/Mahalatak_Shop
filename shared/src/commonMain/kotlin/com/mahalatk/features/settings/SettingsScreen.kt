@@ -40,20 +40,17 @@ import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.change_language
 import mahalatk.shared.generated.resources.change_password
-import mahalatk.shared.generated.resources.change_phone_number
 import mahalatk.shared.generated.resources.dark_mode
 import mahalatk.shared.generated.resources.delete_account
 import mahalatk.shared.generated.resources.general_settings
 import mahalatk.shared.generated.resources.ic_delete
 import mahalatk.shared.generated.resources.ic_language
 import mahalatk.shared.generated.resources.ic_lock
-import mahalatk.shared.generated.resources.ic_phone
 import mahalatk.shared.generated.resources.ic_settings
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
-private val ChangePhoneColor = Color(0xFF4CAF50)
 private val ChangeLanguageColor = Color(0xFFE91E63)
 private val ChangePasswordColor = Color(0xFF42A5F5)
 private val DarkModeColor = Color(0xFF5C6BC0)
@@ -62,7 +59,6 @@ private val DeleteAccountColor = Color(0xFFF44336)
 @Composable
 fun SettingsScreen(
     onBack: () -> Unit = {},
-    onChangePhoneNumber: () -> Unit = {},
     onChangeLanguage: () -> Unit = {},
     onChangePassword: () -> Unit = {},
     onDeleteAccount: () -> Unit = {},
@@ -93,18 +89,8 @@ fun SettingsScreen(
                 elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
             ) {
                 Column {
-                    // 1 ─ Change Phone Number
+                    // 1 ─ Change Password
                     AnimatedListItem(0) {
-                        MenuItemRow(
-                            icon = Res.drawable.ic_phone,
-                            iconColor = ChangePhoneColor,
-                            title = stringResource(Res.string.change_phone_number),
-                            onClick = onChangePhoneNumber,
-                        )
-                    }
-
-                    // 2 ─ Change Password
-                    AnimatedListItem(1) {
                         MenuItemRow(
                             icon = Res.drawable.ic_lock,
                             iconColor = ChangePasswordColor,
@@ -113,8 +99,8 @@ fun SettingsScreen(
                         )
                     }
 
-                    // 3 ─ Change Language
-                    AnimatedListItem(2) {
+                    // 2 ─ Change Language
+                    AnimatedListItem(1) {
                         MenuItemRow(
                             icon = Res.drawable.ic_language,
                             iconColor = ChangeLanguageColor,
@@ -123,16 +109,16 @@ fun SettingsScreen(
                         )
                     }
 
-                    // 4 ─ Dark Mode Toggle
-                    AnimatedListItem(3) {
+                    // 3 ─ Dark Mode Toggle
+                    AnimatedListItem(2) {
                         DarkModeToggleRow(
                             isDarkMode = isDarkMode,
                             onToggle = { viewModel.toggleDarkMode() },
                         )
                     }
 
-                    // 5 ─ Delete Account
-                    AnimatedListItem(4) {
+                    // 4 ─ Delete Account
+                    AnimatedListItem(3) {
                         MenuItemRow(
                             icon = Res.drawable.ic_delete,
                             iconColor = DeleteAccountColor,

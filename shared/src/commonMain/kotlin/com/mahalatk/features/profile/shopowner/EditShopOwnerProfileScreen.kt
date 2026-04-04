@@ -14,6 +14,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Storefront
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -49,10 +50,12 @@ import mahalatk.shared.generated.resources.exchange
 import mahalatk.shared.generated.resources.exchange_and_return
 import mahalatk.shared.generated.resources.ic_city
 import mahalatk.shared.generated.resources.ic_location
+import mahalatk.shared.generated.resources.ic_phone
 import mahalatk.shared.generated.resources.ic_user
 import mahalatk.shared.generated.resources.not_available_policy
 import mahalatk.shared.generated.resources.online_shop
 import mahalatk.shared.generated.resources.owner_name
+import mahalatk.shared.generated.resources.phone_number
 import mahalatk.shared.generated.resources.physical_shop
 import mahalatk.shared.generated.resources.save
 import mahalatk.shared.generated.resources.select_city
@@ -76,6 +79,7 @@ fun EditShopOwnerProfileScreen(
     viewModel: ShopOwnerProfileViewModel = koinViewModel(),
     onBack: () -> Unit = {},
     onNavigateToPickLocation: () -> Unit = {},
+    onChangePhone: () -> Unit = {},
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -189,7 +193,32 @@ fun EditShopOwnerProfileScreen(
 
                         Spacer(modifier = Modifier.height(20.dp))
 
-                        // 3. Shop Type
+                        // 3. Phone Number (read-only, click to change)
+                        DefaultTextField(
+                            value = state.phone,
+                            onValueChanged = {},
+                            placeholderText = stringResource(Res.string.phone_number),
+                            isEnabled = false,
+                            onClick = onChangePhone,
+                            leadingIcon = {
+                                Icon(
+                                    painterResource(Res.drawable.ic_phone), null,
+                                    modifier = Modifier.size(24.dp),
+                                    tint = MahalatkTheme.primary,
+                                )
+                            },
+                            trailingIcon = {
+                                Icon(
+                                    Icons.Outlined.Edit, null,
+                                    tint = MahalatkTheme.primary,
+                                )
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+
+                        Spacer(modifier = Modifier.height(20.dp))
+
+                        // 4. Shop Type
                         val shopTypeLabel = when (state.shopType) {
                             ShopType.PHYSICAL -> stringResource(Res.string.physical_shop)
                             ShopType.ONLINE -> stringResource(Res.string.online_shop)
