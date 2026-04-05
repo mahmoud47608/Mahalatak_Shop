@@ -15,14 +15,18 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,6 +47,7 @@ import com.mahalatk.navigation.Route
 import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.CornerDimensions
 import com.mahalatk.theme.MahalatkTheme
+import kotlinx.coroutines.launch
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.ic_nav_chat
 import mahalatk.shared.generated.resources.inquiries_chat
@@ -55,8 +60,19 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun ChatScreen(viewModel: ChatViewModel = koinViewModel()) {
     val state by viewModel.uiState.collectAsState()
-    val filteredConversations by viewModel.filteredConversations.collectAsState()
     val navigator = LocalNavigator.current
+    val tabs = ChatTab.entries
+    val coroutineScope = rememberCoroutineScope()
+    val pagerState = rememberPagerState(
+        initialPage = tabs.indexOf(state.selectedTab).coerceAtLeast(0),
+        pageCount = { tabs.size },
+    )
+
+    // Sync pager swipes -> viewModel
+    LaunchedEffect(pagerState.currentPage) {
+        val tab = tabs[pagerState.currentPage]
+        if (state.selectedTab != tab) viewModel.selectTab(tab)
+    }
 
     Column(
         modifier = Modifier.fillMaxSize().background(AppColor.ScreenBackground),
@@ -70,55 +86,70 @@ fun ChatScreen(viewModel: ChatViewModel = koinViewModel()) {
                 ChatTab.Orders to stringResource(Res.string.orders_chat),
                 ChatTab.Inquiries to stringResource(Res.string.inquiries_chat),
             ),
-            selectedTab = state.selectedTab,
-            onTabSelected = viewModel::selectTab,
+            selectedTab = tabs[pagerState.currentPage],
+            onTabSelected = { tab ->
+                coroutineScope.launch { pagerState.animateScrollToPage(tabs.indexOf(tab)) }
+            },
             modifier = Modifier.padding(horizontal = 20.dp),
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        if (state.isLoading) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(
-                    start = 20.dp,
-                    end = 20.dp,
-                    top = 4.dp,
-                    bottom = 16.dp
-                ),
-                verticalArrangement = Arrangement.spacedBy(10.dp),
-            ) {
-                items(4) { index ->
-                    AnimatedListItem(index) { ChatItemSkeleton() }
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier.fillMaxSize(),
+        ) { page ->
+            val tab = tabs[page]
+            val pageConversations = state.conversations.filter { conv ->
+                when (tab) {
+                    ChatTab.Orders -> !conv.isInquiry
+                    ChatTab.Inquiries -> conv.isInquiry
                 }
             }
-        } else if (filteredConversations.isEmpty()) {
-            EmptyStatePlaceholder(
-                icon = Res.drawable.ic_nav_chat,
-                message = stringResource(Res.string.no_messages),
-                iconTint = AppColor.TextHint.copy(alpha = 0.4f),
-            )
-        } else {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp),
-            ) {
-                itemsIndexed(
-                    filteredConversations,
-                    key = { _, c -> c.id },
-                    contentType = { _, _ -> "chat" }) { index, conversation ->
-                    AnimatedListItem(index) {
-                        ChatItem(
-                        conversation = conversation,
-                        onClick = {
-                            navigator.push(
-                                Route.ChatDetail(conversation.id, conversation.customerName)
-                            )
-                        },
-                        )
+
+            if (state.isLoading) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(
+                        start = 20.dp,
+                        end = 20.dp,
+                        top = 4.dp,
+                        bottom = 16.dp
+                    ),
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                ) {
+                    items(4) { index ->
+                        AnimatedListItem(index) { ChatItemSkeleton() }
                     }
                 }
-                item { Spacer(modifier = Modifier.height(16.dp)) }
+            } else if (pageConversations.isEmpty()) {
+                EmptyStatePlaceholder(
+                    icon = Res.drawable.ic_nav_chat,
+                    message = stringResource(Res.string.no_messages),
+                    iconTint = AppColor.TextHint.copy(alpha = 0.4f),
+                )
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                ) {
+                    itemsIndexed(
+                        pageConversations,
+                        key = { _, c -> c.id },
+                        contentType = { _, _ -> "chat" }) { index, conversation ->
+                        AnimatedListItem(index) {
+                            ChatItem(
+                                conversation = conversation,
+                                onClick = {
+                                    navigator.push(
+                                        Route.ChatDetail(conversation.id, conversation.customerName)
+                                    )
+                                },
+                            )
+                        }
+                    }
+                    item { Spacer(modifier = Modifier.height(16.dp)) }
+                }
             }
         }
     }

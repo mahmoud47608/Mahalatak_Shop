@@ -107,6 +107,35 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
+                // Profile avatar
+                UserAvatar(
+                    imageUrl = state.userImage,
+                    size = 48.dp,
+                    backgroundColor = Color.White.copy(alpha = 0.2f),
+                )
+
+                Spacer(modifier = Modifier.width(12.dp))
+
+                // Greeting + Name
+                Column(
+                    horizontalAlignment = Alignment.Start,
+                ) {
+                    Text(
+                        text = stringResource(Res.string.hello),
+                        style = MahalatkTheme.bodyMedium,
+                        color = Color.White.copy(alpha = 0.8f),
+                    )
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        text = state.userName,
+                        style = MahalatkTheme.titleMedium,
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
+
+                Spacer(modifier = Modifier.weight(1f))
+
                 // Notification bell
                 IconButton(
                     onClick = { navigator.push(com.mahalatk.navigation.Route.Notifications) },
@@ -124,35 +153,6 @@ fun HomeScreen(
                         modifier = Modifier.size(22.dp),
                     )
                 }
-
-                Spacer(modifier = Modifier.weight(1f))
-
-                // Greeting + Name
-                Column(
-                    horizontalAlignment = Alignment.End,
-                ) {
-                    Text(
-                        text = stringResource(Res.string.hello),
-                        style = MahalatkTheme.bodyMedium,
-                        color = Color.White.copy(alpha = 0.8f),
-                    )
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Text(
-                        text = state.userName,
-                        style = MahalatkTheme.titleMedium,
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold,
-                    )
-                }
-
-                Spacer(modifier = Modifier.width(12.dp))
-
-                // Profile avatar
-                UserAvatar(
-                    imageUrl = state.userImage,
-                    size = 48.dp,
-                    backgroundColor = Color.White.copy(alpha = 0.2f),
-                )
             }
         }
 

@@ -14,14 +14,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,6 +43,7 @@ import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.AppShapes
 import com.mahalatk.theme.CornerDimensions
 import com.mahalatk.theme.MahalatkTheme
+import kotlinx.coroutines.launch
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.completed_tab
 import mahalatk.shared.generated.resources.currency
@@ -57,7 +62,18 @@ fun OrdersScreen(
     onOrderClick: (String) -> Unit = {},
 ) {
     val state by viewModel.uiState.collectAsState()
-    val filteredOrders by viewModel.filteredOrders.collectAsState()
+    val tabs = OrderTab.entries
+    val coroutineScope = rememberCoroutineScope()
+    val pagerState = rememberPagerState(
+        initialPage = tabs.indexOf(state.selectedTab).coerceAtLeast(0),
+        pageCount = { tabs.size },
+    )
+
+    // Sync pager swipes -> viewModel
+    LaunchedEffect(pagerState.currentPage) {
+        val tab = tabs[pagerState.currentPage]
+        if (state.selectedTab != tab) viewModel.selectTab(tab)
+    }
 
     Column(
         modifier = Modifier
@@ -75,49 +91,66 @@ fun OrdersScreen(
                 OrderTab.Completed to stringResource(Res.string.completed_tab),
                 OrderTab.Returns to stringResource(Res.string.returns_tab),
             ),
-            selectedTab = state.selectedTab,
-            onTabSelected = viewModel::selectTab,
+            selectedTab = tabs[pagerState.currentPage],
+            onTabSelected = { tab ->
+                coroutineScope.launch { pagerState.animateScrollToPage(tabs.indexOf(tab)) }
+            },
             modifier = Modifier.padding(horizontal = 20.dp),
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        if (state.isLoading) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(
-                    start = 20.dp,
-                    end = 20.dp,
-                    top = 4.dp,
-                    bottom = 16.dp
-                ),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-            ) {
-                items(4) { index ->
-                    AnimatedListItem(index) { OrderCardSkeleton() }
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier.fillMaxSize(),
+        ) { page ->
+            val tab = tabs[page]
+            val pageOrders = state.orders.filter { order ->
+                when (tab) {
+                    OrderTab.New -> order.status == OrderStatus.New
+                    OrderTab.Current -> order.status == OrderStatus.Preparing
+                    OrderTab.Completed -> order.status == OrderStatus.Delivered
+                    OrderTab.Returns -> order.status == OrderStatus.Returned || order.status == OrderStatus.Cancelled
                 }
             }
-        } else if (filteredOrders.isEmpty()) {
-            EmptyStatePlaceholder(
-                icon = Res.drawable.ic_check_circle,
-                message = stringResource(Res.string.no_orders),
-                iconTint = AppColor.TextHint.copy(alpha = 0.4f),
-            )
-        } else {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(start = 20.dp, end = 20.dp, bottom = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-            ) {
-                itemsIndexed(
-                    filteredOrders,
-                    key = { _, o -> o.id },
-                    contentType = { _, _ -> "order" }) { index, order ->
-                    AnimatedListItem(index) {
-                        OrderCard(
-                            order = order,
-                            onClick = { onOrderClick(order.id) },
-                        )
+
+            if (state.isLoading) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(
+                        start = 20.dp,
+                        end = 20.dp,
+                        top = 4.dp,
+                        bottom = 16.dp
+                    ),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    items(4) { index ->
+                        AnimatedListItem(index) { OrderCardSkeleton() }
+                    }
+                }
+            } else if (pageOrders.isEmpty()) {
+                EmptyStatePlaceholder(
+                    icon = Res.drawable.ic_check_circle,
+                    message = stringResource(Res.string.no_orders),
+                    iconTint = AppColor.TextHint.copy(alpha = 0.4f),
+                )
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(start = 20.dp, end = 20.dp, bottom = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    itemsIndexed(
+                        pageOrders,
+                        key = { _, o -> o.id },
+                        contentType = { _, _ -> "order" }) { index, order ->
+                        AnimatedListItem(index) {
+                            OrderCard(
+                                order = order,
+                                onClick = { onOrderClick(order.id) },
+                            )
+                        }
                     }
                 }
             }

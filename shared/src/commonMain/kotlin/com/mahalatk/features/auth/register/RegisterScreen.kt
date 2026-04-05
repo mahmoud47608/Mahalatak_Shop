@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -82,6 +83,7 @@ import com.mahalatk.common.component.utilis.noRippleClickable
 import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.CornerDimensions
 import com.mahalatk.theme.MahalatkTheme
+import kotlinx.coroutines.launch
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.already_have_account
 import mahalatk.shared.generated.resources.confirm_password
@@ -132,8 +134,8 @@ fun RegisterScreen(
     onNavigateToActivation: (phoneNumber: String) -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    rememberCoroutineScope()
-    rememberPagerState(
+    val coroutineScope = rememberCoroutineScope()
+    val pagerState = rememberPagerState(
         initialPage = if (uiState.accountType == AccountType.SHOP_OWNER) 0 else 1,
         pageCount = { 2 },
     )
@@ -151,6 +153,12 @@ fun RegisterScreen(
             viewModel.updateLocation(it.lat, it.lng, it.address)
             LocationResultHolder.consume()
         }
+    }
+
+    // Sync pager swipes -> account type
+    LaunchedEffect(pagerState.currentPage) {
+        val type = if (pagerState.currentPage == 0) AccountType.SHOP_OWNER else AccountType.EMPLOYEE
+        if (uiState.accountType != type) viewModel.switchAccountType(type)
     }
 
     val pickImage = rememberImagePickerLauncher { bytes ->
@@ -187,7 +195,7 @@ fun RegisterScreen(
 
         // Segmented toggle with sliding indicator
         SlidingTabSelector(
-            selectedIndex = if (uiState.accountType == AccountType.SHOP_OWNER) 0 else 1,
+            selectedIndex = pagerState.currentPage,
             tabs = listOf(
                 TabItem(
                     title = stringResource(Res.string.shop_owner),
@@ -199,8 +207,7 @@ fun RegisterScreen(
                 ),
             ),
             onTabSelected = { index ->
-                val type = if (index == 0) AccountType.SHOP_OWNER else AccountType.EMPLOYEE
-                if (uiState.accountType != type) viewModel.switchAccountType(type)
+                coroutineScope.launch { pagerState.animateScrollToPage(index) }
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -220,11 +227,10 @@ fun RegisterScreen(
             colors = CardDefaults.cardColors(containerColor = MahalatkTheme.white),
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
         ) {
-            Crossfade(
-                targetState = uiState.accountType,
-                animationSpec = tween(200),
+            HorizontalPager(
+                state = pagerState,
                 modifier = Modifier.fillMaxSize(),
-            ) { accountType ->
+            ) { page ->
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -232,8 +238,8 @@ fun RegisterScreen(
                         .padding(vertical = 24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    when (accountType) {
-                        AccountType.SHOP_OWNER -> ShopOwnerForm(
+                    when (page) {
+                        0 -> ShopOwnerForm(
                             uiState = uiState,
                             viewModel = viewModel,
                             onPickImage = pickImage,
@@ -245,7 +251,7 @@ fun RegisterScreen(
                             onPickLocation = onNavigateToPickLocation,
                         )
 
-                        AccountType.EMPLOYEE -> EmployeeForm(
+                        1 -> EmployeeForm(
                             uiState = uiState,
                             viewModel = viewModel,
                             onPickImage = pickImage,
