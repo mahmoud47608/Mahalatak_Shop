@@ -1,6 +1,10 @@
 package com.mahalatk.features.offers.add
 
 import androidx.compose.runtime.Immutable
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.ImmutableSet
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.persistentSetOf
 import org.jetbrains.compose.resources.StringResource
 
 // ─── Enums ───────────────────────────────────────────────────────────────────
@@ -55,15 +59,15 @@ data class AddOfferState(
     // Step 1 - Package
     val packageName: String = "",
     val packagePrice: String = "",
-    val packageProductIds: Set<String> = emptySet(),
+    val packageProductIds: ImmutableSet<String> = persistentSetOf(),
 
     // Step 2 - Scope
     val scopeType: OfferScopeType = OfferScopeType.ALL_PRODUCTS,
-    val selectedCategories: Set<String> = emptySet(),
-    val selectedProductIds: Set<String> = emptySet(),
-    val filterCategories: Set<String> = emptySet(),
-    val availableCategories: List<String> = emptyList(),
-    val availableProducts: List<ProductItem> = emptyList(),
+    val selectedCategories: ImmutableSet<String> = persistentSetOf(),
+    val selectedProductIds: ImmutableSet<String> = persistentSetOf(),
+    val filterCategories: ImmutableSet<String> = persistentSetOf(),
+    val availableCategories: ImmutableList<String> = persistentListOf(),
+    val availableProducts: ImmutableList<ProductItem> = persistentListOf(),
 
     // Step 3 - Duration
     val startDate: String = "",
@@ -76,6 +80,6 @@ data class AddOfferState(
 
 @Immutable
 data class OffersState(
-    val offers: List<Offer> = emptyList(),
+    val offers: ImmutableList<Offer> = persistentListOf(),
     val isLoading: Boolean = true,
 )

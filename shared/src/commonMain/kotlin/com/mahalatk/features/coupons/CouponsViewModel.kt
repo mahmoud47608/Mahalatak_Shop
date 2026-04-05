@@ -2,6 +2,8 @@ package com.mahalatk.features.coupons
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,7 +14,7 @@ import kotlinx.coroutines.launch
 class CouponsViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(
         CouponsState(
-            coupons = listOf(
+            coupons = persistentListOf(
                 Coupon(
                     "1",
                     "SALE20",
@@ -61,11 +63,14 @@ class CouponsViewModel : ViewModel() {
 
     fun toggleActive(id: String) {
         _uiState.update { state ->
-            state.copy(coupons = state.coupons.map { if (it.id == id) it.copy(isActive = !it.isActive) else it })
+            state.copy(coupons = state.coupons.map { if (it.id == id) it.copy(isActive = !it.isActive) else it }
+                .toImmutableList())
         }
     }
 
     fun deleteCoupon(id: String) {
-        _uiState.update { state -> state.copy(coupons = state.coupons.filter { it.id != id }) }
+        _uiState.update { state ->
+            state.copy(coupons = state.coupons.filter { it.id != id }.toImmutableList())
+        }
     }
 }

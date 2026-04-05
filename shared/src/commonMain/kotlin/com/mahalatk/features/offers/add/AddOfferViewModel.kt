@@ -1,6 +1,9 @@
 package com.mahalatk.features.offers.add
 
 import androidx.lifecycle.ViewModel
+import kotlinx.collections.immutable.ImmutableSet
+import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toImmutableSet
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,8 +15,8 @@ class AddOfferViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(
         AddOfferState(
-            availableCategories = MockOfferData.categories,
-            availableProducts = MockOfferData.products,
+            availableCategories = MockOfferData.categories.toImmutableList(),
+            availableProducts = MockOfferData.products.toImmutableList(),
         ),
     )
     val uiState: StateFlow<AddOfferState> = _uiState.asStateFlow()
@@ -135,16 +138,16 @@ class AddOfferViewModel : ViewModel() {
 
 // ─── Set Helpers ────────────────────────────────────────────────────────────
 
-private fun Set<String>.toggle(item: String): Set<String> =
-    if (item in this) this - item else this + item
+private fun Set<String>.toggle(item: String): ImmutableSet<String> =
+    (if (item in this) this - item else this + item).toImmutableSet()
 
 private fun Set<String>.retainByCategory(
     categories: Set<String>,
     products: List<ProductItem>,
-): Set<String> {
-    if (categories.isEmpty()) return this
+): ImmutableSet<String> {
+    if (categories.isEmpty()) return this.toImmutableSet()
     val validIds = products.filter { it.category in categories }.map { it.id }.toSet()
-    return intersect(validIds)
+    return intersect(validIds).toImmutableSet()
 }
 
 // ─── Mock Data ──────────────────────────────────────────────────────────────

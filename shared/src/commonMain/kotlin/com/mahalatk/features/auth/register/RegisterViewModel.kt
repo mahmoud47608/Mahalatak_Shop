@@ -3,6 +3,7 @@ package com.mahalatk.features.auth.register
 import com.mahalatk.base.BaseViewModel
 import com.mahalatk.base.managers.LoadingManager
 import com.mahalatk.base.managers.MessageManager
+import kotlinx.collections.immutable.toImmutableSet
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.please_enter_phone_number
 
@@ -38,9 +39,9 @@ class RegisterViewModel(
     fun toggleCategory(category: ShopCategory) {
         updateState {
             val updated = if (category in selectedCategories) {
-                selectedCategories - category
+                (selectedCategories - category).toImmutableSet()
             } else {
-                selectedCategories + category
+                (selectedCategories + category).toImmutableSet()
             }
             copy(selectedCategories = updated, categoryError = null)
         }

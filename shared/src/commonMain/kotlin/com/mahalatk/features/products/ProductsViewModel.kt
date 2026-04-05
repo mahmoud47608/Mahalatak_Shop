@@ -3,6 +3,9 @@ package com.mahalatk.features.products
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,7 +26,7 @@ data class ProductItem(
 @Immutable
 data class ProductsState(
     val isLoading: Boolean = true,
-    val products: List<ProductItem> = listOf(
+    val products: ImmutableList<ProductItem> = persistentListOf(
         ProductItem(
             id = "1",
             name = "Flavors of Rose",
@@ -69,7 +72,7 @@ class ProductsViewModel : ViewModel() {
                 products = state.products.map { product ->
                     if (product.id == productId) product.copy(isAvailable = !product.isAvailable)
                     else product
-                },
+                }.toImmutableList(),
             )
         }
     }

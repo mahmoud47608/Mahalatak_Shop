@@ -1,6 +1,10 @@
 package com.mahalatk.features.auth.register
 
 import androidx.compose.runtime.Immutable
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.ImmutableSet
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.persistentSetOf
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.category_kids
 import mahalatk.shared.generated.resources.category_men
@@ -53,7 +57,7 @@ data class RegisterState(
     val shopName: String = "",
     val ownerName: String = "",
     val shopType: ShopType = ShopType.PHYSICAL,
-    val selectedCategories: Set<ShopCategory> = emptySet(),
+    val selectedCategories: ImmutableSet<ShopCategory> = persistentSetOf(),
     val returnPolicy: ReturnPolicy = ReturnPolicy.EXCHANGE,
     val returnPeriod: ReturnPeriod = ReturnPeriod.DAYS_2,
     val shopImage: ByteArray? = null,
@@ -88,7 +92,7 @@ data class RegisterState(
     val confirmPasswordError: StringResource? = null,
 
     // Available data for dropdowns
-    val availableCities: List<CityItem> = listOf(
+    val availableCities: ImmutableList<CityItem> = persistentListOf(
         CityItem(1, "الرياض"),
         CityItem(2, "جدة"),
         CityItem(3, "مكة المكرمة"),
@@ -100,7 +104,7 @@ data class RegisterState(
         CityItem(9, "بريدة"),
         CityItem(10, "أبها"),
     ),
-    val availableShops: List<String> = listOf(
+    val availableShops: ImmutableList<String> = persistentListOf(
         "محل الأناقة",
         "محل الموضة",
         "محل الأحذية",

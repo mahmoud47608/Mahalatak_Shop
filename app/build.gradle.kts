@@ -52,4 +52,5 @@ android {
 
 dependencies {
     implementation(project(":shared"))
+    implementation("androidx.profileinstaller:profileinstaller:1.4.1")
 }

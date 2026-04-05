@@ -2,6 +2,9 @@ package com.mahalatk.features.notifications
 
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,7 +21,7 @@ data class NotificationItem(
 
 @Immutable
 data class NotificationsState(
-    val notifications: List<NotificationItem> = listOf(
+    val notifications: ImmutableList<NotificationItem> = persistentListOf(
         NotificationItem("1", "Dashboard", "You have a pending order #2225", "05:30 PM"),
         NotificationItem("2", "Royal Bouquet", "Order #5463 status has been updated", "05:30 PM"),
         NotificationItem("3", "New Order", "You received a new order #7891", "04:15 PM", true),
@@ -49,18 +52,18 @@ class NotificationsViewModel : ViewModel() {
             state.copy(
                 notifications = state.notifications.map {
                     if (it.id == id) it.copy(isRead = true) else it
-                }
+                }.toImmutableList()
             )
         }
     }
 
     fun deleteNotification(id: String) {
         _uiState.update { state ->
-            state.copy(notifications = state.notifications.filter { it.id != id })
+            state.copy(notifications = state.notifications.filter { it.id != id }.toImmutableList())
         }
     }
 
     fun clearAll() {
-        _uiState.update { it.copy(notifications = emptyList()) }
+        _uiState.update { it.copy(notifications = persistentListOf()) }
     }
 }

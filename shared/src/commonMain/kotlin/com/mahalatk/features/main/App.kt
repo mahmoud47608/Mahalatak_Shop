@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.mahalatk.common.component.loading.LoadingOverlay
+import com.mahalatk.di.SetupCoil
 import com.mahalatk.domain.repository.PreferenceRepository
 import com.mahalatk.navigation.AppBottomBar
 import com.mahalatk.navigation.BottomNavItem
@@ -48,6 +49,8 @@ fun App(viewModel: MainViewModel = koinViewModel()) {
 
     // AppColor.isDark is mutableStateOf — reads here trigger recomposition instantly
     MahalatkTheme(darkTheme = com.mahalatk.theme.AppColor.isDark) {
+        SetupCoil()
+
         val navigator = rememberAppNavigator()
         val isLoading by viewModel.isLoading.collectAsState()
         val snackbarHostState = remember { SnackbarHostState() }

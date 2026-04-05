@@ -1,6 +1,8 @@
 package com.mahalatk.features.coupons
 
 import androidx.compose.runtime.Immutable
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.resources.StringResource
 
 enum class CouponDiscountType { PERCENTAGE, FIXED_AMOUNT }
@@ -21,7 +23,7 @@ data class Coupon(
 
 @Immutable
 data class CouponsState(
-    val coupons: List<Coupon> = emptyList(),
+    val coupons: ImmutableList<Coupon> = persistentListOf(),
     val isLoading: Boolean = true,
 )
 

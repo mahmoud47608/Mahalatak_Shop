@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.mahalatk.features.offers.add.Offer
 import com.mahalatk.features.offers.add.OfferType
 import com.mahalatk.features.offers.add.OffersState
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,7 +17,7 @@ import kotlinx.coroutines.launch
 class OffersViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(
         OffersState(
-            offers = listOf(
+            offers = persistentListOf(
                 Offer(
                     "1",
                     OfferType.DISCOUNT,
@@ -51,7 +53,9 @@ class OffersViewModel : ViewModel() {
     }
 
     fun deleteOffer(id: String) {
-        _uiState.update { state -> state.copy(offers = state.offers.filter { it.id != id }) }
+        _uiState.update { state ->
+            state.copy(offers = state.offers.filter { it.id != id }.toImmutableList())
+        }
     }
 
     fun toggleOfferActive(id: String) {
@@ -59,7 +63,7 @@ class OffersViewModel : ViewModel() {
             state.copy(
                 offers = state.offers.map { offer ->
                     if (offer.id == id) offer.copy(isActive = !offer.isActive) else offer
-                },
+                }.toImmutableList(),
             )
         }
     }

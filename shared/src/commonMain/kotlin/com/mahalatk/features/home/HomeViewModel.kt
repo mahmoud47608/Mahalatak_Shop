@@ -4,6 +4,8 @@ import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mahalatk.base.UserDataProvider
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,7 +28,7 @@ data class HomeState(
     val receiveNewOrders: Boolean = true,
     val completedOrders: Int = 35,
     val cancelledOrders: Int = 18,
-    val newOrders: List<OrderItem> = listOf(
+    val newOrders: ImmutableList<OrderItem> = persistentListOf(
         OrderItem("1", "Hader Al-Alawi", "088308", "02:30 PM"),
         OrderItem("2", "Fahd Al-Shehri", "088309", "02:30 PM"),
         OrderItem("3", "Hader Al-Alawi", "088310", "01:15 PM"),

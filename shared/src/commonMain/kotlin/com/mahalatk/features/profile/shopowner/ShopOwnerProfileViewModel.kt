@@ -10,6 +10,7 @@ import com.mahalatk.features.auth.register.ReturnPeriod
 import com.mahalatk.features.auth.register.ReturnPolicy
 import com.mahalatk.features.auth.register.ShopCategory
 import com.mahalatk.features.auth.register.ShopType
+import kotlinx.collections.immutable.toImmutableSet
 import kotlinx.coroutines.launch
 
 class ShopOwnerProfileViewModel(
@@ -44,9 +45,9 @@ class ShopOwnerProfileViewModel(
     fun toggleCategory(category: ShopCategory) {
         updateState {
             val updated = if (category in selectedCategories) {
-                selectedCategories - category
+                (selectedCategories - category).toImmutableSet()
             } else {
-                selectedCategories + category
+                (selectedCategories + category).toImmutableSet()
             }
             copy(selectedCategories = updated, categoryError = null)
         }

@@ -3,6 +3,8 @@ package com.mahalatk.features.products.add
 import androidx.compose.runtime.Immutable
 import com.mahalatk.domain.entity.CategoryData
 import com.mahalatk.domain.entity.SubCategoryData
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.resources.StringResource
 
 enum class DiscountType {
@@ -22,7 +24,7 @@ data class ProductPiece(
     val price: String = "",
     val discountType: DiscountType = DiscountType.NONE,
     val discountValue: String = "",
-    val images: List<ByteArray> = emptyList(),
+    val images: ImmutableList<ByteArray> = persistentListOf(),
     val video: ByteArray? = null,
 )
 
@@ -43,20 +45,20 @@ data class AddProductState(
     val price: String = "",
     val discountType: DiscountType = DiscountType.NONE,
     val discountValue: String = "",
-    val images: List<ByteArray> = emptyList(),
+    val images: ImmutableList<ByteArray> = persistentListOf(),
     val video: ByteArray? = null,
 
     // ── Accumulated pieces ──
-    val pieces: List<ProductPiece> = emptyList(),
+    val pieces: ImmutableList<ProductPiece> = persistentListOf(),
 
     // ── Data from repository ──
-    val availableCategories: List<CategoryData> = DEFAULT_CATEGORIES,
-    val availableSubCategories: List<SubCategoryData> = emptyList(),
-    val availableSeasons: List<String> = listOf("صيفي", "شتوي", "كلاهما"),
-    val availableColors: List<String> = listOf(
+    val availableCategories: ImmutableList<CategoryData> = DEFAULT_CATEGORIES,
+    val availableSubCategories: ImmutableList<SubCategoryData> = persistentListOf(),
+    val availableSeasons: ImmutableList<String> = persistentListOf("صيفي", "شتوي", "كلاهما"),
+    val availableColors: ImmutableList<String> = persistentListOf(
         "أحمر", "أزرق", "أسود", "أبيض", "أخضر", "أصفر", "بني", "رمادي", "برتقالي", "وردي",
     ),
-    val availableSizes: List<String> = listOf(
+    val availableSizes: ImmutableList<String> = persistentListOf(
         "XS", "S", "M", "L", "XL", "XXL", "XXXL",
     ),
 
@@ -90,7 +92,7 @@ data class AddProductState(
 
 // ── Default dummy data ──
 
-private val DEFAULT_CATEGORIES = listOf(
+private val DEFAULT_CATEGORIES = persistentListOf(
     CategoryData(id = 1, name = "ملابس رجالي"),
     CategoryData(id = 2, name = "ملابس حريمي"),
     CategoryData(id = 3, name = "ملابس أطفالي"),

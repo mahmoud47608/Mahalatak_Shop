@@ -3,6 +3,9 @@ package com.mahalatk.features.chat
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -39,7 +42,7 @@ data class ChatMessage(
 data class ChatState(
     val isLoading: Boolean = true,
     val selectedTab: ChatTab = ChatTab.Orders,
-    val conversations: List<ChatConversation> = listOf(
+    val conversations: ImmutableList<ChatConversation> = persistentListOf(
         ChatConversation(
             "1",
             "Hader Al-Alawi",
@@ -91,7 +94,7 @@ data class ChatDetailState(
     val customerName: String = "",
     val isOnline: Boolean = true,
     val messageText: String = "",
-    val messages: List<ChatMessage> = listOf(
+    val messages: ImmutableList<ChatMessage> = persistentListOf(
         ChatMessage("1", "Hello, I need help with my order", "02:25 PM", false),
         ChatMessage("2", "Sure! How can I help you?", "02:26 PM", true),
         ChatMessage("3", "I want to change the delivery address please", "02:28 PM", false),
@@ -113,12 +116,12 @@ class ChatViewModel : ViewModel() {
     }
     val uiState: StateFlow<ChatState> = _uiState.asStateFlow()
 
-    val filteredConversations: StateFlow<List<ChatConversation>> = _uiState.map { state ->
+    val filteredConversations: StateFlow<ImmutableList<ChatConversation>> = _uiState.map { state ->
         when (state.selectedTab) {
-            ChatTab.Orders -> state.conversations.filter { !it.isInquiry }
-            ChatTab.Inquiries -> state.conversations.filter { it.isInquiry }
+            ChatTab.Orders -> state.conversations.filter { !it.isInquiry }.toImmutableList()
+            ChatTab.Inquiries -> state.conversations.filter { it.isInquiry }.toImmutableList()
         }
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), persistentListOf())
 
     fun selectTab(tab: ChatTab) {
         _uiState.update { it.copy(selectedTab = tab) }
@@ -150,7 +153,7 @@ class ChatDetailViewModel : ViewModel() {
         )
         _uiState.update {
             it.copy(
-                messages = it.messages + newMessage,
+                messages = (it.messages + newMessage).toImmutableList(),
                 messageText = "",
             )
         }

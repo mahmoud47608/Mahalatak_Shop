@@ -6,6 +6,10 @@ import com.mahalatk.features.auth.register.ReturnPeriod
 import com.mahalatk.features.auth.register.ReturnPolicy
 import com.mahalatk.features.auth.register.ShopCategory
 import com.mahalatk.features.auth.register.ShopType
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.ImmutableSet
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.persistentSetOf
 import org.jetbrains.compose.resources.StringResource
 
 @Immutable
@@ -15,7 +19,7 @@ data class ShopOwnerProfileState(
     val ownerName: String = "",
     val phone: String = "",
     val shopType: ShopType = ShopType.PHYSICAL,
-    val selectedCategories: Set<ShopCategory> = emptySet(),
+    val selectedCategories: ImmutableSet<ShopCategory> = persistentSetOf(),
     val returnPolicy: ReturnPolicy = ReturnPolicy.EXCHANGE,
     val returnPeriod: ReturnPeriod = ReturnPeriod.DAYS_2,
     val shopImage: ByteArray? = null,
@@ -34,7 +38,7 @@ data class ShopOwnerProfileState(
     val imageError: StringResource? = null,
 
     // Available data for dropdowns
-    val availableCities: List<CityItem> = listOf(
+    val availableCities: ImmutableList<CityItem> = persistentListOf(
         CityItem(1, "الرياض"),
         CityItem(2, "جدة"),
         CityItem(3, "مكة المكرمة"),

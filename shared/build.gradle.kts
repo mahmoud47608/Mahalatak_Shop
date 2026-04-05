@@ -40,6 +40,9 @@ kotlin {
             // Coroutines
             implementation(libs.kotlinx.coroutines.core)
 
+            // Kotlinx Immutable Collections
+            implementation(libs.kotlinx.collections.immutable)
+
             // Serialization
             implementation(libs.kotlinx.serialization.json)
 

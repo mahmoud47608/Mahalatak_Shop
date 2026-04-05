@@ -7,6 +7,8 @@ import com.mahalatk.domain.entity.CategoryData
 import com.mahalatk.domain.entity.SubCategoryData
 import com.mahalatk.domain.repository.CommonRepository
 import com.mahalatk.domain.usecase.product.AddProductUseCase
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.please_add_image
 import mahalatk.shared.generated.resources.please_enter_description
@@ -49,7 +51,8 @@ class AddProductViewModel(
             copy(
                 selectedCategory = category,
                 categoryError = null,
-                availableSubCategories = DEFAULT_SUB_CATEGORIES.filter { it.categoryId == category.id },
+                availableSubCategories = DEFAULT_SUB_CATEGORIES.filter { it.categoryId == category.id }
+                    .toImmutableList(),
                 selectedSubCategory = null,
                 subCategoryError = null,
                 // Clear season when switching to shoes (id=4)
@@ -82,7 +85,7 @@ class AddProductViewModel(
         updateState {
             val combined = images + newImages
             copy(
-                images = combined.take(MAX_IMAGES),
+                images = combined.take(MAX_IMAGES).toImmutableList(),
                 imagesError = null,
             )
         }
@@ -90,7 +93,7 @@ class AddProductViewModel(
 
     fun removeImage(index: Int) {
         updateState {
-            copy(images = images.toMutableList().apply { removeAt(index) })
+            copy(images = images.toMutableList().apply { removeAt(index) }.toImmutableList())
         }
     }
 
@@ -188,14 +191,14 @@ class AddProductViewModel(
         // Save piece and reset Part 2
         updateState {
             copy(
-                pieces = pieces + piece,
+                pieces = (pieces + piece).toImmutableList(),
                 color = "",
                 size = "",
                 quantity = "",
                 price = "",
                 discountType = DiscountType.NONE,
                 discountValue = "",
-                images = emptyList(),
+                images = persistentListOf(),
                 video = null,
                 colorError = null,
                 sizeError = null,
@@ -307,7 +310,7 @@ class AddProductViewModel(
 
         updateState {
             copy(
-                pieces = pieces + piece,
+                pieces = (pieces + piece).toImmutableList(),
                 showSuccessSheet = true,
             )
         }

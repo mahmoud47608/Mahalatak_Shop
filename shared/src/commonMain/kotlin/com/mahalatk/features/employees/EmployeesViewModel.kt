@@ -2,6 +2,9 @@ package com.mahalatk.features.employees
 
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -11,7 +14,7 @@ class EmployeesViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(
         EmployeesState(
-            employees = listOf(
+            employees = persistentListOf(
                 Employee("1", "أحمد محمد علي", "0512345678"),
                 Employee("2", "خالد عبدالله", "0551234567"),
                 Employee("3", "محمد سعيد", "0567891234"),
@@ -24,18 +27,18 @@ class EmployeesViewModel : ViewModel() {
 
     fun acceptEmployee(id: String) {
         _uiState.update { state ->
-            state.copy(employees = state.employees.filter { it.id != id })
+            state.copy(employees = state.employees.filter { it.id != id }.toImmutableList())
         }
     }
 
     fun rejectEmployee(id: String) {
         _uiState.update { state ->
-            state.copy(employees = state.employees.filter { it.id != id })
+            state.copy(employees = state.employees.filter { it.id != id }.toImmutableList())
         }
     }
 }
 
 @Immutable
 data class EmployeesState(
-    val employees: List<Employee> = emptyList(),
+    val employees: ImmutableList<Employee> = persistentListOf(),
 )

@@ -3,6 +3,9 @@ package com.mahalatk.features.orders
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -34,7 +37,7 @@ data class Order(
 data class OrdersState(
     val isLoading: Boolean = true,
     val selectedTab: OrderTab = OrderTab.New,
-    val orders: List<Order> = listOf(
+    val orders: ImmutableList<Order> = persistentListOf(
         Order("1", "Hader Al-Alawi", "088308", 3, 750.0, "02:30 PM", "Today", OrderStatus.New),
         Order("2", "Fahd Al-Shehri", "088309", 1, 250.0, "02:30 PM", "Today", OrderStatus.New),
         Order("3", "Mohamed Ali", "088310", 2, 500.0, "01:15 PM", "Today", OrderStatus.New),
@@ -75,14 +78,19 @@ class OrdersViewModel : ViewModel() {
     }
     val uiState: StateFlow<OrdersState> = _uiState.asStateFlow()
 
-    val filteredOrders: StateFlow<List<Order>> = _uiState.map { state ->
+    val filteredOrders: StateFlow<ImmutableList<Order>> = _uiState.map { state ->
         when (state.selectedTab) {
-            OrderTab.New -> state.orders.filter { it.status == OrderStatus.New }
+            OrderTab.New -> state.orders.filter { it.status == OrderStatus.New }.toImmutableList()
             OrderTab.Current -> state.orders.filter { it.status == OrderStatus.Preparing }
+                .toImmutableList()
+
             OrderTab.Completed -> state.orders.filter { it.status == OrderStatus.Delivered }
+                .toImmutableList()
+
             OrderTab.Returns -> state.orders.filter { it.status == OrderStatus.Returned || it.status == OrderStatus.Cancelled }
+                .toImmutableList()
         }
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), persistentListOf())
 
     fun selectTab(tab: OrderTab) {
         _uiState.update { it.copy(selectedTab = tab) }
