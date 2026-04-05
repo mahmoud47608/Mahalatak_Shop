@@ -1,11 +1,16 @@
 package com.mahalatk.features.auth.register
 
-import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.EaseInOut
+import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -17,10 +22,10 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -42,13 +47,17 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
@@ -114,6 +123,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun RegisterScreen(
     viewModel: RegisterViewModel = koinViewModel(),
@@ -122,6 +132,11 @@ fun RegisterScreen(
     onNavigateToActivation: (phoneNumber: String) -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    rememberCoroutineScope()
+    rememberPagerState(
+        initialPage = if (uiState.accountType == AccountType.SHOP_OWNER) 0 else 1,
+        pageCount = { 2 },
+    )
     var showShopTypeSheet by remember { mutableStateOf(false) }
     var showCitySheet by remember { mutableStateOf(false) }
     var showShopSheet by remember { mutableStateOf(false) }
@@ -842,53 +857,91 @@ private fun ProfileImagePicker(
     errorText: String? = null,
     onClick: () -> Unit,
 ) {
+    // Pulse animation for dashed border when no image
+    val infiniteTransition = rememberInfiniteTransition()
+    val pulseAlpha by infiniteTransition.animateFloat(
+        initialValue = 0.2f,
+        targetValue = 0.6f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1200, easing = EaseInOut),
+            repeatMode = RepeatMode.Reverse,
+        ),
+    )
+    val dashedBorderAlpha = if (imageBytes == null) pulseAlpha else 0.5f
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Box {
-            // Profile Picture Circle
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.noRippleClickable { onClick() },
+        ) {
+            // Dashed circular border
             Box(
                 modifier = Modifier
-                    .size(100.dp)
-                    .clip(CircleShape)
-                    .background(MahalatkTheme.iconBackground),
-                contentAlignment = Alignment.Center
+                    .size(116.dp)
+                    .drawBehind {
+                        val stroke = Stroke(
+                            width = 2.dp.toPx(),
+                            pathEffect = PathEffect.dashPathEffect(
+                                floatArrayOf(10f, 10f), 0f
+                            ),
+                        )
+                        drawCircle(
+                            color = AppColor.Primary.copy(alpha = dashedBorderAlpha),
+                            style = stroke,
+                            radius = size.minDimension / 2f,
+                        )
+                    },
+                contentAlignment = Alignment.Center,
             ) {
-                if (imageBytes != null) {
-                    val bitmap = imageBytes.toImageBitmap()
-                    if (bitmap != null) {
+                // Profile Picture Circle
+                Box(
+                    modifier = Modifier
+                        .size(100.dp)
+                        .clip(CircleShape)
+                        .background(MahalatkTheme.iconBackground),
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (imageBytes != null) {
+                        val bitmap = imageBytes.toImageBitmap()
+                        if (bitmap != null) {
+                            Image(
+                                painter = BitmapPainter(bitmap),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(100.dp)
+                                    .clip(CircleShape),
+                                contentScale = ContentScale.Crop
+                            )
+                        }
+                    } else {
                         Image(
-                            painter = BitmapPainter(bitmap),
+                            painter = painterResource(Res.drawable.ic_profile),
                             contentDescription = null,
                             modifier = Modifier
-                                .size(100.dp)
-                                .clip(CircleShape),
-                            contentScale = ContentScale.Crop
+                                .fillMaxSize()
+                                .padding(top = 14.dp)
                         )
                     }
-                } else {
-                    Image(
-                        painter = painterResource(Res.drawable.ic_profile),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(top = 14.dp)
-                    )
                 }
             }
 
             // Camera button overlay at bottom-right
-            IconButton(
-                onClick = onClick,
+            Box(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .size(40.dp)
-                    .offset(x = 1.dp, y = 1.dp)
+                    .padding(end = 4.dp, bottom = 4.dp)
+                    .shadow(elevation = 3.dp, shape = CircleShape)
+                    .size(32.dp)
+                    .clip(CircleShape)
+                    .background(AppColor.Primary),
+                contentAlignment = Alignment.Center,
             ) {
                 Image(
                     painter = painterResource(Res.drawable.ic_camera),
                     contentDescription = null,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.size(18.dp),
                 )
             }
         }
