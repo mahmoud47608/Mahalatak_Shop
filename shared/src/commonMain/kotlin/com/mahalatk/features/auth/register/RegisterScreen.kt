@@ -1,24 +1,32 @@
 package com.mahalatk.features.auth.register
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Badge
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Storefront
 import androidx.compose.material.icons.filled.Visibility
@@ -36,10 +44,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -155,60 +166,31 @@ fun RegisterScreen(
             onBackClick = onNavigateToLogin,
         )
 
-        // Tab Layout
-        val selectedTabIndex = if (uiState.accountType == AccountType.SHOP_OWNER) 0 else 1
-        val tabs = listOf(
-            stringResource(Res.string.shop_owner),
-            stringResource(Res.string.employee)
-        )
-
         val cardShape = RoundedCornerShape(24.dp)
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // Segmented toggle
-        Row(
+        // Segmented toggle with sliding indicator
+        SlidingTabSelector(
+            selectedIndex = if (uiState.accountType == AccountType.SHOP_OWNER) 0 else 1,
+            tabs = listOf(
+                TabItem(
+                    title = stringResource(Res.string.shop_owner),
+                    icon = Icons.Filled.Storefront,
+                ),
+                TabItem(
+                    title = stringResource(Res.string.employee),
+                    icon = Icons.Filled.Badge,
+                ),
+            ),
+            onTabSelected = { index ->
+                val type = if (index == 0) AccountType.SHOP_OWNER else AccountType.EMPLOYEE
+                if (uiState.accountType != type) viewModel.switchAccountType(type)
+            },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .clip(RoundedCornerShape(CornerDimensions.md))
-                .background(AppColor.SurfaceContainerHigh)
-                .padding(4.dp),
-        ) {
-            tabs.forEachIndexed { index, title ->
-                val isSelected = selectedTabIndex == index
-
-                val bgColor by animateColorAsState(
-                    targetValue = if (isSelected) AppColor.Primary else Color.Transparent,
-                    animationSpec = tween(250),
-                )
-                val textColor by animateColorAsState(
-                    targetValue = if (isSelected) Color.White else AppColor.TextHint,
-                    animationSpec = tween(250),
-                )
-
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .clip(RoundedCornerShape(CornerDimensions.sm))
-                        .background(bgColor)
-                        .noRippleClickable {
-                            val type =
-                                if (index == 0) AccountType.SHOP_OWNER else AccountType.EMPLOYEE
-                            if (uiState.accountType != type) viewModel.switchAccountType(type)
-                        }
-                        .padding(vertical = 10.dp),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        text = title,
-                        style = MahalatkTheme.titleSmall,
-                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                        color = textColor,
-                    )
-                }
-            }
-        }
+                .padding(horizontal = 16.dp),
+        )
 
         Spacer(modifier = Modifier.height(12.dp))
 
@@ -223,8 +205,11 @@ fun RegisterScreen(
             colors = CardDefaults.cardColors(containerColor = MahalatkTheme.white),
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
         ) {
-            Column {
-                // Scrollable Form Content inside the card
+            Crossfade(
+                targetState = uiState.accountType,
+                animationSpec = tween(200),
+                modifier = Modifier.fillMaxSize(),
+            ) { accountType ->
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -232,7 +217,7 @@ fun RegisterScreen(
                         .padding(vertical = 24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    when (uiState.accountType) {
+                    when (accountType) {
                         AccountType.SHOP_OWNER -> ShopOwnerForm(
                             uiState = uiState,
                             viewModel = viewModel,
@@ -922,6 +907,96 @@ private fun ProfileImagePicker(
                 color = MahalatkTheme.error,
                 modifier = Modifier.padding(top = 4.dp)
             )
+        }
+    }
+}
+
+// ─── Sliding Tab Selector ───────────────────────────────────────────
+
+private data class TabItem(
+    val title: String,
+    val icon: ImageVector,
+)
+
+@Composable
+private fun SlidingTabSelector(
+    selectedIndex: Int,
+    tabs: List<TabItem>,
+    onTabSelected: (Int) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val indicatorBias by animateFloatAsState(
+        targetValue = if (selectedIndex == 0) -1f else 1f,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioLowBouncy,
+            stiffness = Spring.StiffnessMediumLow,
+        ),
+    )
+
+    Box(
+        modifier = modifier
+            .height(52.dp)
+            .clip(RoundedCornerShape(CornerDimensions.md))
+            .background(AppColor.SurfaceContainerHigh)
+            .padding(4.dp),
+    ) {
+        // Sliding indicator
+        Box(
+            modifier = Modifier
+                .fillMaxHeight()
+                .fillMaxWidth(0.5f)
+                .align(BiasAlignment(horizontalBias = indicatorBias, verticalBias = 0f))
+                .shadow(
+                    elevation = 4.dp,
+                    shape = RoundedCornerShape(CornerDimensions.sm),
+                    ambientColor = AppColor.Primary.copy(alpha = 0.2f),
+                    spotColor = AppColor.Primary.copy(alpha = 0.3f),
+                )
+                .clip(RoundedCornerShape(CornerDimensions.sm))
+                .background(AppColor.Primary),
+        )
+
+        // Tab items
+        Row(modifier = Modifier.fillMaxSize()) {
+            tabs.forEachIndexed { index, tab ->
+                val isSelected = selectedIndex == index
+
+                val textColor by animateColorAsState(
+                    targetValue = if (isSelected) Color.White else AppColor.TextHint,
+                    animationSpec = tween(200),
+                )
+                val iconColor by animateColorAsState(
+                    targetValue = if (isSelected) Color.White else AppColor.TextHint,
+                    animationSpec = tween(200),
+                )
+
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .noRippleClickable { onTabSelected(index) },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Icon(
+                            imageVector = tab.icon,
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp),
+                            tint = iconColor,
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = tab.title,
+                            style = MahalatkTheme.titleSmall,
+                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                            color = textColor,
+                        )
+                    }
+                }
+            }
         }
     }
 }
