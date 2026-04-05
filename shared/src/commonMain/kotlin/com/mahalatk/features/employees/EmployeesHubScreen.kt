@@ -1,33 +1,35 @@
 package com.mahalatk.features.employees
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.rounded.GroupAdd
 import androidx.compose.material.icons.rounded.Groups
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mahalatk.common.component.animation.AnimatedListItem
 import com.mahalatk.common.component.header.ScreenHeader
@@ -40,8 +42,8 @@ import mahalatk.shared.generated.resources.employees
 import mahalatk.shared.generated.resources.employees_list
 import org.jetbrains.compose.resources.stringResource
 
-private val RequestsCardColor = Color(0xFF4CAF50)
-private val EmployeesCardColor = Color(0xFF5C6BC0)
+private val RequestsColor = Color(0xFF4CAF50)
+private val EmployeesColor = Color(0xFF5C6BC0)
 
 @Composable
 fun EmployeesHubScreen(
@@ -64,19 +66,21 @@ fun EmployeesHubScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             AnimatedListItem(0) {
-                CategoryCard(
+                GlassCard(
                     icon = Icons.Rounded.GroupAdd,
                     title = stringResource(Res.string.employee_requests),
-                    cardColor = RequestsCardColor,
+                    subtitle = "Manage pending join requests",
+                    accentColor = RequestsColor,
                     onClick = onEmployeeRequests,
                 )
             }
 
             AnimatedListItem(1) {
-                CategoryCard(
+                GlassCard(
                     icon = Icons.Rounded.Groups,
                     title = stringResource(Res.string.employees_list),
-                    cardColor = EmployeesCardColor,
+                    subtitle = "View & manage your team",
+                    accentColor = EmployeesColor,
                     onClick = onEmployeesList,
                 )
             }
@@ -85,69 +89,90 @@ fun EmployeesHubScreen(
 }
 
 @Composable
-private fun CategoryCard(
+private fun GlassCard(
     icon: ImageVector,
     title: String,
-    cardColor: Color,
+    subtitle: String,
+    accentColor: Color,
     onClick: () -> Unit,
 ) {
-    Card(
+    val glassShape = RoundedCornerShape(20.dp)
+
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(140.dp)
-            .noRippleClickable { onClick() },
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = AppColor.Surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+            .clip(glassShape)
+            .background(
+                brush = Brush.horizontalGradient(
+                    colors = listOf(
+                        accentColor.copy(alpha = 0.06f),
+                        accentColor.copy(alpha = 0.12f),
+                    ),
+                ),
+            )
+            .border(
+                width = 1.dp,
+                brush = Brush.linearGradient(
+                    colors = listOf(
+                        accentColor.copy(alpha = 0.3f),
+                        accentColor.copy(alpha = 0.08f),
+                    ),
+                ),
+                shape = glassShape,
+            )
+            .noRippleClickable { onClick() }
+            .padding(20.dp),
     ) {
         Row(
-            modifier = Modifier.fillMaxSize(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            // Left: Icon area
+            // Glass icon circle
             Box(
                 modifier = Modifier
-                    .weight(1f)
-                    .fillMaxSize()
-                    .padding(24.dp),
+                    .size(56.dp)
+                    .clip(CircleShape)
+                    .background(accentColor.copy(alpha = 0.12f))
+                    .border(1.dp, accentColor.copy(alpha = 0.2f), CircleShape),
                 contentAlignment = Alignment.Center,
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(72.dp)
-                        .background(
-                            color = cardColor.copy(alpha = 0.1f),
-                            shape = CircleShape,
-                        ),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Icon(
-                        imageVector = icon,
-                        contentDescription = null,
-                        modifier = Modifier.size(36.dp),
-                        tint = cardColor,
-                    )
-                }
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    modifier = Modifier.size(28.dp),
+                    tint = accentColor,
+                )
             }
 
-            // Right: Colored panel with title
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxSize()
-                    .background(
-                        color = cardColor,
-                        shape = RoundedCornerShape(20.dp),
-                    ),
-                contentAlignment = Alignment.Center,
-            ) {
+            Spacer(modifier = Modifier.width(16.dp))
+
+            // Text column
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = title,
-                    style = MahalatkTheme.titleMedium,
-                    color = Color.White,
+                    style = MahalatkTheme.titleSmall,
+                    color = AppColor.TextPrimary,
                     fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(16.dp),
+                )
+                Text(
+                    text = subtitle,
+                    style = MahalatkTheme.bodySmall,
+                    color = AppColor.TextHint,
+                )
+            }
+
+            // Arrow
+            Box(
+                modifier = Modifier
+                    .size(32.dp)
+                    .clip(CircleShape)
+                    .background(accentColor.copy(alpha = 0.1f)),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowRight,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp),
+                    tint = accentColor,
                 )
             }
         }
