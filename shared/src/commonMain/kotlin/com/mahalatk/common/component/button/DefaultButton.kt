@@ -3,25 +3,31 @@ package com.mahalatk.common.component.button
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mahalatk.common.component.utilis.noRippleClickable
 import com.mahalatk.theme.AppPadding
 import com.mahalatk.theme.AppShapes
 import com.mahalatk.theme.MahalatkTheme
@@ -68,32 +74,40 @@ fun DefaultButton(
     }
 
     if (style == ButtonStyle.OUTLINED) {
-        OutlinedButton(
-            onClick = onClick,
-            interactionSource = interactionSource,
+        val tint = if (enabled) MahalatkTheme.primary else MahalatkTheme.border
+        Box(
             modifier = modifier
                 .graphicsLayer { scaleX = scale; scaleY = scale }
-                .fillMaxWidth(),
-            shape = shape,
-            enabled = enabled,
-            border = BorderStroke(
-                width = 1.dp,
-                color = if (enabled) MahalatkTheme.primary else MahalatkTheme.border
-            ),
-            colors = ButtonDefaults.outlinedButtonColors(
-                containerColor = containerColor,
-                contentColor = contentColor,
-                disabledContainerColor = MaterialTheme.colorScheme.surface,
-                disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-            )
+                .fillMaxWidth()
+                .clip(shape)
+                .background(
+                    brush = Brush.horizontalGradient(
+                        colors = listOf(
+                            tint.copy(alpha = 0.05f),
+                            tint.copy(alpha = 0.10f),
+                        ),
+                    ),
+                )
+                .border(
+                    width = 1.dp,
+                    brush = Brush.linearGradient(
+                        colors = listOf(
+                            tint.copy(alpha = 0.3f),
+                            tint.copy(alpha = 0.08f),
+                        ),
+                    ),
+                    shape = shape,
+                )
+                .height(48.dp)
+                .noRippleClickable(onClick = if (enabled) onClick else ({})),
+            contentAlignment = androidx.compose.ui.Alignment.Center,
         ) {
             Text(
                 text = text,
                 modifier = Modifier.padding(contentPadding),
                 style = MahalatkTheme.labelMedium.copy(fontSize = 14.sp),
-                color = if (enabled) contentColor else MaterialTheme.colorScheme.onSurface.copy(
-                    alpha = 0.38f
-                )
+                color = if (enabled) tint else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+                textAlign = TextAlign.Center,
             )
         }
     } else {
@@ -102,7 +116,8 @@ fun DefaultButton(
             interactionSource = interactionSource,
             modifier = modifier
                 .graphicsLayer { scaleX = scale; scaleY = scale }
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .height(48.dp),
             shape = shape,
             enabled = enabled,
             colors = ButtonDefaults.buttonColors(

@@ -21,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -83,7 +84,12 @@ fun DefaultTextField(
                 .clip(shape)
                 .border(
                     width = 1.dp,
-                    color = borderColor,
+                    brush = Brush.linearGradient(
+                        colors = listOf(
+                            borderColor.copy(alpha = 0.6f),
+                            borderColor.copy(alpha = 0.15f),
+                        ),
+                    ),
                     shape = shape,
                 )
                 .onFocusChanged { isFocused = it.isFocused }

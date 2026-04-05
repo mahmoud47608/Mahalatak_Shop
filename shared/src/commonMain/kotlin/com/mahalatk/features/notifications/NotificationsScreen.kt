@@ -1,6 +1,7 @@
 package com.mahalatk.features.notifications
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,24 +19,24 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.mahalatk.common.component.animation.AnimatedListItem
+import com.mahalatk.common.component.card.GlassCard
 import com.mahalatk.common.component.utilis.noRippleClickable
 import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.CornerDimensions
@@ -58,10 +59,10 @@ fun NotificationsScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
 
-    val headerGradient = remember(AppColor.isDark) {
-        Brush.verticalGradient(
-            colors = listOf(AppColor.Primary, AppColor.Primary),
-        )
+    val glassColors = if (AppColor.isDark) {
+        listOf(Color(0xFF14444A), Color(0xFF1F6268), Color(0xFF276E74))
+    } else {
+        listOf(Color(0xFF3D9098), Color(0xFF5AA6AC), Color(0xFF6DBABF))
     }
 
     Column(
@@ -71,7 +72,34 @@ fun NotificationsScreen(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(brush = headerGradient)
+                .drawBehind {
+                    drawRect(Brush.verticalGradient(glassColors))
+                    drawCircle(
+                        Color.White.copy(alpha = 0.07f),
+                        80.dp.toPx(),
+                        Offset(-20.dp.toPx(), -10.dp.toPx()),
+                    )
+                    drawCircle(
+                        Color.White.copy(alpha = 0.05f),
+                        55.dp.toPx(),
+                        Offset(size.width + 10.dp.toPx(), size.height * 0.4f),
+                    )
+                    drawCircle(
+                        Color.White.copy(alpha = 0.03f),
+                        35.dp.toPx(),
+                        Offset(size.width * 0.5f, -15.dp.toPx()),
+                    )
+                }
+                .border(
+                    width = 1.dp,
+                    brush = Brush.linearGradient(
+                        colors = listOf(
+                            Color.White.copy(alpha = 0.20f),
+                            Color.White.copy(alpha = 0.05f),
+                        ),
+                    ),
+                    shape = androidx.compose.ui.graphics.RectangleShape,
+                )
                 .padding(top = 40.dp, bottom = 14.dp, start = 16.dp, end = 16.dp),
         ) {
             Row(
@@ -179,17 +207,13 @@ private fun NotificationCard(
     onDelete: () -> Unit,
     onClick: () -> Unit,
 ) {
-    Card(
-        modifier = Modifier.fillMaxWidth().noRippleClickable { onClick() },
-        shape = RoundedCornerShape(CornerDimensions.lg),
-        colors = CardDefaults.cardColors(
-            containerColor = if (!notification.isRead) AppColor.PrimaryContainer else AppColor.Surface,
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
-        border = null,
+    GlassCard(
+        modifier = Modifier.noRippleClickable { onClick() },
+        cornerRadius = CornerDimensions.lg,
+        contentPadding = 14.dp,
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(14.dp),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.Top,
         ) {
             // Notification icon

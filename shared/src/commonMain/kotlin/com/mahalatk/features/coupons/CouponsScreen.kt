@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mahalatk.common.component.animation.AnimatedListItem
 import com.mahalatk.common.component.animation.PressableCard
+import com.mahalatk.common.component.card.GlassCard
 import com.mahalatk.common.component.empty.EmptyStatePlaceholder
 import com.mahalatk.common.component.header.ScreenHeader
 import com.mahalatk.common.component.loading.ShimmerBox
@@ -162,13 +163,10 @@ fun CouponsScreen(
 
 @Composable
 private fun CouponCard(coupon: Coupon, onToggleActive: () -> Unit) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(CornerDimensions.lg),
-        colors = CardDefaults.cardColors(containerColor = AppColor.Surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+    GlassCard(
+        cornerRadius = CornerDimensions.lg,
     ) {
-        Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+        Column(modifier = Modifier.fillMaxWidth()) {
             // Coupon code in dashed box
             Box(
                 modifier = Modifier.fillMaxWidth().border(

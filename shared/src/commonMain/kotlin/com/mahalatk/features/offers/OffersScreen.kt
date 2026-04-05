@@ -50,6 +50,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mahalatk.common.component.animation.AnimatedListItem
+import com.mahalatk.common.component.card.GlassCard
 import com.mahalatk.common.component.empty.EmptyStatePlaceholder
 import com.mahalatk.common.component.header.ScreenHeader
 import com.mahalatk.common.component.loading.ShimmerBox
@@ -190,13 +191,10 @@ private fun OfferCard(
         }
     }
 
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(CornerDimensions.lg),
-        colors = CardDefaults.cardColors(containerColor = AppColor.Surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+    GlassCard(
+        cornerRadius = CornerDimensions.lg,
     ) {
-        Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+        Column(modifier = Modifier.fillMaxWidth()) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,

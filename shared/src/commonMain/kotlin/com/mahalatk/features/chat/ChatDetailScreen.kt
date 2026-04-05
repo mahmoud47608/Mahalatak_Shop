@@ -9,6 +9,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -45,6 +46,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -96,17 +99,44 @@ fun ChatDetailScreen(
             .fillMaxSize()
             .background(AppColor.ScreenBackground),
     ) {
-        val headerGradient = remember(AppColor.isDark) {
-            Brush.verticalGradient(
-                colors = listOf(AppColor.Primary, AppColor.Primary),
-            )
+        val glassColors = if (AppColor.isDark) {
+            listOf(Color(0xFF14444A), Color(0xFF1F6268), Color(0xFF276E74))
+        } else {
+            listOf(Color(0xFF3D9098), Color(0xFF5AA6AC), Color(0xFF6DBABF))
         }
 
         // ── Header ──
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(brush = headerGradient)
+                .drawBehind {
+                    drawRect(Brush.verticalGradient(glassColors))
+                    drawCircle(
+                        Color.White.copy(alpha = 0.07f),
+                        80.dp.toPx(),
+                        Offset(-20.dp.toPx(), -10.dp.toPx()),
+                    )
+                    drawCircle(
+                        Color.White.copy(alpha = 0.05f),
+                        55.dp.toPx(),
+                        Offset(size.width + 10.dp.toPx(), size.height * 0.4f),
+                    )
+                    drawCircle(
+                        Color.White.copy(alpha = 0.03f),
+                        35.dp.toPx(),
+                        Offset(size.width * 0.5f, -15.dp.toPx()),
+                    )
+                }
+                .border(
+                    width = 1.dp,
+                    brush = Brush.linearGradient(
+                        colors = listOf(
+                            Color.White.copy(alpha = 0.20f),
+                            Color.White.copy(alpha = 0.05f),
+                        ),
+                    ),
+                    shape = androidx.compose.ui.graphics.RectangleShape,
+                )
                 .padding(top = 40.dp, bottom = 14.dp, start = 16.dp, end = 16.dp),
         ) {
             Row(

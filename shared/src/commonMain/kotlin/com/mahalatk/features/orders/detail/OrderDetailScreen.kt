@@ -19,8 +19,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -40,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mahalatk.common.component.animation.AnimatedListItem
 import com.mahalatk.common.component.button.DefaultButton
+import com.mahalatk.common.component.card.GlassCard
 import com.mahalatk.common.component.header.ScreenHeader
 import com.mahalatk.common.component.loading.LoadingOverlay
 import com.mahalatk.common.component.utilis.noRippleClickable
@@ -542,13 +541,11 @@ private fun StarRatingRow(rating: Int, onRate: (Int) -> Unit) {
 
 @Composable
 private fun DetailCard(content: @Composable () -> Unit) {
-    Card(
+    GlassCard(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = AppColor.Surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+        cornerRadius = 16.dp,
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column {
             content()
         }
     }

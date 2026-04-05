@@ -20,8 +20,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Switch
@@ -36,6 +34,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.mahalatk.common.component.animation.AnimatedListItem
+import com.mahalatk.common.component.card.GlassCard
 import com.mahalatk.common.component.image.UserAvatar
 import com.mahalatk.common.component.utilis.noRippleClickable
 import com.mahalatk.theme.AppColor
@@ -77,10 +78,9 @@ fun HomeScreen(
     val state by viewModel.uiState.collectAsState()
     val navigator = com.mahalatk.navigation.LocalNavigator.current
 
-    val headerGradient = remember(AppColor.isDark) {
-        Brush.verticalGradient(
-            colors = listOf(AppColor.Primary, AppColor.Primary),
-        )
+    val glassColors = remember(AppColor.isDark) {
+        if (AppColor.isDark) listOf(Color(0xFF14444A), Color(0xFF1F6268), Color(0xFF276E74))
+        else listOf(Color(0xFF3D9098), Color(0xFF5AA6AC), Color(0xFF6DBABF))
     }
 
     Column(
@@ -88,14 +88,29 @@ fun HomeScreen(
             .fillMaxSize()
             .background(AppColor.ScreenBackground),
     ) {
-        // ── Top Header with gradient ──
+        // ── Top Header with glass morphism ──
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(
-                    brush = headerGradient,
-                    shape = AppShapes.Header,
-                )
+                .clip(AppShapes.Header)
+                .drawBehind {
+                    drawRect(Brush.verticalGradient(glassColors))
+                    drawCircle(
+                        Color.White.copy(alpha = 0.07f),
+                        80.dp.toPx(),
+                        Offset(-20.dp.toPx(), -10.dp.toPx()),
+                    )
+                    drawCircle(
+                        Color.White.copy(alpha = 0.05f),
+                        55.dp.toPx(),
+                        Offset(size.width + 10.dp.toPx(), size.height * 0.4f),
+                    )
+                    drawCircle(
+                        Color.White.copy(alpha = 0.03f),
+                        35.dp.toPx(),
+                        Offset(size.width * 0.5f, -15.dp.toPx()),
+                    )
+                }
                 .padding(
                     top = 50.dp,
                     bottom = 24.dp,
@@ -243,11 +258,10 @@ private fun ToggleCard(
     isChecked: Boolean,
     onToggle: (Boolean) -> Unit,
 ) {
-    Card(
+    GlassCard(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(CornerDimensions.lg),
-        colors = CardDefaults.cardColors(containerColor = AppColor.Surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+        cornerRadius = CornerDimensions.lg,
+        contentPadding = 0.dp,
     ) {
         Row(
             modifier = Modifier
@@ -327,11 +341,10 @@ private fun StatCard(
     // derivedStateOf prevents recomposition on every frame — only recomposes when the integer % actually changes
     val percentage by remember { derivedStateOf { (animatedProgress.value * 100).toInt() } }
 
-    Card(
+    GlassCard(
         modifier = modifier,
-        shape = RoundedCornerShape(CornerDimensions.lg),
-        colors = CardDefaults.cardColors(containerColor = AppColor.Surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+        cornerRadius = CornerDimensions.lg,
+        contentPadding = 0.dp,
     ) {
         Column(
             modifier = Modifier
@@ -394,11 +407,10 @@ private fun StatCard(
 // ──────────────────────────────────────────────
 @Composable
 private fun OrderCard(order: OrderItem, onClick: () -> Unit = {}) {
-    Card(
+    GlassCard(
         modifier = Modifier.fillMaxWidth().noRippleClickable { onClick() },
-        shape = RoundedCornerShape(CornerDimensions.lg),
-        colors = CardDefaults.cardColors(containerColor = AppColor.Surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+        cornerRadius = CornerDimensions.lg,
+        contentPadding = 0.dp,
     ) {
         Row(
             modifier = Modifier

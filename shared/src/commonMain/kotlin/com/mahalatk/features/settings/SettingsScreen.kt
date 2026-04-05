@@ -12,10 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
@@ -34,6 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mahalatk.common.component.animation.AnimatedListItem
 import com.mahalatk.common.component.bottomsheet.SingleSelectBottomSheet
+import com.mahalatk.common.component.card.GlassCard
 import com.mahalatk.common.component.dialog.DeleteAccountDialog
 import com.mahalatk.common.component.header.ScreenHeader
 import com.mahalatk.common.component.menu.MenuItemRow
@@ -96,13 +94,12 @@ fun SettingsScreen(
                 .verticalScroll(rememberScrollState())
                 .padding(top = 16.dp, bottom = 24.dp),
         ) {
-            Card(
+            GlassCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = AppColor.Surface),
-                elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+                cornerRadius = 16.dp,
+                contentPadding = 0.dp,
             ) {
                 Column {
                     // 1 ─ Change Password

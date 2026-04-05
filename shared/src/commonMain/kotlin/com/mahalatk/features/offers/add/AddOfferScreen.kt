@@ -74,7 +74,7 @@ fun AddOfferScreen(
     onBack: () -> Unit = {},
 ) {
     val state by viewModel.uiState.collectAsState()
-    val current = Steps[state.currentStep]
+    Steps[state.currentStep]
 
     Column(
         modifier = Modifier
@@ -91,8 +91,6 @@ fun AddOfferScreen(
             currentStep = state.currentStep,
             steps = Steps,
         )
-
-        StepBanner(step = current, number = state.currentStep + 1)
 
         StepError(errorRes = state.stepError)
 

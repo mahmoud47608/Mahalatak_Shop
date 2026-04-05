@@ -20,13 +20,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Phone
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -46,6 +43,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mahalatk.common.component.animation.AnimatedListItem
+import com.mahalatk.common.component.card.GlassCard
 import com.mahalatk.common.component.empty.EmptyStatePlaceholder
 import com.mahalatk.common.component.header.ScreenHeader
 import com.mahalatk.common.component.image.UserAvatar
@@ -139,11 +137,10 @@ private fun CurrentEmployeeCard(
                     ),
                 ),
     ) {
-        Card(
+        GlassCard(
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = AppColor.Surface),
-            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+            cornerRadius = 16.dp,
+            contentPadding = 0.dp,
         ) {
             Row(
                 modifier = Modifier

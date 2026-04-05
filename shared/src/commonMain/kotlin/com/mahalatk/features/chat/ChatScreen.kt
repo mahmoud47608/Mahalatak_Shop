@@ -35,6 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.mahalatk.common.component.animation.AnimatedListItem
+import com.mahalatk.common.component.card.GlassCard
 import com.mahalatk.common.component.empty.EmptyStatePlaceholder
 import com.mahalatk.common.component.header.ScreenHeader
 import com.mahalatk.common.component.image.UserAvatar
@@ -189,14 +190,13 @@ private fun ChatItem(
     conversation: ChatConversation,
     onClick: () -> Unit,
 ) {
-    Card(
-        modifier = Modifier.fillMaxWidth().noRippleClickable { onClick() },
-        shape = RoundedCornerShape(CornerDimensions.lg),
-        colors = CardDefaults.cardColors(containerColor = AppColor.Surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+    GlassCard(
+        modifier = Modifier.noRippleClickable { onClick() },
+        cornerRadius = CornerDimensions.lg,
+        contentPadding = 14.dp,
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(14.dp),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             // Avatar with online indicator

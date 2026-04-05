@@ -9,10 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,6 +22,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mahalatk.common.component.button.DefaultButton
+import com.mahalatk.common.component.card.GlassCard
 import com.mahalatk.common.component.header.ScreenHeader
 import com.mahalatk.common.component.inputs.DefaultTextField
 import com.mahalatk.theme.AppColor
@@ -60,13 +58,12 @@ fun ChangePhoneScreen(
                 .verticalScroll(rememberScrollState())
                 .padding(top = 16.dp, bottom = 24.dp),
         ) {
-            Card(
+            GlassCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
-                shape = RoundedCornerShape(24.dp),
-                colors = CardDefaults.cardColors(containerColor = AppColor.Surface),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                cornerRadius = 24.dp,
+                contentPadding = 0.dp,
             ) {
                 Column(
                     modifier = Modifier

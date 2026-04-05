@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.mahalatk.common.component.animation.AnimatedListItem
+import com.mahalatk.common.component.card.GlassCard
 import com.mahalatk.common.component.header.ScreenHeader
 import com.mahalatk.common.component.loading.ShimmerBox
 import com.mahalatk.common.component.utilis.noRippleClickable
@@ -117,14 +118,12 @@ fun ProductsScreen(
 // ──────────────────────────────────────────────
 @Composable
 private fun ProductCard(product: ProductItem) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(CornerDimensions.lg),
-        colors = CardDefaults.cardColors(containerColor = AppColor.Surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+    GlassCard(
+        cornerRadius = CornerDimensions.lg,
+        contentPadding = 14.dp,
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(14.dp),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Column(modifier = Modifier.weight(1f)) {

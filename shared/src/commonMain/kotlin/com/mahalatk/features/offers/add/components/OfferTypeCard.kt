@@ -24,8 +24,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,6 +36,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mahalatk.common.component.animation.AnimatedListItem
+import com.mahalatk.common.component.card.GlassCard
 import com.mahalatk.common.component.utilis.noRippleClickable
 import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.CornerDimensions
@@ -53,10 +52,6 @@ fun OfferTypeCard(
     isSelected: Boolean,
     onClick: () -> Unit,
 ) {
-    val containerBg by animateColorAsState(
-        targetValue = if (isSelected) AppColor.PrimaryContainer else AppColor.Surface,
-        animationSpec = tween(250),
-    )
 
     val iconBgAlpha by animateFloatAsState(
         targetValue = if (isSelected) 0.18f else 0.1f,
@@ -69,13 +64,12 @@ fun OfferTypeCard(
     )
 
     AnimatedListItem(index = index) {
-        Card(
+        GlassCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .noRippleClickable { onClick() },
-            shape = RoundedCornerShape(CornerDimensions.lg),
-            colors = CardDefaults.cardColors(containerColor = containerBg),
-            elevation = CardDefaults.cardElevation(defaultElevation = if (isSelected) 0.dp else 1.dp),
+            cornerRadius = CornerDimensions.lg,
+            contentPadding = 0.dp,
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth().padding(14.dp),

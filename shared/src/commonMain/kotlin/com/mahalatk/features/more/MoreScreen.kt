@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import coil3.compose.AsyncImage
 import com.mahalatk.common.component.animation.AnimatedListItem
+import com.mahalatk.common.component.card.GlassCard
 import com.mahalatk.common.component.utilis.noRippleClickable
 import com.mahalatk.navigation.LocalNavigator
 import com.mahalatk.navigation.Route
@@ -237,23 +238,21 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
             // Logout
             item {
                 AnimatedListItem(6) {
-                    Box(
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
-                            .shadow(
-                                2.dp,
-                                RoundedCornerShape(14.dp),
-                                ambientColor = AppColor.Error.copy(alpha = 0.06f)
-                            )
-                            .clip(RoundedCornerShape(14.dp)).background(AppColor.Surface)
-                            .noRippleClickable { viewModel.logout() }.padding(vertical = 12.dp),
-                        contentAlignment = Alignment.Center,
+                    GlassCard(
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                            .noRippleClickable { viewModel.logout() },
+                        accentColor = AppColor.Error,
+                        cornerRadius = 14.dp,
+                        contentPadding = 12.dp,
                     ) {
                         Text(
                             stringResource(Res.string.logout),
                             style = MahalatkTheme.bodySmall,
                             color = AppColor.Error,
                             fontWeight = FontWeight.SemiBold,
-                            fontSize = 13.sp
+                            fontSize = 13.sp,
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.Center,
                         )
                     }
                 }
@@ -367,19 +366,13 @@ private fun ProfileCard(
     isShopOwner: Boolean,
     onClick: () -> Unit
 ) {
-    Box(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
-            .shadow(
-                8.dp,
-                RoundedCornerShape(20.dp),
-                ambientColor = AppColor.Primary.copy(alpha = 0.1f),
-                spotColor = AppColor.Primary.copy(alpha = 0.06f)
-            )
-            .clip(RoundedCornerShape(20.dp)).background(AppColor.Surface)
-            .noRippleClickable(onClick = onClick),
+    GlassCard(
+        modifier = Modifier.padding(horizontal = 16.dp).noRippleClickable(onClick = onClick),
+        cornerRadius = 20.dp,
+        contentPadding = 14.dp,
     ) {
         Row(
-            Modifier.fillMaxWidth().padding(14.dp),
+            Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Avatar with gradient border + verified badge
@@ -534,13 +527,16 @@ private fun QuickActionItem(
     tint: Color,
     onClick: () -> Unit
 ) {
-    Column(
-        modifier = modifier
-            .shadow(2.dp, RoundedCornerShape(14.dp), ambientColor = tint.copy(alpha = 0.08f))
-            .clip(RoundedCornerShape(14.dp)).background(AppColor.Surface)
-            .noRippleClickable(onClick = onClick).padding(vertical = 10.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+    GlassCard(
+        modifier = modifier.noRippleClickable(onClick = onClick),
+        accentColor = tint,
+        cornerRadius = 14.dp,
+        contentPadding = 0.dp,
     ) {
+        Column(
+            modifier = Modifier.fillMaxWidth().padding(vertical = 10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
         Box(
             Modifier.size(36.dp).clip(RoundedCornerShape(10.dp))
                 .background(tint.copy(alpha = 0.08f)), contentAlignment = Alignment.Center
@@ -557,6 +553,7 @@ private fun QuickActionItem(
             textAlign = TextAlign.Center,
             maxLines = 1
         )
+        }
     }
 }
 
@@ -579,10 +576,10 @@ private fun SectionLabel(title: String) {
 
 @Composable
 private fun MenuCard(content: @Composable () -> Unit) {
-    Box(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
-            .shadow(3.dp, RoundedCornerShape(16.dp), ambientColor = Color.Black.copy(alpha = 0.03f))
-            .clip(RoundedCornerShape(16.dp)).background(AppColor.Surface),
+    GlassCard(
+        modifier = Modifier.padding(horizontal = 16.dp),
+        cornerRadius = 16.dp,
+        contentPadding = 0.dp,
     ) { Column { content() } }
 }
 

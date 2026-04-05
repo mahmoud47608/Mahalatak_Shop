@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -35,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.mahalatk.common.component.animation.AnimatedListItem
+import com.mahalatk.common.component.card.GlassCard
 import com.mahalatk.common.component.empty.EmptyStatePlaceholder
 import com.mahalatk.common.component.header.ScreenHeader
 import com.mahalatk.common.component.image.UserAvatar
@@ -76,7 +76,7 @@ fun ComplaintsScreen(
                 contentPadding = PaddingValues(
                     start = 16.dp,
                     end = 16.dp,
-                    top = 8.dp,
+                    top = 16.dp,
                     bottom = 16.dp
                 ),
                 verticalArrangement = Arrangement.spacedBy(14.dp),
@@ -98,19 +98,9 @@ fun ComplaintsScreen(
 
 @Composable
 private fun ComplaintCard(complaint: Complaint) {
-    val cardShape = RoundedCornerShape(20.dp)
-
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(cardShape)
-            .background(AppColor.Surface)
-            .border(
-                width = 1.dp,
-                color = AppColor.Error.copy(alpha = 0.08f),
-                shape = cardShape,
-            )
-            .padding(20.dp),
+    GlassCard(
+        cornerRadius = 20.dp,
+        contentPadding = 20.dp,
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             // ── User info row ──
@@ -122,7 +112,7 @@ private fun ComplaintCard(complaint: Complaint) {
                 Box(
                     modifier = Modifier
                         .size(48.dp)
-                        .border(2.dp, AppColor.Error.copy(alpha = 0.2f), CircleShape),
+                        .border(2.dp, AppColor.Primary.copy(alpha = 0.2f), CircleShape),
                     contentAlignment = Alignment.Center,
                 ) {
                     UserAvatar(
@@ -162,7 +152,7 @@ private fun ComplaintCard(complaint: Complaint) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(1.dp)
-                    .background(AppColor.Error.copy(alpha = 0.06f)),
+                    .background(AppColor.Primary.copy(alpha = 0.06f)),
             )
 
             Spacer(modifier = Modifier.height(14.dp))

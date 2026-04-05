@@ -9,14 +9,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Storefront
 import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -33,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import com.mahalatk.common.component.bottomsheet.MultiSelectBottomSheet
 import com.mahalatk.common.component.bottomsheet.SingleSelectBottomSheet
 import com.mahalatk.common.component.button.DefaultButton
+import com.mahalatk.common.component.card.GlassCard
 import com.mahalatk.common.component.header.ScreenHeader
 import com.mahalatk.common.component.imagepicker.rememberImagePickerLauncher
 import com.mahalatk.common.component.inputs.DefaultTextField
@@ -116,14 +114,13 @@ fun EditShopOwnerProfileScreen(
                 .fillMaxSize()
                 .padding(top = 16.dp, bottom = 24.dp),
         ) {
-            Card(
+            GlassCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
                     .padding(horizontal = 16.dp),
-                shape = RoundedCornerShape(24.dp),
-                colors = CardDefaults.cardColors(containerColor = AppColor.Surface),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                cornerRadius = 24.dp,
+                contentPadding = 0.dp,
             ) {
                 Column(
                     modifier = Modifier

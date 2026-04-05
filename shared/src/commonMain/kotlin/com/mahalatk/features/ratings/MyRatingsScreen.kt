@@ -19,8 +19,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.rounded.StarRate
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,6 +32,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mahalatk.common.component.animation.AnimatedListItem
+import com.mahalatk.common.component.card.GlassCard
 import com.mahalatk.common.component.empty.EmptyStatePlaceholder
 import com.mahalatk.common.component.header.ScreenHeader
 import com.mahalatk.common.component.image.UserAvatar
@@ -79,7 +78,7 @@ fun MyRatingsScreen(
                 contentPadding = PaddingValues(
                     start = 16.dp,
                     end = 16.dp,
-                    top = 4.dp,
+                    top = 16.dp,
                     bottom = 16.dp
                 ),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -115,16 +114,13 @@ private fun RatingSummaryCard(
     averageRating: Float,
     totalRatings: Int,
 ) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = AppColor.Primary),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+    GlassCard(
+        cornerRadius = 20.dp,
+        contentPadding = 20.dp,
     ) {
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp),
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             // Rating number
@@ -133,7 +129,7 @@ private fun RatingSummaryCard(
                     text = ((averageRating * 10).toInt() / 10f).toString(),
                     fontSize = 36.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White,
+                    color = AppColor.TextPrimary,
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 // Stars row
@@ -143,7 +139,7 @@ private fun RatingSummaryCard(
                             Icons.Filled.Star, null,
                             modifier = Modifier.size(16.dp),
                             tint = if (i <= averageRating.toInt()) StarGold
-                            else Color.White.copy(alpha = 0.35f),
+                            else StarEmpty,
                         )
                     }
                 }
@@ -156,7 +152,7 @@ private fun RatingSummaryCard(
                 modifier = Modifier
                     .width(1.dp)
                     .height(50.dp)
-                    .background(Color.White.copy(alpha = 0.25f)),
+                    .background(AppColor.Primary.copy(alpha = 0.15f)),
             )
 
             Spacer(modifier = Modifier.width(20.dp))
@@ -167,12 +163,12 @@ private fun RatingSummaryCard(
                     text = "$totalRatings",
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White,
+                    color = AppColor.TextPrimary,
                 )
                 Text(
                     text = stringResource(Res.string.ratings_count),
                     style = MahalatkTheme.bodySmall,
-                    color = Color.White.copy(alpha = 0.7f),
+                    color = AppColor.TextSecondary,
                 )
             }
         }
@@ -183,16 +179,12 @@ private fun RatingSummaryCard(
 
 @Composable
 private fun RatingCard(rating: Rating) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = AppColor.Surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+    GlassCard(
+        cornerRadius = 16.dp,
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+                .fillMaxWidth(),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),

@@ -37,8 +37,6 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Storefront
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -75,6 +73,7 @@ import androidx.compose.ui.unit.sp
 import com.mahalatk.common.component.bottomsheet.MultiSelectBottomSheet
 import com.mahalatk.common.component.bottomsheet.SingleSelectBottomSheet
 import com.mahalatk.common.component.button.DefaultButton
+import com.mahalatk.common.component.card.GlassCard
 import com.mahalatk.common.component.header.ScreenHeader
 import com.mahalatk.common.component.imagepicker.rememberImagePickerLauncher
 import com.mahalatk.common.component.imagepicker.toImageBitmap
@@ -189,8 +188,6 @@ fun RegisterScreen(
             onBackClick = onNavigateToLogin,
         )
 
-        val cardShape = RoundedCornerShape(24.dp)
-
         Spacer(modifier = Modifier.height(12.dp))
 
         // Segmented toggle with sliding indicator
@@ -217,15 +214,14 @@ fun RegisterScreen(
         Spacer(modifier = Modifier.height(12.dp))
 
         // Card wrapping Form
-        Card(
+        GlassCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
                 .padding(horizontal = 16.dp)
                 .padding(bottom = 20.dp),
-            shape = cardShape,
-            colors = CardDefaults.cardColors(containerColor = MahalatkTheme.white),
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            cornerRadius = 24.dp,
+            contentPadding = 0.dp,
         ) {
             HorizontalPager(
                 state = pagerState,

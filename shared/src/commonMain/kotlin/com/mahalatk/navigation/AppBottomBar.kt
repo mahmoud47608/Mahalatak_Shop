@@ -9,6 +9,7 @@ import androidx.compose.animation.core.snap
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,6 +34,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Path
@@ -167,7 +169,7 @@ fun AppBottomBar(onItemSelected: (BottomNavItem) -> Unit) {
 
     // ── Layout ──
     Box {
-        // Floating circle with the selected icon
+        // Floating circle with the selected icon — glass style
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
@@ -175,7 +177,17 @@ fun AppBottomBar(onItemSelected: (BottomNavItem) -> Unit) {
                 .zIndex(1f)
                 .size(circleRadius * 2)
                 .clip(CircleShape)
-                .background(AppColor.Primary),
+                .background(AppColor.Primary.copy(alpha = 0.10f))
+                .border(
+                    width = 1.5.dp,
+                    brush = Brush.linearGradient(
+                        colors = listOf(
+                            AppColor.Primary.copy(alpha = 0.5f),
+                            AppColor.Primary.copy(alpha = 0.12f),
+                        ),
+                    ),
+                    shape = CircleShape,
+                ),
         ) {
             AnimatedContent(
                 targetState = items[selectedIndex].iconSelected,
@@ -184,13 +196,13 @@ fun AppBottomBar(onItemSelected: (BottomNavItem) -> Unit) {
                 Icon(
                     painter = painterResource(icon),
                     contentDescription = null,
-                    tint = Color.White,
+                    tint = AppColor.Primary,
                     modifier = Modifier.size(24.dp),
                 )
             }
         }
 
-        // Navigation bar with cutout
+        // Navigation bar with cutout — glass style
         Row(
             modifier = Modifier
                 .onPlaced { barSize = it.size }
