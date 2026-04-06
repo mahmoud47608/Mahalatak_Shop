@@ -5,23 +5,19 @@ import com.mahalatk.base.BaseViewModel
 import com.mahalatk.base.managers.LoadingManager
 import com.mahalatk.base.managers.MessageManager
 import com.mahalatk.domain.repository.PreferenceRepository
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-/**
- * Checks if user is already logged in → navigate to Home or Login.
- */
+sealed interface SplashEvent {
+    data object NavigateToHome : SplashEvent
+    data object NavigateToLogin : SplashEvent
+}
+
 class SplashViewModel(
     loadingManager: LoadingManager,
     messageManager: MessageManager,
     private val preferenceRepository: PreferenceRepository,
-) : BaseViewModel<Unit>(Unit, loadingManager, messageManager) {
-
-    private val _isLoggedIn = MutableStateFlow<Boolean?>(null) // null = still checking
-    val isLoggedIn: StateFlow<Boolean?> = _isLoggedIn.asStateFlow()
+) : BaseViewModel<Unit, SplashEvent>(Unit, loadingManager, messageManager) {
 
     init {
         checkLoginStatus()
@@ -30,7 +26,11 @@ class SplashViewModel(
     private fun checkLoginStatus() {
         viewModelScope.launch {
             val loggedIn = preferenceRepository.getIsLogin().first()
-            _isLoggedIn.value = loggedIn
+            if (loggedIn) {
+                sendEvent(SplashEvent.NavigateToHome)
+            } else {
+                sendEvent(SplashEvent.NavigateToLogin)
+            }
         }
     }
 }

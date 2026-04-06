@@ -70,7 +70,8 @@ fun SettingsScreen(
 ) {
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showLanguageSheet by remember { mutableStateOf(false) }
-    val isDarkMode by viewModel.isDarkMode.collectAsState()
+    val settingsState by viewModel.uiState.collectAsState()
+    val isDarkMode = settingsState.isDarkMode
     val currentLang = getCurrentLanguageCode()
     val changeLanguage = rememberLanguageChanger()
 

@@ -1,16 +1,12 @@
 package com.mahalatk.features.products
 
 import androidx.compose.runtime.Immutable
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mahalatk.base.SimpleViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @Immutable
@@ -54,22 +50,19 @@ data class ProductsState(
     ),
 )
 
-class ProductsViewModel : ViewModel() {
-
-    private val _uiState = MutableStateFlow(ProductsState())
-    val uiState: StateFlow<ProductsState> = _uiState.asStateFlow()
+class ProductsViewModel : SimpleViewModel<ProductsState, Nothing>(ProductsState()) {
 
     init {
         viewModelScope.launch {
             delay(1000)
-            _uiState.update { it.copy(isLoading = false) }
+            updateState { copy(isLoading = false) }
         }
     }
 
     fun toggleProductAvailability(productId: String) {
-        _uiState.update { state ->
-            state.copy(
-                products = state.products.map { product ->
+        updateState {
+            copy(
+                products = products.map { product ->
                     if (product.id == productId) product.copy(isAvailable = !product.isAvailable)
                     else product
                 }.toImmutableList(),

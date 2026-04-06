@@ -10,7 +10,7 @@ import mahalatk.shared.generated.resources.please_enter_phone_number
 class RegisterViewModel(
     loadingManager: LoadingManager,
     messageManager: MessageManager,
-) : BaseViewModel<RegisterState>(
+) : BaseViewModel<RegisterState, Nothing>(
     RegisterState(),
     loadingManager,
     messageManager,

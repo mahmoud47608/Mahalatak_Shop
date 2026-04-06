@@ -1,58 +1,53 @@
 package com.mahalatk.features.offers.add
 
-import androidx.lifecycle.ViewModel
+import com.mahalatk.base.SimpleViewModel
 import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toImmutableSet
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.field_required
 
-class AddOfferViewModel : ViewModel() {
-
-    private val _uiState = MutableStateFlow(
-        AddOfferState(
-            availableCategories = MockOfferData.categories.toImmutableList(),
-            availableProducts = MockOfferData.products.toImmutableList(),
-        ),
-    )
-    val uiState: StateFlow<AddOfferState> = _uiState.asStateFlow()
+class AddOfferViewModel : SimpleViewModel<AddOfferState, Nothing>(
+    AddOfferState(
+        availableCategories = MockOfferData.categories.toImmutableList(),
+        availableProducts = MockOfferData.products.toImmutableList(),
+    ),
+) {
 
     // ─── Step 0 — Offer Type ────────────────────────────────────────────────
 
-    fun selectOfferType(type: OfferType) = updateState { copy(offerType = type) }
+    fun selectOfferType(type: OfferType) = updateOfferState { copy(offerType = type) }
 
     // ─── Step 1 — Offer Details ─────────────────────────────────────────────
 
-    fun updateDiscountMode(mode: DiscountMode) = updateState { copy(discountMode = mode) }
-    fun updateDiscountValue(value: String) = updateState { copy(discountValue = value) }
-    fun updateMinCartValue(value: String) = updateState { copy(minCartValue = value) }
-    fun updateBuyQuantity(value: String) = updateState { copy(buyQuantity = value) }
-    fun updateGetQuantity(value: String) = updateState { copy(getQuantity = value) }
-    fun updateFreeShippingMinCart(value: String) = updateState { copy(freeShippingMinCart = value) }
-    fun updatePackageName(value: String) = updateState { copy(packageName = value) }
-    fun updatePackagePrice(value: String) = updateState { copy(packagePrice = value) }
+    fun updateDiscountMode(mode: DiscountMode) = updateOfferState { copy(discountMode = mode) }
+    fun updateDiscountValue(value: String) = updateOfferState { copy(discountValue = value) }
+    fun updateMinCartValue(value: String) = updateOfferState { copy(minCartValue = value) }
+    fun updateBuyQuantity(value: String) = updateOfferState { copy(buyQuantity = value) }
+    fun updateGetQuantity(value: String) = updateOfferState { copy(getQuantity = value) }
+    fun updateFreeShippingMinCart(value: String) =
+        updateOfferState { copy(freeShippingMinCart = value) }
+
+    fun updatePackageName(value: String) = updateOfferState { copy(packageName = value) }
+    fun updatePackagePrice(value: String) = updateOfferState { copy(packagePrice = value) }
 
     // ─── Step 2 — Scope & Products ──────────────────────────────────────────
 
-    fun selectScopeType(type: OfferScopeType) = updateState { copy(scopeType = type) }
+    fun selectScopeType(type: OfferScopeType) = updateOfferState { copy(scopeType = type) }
 
-    fun toggleCategory(category: String) = updateState {
+    fun toggleCategory(category: String) = updateOfferState {
         copy(selectedCategories = selectedCategories.toggle(category))
     }
 
-    fun toggleProduct(productId: String) = updateState {
+    fun toggleProduct(productId: String) = updateOfferState {
         copy(selectedProductIds = selectedProductIds.toggle(productId))
     }
 
-    fun togglePackageProduct(productId: String) = updateState {
+    fun togglePackageProduct(productId: String) = updateOfferState {
         copy(packageProductIds = packageProductIds.toggle(productId))
     }
 
-    fun toggleFilterCategory(category: String) = updateState {
+    fun toggleFilterCategory(category: String) = updateOfferState {
         val updated = filterCategories.toggle(category)
         copy(
             filterCategories = updated,
@@ -60,7 +55,7 @@ class AddOfferViewModel : ViewModel() {
         )
     }
 
-    fun togglePackageFilterCategory(category: String) = updateState {
+    fun togglePackageFilterCategory(category: String) = updateOfferState {
         val updated = filterCategories.toggle(category)
         copy(
             filterCategories = updated,
@@ -70,25 +65,25 @@ class AddOfferViewModel : ViewModel() {
 
     // ─── Step 3 — Duration ──────────────────────────────────────────────────
 
-    fun updateStartDate(value: String) = updateState { copy(startDate = value) }
-    fun updateEndDate(value: String) = updateState { copy(endDate = value) }
+    fun updateStartDate(value: String) = updateOfferState { copy(startDate = value) }
+    fun updateEndDate(value: String) = updateOfferState { copy(endDate = value) }
 
     // ─── Navigation ─────────────────────────────────────────────────────────
 
     fun nextStep() {
         if (!validateCurrentStep()) return
-        _uiState.update {
-            it.copy(
-                currentStep = (it.currentStep + 1).coerceAtMost(3),
+        updateState {
+            copy(
+                currentStep = (currentStep + 1).coerceAtMost(3),
                 stepError = null
             )
         }
     }
 
     fun previousStep() {
-        _uiState.update {
-            it.copy(
-                currentStep = (it.currentStep - 1).coerceAtLeast(0),
+        updateState {
+            copy(
+                currentStep = (currentStep - 1).coerceAtLeast(0),
                 stepError = null
             )
         }
@@ -96,20 +91,20 @@ class AddOfferViewModel : ViewModel() {
 
     fun publish() {
         if (!validateStep(3)) return
-        _uiState.update { it.copy(showSuccess = true) }
+        updateState { copy(showSuccess = true) }
     }
 
     // ─── Internals ──────────────────────────────────────────────────────────
 
-    /** Central state updater — clears error on every user action. */
-    private inline fun updateState(crossinline block: AddOfferState.() -> AddOfferState) {
-        _uiState.update { it.block().copy(stepError = null) }
+    /** Clears stepError on every user action, then applies the block. */
+    private inline fun updateOfferState(crossinline block: AddOfferState.() -> AddOfferState) {
+        updateState { block().copy(stepError = null) }
     }
 
-    private fun validateCurrentStep(): Boolean = validateStep(_uiState.value.currentStep)
+    private fun validateCurrentStep(): Boolean = validateStep(uiState.value.currentStep)
 
     private fun validateStep(step: Int): Boolean {
-        val s = _uiState.value
+        val s = uiState.value
         val valid = when (step) {
             0 -> s.offerType != null
             1 -> when (s.offerType) {
@@ -131,7 +126,7 @@ class AddOfferViewModel : ViewModel() {
             3 -> s.startDate.isNotBlank() && s.endDate.isNotBlank()
             else -> true
         }
-        if (!valid) _uiState.update { it.copy(stepError = Res.string.field_required) }
+        if (!valid) updateState { copy(stepError = Res.string.field_required) }
         return valid
     }
 }

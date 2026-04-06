@@ -1,19 +1,16 @@
 package com.mahalatk.features.orders
 
 import androidx.compose.runtime.Immutable
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mahalatk.base.SimpleViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 enum class OrderTab { New, Current, Completed, Returns }
@@ -66,19 +63,16 @@ data class OrdersState(
     ),
 )
 
-class OrdersViewModel : ViewModel() {
-
-    private val _uiState = MutableStateFlow(OrdersState())
+class OrdersViewModel : SimpleViewModel<OrdersState, Nothing>(OrdersState()) {
 
     init {
         viewModelScope.launch {
             delay(1000)
-            _uiState.update { it.copy(isLoading = false) }
+            updateState { copy(isLoading = false) }
         }
     }
-    val uiState: StateFlow<OrdersState> = _uiState.asStateFlow()
 
-    val filteredOrders: StateFlow<ImmutableList<Order>> = _uiState.map { state ->
+    val filteredOrders: StateFlow<ImmutableList<Order>> = uiState.map { state ->
         when (state.selectedTab) {
             OrderTab.New -> state.orders.filter { it.status == OrderStatus.New }.toImmutableList()
             OrderTab.Current -> state.orders.filter { it.status == OrderStatus.Preparing }
@@ -93,6 +87,6 @@ class OrdersViewModel : ViewModel() {
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), persistentListOf())
 
     fun selectTab(tab: OrderTab) {
-        _uiState.update { it.copy(selectedTab = tab) }
+        updateState { copy(selectedTab = tab) }
     }
 }

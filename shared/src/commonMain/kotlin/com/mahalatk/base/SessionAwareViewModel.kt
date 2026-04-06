@@ -13,14 +13,14 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-open class SessionAwareViewModel<UiState : Any>(
+open class SessionAwareViewModel<UiState : Any, UiEvent : Any>(
     initialState: UiState,
     loadingManager: LoadingManager,
     messageManager: MessageManager,
     protected val sessionManager: SessionManager,
     protected val preferenceRepository: PreferenceRepository,
     protected val tokenCacheManager: TokenCacheManager,
-) : BaseViewModel<UiState>(initialState, loadingManager, messageManager) {
+) : BaseViewModel<UiState, UiEvent>(initialState, loadingManager, messageManager) {
 
     override fun authorizationNeedActive(msg: String, data: BaseResponse<*>) {
         msg.takeIf { it.isNotEmpty() }?.let {

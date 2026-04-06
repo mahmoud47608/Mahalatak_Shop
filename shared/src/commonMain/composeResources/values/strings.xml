@@ -453,6 +453,7 @@
     <string name="route_duration">Est. Duration</string>
 
     <!-- Localized UI Labels -->
+    <string name="section_quick_actions">Quick Actions</string>
     <string name="section_account">Account</string>
     <string name="section_support_legal">Support &amp; Legal</string>
     <string name="select_language">Select Language</string>

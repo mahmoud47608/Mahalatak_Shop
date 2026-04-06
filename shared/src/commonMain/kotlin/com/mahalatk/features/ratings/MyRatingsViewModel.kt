@@ -1,10 +1,9 @@
 package com.mahalatk.features.ratings
 
 import androidx.compose.runtime.Immutable
-import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import com.mahalatk.base.SimpleViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @Immutable
 data class Rating(
@@ -18,14 +17,14 @@ data class Rating(
 
 @Immutable
 data class MyRatingsState(
-    val ratings: List<Rating> = emptyList(),
+    val ratings: ImmutableList<Rating> = persistentListOf(),
     val averageRating: Float = 0f,
     val totalRatings: Int = 0,
 )
 
-class MyRatingsViewModel : ViewModel() {
-
-    private val sampleRatings = listOf(
+class MyRatingsViewModel : SimpleViewModel<MyRatingsState, Nothing>(
+    run {
+        val sampleRatings = persistentListOf(
         Rating(
             id = "1",
             customerName = "فهد فرج",
@@ -61,16 +60,11 @@ class MyRatingsViewModel : ViewModel() {
             comment = "أفضل محل تعاملت معه، خدمة عملاء ممتازة ومنتجات فاخرة",
             date = "منذ شهر",
         ),
-    )
-
-    private val avg = sampleRatings.map { it.rating }.average().toFloat()
-
-    private val _uiState = MutableStateFlow(
+        )
         MyRatingsState(
             ratings = sampleRatings,
-            averageRating = avg,
+            averageRating = sampleRatings.map { it.rating }.average().toFloat(),
             totalRatings = sampleRatings.size,
-        ),
-    )
-    val uiState: StateFlow<MyRatingsState> = _uiState.asStateFlow()
-}
+        )
+    },
+)

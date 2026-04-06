@@ -29,7 +29,7 @@ class AddProductViewModel(
     private val addProductUseCase: AddProductUseCase,
     loadingManager: LoadingManager,
     messageManager: MessageManager,
-) : BaseViewModel<AddProductState>(
+) : BaseViewModel<AddProductState, Nothing>(
     AddProductState(),
     loadingManager,
     messageManager,

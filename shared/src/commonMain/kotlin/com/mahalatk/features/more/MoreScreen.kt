@@ -29,7 +29,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,15 +38,12 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
 import coil3.compose.AsyncImage
 import com.mahalatk.common.component.animation.AnimatedListItem
 import com.mahalatk.common.component.card.GlassCard
@@ -81,6 +77,7 @@ import mahalatk.shared.generated.resources.my_ratings
 import mahalatk.shared.generated.resources.offers
 import mahalatk.shared.generated.resources.privacy_policy
 import mahalatk.shared.generated.resources.section_account
+import mahalatk.shared.generated.resources.section_quick_actions
 import mahalatk.shared.generated.resources.section_support_legal
 import mahalatk.shared.generated.resources.settings
 import mahalatk.shared.generated.resources.shop_owner
@@ -104,58 +101,81 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
     val listState = rememberLazyListState()
 
     LaunchedEffect(Unit) {
-        viewModel.loggedOut.collectLatest { navigator.replaceAll(Route.Login) }
+        viewModel.events.collectLatest { event ->
+            when (event) {
+                MoreEvent.LoggedOut -> navigator.replaceAll(Route.Login)
+            }
+        }
     }
 
-    val collapseProgress by derivedStateOf {
-        if (listState.firstVisibleItemIndex > 0) 1f
-        else (listState.firstVisibleItemScrollOffset / 250f).coerceIn(0f, 1f)
-    }
+    Column(modifier = Modifier.fillMaxSize().background(AppColor.ScreenBackground)) {
 
-    Box(modifier = Modifier.fillMaxSize().background(AppColor.ScreenBackground)) {
-
-        // Gradient header background (static — no animation overhead)
+        // Header — same gradient as Orders/Chat but with title on left + notification icon
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(180.dp)
-                .clip(RoundedCornerShape(bottomStart = 36.dp, bottomEnd = 36.dp))
+                .height(90.dp)
                 .drawBehind {
-                    val colors = if (AppColor.isDark) listOf(
-                        Color(0xFF14444A),
-                        Color(0xFF1F6268),
-                        Color(0xFF276E74)
+                    val glassColors = if (AppColor.isDark) listOf(
+                        Color(0xFF14444A), Color(0xFF1F6268), Color(0xFF276E74)
+                    ) else listOf(Color(0xFF3D9098), Color(0xFF5AA6AC), Color(0xFF6DBABF))
+                    drawRect(Brush.verticalGradient(glassColors))
+                    drawCircle(
+                        Color.White.copy(alpha = 0.07f),
+                        80.dp.toPx(),
+                        Offset(-20.dp.toPx(), -10.dp.toPx())
                     )
-                    else listOf(Color(0xFF3D9098), Color(0xFF5AA6AC), Color(0xFF6DBABF))
-                    drawRect(Brush.verticalGradient(colors))
                     drawCircle(
                         Color.White.copy(alpha = 0.05f),
-                        70.dp.toPx(),
-                        Offset(-15.dp.toPx(), -8.dp.toPx())
+                        55.dp.toPx(),
+                        Offset(size.width + 10.dp.toPx(), size.height * 0.4f)
                     )
                     drawCircle(
-                        Color.White.copy(alpha = 0.04f),
-                        50.dp.toPx(),
-                        Offset(size.width + 8.dp.toPx(), size.height * 0.6f)
+                        Color.White.copy(alpha = 0.03f),
+                        35.dp.toPx(),
+                        Offset(size.width * 0.5f, -15.dp.toPx())
                     )
                 },
-        )
+            contentAlignment = Alignment.BottomCenter,
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth()
+                    .padding(bottom = 12.dp, start = 20.dp, end = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = stringResource(Res.string.more),
+                    style = MahalatkTheme.titleLarge,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                )
+                Spacer(Modifier.weight(1f))
+                Box {
+                    IconButton(onClick = { navigator.push(Route.Notifications) }) {
+                        Icon(
+                            vectorResource(Res.drawable.ic_notification),
+                            contentDescription = null,
+                            tint = Color.White,
+                            modifier = Modifier.size(22.dp),
+                        )
+                    }
+                    Box(
+                        Modifier.size(7.dp).align(Alignment.TopEnd).offset((-9).dp, 9.dp)
+                            .background(Color(0xFFFF5252), CircleShape)
+                            .border(1.dp, Color.White.copy(alpha = 0.8f), CircleShape),
+                    )
+                }
+            }
+        }
 
-        // Header content (title ↔ compact profile crossfade)
-        UnifiedHeader(
-            userName = state.userName,
-            userImage = state.userImage,
-            collapseProgress = collapseProgress,
-            onNotificationClick = { navigator.push(Route.Notifications) },
-            onProfileClick = { navigator.push(Route.ShopOwnerProfile) },
-        )
-
-        // Scrollable content
         LazyColumn(
             state = listState,
-            modifier = Modifier.fillMaxSize().padding(top = 85.dp),
+            modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            item { Spacer(Modifier.height(16.dp)) }
+
+            // User profile card
             item {
                 AnimatedListItem(0) {
                     ProfileCard(
@@ -167,11 +187,12 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
                 }
             }
 
-            item { Spacer(Modifier.height(24.dp)) }
+            item { Spacer(Modifier.height(14.dp)) }
 
             // Quick actions
+            item { AnimatedListItem(1) { SectionLabel(stringResource(Res.string.section_quick_actions)) } }
             item {
-                AnimatedListItem(1) {
+                AnimatedListItem(2) {
                     QuickActionsRow(
                         onOffers = { navigator.push(Route.Offers) },
                         onCoupons = { navigator.push(Route.Coupons) },
@@ -184,19 +205,17 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
             item { Spacer(Modifier.height(18.dp)) }
 
             // Account section
-            item { AnimatedListItem(2) { SectionLabel(stringResource(Res.string.section_account)) } }
+            item { AnimatedListItem(3) { SectionLabel(stringResource(Res.string.section_account)) } }
             item {
-                AnimatedListItem(3) {
+                AnimatedListItem(4) {
                     MenuCard {
                         MenuRow(
                             Res.drawable.ic_settings,
                             Res.string.settings,
-                            Color(0xFF546E7A)
                         ) { navigator.push(Route.Settings) }
                         MenuRow(
                             Res.drawable.ic_profile,
                             Res.string.employees,
-                            Color(0xFF5C6BC0)
                         ) { navigator.push(Route.Employees) }
                     }
                 }
@@ -205,29 +224,25 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
             item { Spacer(Modifier.height(14.dp)) }
 
             // Support section
-            item { AnimatedListItem(4) { SectionLabel(stringResource(Res.string.section_support_legal)) } }
+            item { AnimatedListItem(5) { SectionLabel(stringResource(Res.string.section_support_legal)) } }
             item {
-                AnimatedListItem(5) {
+                AnimatedListItem(6) {
                     MenuCard {
                         MenuRow(
                             Res.drawable.ic_phone,
                             Res.string.contact_us,
-                            Color(0xFF25D366)
                         ) { uriHandler.openUri("https://wa.me/2001017156197") }
                         MenuRow(
                             Res.drawable.ic_about,
                             Res.string.about_app,
-                            Color(0xFF42A5F5)
                         ) { navigator.push(Route.About) }
                         MenuRow(
                             Res.drawable.ic_terms,
                             Res.string.terms_conditions,
-                            Color(0xFF7E57C2)
                         ) { navigator.push(Route.Terms) }
                         MenuRow(
                             Res.drawable.ic_privacy,
                             Res.string.privacy_policy,
-                            Color(0xFF78909C)
                         ) { navigator.push(Route.PrivacyPolicy) }
                     }
                 }
@@ -237,7 +252,7 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
 
             // Logout
             item {
-                AnimatedListItem(6) {
+                AnimatedListItem(7) {
                     GlassCard(
                         modifier = Modifier.padding(horizontal = 16.dp)
                             .noRippleClickable { viewModel.logout() },
@@ -260,7 +275,7 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
 
             // Footer
             item {
-                AnimatedListItem(7) {
+                AnimatedListItem(8) {
                     Column(
                         Modifier.fillMaxWidth().padding(top = 16.dp, bottom = 6.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
@@ -290,72 +305,6 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
 }
 
 // ═══════════════════════════════════════════════════════════════
-//  Header (crossfades between title and compact profile)
-// ═══════════════════════════════════════════════════════════════
-
-@Composable
-private fun UnifiedHeader(
-    userName: String,
-    userImage: String,
-    collapseProgress: Float,
-    onNotificationClick: () -> Unit,
-    onProfileClick: () -> Unit,
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth().zIndex(1f)
-            .padding(top = 40.dp, start = 20.dp, end = 6.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Box(Modifier.weight(1f)) {
-            // Title
-            Text(
-                stringResource(Res.string.more), style = MahalatkTheme.titleLarge,
-                color = Color.White, fontWeight = FontWeight.Bold, fontSize = 20.sp,
-                modifier = Modifier.graphicsLayer { alpha = 1f - collapseProgress },
-            )
-            // Compact profile
-            Row(
-                Modifier.graphicsLayer { alpha = collapseProgress },
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                SmallAvatar(userImage, 32.dp, onProfileClick)
-                Spacer(Modifier.width(8.dp))
-                Column {
-                    Text(
-                        userName.ifEmpty { "Ahmed Mohamed" },
-                        style = MahalatkTheme.titleSmall,
-                        color = Color.White,
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 14.sp,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                    Spacer(Modifier.height(2.dp))
-                    StarRow(size = 10.dp, color = Color.White.copy(alpha = 0.25f))
-                }
-            }
-        }
-
-        // Notification bell (single instance, never duplicated)
-        Box {
-            IconButton(onClick = onNotificationClick) {
-                Icon(
-                    vectorResource(Res.drawable.ic_notification),
-                    null,
-                    tint = Color.White,
-                    modifier = Modifier.size(22.dp)
-                )
-            }
-            Box(
-                Modifier.size(7.dp).align(Alignment.TopEnd).offset((-9).dp, 9.dp)
-                    .background(Color(0xFFFF5252), CircleShape)
-                    .border(1.dp, Color.White.copy(alpha = 0.8f), CircleShape)
-            )
-        }
-    }
-}
-
-// ═══════════════════════════════════════════════════════════════
 //  Profile Card
 // ═══════════════════════════════════════════════════════════════
 
@@ -364,11 +313,14 @@ private fun ProfileCard(
     userName: String,
     userImage: String,
     isShopOwner: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     GlassCard(
-        modifier = Modifier.padding(horizontal = 16.dp).noRippleClickable(onClick = onClick),
-        cornerRadius = 20.dp,
+        modifier = modifier
+            .padding(horizontal = 16.dp)
+            .noRippleClickable(onClick = onClick),
+        cornerRadius = 16.dp,
         contentPadding = 14.dp,
     ) {
         Row(
@@ -437,7 +389,7 @@ private fun ProfileCard(
                 )
                 Spacer(Modifier.height(3.dp))
                 // Tier badge
-                val badgeBg = if (isShopOwner) AppColor.Primary else Color(0xFF7C4DFF)
+                val badgeBg = if (isShopOwner) AppColor.Primary else Color(0xFFFFC107)
                 val badgeText =
                     if (isShopOwner) stringResource(Res.string.shop_owner) else stringResource(Res.string.employee)
                 Box(
@@ -492,28 +444,28 @@ private fun QuickActionsRow(
             Modifier.weight(1f),
             Res.drawable.ic_orders,
             Res.string.offers,
-            Color(0xFFFF6B6B),
+            AppColor.Primary,
             onOffers
         )
         QuickActionItem(
             Modifier.weight(1f),
             Res.drawable.ic_lock,
             Res.string.coupons,
-            Color(0xFF7C4DFF),
+            AppColor.Primary,
             onCoupons
         )
         QuickActionItem(
             Modifier.weight(1f),
             Res.drawable.ic_rating,
             Res.string.my_ratings,
-            Color(0xFFFFC107),
+            AppColor.Primary,
             onRatings
         )
         QuickActionItem(
             Modifier.weight(1f),
             Res.drawable.ic_complaint,
             Res.string.complaints,
-            Color(0xFFFF7043),
+            AppColor.Primary,
             onComplaints
         )
     }
@@ -529,7 +481,6 @@ private fun QuickActionItem(
 ) {
     GlassCard(
         modifier = modifier.noRippleClickable(onClick = onClick),
-        accentColor = tint,
         cornerRadius = 14.dp,
         contentPadding = 0.dp,
     ) {
@@ -636,33 +587,3 @@ private fun StarRow(size: androidx.compose.ui.unit.Dp, color: Color) {
     }
 }
 
-/** Small circular avatar used in the compact header bar. */
-@Composable
-private fun SmallAvatar(imageUrl: String, size: androidx.compose.ui.unit.Dp, onClick: () -> Unit) {
-    Box(
-        modifier = Modifier.size(size).clip(CircleShape)
-            .border(1.5.dp, Color.White.copy(alpha = 0.5f), CircleShape)
-            .noRippleClickable(onClick = onClick),
-        contentAlignment = Alignment.Center,
-    ) {
-        if (imageUrl.isNotEmpty()) {
-            AsyncImage(
-                imageUrl,
-                null,
-                Modifier.fillMaxSize().clip(CircleShape),
-                contentScale = ContentScale.Crop
-            )
-        } else {
-            Box(
-                Modifier.fillMaxSize().background(AppColor.PrimaryContainer, CircleShape),
-                contentAlignment = Alignment.Center
-            ) {
-                Image(
-                    painterResource(Res.drawable.ic_profile),
-                    null,
-                    Modifier.size(size * 0.55f).padding(top = 1.dp)
-                )
-            }
-        }
-    }
-}

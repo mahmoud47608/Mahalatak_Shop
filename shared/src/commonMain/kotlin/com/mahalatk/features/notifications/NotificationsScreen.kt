@@ -209,6 +209,7 @@ private fun NotificationCard(
 ) {
     GlassCard(
         modifier = Modifier.noRippleClickable { onClick() },
+        accentColor = if (!notification.isRead) AppColor.Primary else AppColor.Gray,
         cornerRadius = CornerDimensions.lg,
         contentPadding = 14.dp,
     ) {

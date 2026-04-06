@@ -1,14 +1,10 @@
 package com.mahalatk.features.notifications
 
 import androidx.compose.runtime.Immutable
-import androidx.lifecycle.ViewModel
+import com.mahalatk.base.SimpleViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 
 @Immutable
 data class NotificationItem(
@@ -42,15 +38,12 @@ data class NotificationsState(
     ),
 )
 
-class NotificationsViewModel : ViewModel() {
-
-    private val _uiState = MutableStateFlow(NotificationsState())
-    val uiState: StateFlow<NotificationsState> = _uiState.asStateFlow()
+class NotificationsViewModel : SimpleViewModel<NotificationsState, Nothing>(NotificationsState()) {
 
     fun markAsRead(id: String) {
-        _uiState.update { state ->
-            state.copy(
-                notifications = state.notifications.map {
+        updateState {
+            copy(
+                notifications = notifications.map {
                     if (it.id == id) it.copy(isRead = true) else it
                 }.toImmutableList()
             )
@@ -58,12 +51,12 @@ class NotificationsViewModel : ViewModel() {
     }
 
     fun deleteNotification(id: String) {
-        _uiState.update { state ->
-            state.copy(notifications = state.notifications.filter { it.id != id }.toImmutableList())
+        updateState {
+            copy(notifications = notifications.filter { it.id != id }.toImmutableList())
         }
     }
 
     fun clearAll() {
-        _uiState.update { it.copy(notifications = persistentListOf()) }
+        updateState { copy(notifications = persistentListOf()) }
     }
 }

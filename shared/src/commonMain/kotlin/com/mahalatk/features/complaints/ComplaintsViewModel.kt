@@ -1,10 +1,9 @@
 package com.mahalatk.features.complaints
 
 import androidx.compose.runtime.Immutable
-import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import com.mahalatk.base.SimpleViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @Immutable
 data class Complaint(
@@ -12,25 +11,23 @@ data class Complaint(
     val userName: String,
     val userImage: String = "",
     val description: String,
-    val images: List<String> = emptyList(),
+    val images: ImmutableList<String> = persistentListOf(),
     val date: String,
 )
 
 @Immutable
 data class ComplaintsState(
-    val complaints: List<Complaint> = emptyList(),
+    val complaints: ImmutableList<Complaint> = persistentListOf(),
 )
 
-class ComplaintsViewModel : ViewModel() {
-
-    private val _uiState = MutableStateFlow(
-        ComplaintsState(
-            complaints = listOf(
+class ComplaintsViewModel : SimpleViewModel<ComplaintsState, Nothing>(
+    ComplaintsState(
+        complaints = persistentListOf(
                 Complaint(
                     id = "1",
                     userName = "أحمد محمد",
                     description = "المنتج وصل تالف والتغليف مفتوح، وعند التواصل مع خدمة العملاء لم أحصل على رد سريع",
-                    images = listOf(
+                    images = persistentListOf(
                         "https://picsum.photos/seed/c1a/400/300",
                         "https://picsum.photos/seed/c1b/400/300",
                     ),
@@ -40,7 +37,7 @@ class ComplaintsViewModel : ViewModel() {
                     id = "2",
                     userName = "سارة عبدالله",
                     description = "تأخر التوصيل أكثر من 3 أيام عن الموعد المحدد بدون أي إشعار أو تحديث",
-                    images = listOf(
+                    images = persistentListOf(
                         "https://picsum.photos/seed/c2a/400/300",
                     ),
                     date = "منذ يوم",
@@ -49,7 +46,7 @@ class ComplaintsViewModel : ViewModel() {
                     id = "3",
                     userName = "خالد فهد",
                     description = "المنتج مختلف تماماً عن الصور المعروضة في التطبيق من حيث اللون والحجم",
-                    images = listOf(
+                    images = persistentListOf(
                         "https://picsum.photos/seed/c3a/400/300",
                         "https://picsum.photos/seed/c3b/400/300",
                         "https://picsum.photos/seed/c3c/400/300",
@@ -60,11 +57,9 @@ class ComplaintsViewModel : ViewModel() {
                     id = "4",
                     userName = "نورة سعيد",
                     description = "طلبت استرجاع المبلغ ولم يتم الرد حتى الآن رغم مرور أسبوع كامل",
-                    images = emptyList(),
+                    images = persistentListOf(),
                     date = "منذ أسبوع",
                 ),
-            ),
         ),
-    )
-    val uiState: StateFlow<ComplaintsState> = _uiState.asStateFlow()
-}
+    ),
+)

@@ -1,13 +1,11 @@
 package com.mahalatk.features.orders.detail
 
 import androidx.compose.runtime.Immutable
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mahalatk.base.SimpleViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 // ── Models ─────────────────────────────────────────────
@@ -42,7 +40,7 @@ data class OrderDetailState(
 
     val currentStep: DetailOrderStep = DetailOrderStep.Preparing,
 
-    val products: List<OrderProduct> = listOf(
+    val products: ImmutableList<OrderProduct> = persistentListOf(
         OrderProduct("1", "Flavors of Rose", "A bouquet of flowers chosen with care...", 250.0),
         OrderProduct("2", "Flavors of Rose", "A bouquet of flowers chosen with care...", 250.0),
     ),
@@ -68,37 +66,34 @@ data class OrderDetailState(
 
 // ── ViewModel ──────────────────────────────────────────
 
-class OrderDetailViewModel : ViewModel() {
-
-    private val _uiState = MutableStateFlow(OrderDetailState())
-    val uiState: StateFlow<OrderDetailState> = _uiState.asStateFlow()
+class OrderDetailViewModel : SimpleViewModel<OrderDetailState, Nothing>(OrderDetailState()) {
 
     fun loadOrder(orderId: String) {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
-            delay(1500) // Simulate API call
-            _uiState.update { it.copy(orderId = orderId, isLoading = false) }
+            updateState { copy(isLoading = true) }
+            delay(1500)
+            updateState { copy(orderId = orderId, isLoading = false) }
         }
     }
 
     fun onActionClick() {
-        _uiState.update { state ->
-            val nextStep = when (state.currentStep) {
+        updateState {
+            val nextStep = when (currentStep) {
                 DetailOrderStep.WaitingPayment -> DetailOrderStep.Preparing
                 DetailOrderStep.Preparing -> DetailOrderStep.Ready
                 DetailOrderStep.Ready -> DetailOrderStep.DeliveredToDriver
                 DetailOrderStep.DeliveredToDriver -> DetailOrderStep.Completed
                 DetailOrderStep.Completed -> DetailOrderStep.Completed
             }
-            state.copy(currentStep = nextStep)
+            copy(currentStep = nextStep)
         }
     }
 
     fun rateCustomer(rating: Int) {
-        _uiState.update { it.copy(customerRating = rating) }
+        updateState { copy(customerRating = rating) }
     }
 
     fun rateDriver(rating: Int) {
-        _uiState.update { it.copy(driverRating = rating) }
+        updateState { copy(driverRating = rating) }
     }
 }

@@ -11,7 +11,7 @@ import mahalatk.shared.generated.resources.please_enter_password
 class ChangePasswordViewModel(
     loadingManager: LoadingManager,
     messageManager: MessageManager,
-) : BaseViewModel<ChangePasswordState>(
+) : BaseViewModel<ChangePasswordState, Nothing>(
     ChangePasswordState(),
     loadingManager,
     messageManager,

@@ -1,15 +1,11 @@
 package com.mahalatk.features.home
 
 import androidx.compose.runtime.Immutable
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mahalatk.base.SimpleViewModel
 import com.mahalatk.base.UserDataProvider
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @Immutable
@@ -41,10 +37,7 @@ data class HomeState(
 
 class HomeViewModel(
     private val userDataProvider: UserDataProvider,
-) : ViewModel() {
-
-    private val _uiState = MutableStateFlow(HomeState())
-    val uiState: StateFlow<HomeState> = _uiState.asStateFlow()
+) : SimpleViewModel<HomeState, Nothing>(HomeState()) {
 
     init {
         loadUserData()
@@ -54,9 +47,9 @@ class HomeViewModel(
         viewModelScope.launch {
             val name = userDataProvider.getUserName()
             val image = userDataProvider.getUserImage()
-            _uiState.update {
-                it.copy(
-                    userName = name.ifEmpty { it.userName },
+            updateState {
+                copy(
+                    userName = name.ifEmpty { userName },
                     userImage = image,
                 )
             }
@@ -64,7 +57,6 @@ class HomeViewModel(
     }
 
     fun toggleReceiveOrders(enabled: Boolean) {
-        _uiState.update { it.copy(receiveNewOrders = enabled) }
+        updateState { copy(receiveNewOrders = enabled) }
     }
-
 }

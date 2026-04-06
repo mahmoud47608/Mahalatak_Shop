@@ -11,10 +11,10 @@ import coil3.request.crossfade
 fun SetupCoil() {
     setSingletonImageLoaderFactory { context: PlatformContext ->
         ImageLoader.Builder(context)
-            .crossfade(300)
+            .crossfade(200)
             .memoryCache {
                 MemoryCache.Builder()
-                    .maxSizePercent(context, 0.25)
+                    .maxSizePercent(context, 0.30)
                     .build()
             }
             .build()

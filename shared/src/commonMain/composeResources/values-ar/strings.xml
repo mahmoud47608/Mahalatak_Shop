@@ -446,6 +446,7 @@
     <string name="route_duration">الوقت المتوقع</string>
 
     <!-- Localized UI Labels -->
+    <string name="section_quick_actions">إجراءات سريعة</string>
     <string name="section_account">الحساب</string>
     <string name="section_support_legal">الدعم والقانون</string>
     <string name="select_language">اختر اللغة</string>

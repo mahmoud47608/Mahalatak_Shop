@@ -1,11 +1,7 @@
 package com.mahalatk.features.auth.forgotpassword
 
 import androidx.compose.runtime.Immutable
-import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import com.mahalatk.base.SimpleViewModel
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.passwords_do_not_match
 import mahalatk.shared.generated.resources.please_enter_password
@@ -22,46 +18,43 @@ data class ResetPasswordState(
     val isSuccess: Boolean = false,
 )
 
-class ResetPasswordViewModel : ViewModel() {
-
-    private val _uiState = MutableStateFlow(ResetPasswordState())
-    val uiState: StateFlow<ResetPasswordState> = _uiState.asStateFlow()
+class ResetPasswordViewModel : SimpleViewModel<ResetPasswordState, Nothing>(ResetPasswordState()) {
 
     fun onPasswordChanged(value: String) {
-        _uiState.update { it.copy(password = value, passwordError = null) }
+        updateState { copy(password = value, passwordError = null) }
     }
 
     fun onConfirmPasswordChanged(value: String) {
-        _uiState.update { it.copy(confirmPassword = value, confirmPasswordError = null) }
+        updateState { copy(confirmPassword = value, confirmPasswordError = null) }
     }
 
     fun togglePasswordVisibility() {
-        _uiState.update { it.copy(passwordVisible = !it.passwordVisible) }
+        updateState { copy(passwordVisible = !passwordVisible) }
     }
 
     fun toggleConfirmPasswordVisibility() {
-        _uiState.update { it.copy(confirmPasswordVisible = !it.confirmPasswordVisible) }
+        updateState { copy(confirmPasswordVisible = !confirmPasswordVisible) }
     }
 
     fun submit(): Boolean {
-        _uiState.update { it.copy(passwordError = null, confirmPasswordError = null) }
-        val state = _uiState.value
+        updateState { copy(passwordError = null, confirmPasswordError = null) }
+        val state = uiState.value
         var hasError = false
 
         if (state.password.isBlank() || state.password.length < 8) {
-            _uiState.update { it.copy(passwordError = Res.string.please_enter_password) }
+            updateState { copy(passwordError = Res.string.please_enter_password) }
             hasError = true
         }
         if (state.confirmPassword.isBlank()) {
-            _uiState.update { it.copy(confirmPasswordError = Res.string.please_enter_password) }
+            updateState { copy(confirmPasswordError = Res.string.please_enter_password) }
             hasError = true
         } else if (state.password != state.confirmPassword) {
-            _uiState.update { it.copy(confirmPasswordError = Res.string.passwords_do_not_match) }
+            updateState { copy(confirmPasswordError = Res.string.passwords_do_not_match) }
             hasError = true
         }
 
         if (!hasError) {
-            _uiState.update { it.copy(isSuccess = true) }
+            updateState { copy(isSuccess = true) }
         }
         return !hasError
     }

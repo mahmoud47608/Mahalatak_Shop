@@ -10,7 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.mahalatk.theme.AppColor
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.collectLatest
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.app_icon
 import org.jetbrains.compose.resources.painterResource
@@ -23,10 +23,13 @@ fun SplashScreen(
     onNavigateToHome: () -> Unit = {},
 ) {
     LaunchedEffect(Unit) {
-        // Wait for login check to complete, then show splash for 1.5s
-        val loggedIn = viewModel.isLoggedIn.first { it != null }
         delay(1500)
-        if (loggedIn == true) onNavigateToHome() else onNavigateToLogin()
+        viewModel.events.collectLatest { event ->
+            when (event) {
+                SplashEvent.NavigateToHome -> onNavigateToHome()
+                SplashEvent.NavigateToLogin -> onNavigateToLogin()
+            }
+        }
     }
 
     Box(

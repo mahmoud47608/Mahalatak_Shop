@@ -13,15 +13,16 @@ import com.mahalatk.domain.util.DataState
 import com.mahalatk.domain.util.TokenCacheManager
 import com.mahalatk.domain.util.toJson
 import com.mahalatk.util.applyCommonSideEffects
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.please_enter_password
 import mahalatk.shared.generated.resources.please_enter_phone_number
+
+sealed interface LoginEvent {
+    data object NavigateToHome : LoginEvent
+}
 
 class LoginViewModel(
     private val loginUseCase: LoginUseCase,
@@ -30,7 +31,7 @@ class LoginViewModel(
     sessionManager: SessionManager,
     preferenceRepository: PreferenceRepository,
     tokenCacheManager: TokenCacheManager,
-) : SessionAwareViewModel<LoginState>(
+) : SessionAwareViewModel<LoginState, LoginEvent>(
     LoginState(),
     loadingManager,
     messageManager,
@@ -38,9 +39,6 @@ class LoginViewModel(
     preferenceRepository,
     tokenCacheManager
 ) {
-
-    private val _authData = MutableStateFlow<AuthData?>(null)
-    val authData: StateFlow<AuthData?> = _authData.asStateFlow()
 
     fun login() {
         updateState { copy(mobileError = null, passwordError = null) }
@@ -91,7 +89,7 @@ class LoginViewModel(
                                         tokenCacheManager.refreshTokenCache()
                                     }
                                 }
-                                _authData.value = authData
+                                sendEvent(LoginEvent.NavigateToHome)
                             }
                         }
                     }

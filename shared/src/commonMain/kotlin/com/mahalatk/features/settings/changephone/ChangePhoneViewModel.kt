@@ -9,7 +9,7 @@ import mahalatk.shared.generated.resources.please_enter_phone_number
 class ChangePhoneViewModel(
     loadingManager: LoadingManager,
     messageManager: MessageManager,
-) : BaseViewModel<ChangePhoneState>(
+) : BaseViewModel<ChangePhoneState, Nothing>(
     ChangePhoneState(),
     loadingManager,
     messageManager,

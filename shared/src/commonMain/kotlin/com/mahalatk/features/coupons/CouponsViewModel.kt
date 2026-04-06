@@ -1,20 +1,15 @@
 package com.mahalatk.features.coupons
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mahalatk.base.SimpleViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class CouponsViewModel : ViewModel() {
-    private val _uiState = MutableStateFlow(
-        CouponsState(
-            coupons = persistentListOf(
+class CouponsViewModel : SimpleViewModel<CouponsState, Nothing>(
+    CouponsState(
+        coupons = persistentListOf(
                 Coupon(
                     "1",
                     "SALE20",
@@ -49,28 +44,25 @@ class CouponsViewModel : ViewModel() {
                     "10/05/2026",
                     false
                 ),
-            ),
         ),
-    )
-    val uiState: StateFlow<CouponsState> = _uiState.asStateFlow()
+    ),
+) {
 
     init {
         viewModelScope.launch {
             delay(500)
-            _uiState.update { it.copy(isLoading = false) }
+            updateState { copy(isLoading = false) }
         }
     }
 
     fun toggleActive(id: String) {
-        _uiState.update { state ->
-            state.copy(coupons = state.coupons.map { if (it.id == id) it.copy(isActive = !it.isActive) else it }
+        updateState {
+            copy(coupons = coupons.map { if (it.id == id) it.copy(isActive = !it.isActive) else it }
                 .toImmutableList())
         }
     }
 
     fun deleteCoupon(id: String) {
-        _uiState.update { state ->
-            state.copy(coupons = state.coupons.filter { it.id != id }.toImmutableList())
-        }
+        updateState { copy(coupons = coupons.filter { it.id != id }.toImmutableList()) }
     }
 }

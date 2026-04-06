@@ -192,6 +192,7 @@ private fun ChatItem(
 ) {
     GlassCard(
         modifier = Modifier.noRippleClickable { onClick() },
+        accentColor = if (conversation.unreadCount > 0) AppColor.Primary else AppColor.Gray,
         cornerRadius = CornerDimensions.lg,
         contentPadding = 14.dp,
     ) {

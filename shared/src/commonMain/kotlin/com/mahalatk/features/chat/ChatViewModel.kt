@@ -1,19 +1,16 @@
 package com.mahalatk.features.chat
 
 import androidx.compose.runtime.Immutable
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mahalatk.base.SimpleViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 enum class ChatTab { Orders, Inquiries }
@@ -105,18 +102,16 @@ data class ChatDetailState(
     ),
 )
 
-class ChatViewModel : ViewModel() {
-    private val _uiState = MutableStateFlow(ChatState())
+class ChatViewModel : SimpleViewModel<ChatState, Nothing>(ChatState()) {
 
     init {
         viewModelScope.launch {
             delay(1000)
-            _uiState.update { it.copy(isLoading = false) }
+            updateState { copy(isLoading = false) }
         }
     }
-    val uiState: StateFlow<ChatState> = _uiState.asStateFlow()
 
-    val filteredConversations: StateFlow<ImmutableList<ChatConversation>> = _uiState.map { state ->
+    val filteredConversations: StateFlow<ImmutableList<ChatConversation>> = uiState.map { state ->
         when (state.selectedTab) {
             ChatTab.Orders -> state.conversations.filter { !it.isInquiry }.toImmutableList()
             ChatTab.Inquiries -> state.conversations.filter { it.isInquiry }.toImmutableList()
@@ -124,26 +119,24 @@ class ChatViewModel : ViewModel() {
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), persistentListOf())
 
     fun selectTab(tab: ChatTab) {
-        _uiState.update { it.copy(selectedTab = tab) }
+        updateState { copy(selectedTab = tab) }
     }
 }
 
-class ChatDetailViewModel : ViewModel() {
-    private val _uiState = MutableStateFlow(ChatDetailState())
-    val uiState: StateFlow<ChatDetailState> = _uiState.asStateFlow()
+class ChatDetailViewModel : SimpleViewModel<ChatDetailState, Nothing>(ChatDetailState()) {
 
     fun setCustomerName(name: String) {
-        _uiState.update { it.copy(customerName = name) }
+        updateState { copy(customerName = name) }
     }
 
     fun onMessageTextChanged(text: String) {
-        _uiState.update { it.copy(messageText = text) }
+        updateState { copy(messageText = text) }
     }
 
     private var messageIdCounter = 100
 
     fun sendMessage() {
-        val text = _uiState.value.messageText.trim()
+        val text = uiState.value.messageText.trim()
         if (text.isEmpty()) return
         val newMessage = ChatMessage(
             id = (++messageIdCounter).toString(),
@@ -151,9 +144,9 @@ class ChatDetailViewModel : ViewModel() {
             time = "Now",
             isMe = true,
         )
-        _uiState.update {
-            it.copy(
-                messages = (it.messages + newMessage).toImmutableList(),
+        updateState {
+            copy(
+                messages = (messages + newMessage).toImmutableList(),
                 messageText = "",
             )
         }

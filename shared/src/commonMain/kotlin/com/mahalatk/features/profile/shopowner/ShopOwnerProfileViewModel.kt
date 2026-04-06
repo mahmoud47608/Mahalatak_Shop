@@ -17,7 +17,7 @@ class ShopOwnerProfileViewModel(
     loadingManager: LoadingManager,
     messageManager: MessageManager,
     private val userDataProvider: UserDataProvider,
-) : BaseViewModel<ShopOwnerProfileState>(
+) : BaseViewModel<ShopOwnerProfileState, Nothing>(
     ShopOwnerProfileState(),
     loadingManager,
     messageManager,

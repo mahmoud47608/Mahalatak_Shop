@@ -1,19 +1,18 @@
 package com.mahalatk.features.auth.activation
 
 import androidx.compose.runtime.Immutable
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mahalatk.base.SimpleViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @Immutable
 data class ActivationState(
-    val code: List<String> = listOf("", "", "", ""),
+    val code: ImmutableList<String> = persistentListOf("", "", "", ""),
     val timerSeconds: Int = 60,
     val canResend: Boolean = false,
     val isVerifying: Boolean = false,
@@ -29,36 +28,32 @@ data class ActivationState(
         }
 }
 
-class ActivationViewModel : ViewModel() {
-
-    private val _uiState = MutableStateFlow(ActivationState())
-    val uiState: StateFlow<ActivationState> = _uiState.asStateFlow()
+class ActivationViewModel : SimpleViewModel<ActivationState, Nothing>(ActivationState()) {
 
     private var timerJob: Job? = null
 
     fun setPhoneNumber(phone: String) {
-        _uiState.update { it.copy(phoneNumber = phone) }
+        updateState { copy(phoneNumber = phone) }
         startTimer()
     }
 
     fun onDigitEntered(index: Int, digit: String) {
         if (digit.length > 1) return
-        val newCode = _uiState.value.code.toMutableList()
+        val newCode = uiState.value.code.toMutableList()
         newCode[index] = digit
-        _uiState.update { it.copy(code = newCode) }
+        updateState { copy(code = newCode.toImmutableList()) }
     }
 
     fun verify() {
-        if (!_uiState.value.isCodeComplete) return
-        _uiState.update { it.copy(isVerifying = true) }
-        // actual verification would go here
+        if (!uiState.value.isCodeComplete) return
+        updateState { copy(isVerifying = true) }
     }
 
     fun resendCode() {
-        if (!_uiState.value.canResend) return
-        _uiState.update {
-            it.copy(
-                code = listOf("", "", "", ""),
+        if (!uiState.value.canResend) return
+        updateState {
+            copy(
+                code = persistentListOf("", "", "", ""),
                 timerSeconds = 60,
                 canResend = false,
             )
@@ -69,11 +64,11 @@ class ActivationViewModel : ViewModel() {
     private fun startTimer() {
         timerJob?.cancel()
         timerJob = viewModelScope.launch {
-            while (_uiState.value.timerSeconds > 0) {
+            while (uiState.value.timerSeconds > 0) {
                 delay(1000)
-                _uiState.update { it.copy(timerSeconds = it.timerSeconds - 1) }
+                updateState { copy(timerSeconds = timerSeconds - 1) }
             }
-            _uiState.update { it.copy(canResend = true) }
+            updateState { copy(canResend = true) }
         }
     }
 }

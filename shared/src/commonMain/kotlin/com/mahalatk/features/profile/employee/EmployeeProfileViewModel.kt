@@ -11,7 +11,7 @@ class EmployeeProfileViewModel(
     loadingManager: LoadingManager,
     messageManager: MessageManager,
     private val userDataProvider: UserDataProvider,
-) : BaseViewModel<EmployeeProfileState>(
+) : BaseViewModel<EmployeeProfileState, Nothing>(
     EmployeeProfileState(),
     loadingManager,
     messageManager,

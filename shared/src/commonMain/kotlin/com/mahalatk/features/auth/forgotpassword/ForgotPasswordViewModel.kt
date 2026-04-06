@@ -1,11 +1,7 @@
 package com.mahalatk.features.auth.forgotpassword
 
 import androidx.compose.runtime.Immutable
-import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import com.mahalatk.base.SimpleViewModel
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.please_enter_phone_number
 import org.jetbrains.compose.resources.StringResource
@@ -16,20 +12,17 @@ data class ForgotPasswordState(
     val phoneError: StringResource? = null,
 )
 
-class ForgotPasswordViewModel : ViewModel() {
-
-    private val _uiState = MutableStateFlow(ForgotPasswordState())
-    val uiState: StateFlow<ForgotPasswordState> = _uiState.asStateFlow()
+class ForgotPasswordViewModel :
+    SimpleViewModel<ForgotPasswordState, Nothing>(ForgotPasswordState()) {
 
     fun onPhoneChanged(value: String) {
-        _uiState.update { it.copy(phone = value, phoneError = null) }
+        updateState { copy(phone = value, phoneError = null) }
     }
 
-    /** Returns true if validation passes. */
     fun validate(): Boolean {
-        val state = _uiState.value
+        val state = uiState.value
         if (state.phone.isBlank() || state.phone.length < 9) {
-            _uiState.update { it.copy(phoneError = Res.string.please_enter_phone_number) }
+            updateState { copy(phoneError = Res.string.please_enter_phone_number) }
             return false
         }
         return true

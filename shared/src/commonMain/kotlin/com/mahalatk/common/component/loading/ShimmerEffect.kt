@@ -1,13 +1,13 @@
 package com.mahalatk.common.component.loading
 
-import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
@@ -27,32 +27,35 @@ import androidx.compose.ui.unit.dp
 import com.mahalatk.theme.AppColor
 
 /**
- * Creates a shimmer brush that animates a gradient sweep left→right.
+ * Creates a glassmorphism brush — frosted tinted base with an animated light sweep.
  */
 @Composable
 fun shimmerBrush(): Brush {
     val transition = rememberInfiniteTransition()
-    val translateAnim by transition.animateFloat(
-        initialValue = 0f,
-        targetValue = 1000f,
+    val sweepAnim by transition.animateFloat(
+        initialValue = -500f,
+        targetValue = 1500f,
         animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 1200, easing = LinearEasing),
+            animation = tween(durationMillis = 1800, easing = FastOutSlowInEasing),
             repeatMode = RepeatMode.Restart,
         ),
     )
 
-    val base = if (AppColor.isDark) Color(0xFF2A2A2A) else Color(0xFFE8E8E8)
-    val highlight = if (AppColor.isDark) Color(0xFF3A3A3A) else Color(0xFFF5F5F5)
+    val glass = if (AppColor.isDark) AppColor.Primary.copy(alpha = 0.08f)
+    else AppColor.Primary.copy(alpha = 0.06f)
+
+    val highlight = if (AppColor.isDark) Color.White.copy(alpha = 0.10f)
+    else Color.White.copy(alpha = 0.35f)
 
     return Brush.linearGradient(
-        colors = listOf(base, highlight, base),
-        start = Offset(translateAnim - 500f, 0f),
-        end = Offset(translateAnim, 0f),
+        colors = listOf(glass, highlight, glass),
+        start = Offset(sweepAnim, sweepAnim * 0.3f),
+        end = Offset(sweepAnim + 400f, sweepAnim * 0.3f + 200f),
     )
 }
 
 /**
- * A rounded rectangle placeholder with shimmer animation.
+ * A glassmorphism-styled rounded rectangle placeholder.
  */
 @Composable
 fun ShimmerBox(
@@ -61,32 +64,62 @@ fun ShimmerBox(
     height: Dp = 16.dp,
     shape: Shape = RoundedCornerShape(8.dp),
 ) {
-    val brush = shimmerBrush()
-    val mod = if (width != null) {
-        modifier.width(width).height(height)
-    } else {
-        modifier.fillMaxWidth().height(height)
-    }
-    Spacer(
-        modifier = mod
+    val sweep = shimmerBrush()
+
+    val glassBg = Brush.horizontalGradient(
+        listOf(
+            AppColor.Primary.copy(alpha = if (AppColor.isDark) 0.05f else 0.04f),
+            AppColor.Primary.copy(alpha = if (AppColor.isDark) 0.10f else 0.08f),
+        ),
+    )
+
+    Brush.linearGradient(
+        listOf(
+            AppColor.Primary.copy(alpha = 0.20f),
+            AppColor.Primary.copy(alpha = 0.05f),
+        ),
+    )
+
+    val sizeModifier = if (width != null) modifier.width(width).height(height)
+    else modifier.fillMaxWidth().height(height)
+
+    Box(
+        modifier = sizeModifier
             .clip(shape)
-            .background(brush),
+            .background(glassBg)
+            .background(sweep),
     )
 }
 
 /**
- * A circular placeholder with shimmer animation (for avatars).
+ * A glassmorphism-styled circular placeholder (for avatars).
  */
 @Composable
 fun ShimmerCircle(
     size: Dp = 48.dp,
     modifier: Modifier = Modifier,
 ) {
-    val brush = shimmerBrush()
-    Spacer(
+    val sweep = shimmerBrush()
+
+    val glassBg = Brush.horizontalGradient(
+        listOf(
+            AppColor.Primary.copy(alpha = if (AppColor.isDark) 0.05f else 0.04f),
+            AppColor.Primary.copy(alpha = if (AppColor.isDark) 0.10f else 0.08f),
+        ),
+    )
+
+    Brush.linearGradient(
+        listOf(
+            AppColor.Primary.copy(alpha = 0.20f),
+            AppColor.Primary.copy(alpha = 0.05f),
+        ),
+    )
+
+    Box(
         modifier = modifier
             .size(size)
             .clip(CircleShape)
-            .background(brush),
+            .background(glassBg)
+            .background(sweep),
     )
 }

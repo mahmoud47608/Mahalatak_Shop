@@ -1,33 +1,27 @@
 package com.mahalatk.features.employees
 
 import androidx.compose.runtime.Immutable
-import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import com.mahalatk.base.SimpleViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 
 @Immutable
 data class EmployeesListState(
-    val employees: List<Employee> = emptyList(),
+    val employees: ImmutableList<Employee> = persistentListOf(),
 )
 
-class EmployeesListViewModel : ViewModel() {
-
-    private val _uiState = MutableStateFlow(
-        EmployeesListState(
-            employees = listOf(
-                Employee("1", "أحمد محمد علي", "0512345678"),
-                Employee("2", "خالد عبدالله", "0551234567"),
-                Employee("3", "محمد سعيد", "0567891234"),
-            ),
+class EmployeesListViewModel : SimpleViewModel<EmployeesListState, Nothing>(
+    EmployeesListState(
+        employees = persistentListOf(
+            Employee("1", "أحمد محمد علي", "0512345678"),
+            Employee("2", "خالد عبدالله", "0551234567"),
+            Employee("3", "محمد سعيد", "0567891234"),
         ),
-    )
-    val uiState: StateFlow<EmployeesListState> = _uiState.asStateFlow()
+    ),
+) {
 
     fun deleteEmployee(id: String) {
-        _uiState.update { state ->
-            state.copy(employees = state.employees.filter { it.id != id })
-        }
+        updateState { copy(employees = employees.filter { it.id != id }.toImmutableList()) }
     }
 }

@@ -1,33 +1,33 @@
 package com.mahalatk.features.settings
 
-import androidx.lifecycle.ViewModel
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.viewModelScope
+import com.mahalatk.base.SimpleViewModel
 import com.mahalatk.domain.repository.PreferenceRepository
 import com.mahalatk.theme.AppColor
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+
+@Immutable
+data class SettingsState(
+    val isDarkMode: Boolean = AppColor.isDark,
+)
 
 class SettingsViewModel(
     private val preferenceRepository: PreferenceRepository,
-) : ViewModel() {
-
-    private val _isDarkMode = MutableStateFlow(AppColor.isDark)
-    val isDarkMode: StateFlow<Boolean> = _isDarkMode.asStateFlow()
+) : SimpleViewModel<SettingsState, Nothing>(SettingsState()) {
 
     init {
         viewModelScope.launch {
-            preferenceRepository.getDarkMode().collect { _isDarkMode.value = it }
+            preferenceRepository.getDarkMode().collect { dark ->
+                updateState { copy(isDarkMode = dark) }
+            }
         }
     }
 
     fun toggleDarkMode() {
-        val newValue = !_isDarkMode.value
-        _isDarkMode.value = newValue
-        // Instant visual switch — AppColor.isDark is mutableStateOf, triggers recomposition immediately
+        val newValue = !uiState.value.isDarkMode
+        updateState { copy(isDarkMode = newValue) }
         AppColor.isDark = newValue
-        // Persist for next app launch
         viewModelScope.launch { preferenceRepository.setDarkMode(newValue) }
     }
 }

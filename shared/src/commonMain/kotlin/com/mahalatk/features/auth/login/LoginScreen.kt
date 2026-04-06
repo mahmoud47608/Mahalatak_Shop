@@ -194,9 +194,9 @@ fun LoginScreen(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.authData.collectLatest { authData ->
-            if (authData != null) {
-                onNavigateToHome()
+        viewModel.events.collectLatest { event ->
+            when (event) {
+                LoginEvent.NavigateToHome -> onNavigateToHome()
             }
         }
     }
