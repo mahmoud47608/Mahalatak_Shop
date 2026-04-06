@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Edit
@@ -108,18 +109,47 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
         }
     }
 
-    Column(modifier = Modifier.fillMaxSize().background(AppColor.ScreenBackground)) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(AppColor.ScreenBackground)
+            .drawBehind {
+                // Floating decorative orbs for depth
+                drawCircle(
+                    color = AppColor.Primary.copy(alpha = if (AppColor.isDark) 0.04f else 0.06f),
+                    radius = 120.dp.toPx(),
+                    center = Offset(size.width * 0.85f, size.height * 0.12f),
+                )
+                drawCircle(
+                    color = AppColor.Primary.copy(alpha = if (AppColor.isDark) 0.03f else 0.05f),
+                    radius = 90.dp.toPx(),
+                    center = Offset(-20.dp.toPx(), size.height * 0.45f),
+                )
+                drawCircle(
+                    color = AppColor.Primary.copy(alpha = if (AppColor.isDark) 0.025f else 0.04f),
+                    radius = 70.dp.toPx(),
+                    center = Offset(size.width * 0.7f, size.height * 0.82f),
+                )
+                drawCircle(
+                    color = Color(0xFFFFC107).copy(alpha = if (AppColor.isDark) 0.02f else 0.03f),
+                    radius = 45.dp.toPx(),
+                    center = Offset(size.width * 0.3f, size.height * 0.65f),
+                )
+            }
+    ) {
+        Column(modifier = Modifier.fillMaxSize()) {
 
-        // Header — same gradient as Orders/Chat but with title on left + notification icon
+            // Header — enhanced glassmorphism
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(90.dp)
+                .height(100.dp)
                 .drawBehind {
                     val glassColors = if (AppColor.isDark) listOf(
                         Color(0xFF14444A), Color(0xFF1F6268), Color(0xFF276E74)
                     ) else listOf(Color(0xFF3D9098), Color(0xFF5AA6AC), Color(0xFF6DBABF))
                     drawRect(Brush.verticalGradient(glassColors))
+                    // Glass orbs
                     drawCircle(
                         Color.White.copy(alpha = 0.07f),
                         80.dp.toPx(),
@@ -135,12 +165,34 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
                         35.dp.toPx(),
                         Offset(size.width * 0.5f, -15.dp.toPx())
                     )
+                    drawCircle(
+                        Color.White.copy(alpha = 0.04f),
+                        45.dp.toPx(),
+                        Offset(size.width * 0.3f, size.height * 0.8f)
+                    )
+                    drawCircle(
+                        Color.White.copy(alpha = 0.06f),
+                        25.dp.toPx(),
+                        Offset(size.width * 0.75f, size.height * 0.2f)
+                    )
+                    drawCircle(
+                        Color.White.copy(alpha = 0.03f),
+                        60.dp.toPx(),
+                        Offset(size.width * 0.15f, size.height * 0.6f)
+                    )
+                    // Subtle white accent line at bottom
+                    drawLine(
+                        color = Color.White.copy(alpha = 0.12f),
+                        start = Offset(size.width * 0.1f, size.height - 1.dp.toPx()),
+                        end = Offset(size.width * 0.9f, size.height - 1.dp.toPx()),
+                        strokeWidth = 0.5.dp.toPx(),
+                    )
                 },
             contentAlignment = Alignment.BottomCenter,
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth()
-                    .padding(bottom = 12.dp, start = 20.dp, end = 8.dp),
+                    .padding(bottom = 14.dp, start = 20.dp, end = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
@@ -151,7 +203,12 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
                 )
                 Spacer(Modifier.weight(1f))
                 Box {
-                    IconButton(onClick = { navigator.push(Route.Notifications) }) {
+                    IconButton(
+                        onClick = { navigator.push(Route.Notifications) },
+                        modifier = Modifier
+                            .size(38.dp)
+                            .background(Color.White.copy(alpha = 0.15f), CircleShape),
+                    ) {
                         Icon(
                             vectorResource(Res.drawable.ic_notification),
                             contentDescription = null,
@@ -160,7 +217,7 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
                         )
                     }
                     Box(
-                        Modifier.size(7.dp).align(Alignment.TopEnd).offset((-9).dp, 9.dp)
+                        Modifier.size(7.dp).align(Alignment.TopEnd).offset((-4).dp, 4.dp)
                             .background(Color(0xFFFF5252), CircleShape)
                             .border(1.dp, Color.White.copy(alpha = 0.8f), CircleShape),
                     )
@@ -216,6 +273,7 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
                         MenuRow(
                             Res.drawable.ic_profile,
                             Res.string.employees,
+                            showTopDivider = true,
                         ) { navigator.push(Route.Employees) }
                     }
                 }
@@ -235,14 +293,17 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
                         MenuRow(
                             Res.drawable.ic_about,
                             Res.string.about_app,
+                            showTopDivider = true,
                         ) { navigator.push(Route.About) }
                         MenuRow(
                             Res.drawable.ic_terms,
                             Res.string.terms_conditions,
+                            showTopDivider = true,
                         ) { navigator.push(Route.Terms) }
                         MenuRow(
                             Res.drawable.ic_privacy,
                             Res.string.privacy_policy,
+                            showTopDivider = true,
                         ) { navigator.push(Route.PrivacyPolicy) }
                     }
                 }
@@ -258,17 +319,63 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
                             .noRippleClickable { viewModel.logout() },
                         accentColor = AppColor.Error,
                         cornerRadius = 14.dp,
-                        contentPadding = 12.dp,
+                        contentPadding = 0.dp,
                     ) {
-                        Text(
-                            stringResource(Res.string.logout),
-                            style = MahalatkTheme.bodySmall,
-                            color = AppColor.Error,
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 13.sp,
-                            modifier = Modifier.fillMaxWidth(),
-                            textAlign = TextAlign.Center,
-                        )
+                        Box(Modifier.fillMaxWidth()) {
+                            // Red gradient accent strip at top
+                            Box(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .height(2.dp)
+                                    .align(Alignment.TopCenter)
+                                    .background(
+                                        brush = Brush.horizontalGradient(
+                                            listOf(
+                                                AppColor.Error.copy(alpha = 0.0f),
+                                                AppColor.Error.copy(alpha = 0.4f),
+                                                AppColor.Error.copy(alpha = 0.0f),
+                                            )
+                                        )
+                                    )
+                            )
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 12.dp, vertical = 12.dp),
+                                horizontalArrangement = Arrangement.Center,
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Box(
+                                    Modifier
+                                        .size(28.dp)
+                                        .clip(RoundedCornerShape(8.dp))
+                                        .background(
+                                            brush = Brush.linearGradient(
+                                                listOf(
+                                                    AppColor.Error.copy(alpha = 0.08f),
+                                                    AppColor.Error.copy(alpha = 0.14f),
+                                                )
+                                            )
+                                        ),
+                                    contentAlignment = Alignment.Center,
+                                ) {
+                                    Icon(
+                                        Icons.AutoMirrored.Filled.ExitToApp,
+                                        null,
+                                        tint = AppColor.Error,
+                                        modifier = Modifier.size(14.dp),
+                                    )
+                                }
+                                Spacer(Modifier.width(8.dp))
+                                Text(
+                                    stringResource(Res.string.logout),
+                                    style = MahalatkTheme.bodySmall,
+                                    color = AppColor.Error,
+                                    fontWeight = FontWeight.SemiBold,
+                                    fontSize = 13.sp,
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -280,6 +387,22 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
                         Modifier.fillMaxWidth().padding(top = 16.dp, bottom = 6.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
+                        // Subtle gradient divider
+                        Box(
+                            Modifier
+                                .width(40.dp)
+                                .height(0.5.dp)
+                                .background(
+                                    brush = Brush.horizontalGradient(
+                                        listOf(
+                                            AppColor.TextHint.copy(alpha = 0.0f),
+                                            AppColor.TextHint.copy(alpha = 0.2f),
+                                            AppColor.TextHint.copy(alpha = 0.0f),
+                                        )
+                                    )
+                                )
+                        )
+                        Spacer(Modifier.height(10.dp))
                         Text(
                             "Mahalatak",
                             style = MahalatkTheme.labelSmall,
@@ -302,6 +425,7 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
             item { Spacer(Modifier.height(80.dp)) }
         }
     }
+    } // end outer Box
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -319,16 +443,40 @@ private fun ProfileCard(
     GlassCard(
         modifier = modifier
             .padding(horizontal = 16.dp)
-            .noRippleClickable(onClick = onClick),
-        cornerRadius = 16.dp,
+            .noRippleClickable(onClick = onClick)
+            .drawBehind {
+                // Diagonal shimmer overlay for multi-layer glass
+                drawRect(
+                    brush = Brush.linearGradient(
+                        colors = listOf(
+                            Color.White.copy(alpha = 0.0f),
+                            Color.White.copy(alpha = if (AppColor.isDark) 0.02f else 0.04f),
+                            Color.White.copy(alpha = 0.0f),
+                        ),
+                        start = Offset(0f, 0f),
+                        end = Offset(size.width, size.height),
+                    )
+                )
+            },
+        cornerRadius = 18.dp,
         contentPadding = 14.dp,
     ) {
         Row(
             Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Avatar with gradient border + verified badge
-            Box(contentAlignment = Alignment.Center) {
+            // Avatar with gradient border + glow + verified badge
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.drawBehind {
+                    // Subtle glow behind avatar
+                    drawCircle(
+                        color = AppColor.Primary.copy(alpha = if (AppColor.isDark) 0.12f else 0.15f),
+                        radius = 38.dp.toPx(),
+                        center = center,
+                    )
+                }
+            ) {
                 Box(
                     modifier = Modifier.size(56.dp)
                         .border(
@@ -361,17 +509,29 @@ private fun ProfileCard(
                         )
                     }
                 }
-                // Verified badge
+                // Enhanced verified badge
                 Box(
-                    modifier = Modifier.size(18.dp).align(Alignment.BottomEnd).offset(1.dp, 1.dp)
-                        .shadow(1.dp, CircleShape).background(AppColor.Surface, CircleShape)
-                        .padding(1.5.dp).background(AppColor.Primary, CircleShape),
+                    modifier = Modifier
+                        .size(20.dp)
+                        .align(Alignment.BottomEnd)
+                        .offset(1.dp, 1.dp)
+                        .shadow(2.dp, CircleShape)
+                        .background(AppColor.Surface, CircleShape)
+                        .border(
+                            width = 1.dp,
+                            brush = Brush.linearGradient(
+                                listOf(AppColor.Primary, Color(0xFF8ED1D6))
+                            ),
+                            shape = CircleShape,
+                        )
+                        .padding(2.dp)
+                        .background(AppColor.Primary, CircleShape),
                     contentAlignment = Alignment.Center,
                 ) {
                     Text(
                         "\u2713",
                         color = Color.White,
-                        fontSize = 8.sp,
+                        fontSize = 9.sp,
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -393,8 +553,15 @@ private fun ProfileCard(
                 val badgeText =
                     if (isShopOwner) stringResource(Res.string.shop_owner) else stringResource(Res.string.employee)
                 Box(
-                    Modifier.clip(RoundedCornerShape(5.dp)).background(badgeBg.copy(alpha = 0.1f))
-                        .padding(horizontal = 6.dp, vertical = 2.dp)
+                    Modifier
+                        .clip(RoundedCornerShape(6.dp))
+                        .background(
+                            brush = Brush.horizontalGradient(
+                                listOf(badgeBg.copy(alpha = 0.08f), badgeBg.copy(alpha = 0.14f))
+                            )
+                        )
+                        .border(0.5.dp, badgeBg.copy(alpha = 0.12f), RoundedCornerShape(6.dp))
+                        .padding(horizontal = 7.dp, vertical = 2.dp)
                 ) {
                     Text(
                         badgeText,
@@ -408,10 +575,29 @@ private fun ProfileCard(
                 StarRow(size = 12.dp, color = AppColor.TextHint.copy(alpha = 0.18f))
             }
 
-            // Edit button
+            // Glass-styled edit button
             Box(
-                Modifier.size(34.dp).clip(RoundedCornerShape(10.dp))
-                    .background(AppColor.Primary.copy(alpha = 0.08f)),
+                Modifier
+                    .size(36.dp)
+                    .clip(RoundedCornerShape(11.dp))
+                    .background(
+                        brush = Brush.linearGradient(
+                            listOf(
+                                AppColor.Primary.copy(alpha = 0.08f),
+                                AppColor.Primary.copy(alpha = 0.15f),
+                            )
+                        )
+                    )
+                    .border(
+                        width = 0.5.dp,
+                        brush = Brush.linearGradient(
+                            listOf(
+                                AppColor.Primary.copy(alpha = 0.25f),
+                                AppColor.Primary.copy(alpha = 0.08f),
+                            )
+                        ),
+                        shape = RoundedCornerShape(11.dp),
+                    ),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -436,6 +622,9 @@ private fun QuickActionsRow(
     onRatings: () -> Unit,
     onComplaints: () -> Unit
 ) {
+    val couponAccent = if (AppColor.isDark) Color(0xFFE5AC00) else Color(0xFFFFC107)
+    val ratingAccent = if (AppColor.isDark) Color(0xFFE68A00) else Color(0xFFFF9800)
+
     Row(
         Modifier.fillMaxWidth().padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -451,21 +640,21 @@ private fun QuickActionsRow(
             Modifier.weight(1f),
             Res.drawable.ic_lock,
             Res.string.coupons,
-            AppColor.Primary,
+            couponAccent,
             onCoupons
         )
         QuickActionItem(
             Modifier.weight(1f),
             Res.drawable.ic_rating,
             Res.string.my_ratings,
-            AppColor.Primary,
+            ratingAccent,
             onRatings
         )
         QuickActionItem(
             Modifier.weight(1f),
             Res.drawable.ic_complaint,
             Res.string.complaints,
-            AppColor.Primary,
+            AppColor.Error,
             onComplaints
         )
     }
@@ -481,29 +670,56 @@ private fun QuickActionItem(
 ) {
     GlassCard(
         modifier = modifier.noRippleClickable(onClick = onClick),
+        accentColor = tint,
         cornerRadius = 14.dp,
         contentPadding = 0.dp,
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth().padding(vertical = 10.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-        Box(
-            Modifier.size(36.dp).clip(RoundedCornerShape(10.dp))
-                .background(tint.copy(alpha = 0.08f)), contentAlignment = Alignment.Center
-        ) {
-            Icon(painterResource(icon), null, tint = tint, modifier = Modifier.size(18.dp))
-        }
-        Spacer(Modifier.height(6.dp))
-        Text(
-            stringResource(label),
-            style = MahalatkTheme.labelSmall,
-            color = AppColor.TextPrimary,
-            fontWeight = FontWeight.Medium,
-            fontSize = 10.sp,
-            textAlign = TextAlign.Center,
-            maxLines = 1
-        )
+        Box(modifier = Modifier.fillMaxWidth()) {
+            // Gradient accent strip at top
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .height(3.dp)
+                    .align(Alignment.TopCenter)
+                    .background(
+                        brush = Brush.horizontalGradient(
+                            listOf(
+                                tint.copy(alpha = 0.0f),
+                                tint.copy(alpha = 0.4f),
+                                tint.copy(alpha = 0.0f),
+                            )
+                        )
+                    )
+            )
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Box(
+                    Modifier
+                        .size(38.dp)
+                        .clip(RoundedCornerShape(11.dp))
+                        .background(
+                            brush = Brush.linearGradient(
+                                listOf(tint.copy(alpha = 0.06f), tint.copy(alpha = 0.14f))
+                            )
+                        )
+                        .border(0.5.dp, tint.copy(alpha = 0.15f), RoundedCornerShape(11.dp)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(painterResource(icon), null, tint = tint, modifier = Modifier.size(18.dp))
+                }
+                Spacer(Modifier.height(6.dp))
+                Text(
+                    stringResource(label),
+                    style = MahalatkTheme.labelSmall,
+                    color = AppColor.TextPrimary,
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 10.sp,
+                    textAlign = TextAlign.Center,
+                    maxLines = 1
+                )
+            }
         }
     }
 }
@@ -514,15 +730,33 @@ private fun QuickActionItem(
 
 @Composable
 private fun SectionLabel(title: String) {
-    Text(
-        title,
-        style = MahalatkTheme.labelMedium,
-        color = AppColor.TextSecondary,
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 11.sp,
-        letterSpacing = 0.3.sp,
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 3.dp)
-    )
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp, vertical = 5.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Box(
+            Modifier
+                .width(3.dp)
+                .height(14.dp)
+                .clip(RoundedCornerShape(2.dp))
+                .background(
+                    brush = Brush.verticalGradient(
+                        listOf(AppColor.Primary, AppColor.Primary.copy(alpha = 0.3f))
+                    )
+                )
+        )
+        Spacer(Modifier.width(8.dp))
+        Text(
+            title,
+            style = MahalatkTheme.labelMedium,
+            color = AppColor.TextSecondary,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 11.sp,
+            letterSpacing = 0.3.sp,
+        )
+    }
 }
 
 @Composable
@@ -539,34 +773,64 @@ private fun MenuRow(
     icon: DrawableResource,
     titleRes: StringResource,
     tint: Color = AppColor.Primary,
+    showTopDivider: Boolean = false,
     onClick: () -> Unit
 ) {
-    Row(
-        modifier = Modifier.fillMaxWidth().noRippleClickable(onClick = onClick)
-            .padding(horizontal = 12.dp, vertical = 11.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Box(
-            Modifier.size(32.dp).clip(RoundedCornerShape(10.dp))
-                .background(tint.copy(alpha = 0.1f)), contentAlignment = Alignment.Center
-        ) {
-            Icon(painterResource(icon), null, tint = tint, modifier = Modifier.size(15.dp))
+    Column {
+        if (showTopDivider) {
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 14.dp)
+                    .height(0.5.dp)
+                    .background(
+                        brush = Brush.horizontalGradient(
+                            listOf(
+                                AppColor.Primary.copy(alpha = 0.0f),
+                                AppColor.Primary.copy(
+                                    alpha = if (AppColor.isDark) 0.08f else 0.12f
+                                ),
+                                AppColor.Primary.copy(alpha = 0.0f),
+                            )
+                        )
+                    )
+            )
         }
-        Spacer(Modifier.width(10.dp))
-        Text(
-            stringResource(titleRes),
-            style = MahalatkTheme.bodySmall,
-            color = AppColor.TextPrimary,
-            fontWeight = FontWeight.Medium,
-            fontSize = 13.sp,
-            modifier = Modifier.weight(1f)
-        )
-        Icon(
-            Icons.AutoMirrored.Filled.KeyboardArrowRight,
-            null,
-            tint = AppColor.TextHint.copy(alpha = 0.4f),
-            modifier = Modifier.size(16.dp)
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth().noRippleClickable(onClick = onClick)
+                .padding(horizontal = 12.dp, vertical = 11.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Box(
+                Modifier
+                    .size(34.dp)
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(
+                        brush = Brush.linearGradient(
+                            listOf(tint.copy(alpha = 0.06f), tint.copy(alpha = 0.14f))
+                        )
+                    )
+                    .border(0.5.dp, tint.copy(alpha = 0.1f), RoundedCornerShape(10.dp)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(painterResource(icon), null, tint = tint, modifier = Modifier.size(16.dp))
+            }
+            Spacer(Modifier.width(10.dp))
+            Text(
+                stringResource(titleRes),
+                style = MahalatkTheme.bodySmall,
+                color = AppColor.TextPrimary,
+                fontWeight = FontWeight.Medium,
+                fontSize = 13.sp,
+                modifier = Modifier.weight(1f)
+            )
+            Icon(
+                Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                null,
+                tint = AppColor.TextHint.copy(alpha = 0.4f),
+                modifier = Modifier.size(16.dp)
+            )
+        }
     }
 }
 

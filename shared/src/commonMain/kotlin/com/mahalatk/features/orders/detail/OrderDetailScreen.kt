@@ -19,7 +19,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.text.font.FontWeight
@@ -43,6 +43,7 @@ import com.mahalatk.common.component.header.ScreenHeader
 import com.mahalatk.common.component.loading.LoadingOverlay
 import com.mahalatk.common.component.utilis.noRippleClickable
 import com.mahalatk.theme.AppColor
+import com.mahalatk.theme.CornerDimensions
 import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.coupon_code
@@ -437,7 +438,20 @@ private fun PaymentInfoCard(state: OrderDetailState) {
         )
 
         Spacer(modifier = Modifier.height(6.dp))
-        HorizontalDivider(color = AppColor.Outline, thickness = 0.5.dp)
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .height(0.5.dp)
+                .background(
+                    brush = Brush.horizontalGradient(
+                        listOf(
+                            AppColor.Primary.copy(alpha = 0.0f),
+                            AppColor.Primary.copy(alpha = if (AppColor.isDark) 0.08f else 0.12f),
+                            AppColor.Primary.copy(alpha = 0.0f),
+                        )
+                    )
+                )
+        )
         Spacer(modifier = Modifier.height(6.dp))
 
         Row(
@@ -499,7 +513,20 @@ private fun RatingCard(
         )
 
         Spacer(modifier = Modifier.height(16.dp))
-        HorizontalDivider(color = AppColor.Outline, thickness = 0.5.dp)
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .height(0.5.dp)
+                .background(
+                    brush = Brush.horizontalGradient(
+                        listOf(
+                            AppColor.Primary.copy(alpha = 0.0f),
+                            AppColor.Primary.copy(alpha = if (AppColor.isDark) 0.08f else 0.12f),
+                            AppColor.Primary.copy(alpha = 0.0f),
+                        )
+                    )
+                )
+        )
         Spacer(modifier = Modifier.height(16.dp))
 
         // Driver rating
@@ -543,7 +570,7 @@ private fun StarRatingRow(rating: Int, onRate: (Int) -> Unit) {
 private fun DetailCard(content: @Composable () -> Unit) {
     GlassCard(
         modifier = Modifier.fillMaxWidth(),
-        cornerRadius = 16.dp,
+        cornerRadius = CornerDimensions.lg,
     ) {
         Column {
             content()

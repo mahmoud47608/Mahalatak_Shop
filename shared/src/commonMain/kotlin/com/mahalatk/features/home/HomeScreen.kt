@@ -67,10 +67,32 @@ fun HomeScreen(
         else listOf(Color(0xFF3D9098), Color(0xFF5AA6AC), Color(0xFF6DBABF))
     }
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(AppColor.ScreenBackground),
+            .background(AppColor.ScreenBackground)
+            .drawBehind {
+                // Floating decorative orbs for depth
+                drawCircle(
+                    color = AppColor.Primary.copy(alpha = if (AppColor.isDark) 0.04f else 0.06f),
+                    radius = 120.dp.toPx(),
+                    center = Offset(size.width * 0.85f, size.height * 0.15f),
+                )
+                drawCircle(
+                    color = AppColor.Primary.copy(alpha = if (AppColor.isDark) 0.03f else 0.05f),
+                    radius = 90.dp.toPx(),
+                    center = Offset(-20.dp.toPx(), size.height * 0.5f),
+                )
+                drawCircle(
+                    color = AppColor.Primary.copy(alpha = if (AppColor.isDark) 0.025f else 0.04f),
+                    radius = 70.dp.toPx(),
+                    center = Offset(size.width * 0.7f, size.height * 0.85f),
+                )
+            }
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize(),
     ) {
         // ── Top Header with glass morphism ──
         Box(
@@ -229,4 +251,5 @@ fun HomeScreen(
             item { Spacer(modifier = Modifier.height(16.dp)) }
         }
     }
+    } // end outer Box
 }

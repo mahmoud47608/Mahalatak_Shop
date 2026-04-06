@@ -89,17 +89,24 @@ fun NotificationsScreen(
                         35.dp.toPx(),
                         Offset(size.width * 0.5f, -15.dp.toPx()),
                     )
+                    drawCircle(
+                        Color.White.copy(alpha = 0.04f),
+                        45.dp.toPx(),
+                        Offset(size.width * 0.3f, size.height * 0.8f),
+                    )
+                    drawCircle(
+                        Color.White.copy(alpha = 0.06f),
+                        25.dp.toPx(),
+                        Offset(size.width * 0.75f, size.height * 0.2f),
+                    )
+                    // Accent line at bottom
+                    drawLine(
+                        color = Color.White.copy(alpha = 0.12f),
+                        start = Offset(size.width * 0.1f, size.height - 1.dp.toPx()),
+                        end = Offset(size.width * 0.9f, size.height - 1.dp.toPx()),
+                        strokeWidth = 0.5.dp.toPx(),
+                    )
                 }
-                .border(
-                    width = 1.dp,
-                    brush = Brush.linearGradient(
-                        colors = listOf(
-                            Color.White.copy(alpha = 0.20f),
-                            Color.White.copy(alpha = 0.05f),
-                        ),
-                    ),
-                    shape = androidx.compose.ui.graphics.RectangleShape,
-                )
                 .padding(top = 40.dp, bottom = 14.dp, start = 16.dp, end = 16.dp),
         ) {
             Row(
@@ -222,7 +229,19 @@ private fun NotificationCard(
                 modifier = Modifier
                     .size(48.dp)
                     .clip(RoundedCornerShape(14.dp))
-                    .background(AppColor.Primary.copy(alpha = 0.1f)),
+                    .background(
+                        brush = Brush.linearGradient(
+                            listOf(
+                                AppColor.Primary.copy(alpha = 0.06f),
+                                AppColor.Primary.copy(alpha = 0.14f),
+                            )
+                        )
+                    )
+                    .border(
+                        0.5.dp,
+                        AppColor.Primary.copy(alpha = 0.1f),
+                        RoundedCornerShape(14.dp),
+                    ),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(

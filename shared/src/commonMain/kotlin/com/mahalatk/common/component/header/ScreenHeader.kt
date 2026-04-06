@@ -1,7 +1,6 @@
 package com.mahalatk.common.component.header
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,7 +19,6 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -50,6 +48,7 @@ fun ScreenHeader(
             .height(height)
             .drawBehind {
                 drawRect(Brush.verticalGradient(glassColors))
+                // Glass orbs for depth
                 drawCircle(
                     Color.White.copy(alpha = 0.07f),
                     80.dp.toPx(),
@@ -65,17 +64,29 @@ fun ScreenHeader(
                     35.dp.toPx(),
                     Offset(size.width * 0.5f, -15.dp.toPx()),
                 )
-            }
-            .border(
-                width = 1.dp,
-                brush = Brush.linearGradient(
-                    colors = listOf(
-                        Color.White.copy(alpha = 0.20f),
-                        Color.White.copy(alpha = 0.05f),
-                    ),
-                ),
-                shape = RectangleShape,
-            ),
+                drawCircle(
+                    Color.White.copy(alpha = 0.04f),
+                    45.dp.toPx(),
+                    Offset(size.width * 0.3f, size.height * 0.8f),
+                )
+                drawCircle(
+                    Color.White.copy(alpha = 0.06f),
+                    25.dp.toPx(),
+                    Offset(size.width * 0.75f, size.height * 0.2f),
+                )
+                drawCircle(
+                    Color.White.copy(alpha = 0.03f),
+                    60.dp.toPx(),
+                    Offset(size.width * 0.15f, size.height * 0.6f),
+                )
+                // Subtle accent line at bottom
+                drawLine(
+                    color = Color.White.copy(alpha = 0.12f),
+                    start = Offset(size.width * 0.1f, size.height - 1.dp.toPx()),
+                    end = Offset(size.width * 0.9f, size.height - 1.dp.toPx()),
+                    strokeWidth = 0.5.dp.toPx(),
+                )
+            },
         contentAlignment = Alignment.BottomCenter,
     ) {
         Text(

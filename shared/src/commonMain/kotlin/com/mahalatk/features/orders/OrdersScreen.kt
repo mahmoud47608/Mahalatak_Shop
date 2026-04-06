@@ -17,8 +17,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -28,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -197,7 +196,22 @@ private fun OrderCard(order: Order, onClick: () -> Unit = {}) {
             }
 
             Spacer(modifier = Modifier.height(12.dp))
-            Box(modifier = Modifier.fillMaxWidth().height(1.dp).background(AppColor.Outline))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(0.5.dp)
+                    .background(
+                        brush = Brush.horizontalGradient(
+                            listOf(
+                                AppColor.Primary.copy(alpha = 0.0f),
+                                AppColor.Primary.copy(
+                                    alpha = if (AppColor.isDark) 0.08f else 0.12f
+                                ),
+                                AppColor.Primary.copy(alpha = 0.0f),
+                            )
+                        )
+                    )
+            )
             Spacer(modifier = Modifier.height(12.dp))
 
             Row(
@@ -268,13 +282,11 @@ private fun StatusBadge(status: OrderStatus) {
 
 @Composable
 private fun OrderCardSkeleton() {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(CornerDimensions.lg),
-        colors = CardDefaults.cardColors(containerColor = AppColor.Surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+    GlassCard(
+        cornerRadius = CornerDimensions.lg,
+        contentPadding = 16.dp,
     ) {
-        Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+        Column(modifier = Modifier.fillMaxWidth()) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
@@ -289,7 +301,22 @@ private fun OrderCardSkeleton() {
                 ShimmerBox(width = 60.dp, height = 24.dp, shape = RoundedCornerShape(8.dp))
             }
             Spacer(modifier = Modifier.height(12.dp))
-            Box(modifier = Modifier.fillMaxWidth().height(1.dp).background(AppColor.Outline))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(0.5.dp)
+                    .background(
+                        brush = Brush.horizontalGradient(
+                            listOf(
+                                AppColor.Primary.copy(alpha = 0.0f),
+                                AppColor.Primary.copy(
+                                    alpha = if (AppColor.isDark) 0.08f else 0.12f
+                                ),
+                                AppColor.Primary.copy(alpha = 0.0f),
+                            )
+                        )
+                    )
+            )
             Spacer(modifier = Modifier.height(12.dp))
             Row(modifier = Modifier.fillMaxWidth()) {
                 ShimmerBox(width = 80.dp, height = 14.dp)

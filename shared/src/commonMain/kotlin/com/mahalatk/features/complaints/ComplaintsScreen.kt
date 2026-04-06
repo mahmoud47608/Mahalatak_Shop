@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -39,6 +39,7 @@ import com.mahalatk.common.component.empty.EmptyStatePlaceholder
 import com.mahalatk.common.component.header.ScreenHeader
 import com.mahalatk.common.component.image.UserAvatar
 import com.mahalatk.theme.AppColor
+import com.mahalatk.theme.CornerDimensions
 import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.complaints
@@ -99,7 +100,7 @@ fun ComplaintsScreen(
 @Composable
 private fun ComplaintCard(complaint: Complaint) {
     GlassCard(
-        cornerRadius = 20.dp,
+        cornerRadius = CornerDimensions.lg,
         contentPadding = 20.dp,
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
@@ -149,10 +150,18 @@ private fun ComplaintCard(complaint: Complaint) {
 
             // ── Separator ──
             Box(
-                modifier = Modifier
+                Modifier
                     .fillMaxWidth()
-                    .height(1.dp)
-                    .background(AppColor.Primary.copy(alpha = 0.06f)),
+                    .height(0.5.dp)
+                    .background(
+                        brush = Brush.horizontalGradient(
+                            listOf(
+                                AppColor.Primary.copy(alpha = 0.0f),
+                                AppColor.Primary.copy(alpha = if (AppColor.isDark) 0.08f else 0.12f),
+                                AppColor.Primary.copy(alpha = 0.0f),
+                            )
+                        )
+                    )
             )
 
             Spacer(modifier = Modifier.height(14.dp))

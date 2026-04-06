@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -126,13 +125,20 @@ private fun GlassCard(
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            // Glass icon circle
+            // Glass icon container
             Box(
                 modifier = Modifier
                     .size(56.dp)
-                    .clip(CircleShape)
-                    .background(accentColor.copy(alpha = 0.12f))
-                    .border(1.dp, accentColor.copy(alpha = 0.2f), CircleShape),
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(
+                        brush = Brush.linearGradient(
+                            listOf(
+                                accentColor.copy(alpha = 0.06f),
+                                accentColor.copy(alpha = 0.14f),
+                            )
+                        )
+                    )
+                    .border(0.5.dp, accentColor.copy(alpha = 0.15f), RoundedCornerShape(16.dp)),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
@@ -163,9 +169,17 @@ private fun GlassCard(
             // Arrow
             Box(
                 modifier = Modifier
-                    .size(32.dp)
-                    .clip(CircleShape)
-                    .background(accentColor.copy(alpha = 0.1f)),
+                    .size(34.dp)
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(
+                        brush = Brush.linearGradient(
+                            listOf(
+                                accentColor.copy(alpha = 0.06f),
+                                accentColor.copy(alpha = 0.14f),
+                            )
+                        )
+                    )
+                    .border(0.5.dp, accentColor.copy(alpha = 0.1f), RoundedCornerShape(10.dp)),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(

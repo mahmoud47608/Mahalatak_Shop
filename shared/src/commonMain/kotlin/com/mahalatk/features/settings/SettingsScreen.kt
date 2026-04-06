@@ -1,17 +1,19 @@
 package com.mahalatk.features.settings
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Switch
@@ -26,6 +28,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -119,6 +122,7 @@ fun SettingsScreen(
                             icon = Res.drawable.ic_language,
                             iconColor = ChangeLanguageColor,
                             title = stringResource(Res.string.change_language),
+                            showTopDivider = true,
                             onClick = { showLanguageSheet = true },
                         )
                     }
@@ -137,6 +141,7 @@ fun SettingsScreen(
                             icon = Res.drawable.ic_delete,
                             iconColor = DeleteAccountColor,
                             title = stringResource(Res.string.delete_account),
+                            showTopDivider = true,
                             onClick = { showDeleteDialog = true },
                         )
                     }
@@ -173,6 +178,25 @@ private fun DarkModeToggleRow(
     isDarkMode: Boolean,
     onToggle: () -> Unit,
 ) {
+    Column {
+        // Glass divider
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 14.dp)
+                .height(0.5.dp)
+                .background(
+                    brush = Brush.horizontalGradient(
+                        listOf(
+                            AppColor.Primary.copy(alpha = 0.0f),
+                            AppColor.Primary.copy(
+                                alpha = if (AppColor.isDark) 0.08f else 0.12f
+                            ),
+                            AppColor.Primary.copy(alpha = 0.0f),
+                        )
+                    )
+                )
+        )
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -181,9 +205,17 @@ private fun DarkModeToggleRow(
     ) {
         Box(
             modifier = Modifier
-                .size(32.dp)
-                .clip(CircleShape)
-                .background(DarkModeColor.copy(alpha = 0.12f)),
+                .size(34.dp)
+                .clip(RoundedCornerShape(10.dp))
+                .background(
+                    brush = Brush.linearGradient(
+                        listOf(
+                            DarkModeColor.copy(alpha = 0.06f),
+                            DarkModeColor.copy(alpha = 0.14f),
+                        )
+                    )
+                )
+                .border(0.5.dp, DarkModeColor.copy(alpha = 0.1f), RoundedCornerShape(10.dp)),
             contentAlignment = Alignment.Center,
         ) {
             Icon(
@@ -215,4 +247,5 @@ private fun DarkModeToggleRow(
             ),
         )
     }
+    } // end Column
 }

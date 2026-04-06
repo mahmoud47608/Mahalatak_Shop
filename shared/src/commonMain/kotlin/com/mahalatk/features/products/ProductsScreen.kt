@@ -1,6 +1,7 @@
 package com.mahalatk.features.products
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,8 +19,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -186,14 +186,12 @@ private fun ProductCard(product: ProductItem) {
 // ──────────────────────────────────────────────
 @Composable
 private fun ProductCardSkeleton() {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(CornerDimensions.lg),
-        colors = CardDefaults.cardColors(containerColor = AppColor.Surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+    GlassCard(
+        cornerRadius = CornerDimensions.lg,
+        contentPadding = 14.dp,
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(14.dp),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Column(modifier = Modifier.weight(1f)) {
@@ -222,7 +220,16 @@ private fun ActionButtons() {
     ) {
         Row(
             modifier = Modifier
-                .background(AppColor.Primary.copy(alpha = 0.1f), RoundedCornerShape(8.dp))
+                .clip(RoundedCornerShape(8.dp))
+                .background(
+                    brush = Brush.linearGradient(
+                        listOf(
+                            AppColor.Primary.copy(alpha = 0.06f),
+                            AppColor.Primary.copy(alpha = 0.12f),
+                        )
+                    )
+                )
+                .border(0.5.dp, AppColor.Primary.copy(alpha = 0.12f), RoundedCornerShape(8.dp))
                 .noRippleClickable { }
                 .padding(horizontal = 14.dp, vertical = 7.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -243,7 +250,16 @@ private fun ActionButtons() {
         }
         Row(
             modifier = Modifier
-                .background(AppColor.Error.copy(alpha = 0.1f), RoundedCornerShape(8.dp))
+                .clip(RoundedCornerShape(8.dp))
+                .background(
+                    brush = Brush.linearGradient(
+                        listOf(
+                            AppColor.Error.copy(alpha = 0.06f),
+                            AppColor.Error.copy(alpha = 0.12f),
+                        )
+                    )
+                )
+                .border(0.5.dp, AppColor.Error.copy(alpha = 0.12f), RoundedCornerShape(8.dp))
                 .noRippleClickable { }
                 .padding(horizontal = 14.dp, vertical = 7.dp),
             verticalAlignment = Alignment.CenterVertically,

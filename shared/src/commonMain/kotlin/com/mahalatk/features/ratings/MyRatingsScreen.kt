@@ -37,6 +37,7 @@ import com.mahalatk.common.component.empty.EmptyStatePlaceholder
 import com.mahalatk.common.component.header.ScreenHeader
 import com.mahalatk.common.component.image.UserAvatar
 import com.mahalatk.theme.AppColor
+import com.mahalatk.theme.CornerDimensions
 import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.ic_rating
@@ -115,7 +116,7 @@ private fun RatingSummaryCard(
     totalRatings: Int,
 ) {
     GlassCard(
-        cornerRadius = 20.dp,
+        cornerRadius = CornerDimensions.lg,
         contentPadding = 20.dp,
     ) {
         Row(
@@ -180,7 +181,7 @@ private fun RatingSummaryCard(
 @Composable
 private fun RatingCard(rating: Rating) {
     GlassCard(
-        cornerRadius = 16.dp,
+        cornerRadius = CornerDimensions.lg,
     ) {
         Column(
             modifier = Modifier
