@@ -26,7 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -154,13 +154,7 @@ private fun ComplaintCard(complaint: Complaint) {
                     .fillMaxWidth()
                     .height(0.5.dp)
                     .background(
-                        brush = Brush.horizontalGradient(
-                            listOf(
-                                AppColor.Primary.copy(alpha = 0.0f),
-                                AppColor.Primary.copy(alpha = if (AppColor.isDark) 0.08f else 0.12f),
-                                AppColor.Primary.copy(alpha = 0.0f),
-                            )
-                        )
+                        color = Color.LightGray.copy(alpha = if (AppColor.isDark) 0.5f else 1f)
                     )
             )
 

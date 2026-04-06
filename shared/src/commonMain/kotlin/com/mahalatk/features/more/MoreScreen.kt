@@ -20,7 +20,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Edit
@@ -52,6 +51,7 @@ import com.mahalatk.common.component.utilis.noRippleClickable
 import com.mahalatk.navigation.LocalNavigator
 import com.mahalatk.navigation.Route
 import com.mahalatk.theme.AppColor
+import com.mahalatk.theme.AppShapes
 import com.mahalatk.theme.MahalatkTheme
 import kotlinx.coroutines.flow.collectLatest
 import mahalatk.shared.generated.resources.Res
@@ -116,6 +116,7 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(100.dp)
+                .clip(AppShapes.Header)
                 .drawBehind {
                     val glassColors = AppColor.HeaderGradient
                     drawRect(Brush.verticalGradient(glassColors))
@@ -162,7 +163,7 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth()
-                    .padding(bottom = 14.dp, start = 20.dp, end = 8.dp),
+                    .padding(bottom = 14.dp, start = 20.dp, end = 20.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
@@ -239,10 +240,12 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
                         MenuRow(
                             Res.drawable.ic_settings,
                             Res.string.settings,
+                            tint = Color(0xFF6B9BA8),
                         ) { navigator.push(Route.Settings) }
                         MenuRow(
                             Res.drawable.ic_profile,
                             Res.string.employees,
+                            tint = Color(0xFFCE9B58),
                             showTopDivider = true,
                         ) { navigator.push(Route.Employees) }
                     }
@@ -259,20 +262,24 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
                         MenuRow(
                             Res.drawable.ic_phone,
                             Res.string.contact_us,
+                            tint = Color(0xFF5EAAB0),
                         ) { uriHandler.openUri("https://wa.me/2001017156197") }
                         MenuRow(
                             Res.drawable.ic_about,
                             Res.string.about_app,
+                            tint = Color(0xFFDEA477),
                             showTopDivider = true,
                         ) { navigator.push(Route.About) }
                         MenuRow(
                             Res.drawable.ic_terms,
                             Res.string.terms_conditions,
+                            tint = Color(0xFF6B9BA8),
                             showTopDivider = true,
                         ) { navigator.push(Route.Terms) }
                         MenuRow(
                             Res.drawable.ic_privacy,
                             Res.string.privacy_policy,
+                            tint = Color(0xFFC09088),
                             showTopDivider = true,
                         ) { navigator.push(Route.PrivacyPolicy) }
                     }
@@ -292,12 +299,12 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
                         contentPadding = 0.dp,
                     ) {
                         Box(Modifier.fillMaxWidth()) {
-                            // Red gradient accent strip at top
+                            // Red gradient accent strip at bottom
                             Box(
                                 Modifier
                                     .fillMaxWidth()
                                     .height(2.dp)
-                                    .align(Alignment.TopCenter)
+                                    .align(Alignment.BottomCenter)
                                     .background(
                                         brush = Brush.horizontalGradient(
                                             listOf(
@@ -311,32 +318,10 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(horizontal = 12.dp, vertical = 12.dp),
+                                    .padding(horizontal = 12.dp, vertical = 16.dp),
                                 horizontalArrangement = Arrangement.Center,
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
-                                Box(
-                                    Modifier
-                                        .size(28.dp)
-                                        .clip(RoundedCornerShape(8.dp))
-                                        .background(
-                                            brush = Brush.linearGradient(
-                                                listOf(
-                                                    AppColor.Error.copy(alpha = 0.08f),
-                                                    AppColor.Error.copy(alpha = 0.14f),
-                                                )
-                                            )
-                                        ),
-                                    contentAlignment = Alignment.Center,
-                                ) {
-                                    Icon(
-                                        Icons.AutoMirrored.Filled.ExitToApp,
-                                        null,
-                                        tint = AppColor.Error,
-                                        modifier = Modifier.size(14.dp),
-                                    )
-                                }
-                                Spacer(Modifier.width(8.dp))
                                 Text(
                                     stringResource(Res.string.logout),
                                     style = MahalatkTheme.bodySmall,
@@ -586,8 +571,10 @@ private fun QuickActionsRow(
     onRatings: () -> Unit,
     onComplaints: () -> Unit
 ) {
-    val couponAccent = if (AppColor.isDark) Color(0xFFE5AC00) else Color(0xFFFFC107)
-    val ratingAccent = if (AppColor.isDark) Color(0xFFE68A00) else Color(0xFFFF9800)
+    val offersAccent = if (AppColor.isDark) Color(0xFF4A8E94) else Color(0xFF5EAAB0)
+    val couponAccent = if (AppColor.isDark) Color(0xFFAD8248) else Color(0xFFCE9B58)
+    val ratingAccent = if (AppColor.isDark) Color(0xFF557F8C) else Color(0xFF6B9BA8)
+    val complaintsAccent = if (AppColor.isDark) Color(0xFFA86860) else Color(0xFFCF8578)
 
     Row(
         Modifier.fillMaxWidth().padding(horizontal = 16.dp),
@@ -597,7 +584,7 @@ private fun QuickActionsRow(
             Modifier.weight(1f),
             Res.drawable.ic_orders,
             Res.string.offers,
-            AppColor.Primary,
+            offersAccent,
             onOffers
         )
         QuickActionItem(
@@ -618,7 +605,7 @@ private fun QuickActionsRow(
             Modifier.weight(1f),
             Res.drawable.ic_complaint,
             Res.string.complaints,
-            AppColor.Error,
+            complaintsAccent,
             onComplaints
         )
     }
@@ -639,12 +626,12 @@ private fun QuickActionItem(
         contentPadding = 0.dp,
     ) {
         Box(modifier = Modifier.fillMaxWidth()) {
-            // Gradient accent strip at top
+            // Gradient accent strip at bottom
             Box(
                 Modifier
                     .fillMaxWidth()
                     .height(3.dp)
-                    .align(Alignment.TopCenter)
+                    .align(Alignment.BottomCenter)
                     .background(
                         brush = Brush.horizontalGradient(
                             listOf(
@@ -745,17 +732,7 @@ private fun MenuRow(
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
                     .height(0.5.dp)
-                    .background(
-                        brush = Brush.horizontalGradient(
-                            listOf(
-                                AppColor.Primary.copy(alpha = 0.0f),
-                                AppColor.Primary.copy(
-                                    alpha = if (AppColor.isDark) 0.08f else 0.12f
-                                ),
-                                AppColor.Primary.copy(alpha = 0.0f),
-                            )
-                        )
-                    )
+                    .background(Color.LightGray.copy(alpha = if (AppColor.isDark) 0.5f else 1f))
             )
         }
         Row(

@@ -57,9 +57,9 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
-private val ChangeLanguageColor = AppColor.AccentPink
-private val ChangePasswordColor = AppColor.AccentBlue
-private val DarkModeColor = AppColor.AccentIndigo
+private val ChangePasswordColor = Color(0xFF5EAAB0)   // soft teal (logo)
+private val ChangeLanguageColor = Color(0xFFCE9B58)   // warm amber (logo)
+private val DarkModeColor = Color(0xFF6B9BA8)          // cool slate (logo)
 private val DeleteAccountColor = AppColor.Error
 
 private data class LanguageOption(val code: String, val label: String)
@@ -186,15 +186,7 @@ private fun DarkModeToggleRow(
                 .padding(horizontal = 14.dp)
                 .height(0.5.dp)
                 .background(
-                    brush = Brush.horizontalGradient(
-                        listOf(
-                            AppColor.Primary.copy(alpha = 0.0f),
-                            AppColor.Primary.copy(
-                                alpha = if (AppColor.isDark) 0.08f else 0.12f
-                            ),
-                            AppColor.Primary.copy(alpha = 0.0f),
-                        )
-                    )
+                    color = Color.LightGray.copy(alpha = if (AppColor.isDark) 0.5f else 1f)
                 )
         )
     Row(

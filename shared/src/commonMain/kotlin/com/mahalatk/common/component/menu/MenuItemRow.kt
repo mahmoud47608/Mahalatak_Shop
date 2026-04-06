@@ -52,15 +52,7 @@ fun MenuItemRow(
                     .padding(horizontal = 16.dp)
                     .height(0.5.dp)
                     .background(
-                        brush = Brush.horizontalGradient(
-                            listOf(
-                                AppColor.Primary.copy(alpha = 0.0f),
-                                AppColor.Primary.copy(
-                                    alpha = if (AppColor.isDark) 0.08f else 0.12f
-                                ),
-                                AppColor.Primary.copy(alpha = 0.0f),
-                            )
-                        )
+                        color = Color.LightGray.copy(alpha = if (AppColor.isDark) 0.5f else 1f)
                     )
             )
         }

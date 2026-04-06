@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
@@ -23,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.mahalatk.theme.AppColor
+import com.mahalatk.theme.AppShapes
 import com.mahalatk.theme.MahalatkTheme
 
 /**
@@ -35,6 +37,7 @@ fun ScreenHeader(
     modifier: Modifier = Modifier,
     height: Dp = 90.dp,
     onBackClick: (() -> Unit)? = null,
+    actions: (@Composable () -> Unit)? = null,
 ) {
     val glassColors = AppColor.HeaderGradient
 
@@ -42,6 +45,7 @@ fun ScreenHeader(
         modifier = modifier
             .fillMaxWidth()
             .height(height)
+            .clip(AppShapes.Header)
             .drawBehind {
                 drawRect(Brush.verticalGradient(glassColors))
                 // Glass orbs for depth
@@ -117,6 +121,16 @@ fun ScreenHeader(
                         modifier = Modifier.size(22.dp),
                     )
                 }
+            }
+        }
+
+        if (actions != null) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(end = 16.dp, bottom = 10.dp),
+            ) {
+                actions()
             }
         }
     }

@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -20,7 +19,7 @@ import com.mahalatk.theme.AppColor
 @Composable
 fun GradientDivider(
     modifier: Modifier = Modifier,
-    color: Color = AppColor.Primary,
+    color: Color = Color.LightGray,
     height: Dp = 0.5.dp,
     horizontalPadding: Dp = 12.dp,
 ) {
@@ -29,14 +28,6 @@ fun GradientDivider(
             .fillMaxWidth()
             .padding(horizontal = horizontalPadding)
             .height(height)
-            .background(
-                brush = Brush.horizontalGradient(
-                    listOf(
-                        color.copy(alpha = 0.0f),
-                        color.copy(alpha = if (AppColor.isDark) 0.08f else 0.12f),
-                        color.copy(alpha = 0.0f),
-                    )
-                )
-            )
+            .background(color.copy(alpha = if (AppColor.isDark) 0.5f else 1f))
     )
 }

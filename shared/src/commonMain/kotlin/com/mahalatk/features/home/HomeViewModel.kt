@@ -24,6 +24,7 @@ data class HomeState(
     val receiveNewOrders: Boolean = true,
     val completedOrders: Int = 35,
     val cancelledOrders: Int = 18,
+    val shopVisitors: Int = 120,
     val newOrders: ImmutableList<OrderItem> = persistentListOf(
         OrderItem("1", "Hader Al-Alawi", "088308", "02:30 PM"),
         OrderItem("2", "Fahd Al-Shehri", "088309", "02:30 PM"),

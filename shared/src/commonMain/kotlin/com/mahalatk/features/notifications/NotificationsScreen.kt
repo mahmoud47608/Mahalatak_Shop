@@ -17,10 +17,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -28,8 +25,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -37,6 +32,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.mahalatk.common.component.animation.AnimatedListItem
 import com.mahalatk.common.component.card.GlassCard
+import com.mahalatk.common.component.header.ScreenHeader
 import com.mahalatk.common.component.utilis.noRippleClickable
 import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.CornerDimensions
@@ -59,90 +55,14 @@ fun NotificationsScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
 
-    val glassColors = AppColor.HeaderGradient
-
     Column(
         modifier = Modifier.fillMaxSize().background(AppColor.ScreenBackground),
     ) {
-        // ── Header ──
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .drawBehind {
-                    drawRect(Brush.verticalGradient(glassColors))
-                    drawCircle(
-                        Color.White.copy(alpha = 0.07f),
-                        80.dp.toPx(),
-                        Offset(-20.dp.toPx(), -10.dp.toPx()),
-                    )
-                    drawCircle(
-                        Color.White.copy(alpha = 0.05f),
-                        55.dp.toPx(),
-                        Offset(size.width + 10.dp.toPx(), size.height * 0.4f),
-                    )
-                    drawCircle(
-                        Color.White.copy(alpha = 0.03f),
-                        35.dp.toPx(),
-                        Offset(size.width * 0.5f, -15.dp.toPx()),
-                    )
-                    drawCircle(
-                        Color.White.copy(alpha = 0.04f),
-                        45.dp.toPx(),
-                        Offset(size.width * 0.3f, size.height * 0.8f),
-                    )
-                    drawCircle(
-                        Color.White.copy(alpha = 0.06f),
-                        25.dp.toPx(),
-                        Offset(size.width * 0.75f, size.height * 0.2f),
-                    )
-                    // Accent line at bottom
-                    drawLine(
-                        color = Color.White.copy(alpha = 0.12f),
-                        start = Offset(size.width * 0.1f, size.height - 1.dp.toPx()),
-                        end = Offset(size.width * 0.9f, size.height - 1.dp.toPx()),
-                        strokeWidth = 0.5.dp.toPx(),
-                    )
-                }
-                .padding(top = 40.dp, bottom = 16.dp, start = 16.dp, end = 16.dp),
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(34.dp)
-                        .background(
-                            color = Color.White.copy(alpha = 0.25f),
-                            shape = CircleShape,
-                        ),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    IconButton(
-                        onClick = onBack,
-                        modifier = Modifier.size(34.dp),
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                            contentDescription = null,
-                            tint = Color.White,
-                            modifier = Modifier.size(22.dp),
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.width(12.dp))
-
-                Text(
-                    text = stringResource(Res.string.notifications),
-                    style = MahalatkTheme.titleLarge,
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.weight(1f),
-                )
-
-                // Clear all button
-                if (state.notifications.isNotEmpty()) {
+        ScreenHeader(
+            title = stringResource(Res.string.notifications),
+            onBackClick = onBack,
+            actions = if (state.notifications.isNotEmpty()) {
+                {
                     Text(
                         text = stringResource(Res.string.clear_all_notifications),
                         style = MahalatkTheme.labelMedium,
@@ -154,11 +74,11 @@ fun NotificationsScreen(
                                 shape = RoundedCornerShape(8.dp),
                             )
                             .noRippleClickable { viewModel.clearAll() }
-                            .padding(horizontal = 12.dp, vertical = 8.dp),
+                            .padding(horizontal = 12.dp, vertical = 6.dp),
                     )
                 }
-            }
-        }
+            } else null,
+        )
 
         // ── Content ──
         if (state.notifications.isEmpty()) {

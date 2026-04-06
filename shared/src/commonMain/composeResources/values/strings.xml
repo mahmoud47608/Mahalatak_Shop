@@ -223,6 +223,7 @@
     <string name="completed_orders">Completed Orders</string>
     <string name="cancelled_orders">Cancelled Orders</string>
     <string name="new_orders">New Orders</string>
+    <string name="shop_visitors">Shop Visitors</string>
     <string name="order_number">Order #%s</string>
     <string name="today">Today</string>
 
@@ -304,10 +305,10 @@
 
     <!-- Orders Screen -->
     <string name="my_orders">My Orders</string>
-    <string name="new_tab">New</string>
+    <string name="accepted_tab">Accepted</string>
     <string name="current_tab">Current</string>
     <string name="completed_tab">Completed</string>
-    <string name="returns_tab">Returns</string>
+    <string name="cancelled_tab">Cancelled</string>
     <string name="no_orders">No orders yet</string>
     <string name="items_count">%d items</string>
 
@@ -330,6 +331,13 @@
     <string name="status_preparing">Preparing</string>
     <string name="status_ready">Ready</string>
     <string name="status_delivered_driver">Delivered to driver</string>
+    <string name="status_completed">Completed</string>
+    <string name="status_ready_delivery">Ready for delivery</string>
+    <string name="status_waiting_desc">The order is waiting for the customer to complete payment</string>
+    <string name="status_preparing_desc">The order is being prepared and will be ready soon</string>
+    <string name="status_ready_desc">The order is ready and waiting for the driver</string>
+    <string name="status_delivered_desc">The order has been handed to the driver</string>
+    <string name="status_completed_desc">The order has been delivered successfully</string>
     <string name="mark_prepared">Done Preparing</string>
     <string name="mark_delivered_driver">Delivered to Driver</string>
     <string name="customer_rating">Customer Rating</string>

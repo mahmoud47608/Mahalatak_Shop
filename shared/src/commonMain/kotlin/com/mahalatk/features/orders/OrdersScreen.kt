@@ -27,7 +27,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -46,14 +45,14 @@ import com.mahalatk.theme.CornerDimensions
 import com.mahalatk.theme.MahalatkTheme
 import kotlinx.coroutines.launch
 import mahalatk.shared.generated.resources.Res
+import mahalatk.shared.generated.resources.accepted_tab
+import mahalatk.shared.generated.resources.cancelled_tab
 import mahalatk.shared.generated.resources.completed_tab
 import mahalatk.shared.generated.resources.currency
 import mahalatk.shared.generated.resources.current_tab
 import mahalatk.shared.generated.resources.ic_check_circle
 import mahalatk.shared.generated.resources.my_orders
-import mahalatk.shared.generated.resources.new_tab
 import mahalatk.shared.generated.resources.no_orders
-import mahalatk.shared.generated.resources.returns_tab
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -87,10 +86,10 @@ fun OrdersScreen(
 
         FilterTabs(
             tabs = listOf(
-                OrderTab.New to stringResource(Res.string.new_tab),
+                OrderTab.Accepted to stringResource(Res.string.accepted_tab),
                 OrderTab.Current to stringResource(Res.string.current_tab),
                 OrderTab.Completed to stringResource(Res.string.completed_tab),
-                OrderTab.Returns to stringResource(Res.string.returns_tab),
+                OrderTab.Cancelled to stringResource(Res.string.cancelled_tab),
             ),
             selectedTab = tabs[pagerState.currentPage],
             onTabSelected = { tab ->
@@ -108,10 +107,10 @@ fun OrdersScreen(
             val tab = tabs[page]
             val pageOrders = state.orders.filter { order ->
                 when (tab) {
-                    OrderTab.New -> order.status == OrderStatus.New
+                    OrderTab.Accepted -> order.status == OrderStatus.New
                     OrderTab.Current -> order.status == OrderStatus.Preparing
                     OrderTab.Completed -> order.status == OrderStatus.Delivered
-                    OrderTab.Returns -> order.status == OrderStatus.Returned || order.status == OrderStatus.Cancelled
+                    OrderTab.Cancelled -> order.status == OrderStatus.Returned || order.status == OrderStatus.Cancelled
                 }
             }
 
@@ -202,15 +201,7 @@ private fun OrderCard(order: Order, onClick: () -> Unit = {}) {
                     .fillMaxWidth()
                     .height(0.5.dp)
                     .background(
-                        brush = Brush.horizontalGradient(
-                            listOf(
-                                AppColor.Primary.copy(alpha = 0.0f),
-                                AppColor.Primary.copy(
-                                    alpha = if (AppColor.isDark) 0.08f else 0.12f
-                                ),
-                                AppColor.Primary.copy(alpha = 0.0f),
-                            )
-                        )
+                        color = Color.LightGray.copy(alpha = if (AppColor.isDark) 0.5f else 1f)
                     )
             )
             Spacer(modifier = Modifier.height(12.dp))
@@ -256,7 +247,7 @@ private fun StatusBadge(status: OrderStatus) {
             OrderStatus.Returned -> Triple(
                 AppColor.Error.copy(alpha = 0.1f),
                 AppColor.Error,
-                "Returned"
+                "Cancelled"
             )
 
             OrderStatus.Cancelled -> Triple(
@@ -312,15 +303,7 @@ private fun OrderCardSkeleton() {
                     .fillMaxWidth()
                     .height(0.5.dp)
                     .background(
-                        brush = Brush.horizontalGradient(
-                            listOf(
-                                AppColor.Primary.copy(alpha = 0.0f),
-                                AppColor.Primary.copy(
-                                    alpha = if (AppColor.isDark) 0.08f else 0.12f
-                                ),
-                                AppColor.Primary.copy(alpha = 0.0f),
-                            )
-                        )
+                        color = Color.LightGray.copy(alpha = if (AppColor.isDark) 0.5f else 1f)
                     )
             )
             Spacer(modifier = Modifier.height(12.dp))

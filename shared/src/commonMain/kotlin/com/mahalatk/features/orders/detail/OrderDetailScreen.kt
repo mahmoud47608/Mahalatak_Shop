@@ -29,7 +29,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.text.font.FontWeight
@@ -66,9 +65,19 @@ import mahalatk.shared.generated.resources.products_section
 import mahalatk.shared.generated.resources.products_total
 import mahalatk.shared.generated.resources.recommend_dealing
 import mahalatk.shared.generated.resources.sar
+import mahalatk.shared.generated.resources.status_completed
+import mahalatk.shared.generated.resources.status_completed_desc
+import mahalatk.shared.generated.resources.status_delivered_desc
+import mahalatk.shared.generated.resources.status_delivered_driver
+import mahalatk.shared.generated.resources.status_preparing
+import mahalatk.shared.generated.resources.status_preparing_desc
+import mahalatk.shared.generated.resources.status_ready_delivery
+import mahalatk.shared.generated.resources.status_ready_desc
+import mahalatk.shared.generated.resources.status_waiting_desc
 import mahalatk.shared.generated.resources.submit_rating
 import mahalatk.shared.generated.resources.total_amount
 import mahalatk.shared.generated.resources.vat_amount
+import mahalatk.shared.generated.resources.waiting_payment
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -265,19 +274,19 @@ private fun StatusStepperCard(currentStep: DetailOrderStep) {
     )
 
     val statusText = when (currentStep) {
-        DetailOrderStep.WaitingPayment -> "Waiting for customer payment"
-        DetailOrderStep.Preparing -> "Preparing"
-        DetailOrderStep.Ready -> "Ready for delivery"
-        DetailOrderStep.DeliveredToDriver -> "Delivered to driver"
-        DetailOrderStep.Completed -> "Completed"
+        DetailOrderStep.WaitingPayment -> stringResource(Res.string.waiting_payment)
+        DetailOrderStep.Preparing -> stringResource(Res.string.status_preparing)
+        DetailOrderStep.Ready -> stringResource(Res.string.status_ready_delivery)
+        DetailOrderStep.DeliveredToDriver -> stringResource(Res.string.status_delivered_driver)
+        DetailOrderStep.Completed -> stringResource(Res.string.status_completed)
     }
 
     val statusDesc = when (currentStep) {
-        DetailOrderStep.WaitingPayment -> "The order is waiting for the customer to complete payment"
-        DetailOrderStep.Preparing -> "The order is being prepared and will be ready soon"
-        DetailOrderStep.Ready -> "The order is ready and waiting for the driver"
-        DetailOrderStep.DeliveredToDriver -> "The order has been handed to the driver"
-        DetailOrderStep.Completed -> "The order has been delivered successfully"
+        DetailOrderStep.WaitingPayment -> stringResource(Res.string.status_waiting_desc)
+        DetailOrderStep.Preparing -> stringResource(Res.string.status_preparing_desc)
+        DetailOrderStep.Ready -> stringResource(Res.string.status_ready_desc)
+        DetailOrderStep.DeliveredToDriver -> stringResource(Res.string.status_delivered_desc)
+        DetailOrderStep.Completed -> stringResource(Res.string.status_completed_desc)
     }
 
     DetailCard {
@@ -443,13 +452,7 @@ private fun PaymentInfoCard(state: OrderDetailState) {
                 .fillMaxWidth()
                 .height(0.5.dp)
                 .background(
-                    brush = Brush.horizontalGradient(
-                        listOf(
-                            AppColor.Primary.copy(alpha = 0.0f),
-                            AppColor.Primary.copy(alpha = if (AppColor.isDark) 0.08f else 0.12f),
-                            AppColor.Primary.copy(alpha = 0.0f),
-                        )
-                    )
+                    color = Color.LightGray.copy(alpha = if (AppColor.isDark) 0.5f else 1f)
                 )
         )
         Spacer(modifier = Modifier.height(6.dp))
@@ -518,13 +521,7 @@ private fun RatingCard(
                 .fillMaxWidth()
                 .height(0.5.dp)
                 .background(
-                    brush = Brush.horizontalGradient(
-                        listOf(
-                            AppColor.Primary.copy(alpha = 0.0f),
-                            AppColor.Primary.copy(alpha = if (AppColor.isDark) 0.08f else 0.12f),
-                            AppColor.Primary.copy(alpha = 0.0f),
-                        )
-                    )
+                    color = Color.LightGray.copy(alpha = if (AppColor.isDark) 0.5f else 1f)
                 )
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -554,7 +551,7 @@ private fun StarRatingRow(rating: Int, onRate: (Int) -> Unit) {
             Icon(
                 imageVector = Icons.Filled.Star,
                 contentDescription = null,
-                tint = if (index < rating) Color(0xFFFFC107) else AppColor.Outline,
+                tint = if (index < rating) AppColor.StarGold else AppColor.Outline,
                 modifier = Modifier
                     .size(28.dp)
                     .noRippleClickable { onRate(index + 1) },

@@ -216,6 +216,7 @@
     <string name="completed_orders">الطلبات المكتملة</string>
     <string name="cancelled_orders">الطلبات الملغاة</string>
     <string name="new_orders">الطلبات الجديدة</string>
+    <string name="shop_visitors">زوار المحل</string>
     <string name="order_number">طلب #%s</string>
     <string name="today">اليوم</string>
 
@@ -297,10 +298,10 @@
 
     <!-- Orders Screen -->
     <string name="my_orders">طلباتي</string>
-    <string name="new_tab">جديد</string>
-    <string name="current_tab">حالي</string>
-    <string name="completed_tab">مكتمل</string>
-    <string name="returns_tab">مرتجعات</string>
+    <string name="accepted_tab">مقبولة</string>
+    <string name="current_tab">حالية</string>
+    <string name="completed_tab">مكتملة</string>
+    <string name="cancelled_tab">ملغية</string>
     <string name="no_orders">لا توجد طلبات بعد</string>
     <string name="items_count">%d عناصر</string>
 
@@ -323,6 +324,13 @@
     <string name="status_preparing">قيد التحضير</string>
     <string name="status_ready">جاهز</string>
     <string name="status_delivered_driver">تم التسليم للسائق</string>
+    <string name="status_completed">مكتمل</string>
+    <string name="status_ready_delivery">جاهز للتوصيل</string>
+    <string name="status_waiting_desc">الطلب في انتظار إتمام الدفع من العميل</string>
+    <string name="status_preparing_desc">الطلب قيد التحضير وسيكون جاهزاً قريباً</string>
+    <string name="status_ready_desc">الطلب جاهز وفي انتظار السائق</string>
+    <string name="status_delivered_desc">تم تسليم الطلب للسائق</string>
+    <string name="status_completed_desc">تم توصيل الطلب بنجاح</string>
     <string name="mark_prepared">تم التحضير</string>
     <string name="mark_delivered_driver">تم التسليم للسائق</string>
     <string name="customer_rating">تقييم العميل</string>
