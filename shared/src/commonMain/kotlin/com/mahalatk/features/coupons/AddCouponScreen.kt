@@ -9,12 +9,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.CalendarMonth
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -34,6 +31,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.mahalatk.common.component.bottomsheet.SuccessBottomSheet
 import com.mahalatk.common.component.button.DefaultButton
+import com.mahalatk.common.component.card.GlassCard
 import com.mahalatk.common.component.chips.ChipCloud
 import com.mahalatk.common.component.header.ScreenHeader
 import com.mahalatk.common.component.inputs.DefaultTextField
@@ -76,11 +74,10 @@ fun AddCouponScreen(
         )
 
         Column(modifier = Modifier.fillMaxSize().padding(top = 16.dp, bottom = 24.dp)) {
-            Card(
+            GlassCard(
                 modifier = Modifier.fillMaxWidth().weight(1f).padding(horizontal = 16.dp),
-                shape = RoundedCornerShape(CornerDimensions.xl),
-                colors = CardDefaults.cardColors(containerColor = AppColor.Surface),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                cornerRadius = CornerDimensions.lg,
+                contentPadding = 16.dp,
             ) {
                 Column(
                     modifier = Modifier

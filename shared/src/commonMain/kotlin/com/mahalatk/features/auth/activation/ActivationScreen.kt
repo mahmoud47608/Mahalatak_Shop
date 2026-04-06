@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -242,15 +243,28 @@ private fun OtpInput(
                         isCurrent -> AppColor.Primary.copy(alpha = 0.5f)
                         else -> AppColor.Border
                     }
-                    val bgColor =
-                        if (digit.isNotEmpty()) AppColor.Primary.copy(alpha = 0.05f) else AppColor.Surface
-
                     Box(
                         modifier = Modifier
                             .size(60.dp)
                             .clip(RoundedCornerShape(14.dp))
-                            .background(bgColor)
-                            .border(1.5.dp, borderColor, RoundedCornerShape(14.dp)),
+                            .background(
+                                brush = Brush.linearGradient(
+                                    listOf(
+                                        AppColor.Primary.copy(alpha = 0.04f),
+                                        AppColor.Primary.copy(alpha = 0.08f),
+                                    )
+                                )
+                            )
+                            .border(
+                                1.5.dp,
+                                brush = Brush.linearGradient(
+                                    listOf(
+                                        borderColor.copy(alpha = 0.5f),
+                                        borderColor.copy(alpha = 0.15f),
+                                    )
+                                ),
+                                shape = RoundedCornerShape(14.dp),
+                            ),
                         contentAlignment = Alignment.Center,
                     ) {
                         if (digit.isNotEmpty()) {

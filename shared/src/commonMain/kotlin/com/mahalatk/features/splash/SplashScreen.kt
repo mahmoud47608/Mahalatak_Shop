@@ -4,12 +4,15 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.mahalatk.theme.AppColor
 import kotlinx.coroutines.delay
@@ -58,6 +61,19 @@ fun SplashScreen(
             },
         contentAlignment = Alignment.Center
     ) {
+        // Subtle glow behind logo
+        Box(
+            modifier = Modifier
+                .size(200.dp)
+                .background(
+                    brush = Brush.radialGradient(
+                        listOf(
+                            AppColor.Primary.copy(alpha = if (AppColor.isDark) 0.08f else 0.10f),
+                            Color.Transparent,
+                        )
+                    )
+                ),
+        )
         Image(
             painter = painterResource(Res.drawable.app_icon),
             contentDescription = "App Logo",

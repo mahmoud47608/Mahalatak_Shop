@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -41,7 +42,15 @@ fun EmptyStatePlaceholder(
             Box(
                 modifier = Modifier
                     .size(circleSize)
-                    .background(iconBackgroundColor, CircleShape),
+                    .background(
+                        brush = Brush.radialGradient(
+                            listOf(
+                                iconBackgroundColor,
+                                iconBackgroundColor.copy(alpha = 0.02f),
+                            )
+                        ),
+                        shape = CircleShape,
+                    ),
                 contentAlignment = Alignment.Center,
             ) {
                 if (iconTint != null) {

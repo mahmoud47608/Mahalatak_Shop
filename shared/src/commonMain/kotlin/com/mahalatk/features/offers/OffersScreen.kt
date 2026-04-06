@@ -9,6 +9,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,6 +45,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -202,7 +204,12 @@ private fun OfferCard(
                     modifier = Modifier
                         .size(44.dp)
                         .clip(CircleShape)
-                        .background(iconBg.copy(alpha = 0.12f)),
+                        .background(
+                            brush = Brush.linearGradient(
+                                listOf(iconBg.copy(alpha = 0.06f), iconBg.copy(alpha = 0.14f))
+                            )
+                        )
+                        .border(0.5.dp, iconBg.copy(alpha = 0.1f), CircleShape),
                     contentAlignment = Alignment.Center,
                 ) {
                     Icon(
@@ -243,7 +250,15 @@ private fun OfferCard(
                     modifier = Modifier
                         .size(30.dp)
                         .clip(CircleShape)
-                        .background(AppColor.Error.copy(alpha = 0.08f))
+                        .background(
+                            brush = Brush.linearGradient(
+                                listOf(
+                                    AppColor.Error.copy(alpha = 0.06f),
+                                    AppColor.Error.copy(alpha = 0.14f)
+                                )
+                            )
+                        )
+                        .border(0.5.dp, AppColor.Error.copy(alpha = 0.1f), CircleShape)
                         .noRippleClickable { onDelete() },
                     contentAlignment = Alignment.Center,
                 ) {
@@ -279,6 +294,7 @@ private fun ActiveBadge(isActive: Boolean, onClick: () -> Unit) {
         modifier = Modifier
             .noRippleClickable { onClick() }
             .background(color = bgColor, shape = RoundedCornerShape(8.dp))
+            .border(0.5.dp, textColor.copy(alpha = 0.15f), RoundedCornerShape(8.dp))
             .padding(horizontal = 12.dp, vertical = 6.dp),
     ) {
         Text(

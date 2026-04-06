@@ -1,6 +1,7 @@
 package com.mahalatk.features.home.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -51,8 +53,18 @@ internal fun ToggleCard(
                 modifier = Modifier
                     .size(44.dp)
                     .background(
-                        color = AppColor.Primary.copy(alpha = 0.1f),
+                        brush = Brush.linearGradient(
+                            listOf(
+                                AppColor.Primary.copy(alpha = 0.06f),
+                                AppColor.Primary.copy(alpha = 0.14f),
+                            )
+                        ),
                         shape = RoundedCornerShape(12.dp),
+                    )
+                    .border(
+                        0.5.dp,
+                        AppColor.Primary.copy(alpha = 0.12f),
+                        RoundedCornerShape(12.dp),
                     ),
                 contentAlignment = Alignment.Center,
             ) {

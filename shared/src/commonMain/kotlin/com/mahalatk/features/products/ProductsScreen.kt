@@ -99,7 +99,11 @@ fun ProductsScreen(
                 .size(60.dp)
                 .shadow(elevation = 8.dp, shape = CircleShape)
                 .clip(CircleShape)
-                .background(AppColor.Primary)
+                .background(
+                    brush = Brush.verticalGradient(
+                        listOf(AppColor.Primary, AppColor.Primary.copy(alpha = 0.85f))
+                    )
+                )
                 .noRippleClickable { onAddProduct() },
             contentAlignment = Alignment.Center,
         ) {

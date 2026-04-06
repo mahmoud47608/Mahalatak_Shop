@@ -9,7 +9,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -127,16 +126,6 @@ fun ChatDetailScreen(
                         Offset(size.width * 0.5f, -15.dp.toPx()),
                     )
                 }
-                .border(
-                    width = 1.dp,
-                    brush = Brush.linearGradient(
-                        colors = listOf(
-                            Color.White.copy(alpha = 0.20f),
-                            Color.White.copy(alpha = 0.05f),
-                        ),
-                    ),
-                    shape = androidx.compose.ui.graphics.RectangleShape,
-                )
                 .padding(top = 40.dp, bottom = 14.dp, start = 16.dp, end = 16.dp),
         ) {
             Row(

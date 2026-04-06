@@ -26,6 +26,7 @@ import com.mahalatk.common.component.card.GlassCard
 import com.mahalatk.common.component.header.ScreenHeader
 import com.mahalatk.common.component.inputs.DefaultTextField
 import com.mahalatk.theme.AppColor
+import com.mahalatk.theme.CornerDimensions
 import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.change_phone_subtitle
@@ -62,7 +63,7 @@ fun ChangePhoneScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
-                cornerRadius = 24.dp,
+                cornerRadius = CornerDimensions.lg,
                 contentPadding = 0.dp,
             ) {
                 Column(

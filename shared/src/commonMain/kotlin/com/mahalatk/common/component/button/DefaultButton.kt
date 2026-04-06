@@ -66,6 +66,18 @@ fun DefaultButton(
         ButtonStyle.OUTLINED -> MaterialTheme.colorScheme.surface
     }
 
+    val containerBrush = when (style) {
+        ButtonStyle.PRIMARY -> Brush.verticalGradient(
+            listOf(MahalatkTheme.primary, MahalatkTheme.primary.copy(alpha = 0.85f))
+        )
+
+        ButtonStyle.ERROR -> Brush.verticalGradient(
+            listOf(MahalatkTheme.error, MahalatkTheme.error.copy(alpha = 0.85f))
+        )
+
+        else -> null
+    }
+
     val contentColor = when (style) {
         ButtonStyle.PRIMARY -> MahalatkTheme.white
         ButtonStyle.ERROR -> MaterialTheme.colorScheme.onError
@@ -111,27 +123,48 @@ fun DefaultButton(
             )
         }
     } else {
-        Button(
-            onClick = onClick,
-            interactionSource = interactionSource,
-            modifier = modifier
-                .graphicsLayer { scaleX = scale; scaleY = scale }
-                .fillMaxWidth()
-                .height(48.dp),
-            shape = shape,
-            enabled = enabled,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = containerColor,
-                contentColor = contentColor,
-                disabledContainerColor = MahalatkTheme.hint,
-                disabledContentColor = MahalatkTheme.white.copy(alpha = 0.7f)
-            )
-        ) {
-            Text(
-                text = text,
-                modifier = Modifier.padding(contentPadding),
-                style = MahalatkTheme.labelMedium.copy(fontSize = 14.sp),
-            )
+        if (containerBrush != null && enabled) {
+            // Gradient button for PRIMARY/ERROR
+            Box(
+                modifier = modifier
+                    .graphicsLayer { scaleX = scale; scaleY = scale }
+                    .fillMaxWidth()
+                    .height(48.dp)
+                    .clip(shape)
+                    .background(brush = containerBrush, shape = shape)
+                    .noRippleClickable(onClick = onClick),
+                contentAlignment = androidx.compose.ui.Alignment.Center,
+            ) {
+                Text(
+                    text = text,
+                    modifier = Modifier.padding(contentPadding),
+                    style = MahalatkTheme.labelMedium.copy(fontSize = 14.sp),
+                    color = contentColor,
+                )
+            }
+        } else {
+            Button(
+                onClick = onClick,
+                interactionSource = interactionSource,
+                modifier = modifier
+                    .graphicsLayer { scaleX = scale; scaleY = scale }
+                    .fillMaxWidth()
+                    .height(48.dp),
+                shape = shape,
+                enabled = enabled,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = containerColor,
+                    contentColor = contentColor,
+                    disabledContainerColor = MahalatkTheme.hint,
+                    disabledContentColor = MahalatkTheme.white.copy(alpha = 0.7f)
+                )
+            ) {
+                Text(
+                    text = text,
+                    modifier = Modifier.padding(contentPadding),
+                    style = MahalatkTheme.labelMedium.copy(fontSize = 14.sp),
+                )
+            }
         }
     }
 }

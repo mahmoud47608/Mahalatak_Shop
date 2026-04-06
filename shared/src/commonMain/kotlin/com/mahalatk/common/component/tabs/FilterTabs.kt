@@ -2,6 +2,7 @@ package com.mahalatk.common.component.tabs
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -15,6 +16,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -45,20 +48,35 @@ fun <T> FilterTabs(
     ) {
         tabs.forEach { (tab, label) ->
             val isSelected = tab == selectedTab
-            val bgColor by animateColorAsState(
-                targetValue = if (isSelected) AppColor.Primary else Color.Transparent,
-                label = "tabBg",
-            )
             val textColor by animateColorAsState(
                 targetValue = if (isSelected) Color.White else AppColor.TextHint,
                 label = "tabText",
             )
 
+            val tabShape = RoundedCornerShape(10.dp)
             val stableOnClick = remember(tab) { { currentOnTabSelected.value(tab) } }
             Box(
                 modifier = Modifier
                     .weight(1f)
-                    .background(color = bgColor, shape = RoundedCornerShape(10.dp))
+                    .clip(tabShape)
+                    .then(
+                        if (isSelected) Modifier
+                            .background(
+                                brush = Brush.verticalGradient(
+                                    listOf(
+                                        AppColor.Primary,
+                                        AppColor.Primary.copy(alpha = 0.85f),
+                                    )
+                                ),
+                                shape = tabShape,
+                            )
+                            .border(
+                                0.5.dp,
+                                AppColor.Primary.copy(alpha = 0.3f),
+                                tabShape,
+                            )
+                        else Modifier
+                    )
                     .noRippleClickable(onClick = stableOnClick)
                     .padding(vertical = 10.dp),
                 contentAlignment = Alignment.Center,

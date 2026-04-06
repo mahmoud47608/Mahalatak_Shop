@@ -32,7 +32,6 @@ import androidx.compose.material.icons.filled.RadioButtonChecked
 import androidx.compose.material.icons.filled.RadioButtonUnchecked
 import androidx.compose.material.icons.filled.Videocam
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -45,6 +44,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.ContentScale
@@ -290,9 +290,19 @@ fun AddProductScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             // ── Divider between Part 1 and Part 2 ──
-            HorizontalDivider(
-                color = AppColor.TextHint.copy(alpha = 0.3f),
-                thickness = 1.dp,
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .height(0.5.dp)
+                    .background(
+                        brush = Brush.horizontalGradient(
+                            listOf(
+                                AppColor.Primary.copy(alpha = 0.0f),
+                                AppColor.Primary.copy(alpha = if (AppColor.isDark) 0.08f else 0.12f),
+                                AppColor.Primary.copy(alpha = 0.0f),
+                            )
+                        )
+                    )
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -685,7 +695,15 @@ private fun ImageGridSection(
                             .align(Alignment.TopEnd)
                             .padding(4.dp)
                             .size(24.dp)
-                            .background(AppColor.Error.copy(alpha = 0.8f), CircleShape)
+                            .background(
+                                brush = Brush.linearGradient(
+                                    listOf(
+                                        AppColor.Error.copy(alpha = 0.7f),
+                                        AppColor.Error.copy(alpha = 0.9f)
+                                    )
+                                ),
+                                shape = CircleShape,
+                            )
                             .noRippleClickable { onRemoveImage(index) },
                         contentAlignment = Alignment.Center,
                     ) {
@@ -760,7 +778,15 @@ private fun VideoSection(
                             .align(Alignment.TopEnd)
                             .padding(4.dp)
                             .size(24.dp)
-                            .background(AppColor.Error.copy(alpha = 0.8f), CircleShape)
+                            .background(
+                                brush = Brush.linearGradient(
+                                    listOf(
+                                        AppColor.Error.copy(alpha = 0.7f),
+                                        AppColor.Error.copy(alpha = 0.9f)
+                                    )
+                                ),
+                                shape = CircleShape,
+                            )
                             .noRippleClickable { onRemoveVideo() },
                         contentAlignment = Alignment.Center,
                     ) {

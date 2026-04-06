@@ -1,6 +1,7 @@
 package com.mahalatk.features.orders
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -269,6 +270,11 @@ private fun StatusBadge(status: OrderStatus) {
     Box(
         modifier = Modifier
             .background(color = bgColor, shape = AppShapes.Small)
+            .border(
+                0.5.dp,
+                textColor.copy(alpha = 0.15f),
+                AppShapes.Small,
+            )
             .padding(horizontal = 12.dp, vertical = 5.dp),
     ) {
         Text(
