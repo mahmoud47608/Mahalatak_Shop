@@ -57,10 +57,10 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
-private val ChangeLanguageColor = Color(0xFFE91E63)
-private val ChangePasswordColor = Color(0xFF42A5F5)
-private val DarkModeColor = Color(0xFF5C6BC0)
-private val DeleteAccountColor = Color(0xFFF44336)
+private val ChangeLanguageColor = AppColor.AccentPink
+private val ChangePasswordColor = AppColor.AccentBlue
+private val DarkModeColor = AppColor.AccentIndigo
+private val DeleteAccountColor = AppColor.Error
 
 private data class LanguageOption(val code: String, val label: String)
 

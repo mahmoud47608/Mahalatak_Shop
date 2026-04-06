@@ -109,35 +109,7 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
         }
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(AppColor.ScreenBackground)
-            .drawBehind {
-                // Floating decorative orbs for depth
-                drawCircle(
-                    color = AppColor.Primary.copy(alpha = if (AppColor.isDark) 0.04f else 0.06f),
-                    radius = 120.dp.toPx(),
-                    center = Offset(size.width * 0.85f, size.height * 0.12f),
-                )
-                drawCircle(
-                    color = AppColor.Primary.copy(alpha = if (AppColor.isDark) 0.03f else 0.05f),
-                    radius = 90.dp.toPx(),
-                    center = Offset(-20.dp.toPx(), size.height * 0.45f),
-                )
-                drawCircle(
-                    color = AppColor.Primary.copy(alpha = if (AppColor.isDark) 0.025f else 0.04f),
-                    radius = 70.dp.toPx(),
-                    center = Offset(size.width * 0.7f, size.height * 0.82f),
-                )
-                drawCircle(
-                    color = Color(0xFFFFC107).copy(alpha = if (AppColor.isDark) 0.02f else 0.03f),
-                    radius = 45.dp.toPx(),
-                    center = Offset(size.width * 0.3f, size.height * 0.65f),
-                )
-            }
-    ) {
-        Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier.fillMaxSize().background(AppColor.ScreenBackground)) {
 
             // Header — enhanced glassmorphism
         Box(
@@ -145,9 +117,7 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
                 .fillMaxWidth()
                 .height(100.dp)
                 .drawBehind {
-                    val glassColors = if (AppColor.isDark) listOf(
-                        Color(0xFF14444A), Color(0xFF1F6268), Color(0xFF276E74)
-                    ) else listOf(Color(0xFF3D9098), Color(0xFF5AA6AC), Color(0xFF6DBABF))
+                    val glassColors = AppColor.HeaderGradient
                     drawRect(Brush.verticalGradient(glassColors))
                     // Glass orbs
                     drawCircle(
@@ -213,7 +183,7 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
                             vectorResource(Res.drawable.ic_notification),
                             contentDescription = null,
                             tint = Color.White,
-                            modifier = Modifier.size(22.dp),
+                            modifier = Modifier.size(20.dp),
                         )
                     }
                     Box(
@@ -244,7 +214,7 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
                 }
             }
 
-            item { Spacer(Modifier.height(14.dp)) }
+            item { Spacer(Modifier.height(16.dp)) }
 
             // Quick actions
             item { AnimatedListItem(1) { SectionLabel(stringResource(Res.string.section_quick_actions)) } }
@@ -259,7 +229,7 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
                 }
             }
 
-            item { Spacer(Modifier.height(18.dp)) }
+            item { Spacer(Modifier.height(16.dp)) }
 
             // Account section
             item { AnimatedListItem(3) { SectionLabel(stringResource(Res.string.section_account)) } }
@@ -279,7 +249,7 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
                 }
             }
 
-            item { Spacer(Modifier.height(14.dp)) }
+            item { Spacer(Modifier.height(16.dp)) }
 
             // Support section
             item { AnimatedListItem(5) { SectionLabel(stringResource(Res.string.section_support_legal)) } }
@@ -309,7 +279,7 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
                 }
             }
 
-            item { Spacer(Modifier.height(18.dp)) }
+            item { Spacer(Modifier.height(16.dp)) }
 
             // Logout
             item {
@@ -372,7 +342,6 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
                                     style = MahalatkTheme.bodySmall,
                                     color = AppColor.Error,
                                     fontWeight = FontWeight.SemiBold,
-                                    fontSize = 13.sp,
                                 )
                             }
                         }
@@ -402,13 +371,12 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
                                     )
                                 )
                         )
-                        Spacer(Modifier.height(10.dp))
+                        Spacer(Modifier.height(8.dp))
                         Text(
                             "Mahalatak",
                             style = MahalatkTheme.labelSmall,
                             color = AppColor.TextHint.copy(alpha = 0.45f),
                             fontWeight = FontWeight.SemiBold,
-                            fontSize = 11.sp,
                             letterSpacing = 0.8.sp
                         )
                         Spacer(Modifier.height(2.dp))
@@ -416,7 +384,6 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
                             "v1.0.0",
                             style = MahalatkTheme.labelSmall,
                             color = AppColor.TextHint.copy(alpha = 0.3f),
-                            fontSize = 10.sp
                         )
                     }
                 }
@@ -425,7 +392,6 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
             item { Spacer(Modifier.height(80.dp)) }
         }
     }
-    } // end outer Box
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -531,7 +497,6 @@ private fun ProfileCard(
                     Text(
                         "\u2713",
                         color = Color.White,
-                        fontSize = 9.sp,
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -547,7 +512,7 @@ private fun ProfileCard(
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp
                 )
-                Spacer(Modifier.height(3.dp))
+                Spacer(Modifier.height(4.dp))
                 // Tier badge
                 val badgeBg = if (isShopOwner) AppColor.Primary else Color(0xFFFFC107)
                 val badgeText =
@@ -568,10 +533,9 @@ private fun ProfileCard(
                         style = MahalatkTheme.labelSmall,
                         color = badgeBg,
                         fontWeight = FontWeight.SemiBold,
-                        fontSize = 9.sp
                     )
                 }
-                Spacer(Modifier.height(5.dp))
+                Spacer(Modifier.height(4.dp))
                 StarRow(size = 12.dp, color = AppColor.TextHint.copy(alpha = 0.18f))
             }
 
@@ -707,15 +671,14 @@ private fun QuickActionItem(
                         .border(0.5.dp, tint.copy(alpha = 0.15f), RoundedCornerShape(11.dp)),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(painterResource(icon), null, tint = tint, modifier = Modifier.size(18.dp))
+                    Icon(painterResource(icon), null, tint = tint, modifier = Modifier.size(20.dp))
                 }
-                Spacer(Modifier.height(6.dp))
+                Spacer(Modifier.height(8.dp))
                 Text(
                     stringResource(label),
                     style = MahalatkTheme.labelSmall,
                     color = AppColor.TextPrimary,
                     fontWeight = FontWeight.Medium,
-                    fontSize = 10.sp,
                     textAlign = TextAlign.Center,
                     maxLines = 1
                 )
@@ -733,7 +696,7 @@ private fun SectionLabel(title: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp, vertical = 5.dp),
+            .padding(horizontal = 20.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(
@@ -753,7 +716,6 @@ private fun SectionLabel(title: String) {
             style = MahalatkTheme.labelMedium,
             color = AppColor.TextSecondary,
             fontWeight = FontWeight.SemiBold,
-            fontSize = 11.sp,
             letterSpacing = 0.3.sp,
         )
     }
@@ -781,7 +743,7 @@ private fun MenuRow(
             Box(
                 Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 14.dp)
+                    .padding(horizontal = 16.dp)
                     .height(0.5.dp)
                     .background(
                         brush = Brush.horizontalGradient(
@@ -798,7 +760,7 @@ private fun MenuRow(
         }
         Row(
             modifier = Modifier.fillMaxWidth().noRippleClickable(onClick = onClick)
-                .padding(horizontal = 12.dp, vertical = 11.dp),
+                .padding(horizontal = 12.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Box(
@@ -821,7 +783,6 @@ private fun MenuRow(
                 style = MahalatkTheme.bodySmall,
                 color = AppColor.TextPrimary,
                 fontWeight = FontWeight.Medium,
-                fontSize = 13.sp,
                 modifier = Modifier.weight(1f)
             )
             Icon(

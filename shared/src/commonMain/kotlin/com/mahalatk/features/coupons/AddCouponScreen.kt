@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.CalendarMonth
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -154,7 +154,7 @@ fun AddCouponScreen(
                         errorText = state.dateError?.let { stringResource(it) },
                         leadingIcon = {
                             Icon(
-                                Icons.Rounded.CalendarMonth,
+                                Icons.Filled.DateRange,
                                 null,
                                 modifier = Modifier.size(24.dp),
                                 tint = MahalatkTheme.primary
@@ -172,7 +172,7 @@ fun AddCouponScreen(
                         onClick = { showEndDatePicker = true },
                         leadingIcon = {
                             Icon(
-                                Icons.Rounded.CalendarMonth,
+                                Icons.Filled.DateRange,
                                 null,
                                 modifier = Modifier.size(24.dp),
                                 tint = MahalatkTheme.primary

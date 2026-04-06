@@ -1,6 +1,7 @@
 package com.mahalatk.features.chat
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -114,7 +115,7 @@ fun ChatScreen(viewModel: ChatViewModel = koinViewModel()) {
                         top = 4.dp,
                         bottom = 16.dp
                     ),
-                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     items(4) { index ->
                         AnimatedListItem(index) { ChatItemSkeleton() }
@@ -129,7 +130,7 @@ fun ChatScreen(viewModel: ChatViewModel = koinViewModel()) {
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp),
-                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     itemsIndexed(
                         pageConversations,
@@ -157,7 +158,7 @@ fun ChatScreen(viewModel: ChatViewModel = koinViewModel()) {
 private fun ChatItemSkeleton() {
     GlassCard(
         cornerRadius = CornerDimensions.lg,
-        contentPadding = 14.dp,
+        contentPadding = 16.dp,
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -167,13 +168,13 @@ private fun ChatItemSkeleton() {
             Spacer(modifier = Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
                 ShimmerBox(width = 100.dp, height = 14.dp)
-                Spacer(modifier = Modifier.height(6.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 ShimmerBox(width = 160.dp, height = 10.dp)
             }
             Spacer(modifier = Modifier.width(8.dp))
             Column(horizontalAlignment = Alignment.End) {
                 ShimmerBox(width = 40.dp, height = 10.dp)
-                Spacer(modifier = Modifier.height(6.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 ShimmerCircle(size = 22.dp)
             }
         }
@@ -189,7 +190,7 @@ private fun ChatItem(
         modifier = Modifier.noRippleClickable { onClick() },
         accentColor = if (conversation.unreadCount > 0) AppColor.Primary else AppColor.Gray,
         cornerRadius = CornerDimensions.lg,
-        contentPadding = 14.dp,
+        contentPadding = 16.dp,
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -241,10 +242,11 @@ private fun ChatItem(
                     color = AppColor.TextHint,
                 )
                 if (conversation.unreadCount > 0) {
-                    Spacer(modifier = Modifier.height(6.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
                     Box(
                         modifier = Modifier.size(22.dp).clip(CircleShape)
-                            .background(AppColor.Primary),
+                            .background(AppColor.Primary)
+                            .border(0.5.dp, AppColor.Primary.copy(alpha = 0.3f), CircleShape),
                         contentAlignment = Alignment.Center,
                     ) {
                         Text(

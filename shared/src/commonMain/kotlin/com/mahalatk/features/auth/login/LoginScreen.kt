@@ -23,8 +23,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -69,24 +67,7 @@ fun LoginScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(AppColor.ScreenBackground)
-            .drawBehind {
-                drawCircle(
-                    color = AppColor.Primary.copy(alpha = if (AppColor.isDark) 0.04f else 0.06f),
-                    radius = 120.dp.toPx(),
-                    center = Offset(size.width * 0.85f, size.height * 0.1f),
-                )
-                drawCircle(
-                    color = AppColor.Primary.copy(alpha = if (AppColor.isDark) 0.03f else 0.05f),
-                    radius = 90.dp.toPx(),
-                    center = Offset(-20.dp.toPx(), size.height * 0.6f),
-                )
-                drawCircle(
-                    color = AppColor.Primary.copy(alpha = if (AppColor.isDark) 0.025f else 0.04f),
-                    radius = 70.dp.toPx(),
-                    center = Offset(size.width * 0.7f, size.height * 0.85f),
-                )
-            },
+            .background(AppColor.ScreenBackground),
     ) {
         ScreenHeader(title = stringResource(Res.string.login))
 

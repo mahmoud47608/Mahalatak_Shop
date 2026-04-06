@@ -80,7 +80,7 @@ fun ComplaintsScreen(
                     top = 16.dp,
                     bottom = 16.dp
                 ),
-                verticalArrangement = Arrangement.spacedBy(14.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 itemsIndexed(
                     state.complaints,
@@ -123,7 +123,7 @@ private fun ComplaintCard(complaint: Complaint) {
                     )
                 }
 
-                Spacer(modifier = Modifier.width(14.dp))
+                Spacer(modifier = Modifier.width(12.dp))
 
                 // Name + date
                 Column(modifier = Modifier.weight(1f)) {
@@ -135,18 +135,18 @@ private fun ComplaintCard(complaint: Complaint) {
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )
-                    Spacer(modifier = Modifier.height(3.dp))
+                    Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = complaint.date,
                         style = MahalatkTheme.labelSmall,
                         color = AppColor.TextHint,
-                        fontSize = 11.sp,
+                        fontSize = 12.sp,
                     )
                 }
 
             }
 
-            Spacer(modifier = Modifier.height(14.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             // ── Separator ──
             Box(
@@ -164,7 +164,7 @@ private fun ComplaintCard(complaint: Complaint) {
                     )
             )
 
-            Spacer(modifier = Modifier.height(14.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             // ── Description ──
             Text(
@@ -176,10 +176,10 @@ private fun ComplaintCard(complaint: Complaint) {
 
             // ── Attached images ──
             if (complaint.images.isNotEmpty()) {
-                Spacer(modifier = Modifier.height(14.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
                 LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
                     contentPadding = PaddingValues(0.dp),
                 ) {
                     items(complaint.images) { imageUrl ->

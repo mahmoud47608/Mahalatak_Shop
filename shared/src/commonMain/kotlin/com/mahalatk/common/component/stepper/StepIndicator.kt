@@ -33,7 +33,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.MahalatkTheme
 
@@ -105,7 +104,7 @@ private fun StepItem(
             } else {
                 Text(
                     text = "${index + 1}",
-                    fontSize = 13.sp,
+                    style = MahalatkTheme.labelMedium,
                     fontWeight = FontWeight.Bold,
                     color = if (isActive) Color.White else AppColor.TextHint,
                 )
@@ -113,7 +112,7 @@ private fun StepItem(
         }
 
         if (label != null) {
-            Spacer(modifier = Modifier.height(6.dp))
+            Spacer(modifier = Modifier.height(8.dp))
             StepLabel(label = label, isActive = isActive, isCompleted = isCompleted)
         }
     }
@@ -134,7 +133,6 @@ private fun StepLabel(label: String, isActive: Boolean, isCompleted: Boolean) {
     Text(
         text = label,
         style = MahalatkTheme.labelSmall,
-        fontSize = 10.sp,
         color = color,
         fontWeight = if (isActive) FontWeight.Bold else FontWeight.Normal,
         textAlign = TextAlign.Center,
@@ -154,8 +152,8 @@ private fun RowScope.ConnectingLine(isFilled: Boolean) {
     Box(
         modifier = Modifier
             .weight(1f)
-            .padding(top = 15.dp)
-            .height(3.dp)
+            .padding(top = 16.dp)
+            .height(4.dp)
             .padding(horizontal = 8.dp)
             .clip(CircleShape)
             .background(color),

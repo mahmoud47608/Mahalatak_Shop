@@ -36,11 +36,7 @@ fun ScreenHeader(
     height: Dp = 90.dp,
     onBackClick: (() -> Unit)? = null,
 ) {
-    val glassColors = if (AppColor.isDark) {
-        listOf(Color(0xFF14444A), Color(0xFF1F6268), Color(0xFF276E74))
-    } else {
-        listOf(Color(0xFF3D9098), Color(0xFF5AA6AC), Color(0xFF6DBABF))
-    }
+    val glassColors = AppColor.HeaderGradient
 
     Box(
         modifier = modifier

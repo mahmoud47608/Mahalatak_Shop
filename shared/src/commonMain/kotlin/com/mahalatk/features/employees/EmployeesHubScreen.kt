@@ -41,8 +41,8 @@ import mahalatk.shared.generated.resources.employees
 import mahalatk.shared.generated.resources.employees_list
 import org.jetbrains.compose.resources.stringResource
 
-private val RequestsColor = Color(0xFF4CAF50)
-private val EmployeesColor = Color(0xFF5C6BC0)
+private val RequestsColor = AppColor.AccentGreen
+private val EmployeesColor = AppColor.AccentIndigo
 
 @Composable
 fun EmployeesHubScreen(

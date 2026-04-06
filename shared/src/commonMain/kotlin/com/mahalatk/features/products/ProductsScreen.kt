@@ -71,18 +71,18 @@ fun ProductsScreen(
             if (state.isLoading) {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp),
-                    verticalArrangement = Arrangement.spacedBy(14.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
-                    item { Spacer(modifier = Modifier.height(6.dp)) }
+                    item { Spacer(modifier = Modifier.height(8.dp)) }
                     items(4) { ProductCardSkeleton() }
                     item { Spacer(modifier = Modifier.height(80.dp)) }
                 }
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp),
-                    verticalArrangement = Arrangement.spacedBy(14.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
-                    item { Spacer(modifier = Modifier.height(6.dp)) }
+                    item { Spacer(modifier = Modifier.height(8.dp)) }
                     itemsIndexed(state.products, key = { _, p -> p.id }) { index, product ->
                         AnimatedListItem(index) { ProductCard(product = product) }
                     }
@@ -124,7 +124,7 @@ fun ProductsScreen(
 private fun ProductCard(product: ProductItem) {
     GlassCard(
         cornerRadius = CornerDimensions.lg,
-        contentPadding = 14.dp,
+        contentPadding = 16.dp,
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -145,14 +145,14 @@ private fun ProductCard(product: ProductItem) {
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                 )
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = "${product.price.toInt()} ${stringResource(Res.string.currency)}",
                     style = MahalatkTheme.titleSmall,
                     color = AppColor.Primary,
                     fontWeight = FontWeight.Bold,
                 )
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 ActionButtons()
             }
 
@@ -192,7 +192,7 @@ private fun ProductCard(product: ProductItem) {
 private fun ProductCardSkeleton() {
     GlassCard(
         cornerRadius = CornerDimensions.lg,
-        contentPadding = 14.dp,
+        contentPadding = 16.dp,
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -202,9 +202,9 @@ private fun ProductCardSkeleton() {
                 ShimmerBox(width = 140.dp, height = 14.dp)
                 Spacer(modifier = Modifier.height(4.dp))
                 ShimmerBox(width = 180.dp, height = 10.dp)
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 ShimmerBox(width = 80.dp, height = 14.dp)
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                     ShimmerBox(width = 60.dp, height = 28.dp, shape = RoundedCornerShape(8.dp))
                     ShimmerBox(width = 60.dp, height = 28.dp, shape = RoundedCornerShape(8.dp))
@@ -235,7 +235,7 @@ private fun ActionButtons() {
                 )
                 .border(0.5.dp, AppColor.Primary.copy(alpha = 0.12f), RoundedCornerShape(8.dp))
                 .noRippleClickable { }
-                .padding(horizontal = 14.dp, vertical = 7.dp),
+                .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
@@ -244,7 +244,7 @@ private fun ActionButtons() {
                 tint = AppColor.Primary,
                 modifier = Modifier.size(16.dp)
             )
-            Spacer(Modifier.width(5.dp))
+            Spacer(Modifier.width(4.dp))
             Text(
                 stringResource(Res.string.edit),
                 style = MahalatkTheme.labelMedium,
@@ -265,7 +265,7 @@ private fun ActionButtons() {
                 )
                 .border(0.5.dp, AppColor.Error.copy(alpha = 0.12f), RoundedCornerShape(8.dp))
                 .noRippleClickable { }
-                .padding(horizontal = 14.dp, vertical = 7.dp),
+                .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
@@ -274,7 +274,7 @@ private fun ActionButtons() {
                 tint = AppColor.Error,
                 modifier = Modifier.size(16.dp)
             )
-            Spacer(Modifier.width(5.dp))
+            Spacer(Modifier.width(4.dp))
             Text(
                 stringResource(Res.string.delete),
                 style = MahalatkTheme.labelMedium,

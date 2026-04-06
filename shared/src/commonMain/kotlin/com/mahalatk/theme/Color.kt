@@ -94,4 +94,21 @@ object AppColor {
     val StatusProcessing = Color(0xFF4E9FE0)
     val NavyBlue = Color(0xFF1A47B8)
     val Purple = Color(0xFF543592)
+
+    // ── Glass header gradient ────────────────────────
+    val HeaderGradient: List<Color>
+        get() = if (isDark) listOf(Color(0xFF14444A), Color(0xFF1F6268), Color(0xFF276E74))
+        else listOf(Color(0xFF3D9098), Color(0xFF5AA6AC), Color(0xFF6DBABF))
+
+    // ── Star/Rating colors ──────────────────────────
+    val StarGold = Color(0xFFFFC107)
+    val StarEmpty get() = of(Color(0xFFE0E0E0), Color(0xFF444444))
+
+    // ── Accent palette for action items ─────────────
+    val AccentPink = Color(0xFFE91E63)
+    val AccentBlue = Color(0xFF42A5F5)
+    val AccentIndigo = Color(0xFF5C6BC0)
+    val AccentGreen = Color(0xFF4CAF50)
+    val AccentOrange get() = of(Color(0xFFFF9800), Color(0xFFE68A00))
+    val AccentAmber get() = of(Color(0xFFFFC107), Color(0xFFE5AC00))
 }

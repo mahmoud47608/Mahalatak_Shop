@@ -275,7 +275,7 @@ private fun StatusBadge(status: OrderStatus) {
                 textColor.copy(alpha = 0.15f),
                 AppShapes.Small,
             )
-            .padding(horizontal = 12.dp, vertical = 5.dp),
+            .padding(horizontal = 12.dp, vertical = 4.dp),
     ) {
         Text(
             text = label,
@@ -301,7 +301,7 @@ private fun OrderCardSkeleton() {
                 Spacer(modifier = Modifier.width(12.dp))
                 Column(modifier = Modifier.weight(1f)) {
                     ShimmerBox(width = 120.dp, height = 14.dp)
-                    Spacer(modifier = Modifier.height(6.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
                     ShimmerBox(width = 80.dp, height = 10.dp)
                 }
                 ShimmerBox(width = 60.dp, height = 24.dp, shape = RoundedCornerShape(8.dp))

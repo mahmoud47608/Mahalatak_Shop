@@ -9,6 +9,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -98,11 +99,7 @@ fun ChatDetailScreen(
             .fillMaxSize()
             .background(AppColor.ScreenBackground),
     ) {
-        val glassColors = if (AppColor.isDark) {
-            listOf(Color(0xFF14444A), Color(0xFF1F6268), Color(0xFF276E74))
-        } else {
-            listOf(Color(0xFF3D9098), Color(0xFF5AA6AC), Color(0xFF6DBABF))
-        }
+        val glassColors = AppColor.HeaderGradient
 
         // ── Header ──
         Box(
@@ -208,35 +205,76 @@ fun ChatDetailScreen(
             item { Spacer(modifier = Modifier.height(8.dp)) }
         }
 
-        // ── Input Bar ──
+        // ── Input Bar — glass style ──
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .drawBehind {
+                    // Subtle top accent line
+                    drawLine(
+                        color = AppColor.Primary.copy(alpha = if (AppColor.isDark) 0.06f else 0.08f),
+                        start = Offset(0f, 0f),
+                        end = Offset(size.width, 0f),
+                        strokeWidth = 0.5.dp.toPx(),
+                    )
+                }
                 .background(AppColor.Surface)
-                .padding(horizontal = 12.dp, vertical = 10.dp),
+                .padding(horizontal = 12.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            // Camera button
-            IconButton(
-                onClick = { pickImage() },
-                modifier = Modifier.size(40.dp),
+            // Camera button — glass circle
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .background(
+                        brush = Brush.linearGradient(
+                            listOf(
+                                AppColor.Primary.copy(alpha = 0.06f),
+                                AppColor.Primary.copy(alpha = 0.12f),
+                            )
+                        )
+                    )
+                    .border(0.5.dp, AppColor.Primary.copy(alpha = 0.1f), CircleShape),
+                contentAlignment = Alignment.Center,
             ) {
-                Image(
-                    painter = painterResource(Res.drawable.ic_camera),
-                    contentDescription = null,
-                    modifier = Modifier.size(36.dp),
-                )
+                IconButton(
+                    onClick = { pickImage() },
+                    modifier = Modifier.size(40.dp),
+                ) {
+                    Image(
+                        painter = painterResource(Res.drawable.ic_camera),
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp),
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.width(8.dp))
 
-            // Text input
+            // Text input — glass styled
+            val inputShape = RoundedCornerShape(20.dp)
             Box(
                 modifier = Modifier
                     .weight(1f)
+                    .clip(inputShape)
                     .background(
-                        color = AppColor.ScreenBackground,
-                        shape = RoundedCornerShape(24.dp),
+                        brush = Brush.horizontalGradient(
+                            listOf(
+                                AppColor.Primary.copy(alpha = 0.03f),
+                                AppColor.Primary.copy(alpha = 0.06f),
+                            )
+                        )
+                    )
+                    .border(
+                        0.5.dp,
+                        Brush.linearGradient(
+                            listOf(
+                                AppColor.Primary.copy(alpha = 0.15f),
+                                AppColor.Primary.copy(alpha = 0.05f),
+                            )
+                        ),
+                        inputShape,
                     )
                     .padding(horizontal = 16.dp, vertical = 12.dp),
             ) {
@@ -256,9 +294,9 @@ fun ChatDetailScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.width(10.dp))
+            Spacer(modifier = Modifier.width(8.dp))
 
-            // Send button
+            // Send button — gradient
             val sendInteractionSource = remember { MutableInteractionSource() }
             val isSendPressed by sendInteractionSource.collectIsPressedAsState()
             val sendScale by animateFloatAsState(
@@ -274,7 +312,11 @@ fun ChatDetailScreen(
                         scaleY = sendScale
                     }
                     .clip(CircleShape)
-                    .background(AppColor.Primary)
+                    .background(
+                        brush = Brush.verticalGradient(
+                            listOf(AppColor.Primary, AppColor.Primary.copy(alpha = 0.85f))
+                        )
+                    )
                     .clickable(
                         interactionSource = sendInteractionSource,
                         indication = null,
@@ -299,13 +341,12 @@ fun ChatDetailScreen(
 private fun MessageBubble(message: ChatMessage, animate: Boolean = false) {
     val content = @Composable {
         val isMe = message.isMe
-        val bgColor = if (isMe) AppColor.Primary else AppColor.Surface
         val textColor = if (isMe) Color.White else AppColor.TextPrimary
         val timeColor = if (isMe) Color.White.copy(alpha = 0.7f) else AppColor.TextHint
         val shape = if (isMe) {
-            RoundedCornerShape(16.dp, 16.dp, 4.dp, 16.dp)
+            RoundedCornerShape(20.dp, 20.dp, 4.dp, 20.dp)
         } else {
-            RoundedCornerShape(16.dp, 16.dp, 16.dp, 4.dp)
+            RoundedCornerShape(20.dp, 20.dp, 20.dp, 4.dp)
         }
         val alignment = if (isMe) Alignment.End else Alignment.Start
 
@@ -316,8 +357,44 @@ private fun MessageBubble(message: ChatMessage, animate: Boolean = false) {
             Box(
                 modifier = Modifier
                     .widthIn(max = 280.dp)
-                    .background(color = bgColor, shape = shape)
-                    .padding(horizontal = 14.dp, vertical = 10.dp),
+                    .clip(shape)
+                    .then(
+                        if (isMe) {
+                            // "Me" bubble — gradient primary
+                            Modifier.background(
+                                brush = Brush.verticalGradient(
+                                    listOf(
+                                        AppColor.Primary,
+                                        AppColor.Primary.copy(alpha = 0.88f),
+                                    )
+                                ),
+                                shape = shape,
+                            )
+                        } else {
+                            // "Other" bubble — glass style
+                            Modifier
+                                .background(
+                                    brush = Brush.horizontalGradient(
+                                        listOf(
+                                            AppColor.Primary.copy(alpha = 0.04f),
+                                            AppColor.Primary.copy(alpha = 0.08f),
+                                        )
+                                    ),
+                                    shape = shape,
+                                )
+                                .border(
+                                    0.5.dp,
+                                    Brush.linearGradient(
+                                        listOf(
+                                            AppColor.Primary.copy(alpha = 0.15f),
+                                            AppColor.Primary.copy(alpha = 0.05f),
+                                        )
+                                    ),
+                                    shape,
+                                )
+                        }
+                    )
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
             ) {
                 Column {
                     Text(

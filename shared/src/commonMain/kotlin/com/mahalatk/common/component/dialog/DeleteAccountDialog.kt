@@ -36,7 +36,7 @@ import mahalatk.shared.generated.resources.ic_delete
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
-private val DeleteRed = Color(0xFFF44336)
+private val DeleteRed = AppColor.Error
 
 @Composable
 fun DeleteAccountDialog(
@@ -66,7 +66,7 @@ fun DeleteAccountDialog(
                     painter = painterResource(Res.drawable.ic_delete),
                     contentDescription = null,
                     tint = DeleteRed,
-                    modifier = Modifier.size(36.dp),
+                    modifier = Modifier.size(40.dp),
                 )
             }
 
@@ -76,7 +76,7 @@ fun DeleteAccountDialog(
                 text = stringResource(Res.string.delete_account),
                 style = MahalatkTheme.titleMedium,
                 color = AppColor.TextPrimary,
-                fontWeight = FontWeight.Bold,
+                fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center,
             )
 

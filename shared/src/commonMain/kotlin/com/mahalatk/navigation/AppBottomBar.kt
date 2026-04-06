@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
@@ -169,13 +170,19 @@ fun AppBottomBar(onItemSelected: (BottomNavItem) -> Unit) {
 
     // ── Layout ──
     Box {
-        // Floating circle with the selected icon — glass style
+        // Floating circle with the selected icon — glass style + glow
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .offset { circleOffset }
                 .zIndex(1f)
                 .size(circleRadius * 2)
+                .shadow(
+                    elevation = 8.dp,
+                    shape = CircleShape,
+                    ambientColor = AppColor.Primary.copy(alpha = 0.20f),
+                    spotColor = AppColor.Primary.copy(alpha = 0.25f),
+                )
                 .clip(CircleShape)
                 .background(AppColor.Primary.copy(alpha = 0.10f))
                 .border(

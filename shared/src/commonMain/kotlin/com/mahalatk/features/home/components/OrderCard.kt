@@ -42,7 +42,7 @@ internal fun OrderCard(order: OrderItem, onClick: () -> Unit = {}) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(14.dp),
+                .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Box(
@@ -76,9 +76,9 @@ internal fun OrderCard(order: OrderItem, onClick: () -> Unit = {}) {
                     text = order.customerName,
                     style = MahalatkTheme.titleSmall,
                     color = AppColor.TextPrimary,
-                    fontWeight = FontWeight.SemiBold,
+                    fontWeight = FontWeight.Bold,
                 )
-                Spacer(modifier = Modifier.height(3.dp))
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = "#${order.orderNumber}",
                     style = MahalatkTheme.bodySmall,
@@ -92,7 +92,7 @@ internal fun OrderCard(order: OrderItem, onClick: () -> Unit = {}) {
                     style = MahalatkTheme.bodySmall,
                     color = AppColor.TextSecondary,
                 )
-                Spacer(modifier = Modifier.height(3.dp))
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = stringResource(Res.string.today),
                     style = MahalatkTheme.labelSmall,

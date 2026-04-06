@@ -42,7 +42,7 @@ fun <T> FilterTabs(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .background(color = AppColor.Surface, shape = RoundedCornerShape(14.dp))
+            .background(color = AppColor.Surface, shape = RoundedCornerShape(12.dp))
             .padding(4.dp),
         horizontalArrangement = Arrangement.SpaceEvenly,
     ) {
@@ -53,7 +53,7 @@ fun <T> FilterTabs(
                 label = "tabText",
             )
 
-            val tabShape = RoundedCornerShape(10.dp)
+            val tabShape = RoundedCornerShape(12.dp)
             val stableOnClick = remember(tab) { { currentOnTabSelected.value(tab) } }
             Box(
                 modifier = Modifier
@@ -78,7 +78,7 @@ fun <T> FilterTabs(
                         else Modifier
                     )
                     .noRippleClickable(onClick = stableOnClick)
-                    .padding(vertical = 10.dp),
+                    .padding(vertical = 12.dp),
                 contentAlignment = Alignment.Center,
             ) {
                 Text(

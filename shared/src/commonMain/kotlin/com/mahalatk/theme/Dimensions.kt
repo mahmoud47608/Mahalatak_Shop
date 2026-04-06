@@ -69,8 +69,8 @@ object CornerDimensions {
     /** Container radius - 12dp (cards, containers from Figma) */
     val md = 12.dp
 
-    /** Large corner radius - 16dp */
-    val lg = 16.dp
+    /** Large corner radius - 20dp (M3 standard card radius) */
+    val lg = 20.dp
 
     /** Extra large corner radius - 20dp */
     val xl = 20.dp

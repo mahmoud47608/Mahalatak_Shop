@@ -21,7 +21,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -62,37 +61,12 @@ fun HomeScreen(
     val state by viewModel.uiState.collectAsState()
     val navigator = com.mahalatk.navigation.LocalNavigator.current
 
-    val glassColors = remember(AppColor.isDark) {
-        if (AppColor.isDark) listOf(Color(0xFF14444A), Color(0xFF1F6268), Color(0xFF276E74))
-        else listOf(Color(0xFF3D9098), Color(0xFF5AA6AC), Color(0xFF6DBABF))
-    }
+    val glassColors = AppColor.HeaderGradient
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(AppColor.ScreenBackground)
-            .drawBehind {
-                // Floating decorative orbs for depth
-                drawCircle(
-                    color = AppColor.Primary.copy(alpha = if (AppColor.isDark) 0.04f else 0.06f),
-                    radius = 120.dp.toPx(),
-                    center = Offset(size.width * 0.85f, size.height * 0.15f),
-                )
-                drawCircle(
-                    color = AppColor.Primary.copy(alpha = if (AppColor.isDark) 0.03f else 0.05f),
-                    radius = 90.dp.toPx(),
-                    center = Offset(-20.dp.toPx(), size.height * 0.5f),
-                )
-                drawCircle(
-                    color = AppColor.Primary.copy(alpha = if (AppColor.isDark) 0.025f else 0.04f),
-                    radius = 70.dp.toPx(),
-                    center = Offset(size.width * 0.7f, size.height * 0.85f),
-                )
-            }
-    ) {
-        Column(
+    Column(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxSize()
+                .background(AppColor.ScreenBackground),
     ) {
         // ── Top Header with glass morphism ──
         Box(
@@ -161,7 +135,7 @@ fun HomeScreen(
                 IconButton(
                     onClick = { navigator.push(com.mahalatk.navigation.Route.Notifications) },
                     modifier = Modifier
-                        .size(42.dp)
+                        .size(40.dp)
                         .background(
                             color = Color.White.copy(alpha = 0.15f),
                             shape = CircleShape,
@@ -251,5 +225,4 @@ fun HomeScreen(
             item { Spacer(modifier = Modifier.height(16.dp)) }
         }
     }
-    } // end outer Box
 }

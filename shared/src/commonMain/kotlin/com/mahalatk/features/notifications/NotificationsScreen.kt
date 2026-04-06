@@ -59,11 +59,7 @@ fun NotificationsScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
 
-    val glassColors = if (AppColor.isDark) {
-        listOf(Color(0xFF14444A), Color(0xFF1F6268), Color(0xFF276E74))
-    } else {
-        listOf(Color(0xFF3D9098), Color(0xFF5AA6AC), Color(0xFF6DBABF))
-    }
+    val glassColors = AppColor.HeaderGradient
 
     Column(
         modifier = Modifier.fillMaxSize().background(AppColor.ScreenBackground),
@@ -107,7 +103,7 @@ fun NotificationsScreen(
                         strokeWidth = 0.5.dp.toPx(),
                     )
                 }
-                .padding(top = 40.dp, bottom = 14.dp, start = 16.dp, end = 16.dp),
+                .padding(top = 40.dp, bottom = 16.dp, start = 16.dp, end = 16.dp),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -135,7 +131,7 @@ fun NotificationsScreen(
                     }
                 }
 
-                Spacer(modifier = Modifier.width(10.dp))
+                Spacer(modifier = Modifier.width(12.dp))
 
                 Text(
                     text = stringResource(Res.string.notifications),
@@ -158,7 +154,7 @@ fun NotificationsScreen(
                                 shape = RoundedCornerShape(8.dp),
                             )
                             .noRippleClickable { viewModel.clearAll() }
-                            .padding(horizontal = 12.dp, vertical = 6.dp),
+                            .padding(horizontal = 12.dp, vertical = 8.dp),
                     )
                 }
             }
@@ -170,7 +166,7 @@ fun NotificationsScreen(
         } else {
             LazyColumn(
                 modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 item { Spacer(modifier = Modifier.height(12.dp)) }
                 itemsIndexed(state.notifications, key = { _, n -> n.id }) { index, notification ->
@@ -218,7 +214,7 @@ private fun NotificationCard(
         modifier = Modifier.noRippleClickable { onClick() },
         accentColor = if (!notification.isRead) AppColor.Primary else AppColor.Gray,
         cornerRadius = CornerDimensions.lg,
-        contentPadding = 14.dp,
+        contentPadding = 16.dp,
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -265,7 +261,7 @@ private fun NotificationCard(
                                 .clip(CircleShape)
                                 .background(AppColor.Primary),
                         )
-                        Spacer(modifier = Modifier.width(6.dp))
+                        Spacer(modifier = Modifier.width(8.dp))
                     }
                     Text(
                         text = notification.title,
@@ -284,7 +280,7 @@ private fun NotificationCard(
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                 )
-                Spacer(modifier = Modifier.height(6.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = notification.time,
                     style = MahalatkTheme.labelSmall,

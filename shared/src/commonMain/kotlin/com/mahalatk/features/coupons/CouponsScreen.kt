@@ -30,7 +30,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -153,7 +153,7 @@ fun CouponsScreen(
                 contentColor = Color.White,
                 shape = CircleShape,
             ) {
-                Icon(Icons.Rounded.Add, null, modifier = Modifier.size(28.dp))
+                Icon(Icons.Filled.Add, null, modifier = Modifier.size(28.dp))
             }
         }
     }

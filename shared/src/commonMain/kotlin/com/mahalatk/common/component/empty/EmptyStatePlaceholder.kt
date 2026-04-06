@@ -1,5 +1,10 @@
 package com.mahalatk.common.component.empty
 
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -12,10 +17,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -25,7 +32,7 @@ import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
 /**
- * Reusable empty state placeholder with icon in a circle and a message.
+ * Reusable empty state placeholder with floating icon animation and a message.
  */
 @Composable
 fun EmptyStatePlaceholder(
@@ -37,11 +44,24 @@ fun EmptyStatePlaceholder(
     circleSize: Dp = 80.dp,
     iconSize: Dp = 40.dp,
 ) {
+    // Subtle floating animation
+    val infiniteTransition = rememberInfiniteTransition(label = "emptyFloat")
+    val floatOffset by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = -8f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(2000),
+            repeatMode = RepeatMode.Reverse,
+        ),
+        label = "floatY",
+    )
+
     Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Box(
                 modifier = Modifier
                     .size(circleSize)
+                    .graphicsLayer { translationY = floatOffset }
                     .background(
                         brush = Brush.radialGradient(
                             listOf(

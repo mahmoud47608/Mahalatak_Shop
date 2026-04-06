@@ -43,7 +43,7 @@ fun <T> SingleSelectBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
         containerColor = MahalatkTheme.white,
-        shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
+        shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp)
     ) {
         Column(
             modifier = Modifier
@@ -79,7 +79,7 @@ fun <T> SingleSelectBottomSheet(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(backgroundColor, RoundedCornerShape(12.dp))
-                            .border(0.7.dp, borderColor, RoundedCornerShape(12.dp))
+                            .border(1.dp, borderColor, RoundedCornerShape(12.dp))
                             .noRippleClickable {
                                 onItemSelected(item)
                                 onDismiss()

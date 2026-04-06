@@ -49,7 +49,7 @@ fun MenuItemRow(
             Box(
                 Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 14.dp)
+                    .padding(horizontal = 16.dp)
                     .height(0.5.dp)
                     .background(
                         brush = Brush.horizontalGradient(
@@ -68,7 +68,7 @@ fun MenuItemRow(
             modifier = modifier
                 .fillMaxWidth()
                 .noRippleClickable { onClick() }
-                .padding(horizontal = 14.dp, vertical = 12.dp),
+                .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Box(
