@@ -138,6 +138,12 @@ kotlin {
     }
 }
 
+compose.resources {
+    publicResClass = true
+    packageOfResClass = "mahalatk.shared.generated.resources"
+    generateResClass = auto
+}
+
 android {
     namespace = "com.mahalatk.shared"
     compileSdk = 36
