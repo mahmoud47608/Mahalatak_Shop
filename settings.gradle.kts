@@ -26,7 +26,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Mahalatk"
+rootProject.name = "Mahalatk Shop"
 include(":app")
 include(":data")
 include(":domain")

@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.mahalatk"
+    namespace = "com.mahalatk.shop"
     compileSdk = 36
 
     defaultConfig {
