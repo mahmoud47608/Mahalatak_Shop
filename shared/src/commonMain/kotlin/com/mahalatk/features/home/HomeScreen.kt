@@ -35,6 +35,7 @@ import com.mahalatk.common.component.image.UserAvatar
 import com.mahalatk.features.home.components.OrderCard
 import com.mahalatk.features.home.components.StatCard
 import com.mahalatk.features.home.components.ToggleCard
+import com.mahalatk.features.home.components.VisitorCountCard
 import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.AppShapes
 import com.mahalatk.theme.MahalatkTheme
@@ -47,7 +48,6 @@ import mahalatk.shared.generated.resources.ic_notification
 import mahalatk.shared.generated.resources.ic_orders
 import mahalatk.shared.generated.resources.new_orders
 import mahalatk.shared.generated.resources.receive_new_orders
-import mahalatk.shared.generated.resources.shop_visitors
 import mahalatk.shared.generated.resources.statistics
 import mahalatk.shared.generated.resources.unavailable
 import org.jetbrains.compose.resources.stringResource
@@ -185,17 +185,14 @@ fun HomeScreen(
             }
 
             item {
+                VisitorCountCard(count = state.shopVisitors)
+            }
+
+            item {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
-                    StatCard(
-                        modifier = Modifier.weight(1f),
-                        count = state.shopVisitors,
-                        label = stringResource(Res.string.shop_visitors),
-                        accentColor = Color(0xFFDEA477),
-                        progress = 1f,
-                    )
                     StatCard(
                         modifier = Modifier.weight(1f),
                         count = state.completedOrders,

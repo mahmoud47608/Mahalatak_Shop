@@ -338,6 +338,10 @@
     <string name="status_ready_desc">The order is ready and waiting for the driver</string>
     <string name="status_delivered_desc">The order has been handed to the driver</string>
     <string name="status_completed_desc">The order has been delivered successfully</string>
+    <string name="order_status_new">New</string>
+    <string name="order_status_preparing">Preparing</string>
+    <string name="order_status_delivered">Delivered</string>
+    <string name="order_status_cancelled">Cancelled</string>
     <string name="mark_prepared">Done Preparing</string>
     <string name="mark_delivered_driver">Delivered to Driver</string>
     <string name="customer_rating">Customer Rating</string>
@@ -364,6 +368,33 @@
     <string name="terms_conditions_content">Please read this agreement carefully before using the [Mahalatak] app. By using the app, you acknowledge your full agreement to these terms and commit to compliance.</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="privacy_policy_content">Please read this agreement carefully before using the [Mahalatak] app. By using the app, you acknowledge your full agreement to these terms and commit to compliance.</string>
+    <!-- Subscription Packages -->
+    <string name="my_packages">Packages</string>
+    <string name="package_details">Package Details</string>
+    <string name="subscribe_now">Subscribe Now</string>
+    <string name="subscription_pending">Pending Admin Approval</string>
+    <string name="subscription_active">Subscribed</string>
+    <string name="subscription_available">Available</string>
+    <string name="subscribe_success_message">Subscription request sent. Pending admin approval.</string>
+    <string name="no_packages">No packages available</string>
+    <string name="package_price_label">Price</string>
+    <string name="use_package">Use Package</string>
+    <string name="send_message">Send Message</string>
+    <string name="message_content">Message Content</string>
+    <string name="send_to_all_customers">Send to all customers</string>
+    <string name="message_sent_success">Message sent. Pending admin approval.</string>
+    <string name="upload_banner">Upload Banner</string>
+    <string name="banner_description">Banner Description</string>
+    <string name="banner_uploaded_success">Banner uploaded. Pending admin approval.</string>
+    <string name="banner_type_home">Home Slider</string>
+    <string name="banner_type_more">More Slider</string>
+    <string name="banner_type_cart">Cart Slider</string>
+
+    <string name="image_selected">Image selected</string>
+
+    <!-- Employees -->
+    <string name="employee_requests_subtitle">Manage pending join requests</string>
+    <string name="employees_list_subtitle">View and manage your team</string>
     <string name="employees">Employees</string>
     <string name="no_employees">No employee applications</string>
     <string name="employee_requests">Employee Requests</string>

@@ -11,7 +11,7 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.mahalatk"
+        applicationId = "com.mahalatk.shop"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
@@ -52,5 +52,5 @@ android {
 
 dependencies {
     implementation(project(":shared"))
-    implementation("androidx.profileinstaller:profileinstaller:1.4.1")
+    implementation(libs.androidx.profileinstaller)
 }

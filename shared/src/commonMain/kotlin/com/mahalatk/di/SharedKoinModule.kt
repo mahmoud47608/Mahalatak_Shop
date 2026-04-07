@@ -26,6 +26,8 @@ import com.mahalatk.features.offers.OffersViewModel
 import com.mahalatk.features.offers.add.AddOfferViewModel
 import com.mahalatk.features.orders.OrdersViewModel
 import com.mahalatk.features.orders.detail.OrderDetailViewModel
+import com.mahalatk.features.packages.PackageDetailViewModel
+import com.mahalatk.features.packages.PackagesViewModel
 import com.mahalatk.features.products.ProductsViewModel
 import com.mahalatk.features.products.add.AddProductViewModel
 import com.mahalatk.features.profile.employee.EmployeeProfileViewModel
@@ -78,4 +80,6 @@ val sharedModule = module {
     viewModel { AddCouponViewModel() }
     viewModel { OffersViewModel() }
     viewModel { AddOfferViewModel() }
+    viewModel { PackagesViewModel() }
+    viewModel { PackageDetailViewModel() }
 }

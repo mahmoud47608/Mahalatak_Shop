@@ -23,7 +23,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,6 +52,10 @@ import mahalatk.shared.generated.resources.current_tab
 import mahalatk.shared.generated.resources.ic_check_circle
 import mahalatk.shared.generated.resources.my_orders
 import mahalatk.shared.generated.resources.no_orders
+import mahalatk.shared.generated.resources.order_status_cancelled
+import mahalatk.shared.generated.resources.order_status_delivered
+import mahalatk.shared.generated.resources.order_status_new
+import mahalatk.shared.generated.resources.order_status_preparing
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -229,33 +232,23 @@ private fun OrderCard(order: Order, onClick: () -> Unit = {}) {
 
 @Composable
 private fun StatusBadge(status: OrderStatus) {
-    val (bgColor, textColor, label) = remember(status) {
-        when (status) {
-            OrderStatus.New -> Triple(AppColor.Primary.copy(alpha = 0.1f), AppColor.Primary, "New")
-            OrderStatus.Preparing -> Triple(
-                AppColor.Warning.copy(alpha = 0.15f),
-                Color(0xFFE6A700),
-                "Preparing"
-            )
-
-            OrderStatus.Delivered -> Triple(
-                AppColor.Success.copy(alpha = 0.1f),
-                AppColor.Success,
-                "Delivered"
-            )
-
-            OrderStatus.Returned -> Triple(
-                AppColor.Error.copy(alpha = 0.1f),
-                AppColor.Error,
-                "Cancelled"
-            )
-
-            OrderStatus.Cancelled -> Triple(
-                AppColor.Error.copy(alpha = 0.1f),
-                AppColor.Error,
-                "Cancelled"
-        )
-        }
+    val bgColor = when (status) {
+        OrderStatus.New -> AppColor.Primary.copy(alpha = 0.1f)
+        OrderStatus.Preparing -> AppColor.Warning.copy(alpha = 0.15f)
+        OrderStatus.Delivered -> AppColor.Success.copy(alpha = 0.1f)
+        OrderStatus.Returned, OrderStatus.Cancelled -> AppColor.Error.copy(alpha = 0.1f)
+    }
+    val textColor = when (status) {
+        OrderStatus.New -> AppColor.Primary
+        OrderStatus.Preparing -> Color(0xFFE6A700)
+        OrderStatus.Delivered -> AppColor.Success
+        OrderStatus.Returned, OrderStatus.Cancelled -> AppColor.Error
+    }
+    val label = when (status) {
+        OrderStatus.New -> stringResource(Res.string.order_status_new)
+        OrderStatus.Preparing -> stringResource(Res.string.order_status_preparing)
+        OrderStatus.Delivered -> stringResource(Res.string.order_status_delivered)
+        OrderStatus.Returned, OrderStatus.Cancelled -> stringResource(Res.string.order_status_cancelled)
     }
 
     Box(

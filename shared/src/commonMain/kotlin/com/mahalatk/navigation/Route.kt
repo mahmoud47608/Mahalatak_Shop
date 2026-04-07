@@ -45,6 +45,10 @@ sealed interface Route {
     data object EmployeeRequests : Route
     data object EmployeesList : Route
     data object AddEmployee : Route
+    data object Packages : Route
+    data class PackageDetail(val packageId: Int) : Route
+    data object SendMessage : Route
+    data class UploadBanner(val bannerType: String) : Route
     data object ChangePassword : Route
     data object Settings : Route
     data object About : Route

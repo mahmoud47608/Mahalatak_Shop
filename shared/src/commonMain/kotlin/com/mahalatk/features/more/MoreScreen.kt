@@ -74,6 +74,7 @@ import mahalatk.shared.generated.resources.ic_settings
 import mahalatk.shared.generated.resources.ic_terms
 import mahalatk.shared.generated.resources.logout
 import mahalatk.shared.generated.resources.more
+import mahalatk.shared.generated.resources.my_packages
 import mahalatk.shared.generated.resources.my_ratings
 import mahalatk.shared.generated.resources.offers
 import mahalatk.shared.generated.resources.privacy_policy
@@ -224,8 +225,7 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
                     QuickActionsRow(
                         onOffers = { navigator.push(Route.Offers) },
                         onCoupons = { navigator.push(Route.Coupons) },
-                        onRatings = { navigator.push(Route.MyRatings) },
-                        onComplaints = { navigator.push(Route.Complaints) },
+                        onPackages = { navigator.push(Route.Packages) },
                     )
                 }
             }
@@ -260,9 +260,21 @@ fun MoreScreen(viewModel: MoreViewModel = koinViewModel()) {
                 AnimatedListItem(6) {
                     MenuCard {
                         MenuRow(
+                            Res.drawable.ic_rating,
+                            Res.string.my_ratings,
+                            tint = Color(0xFF6B9BA8),
+                        ) { navigator.push(Route.MyRatings) }
+                        MenuRow(
+                            Res.drawable.ic_complaint,
+                            Res.string.complaints,
+                            tint = Color(0xFFC09088),
+                            showTopDivider = true,
+                        ) { navigator.push(Route.Complaints) }
+                        MenuRow(
                             Res.drawable.ic_phone,
                             Res.string.contact_us,
                             tint = Color(0xFF5EAAB0),
+                            showTopDivider = true,
                         ) { uriHandler.openUri("https://wa.me/2001017156197") }
                         MenuRow(
                             Res.drawable.ic_about,
@@ -568,13 +580,11 @@ private fun ProfileCard(
 private fun QuickActionsRow(
     onOffers: () -> Unit,
     onCoupons: () -> Unit,
-    onRatings: () -> Unit,
-    onComplaints: () -> Unit
+    onPackages: () -> Unit,
 ) {
     val offersAccent = if (AppColor.isDark) Color(0xFF4A8E94) else Color(0xFF5EAAB0)
     val couponAccent = if (AppColor.isDark) Color(0xFFAD8248) else Color(0xFFCE9B58)
-    val ratingAccent = if (AppColor.isDark) Color(0xFF557F8C) else Color(0xFF6B9BA8)
-    val complaintsAccent = if (AppColor.isDark) Color(0xFFA86860) else Color(0xFFCF8578)
+    val packagesAccent = if (AppColor.isDark) Color(0xFF4A5399) else Color(0xFF5C6BC0)
 
     Row(
         Modifier.fillMaxWidth().padding(horizontal = 16.dp),
@@ -596,17 +606,10 @@ private fun QuickActionsRow(
         )
         QuickActionItem(
             Modifier.weight(1f),
-            Res.drawable.ic_rating,
-            Res.string.my_ratings,
-            ratingAccent,
-            onRatings
-        )
-        QuickActionItem(
-            Modifier.weight(1f),
-            Res.drawable.ic_complaint,
-            Res.string.complaints,
-            complaintsAccent,
-            onComplaints
+            Res.drawable.ic_orders,
+            Res.string.my_packages,
+            packagesAccent,
+            onPackages
         )
     }
 }

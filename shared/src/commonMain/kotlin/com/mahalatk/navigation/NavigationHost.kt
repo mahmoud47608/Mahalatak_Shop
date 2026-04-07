@@ -31,6 +31,10 @@ import com.mahalatk.features.notifications.NotificationsScreen
 import com.mahalatk.features.offers.OffersScreen
 import com.mahalatk.features.offers.add.AddOfferScreen
 import com.mahalatk.features.orders.detail.OrderDetailScreen
+import com.mahalatk.features.packages.PackageDetailScreen
+import com.mahalatk.features.packages.PackagesScreen
+import com.mahalatk.features.packages.SendMessageScreen
+import com.mahalatk.features.packages.UploadBannerScreen
 import com.mahalatk.features.products.add.AddProductScreen
 import com.mahalatk.features.profile.ProfileScreen
 import com.mahalatk.features.profile.employee.EditEmployeeProfileScreen
@@ -46,6 +50,8 @@ import com.mahalatk.features.splash.SplashScreen
 import com.mahalatk.navigation.graphs.MainNavGraph
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.change_phone_title
+import mahalatk.shared.generated.resources.phone_changed_success
+import mahalatk.shared.generated.resources.registration_success
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -113,7 +119,7 @@ fun NavigationHost() {
                         route.isFromNewPhone -> ActivationScreen(
                             phoneNumber = route.phoneNumber,
                             showSuccessOnVerify = true,
-                            successMessage = "Phone number changed successfully!",
+                            successMessage = stringResource(Res.string.phone_changed_success),
                             headerTitle = stringResource(Res.string.change_phone_title),
                             onBack = { navigator.pop() },
                             onVerified = { navigator.popUntil { it is Route.Settings } },
@@ -122,7 +128,7 @@ fun NavigationHost() {
                         else -> ActivationScreen(
                             phoneNumber = route.phoneNumber,
                             showSuccessOnVerify = true,
-                            successMessage = "Registration request sent successfully!",
+                            successMessage = stringResource(Res.string.registration_success),
                             onVerified = { navigator.replaceAll(Route.Home) },
                         )
                     }
@@ -256,6 +262,47 @@ fun NavigationHost() {
                 is Route.AddEmployee -> NavEntry(route) {
                     AddEmployeeScreen(onBack = { navigator.pop() })
                 }
+
+                    is Route.Packages -> NavEntry(route) {
+                        PackagesScreen(
+                            onBack = { navigator.pop() },
+                            onPackageClick = { pkg ->
+                                com.mahalatk.features.packages.PackageItemHolder.set(pkg)
+                                navigator.push(Route.PackageDetail(pkg.id))
+                            },
+                        )
+                    }
+
+                    is Route.PackageDetail -> NavEntry(route) {
+                        val item = com.mahalatk.features.packages.PackageItemHolder.get()
+                            ?: com.mahalatk.features.packages.PackageItem(
+                                route.packageId, "", "", "", "", "",
+                                com.mahalatk.features.packages.PackageStatus.AVAILABLE,
+                            )
+                        PackageDetailScreen(
+                            packageItem = item,
+                            onBack = { navigator.pop() },
+                            onUsePackage = { type ->
+                                when (type) {
+                                    "messages" -> navigator.push(Route.SendMessage)
+                                    "home_slider", "more_slider", "cart_slider" -> navigator.push(
+                                        Route.UploadBanner(type)
+                                    )
+                                }
+                            },
+                        )
+                    }
+
+                    is Route.SendMessage -> NavEntry(route) {
+                        SendMessageScreen(onBack = { navigator.pop() })
+                    }
+
+                    is Route.UploadBanner -> NavEntry(route) {
+                        UploadBannerScreen(
+                            bannerType = route.bannerType,
+                            onBack = { navigator.pop() },
+                        )
+                    }
 
                 is Route.Complaints -> NavEntry(route) {
                     ComplaintsScreen(onBack = { navigator.pop() })

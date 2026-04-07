@@ -37,8 +37,10 @@ import com.mahalatk.theme.AppColor
 import com.mahalatk.theme.MahalatkTheme
 import mahalatk.shared.generated.resources.Res
 import mahalatk.shared.generated.resources.employee_requests
+import mahalatk.shared.generated.resources.employee_requests_subtitle
 import mahalatk.shared.generated.resources.employees
 import mahalatk.shared.generated.resources.employees_list
+import mahalatk.shared.generated.resources.employees_list_subtitle
 import org.jetbrains.compose.resources.stringResource
 
 private val RequestsColor = AppColor.Primary
@@ -68,7 +70,7 @@ fun EmployeesHubScreen(
                 GlassCard(
                     icon = Icons.Rounded.GroupAdd,
                     title = stringResource(Res.string.employee_requests),
-                    subtitle = "Manage pending join requests",
+                    subtitle = stringResource(Res.string.employee_requests_subtitle),
                     accentColor = RequestsColor,
                     onClick = onEmployeeRequests,
                 )
@@ -78,7 +80,7 @@ fun EmployeesHubScreen(
                 GlassCard(
                     icon = Icons.Rounded.Groups,
                     title = stringResource(Res.string.employees_list),
-                    subtitle = "View & manage your team",
+                    subtitle = stringResource(Res.string.employees_list_subtitle),
                     accentColor = EmployeesColor,
                     onClick = onEmployeesList,
                 )

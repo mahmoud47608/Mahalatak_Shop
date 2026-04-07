@@ -331,6 +331,10 @@
     <string name="status_ready_desc">الطلب جاهز وفي انتظار السائق</string>
     <string name="status_delivered_desc">تم تسليم الطلب للسائق</string>
     <string name="status_completed_desc">تم توصيل الطلب بنجاح</string>
+    <string name="order_status_new">جديد</string>
+    <string name="order_status_preparing">قيد التحضير</string>
+    <string name="order_status_delivered">تم التوصيل</string>
+    <string name="order_status_cancelled">ملغي</string>
     <string name="mark_prepared">تم التحضير</string>
     <string name="mark_delivered_driver">تم التسليم للسائق</string>
     <string name="customer_rating">تقييم العميل</string>
@@ -357,6 +361,33 @@
     <string name="terms_conditions_content">يُرجى قراءة هذه الاتفاقية بعناية قبل استخدام تطبيق [محلاتك]. باستخدامك للتطبيق، فإنك تقر بموافقتك الكاملة على هذه الشروط، وتلتزم بالامتثال لها.</string>
     <string name="privacy_policy">سياسة الخصوصية</string>
     <string name="privacy_policy_content">يُرجى قراءة هذه الاتفاقية بعناية قبل استخدام تطبيق [محلاتك]. باستخدامك للتطبيق، فإنك تقر بموافقتك الكاملة على هذه الشروط، وتلتزم بالامتثال لها.</string>
+    <!-- Subscription Packages -->
+    <string name="my_packages">الباقات</string>
+    <string name="package_details">تفاصيل الباقة</string>
+    <string name="subscribe_now">اشترك الآن</string>
+    <string name="subscription_pending">في انتظار موافقة الإدارة</string>
+    <string name="subscription_active">مشترك</string>
+    <string name="subscription_available">متاح</string>
+    <string name="subscribe_success_message">تم إرسال طلب الاشتراك. في انتظار موافقة الإدارة</string>
+    <string name="no_packages">لا توجد باقات متاحة</string>
+    <string name="package_price_label">السعر</string>
+    <string name="use_package">استخدم الباقة</string>
+    <string name="send_message">إرسال رسالة</string>
+    <string name="message_content">محتوى الرسالة</string>
+    <string name="send_to_all_customers">إرسال لجميع العملاء</string>
+    <string name="message_sent_success">تم إرسال الرسالة. في انتظار موافقة الإدارة</string>
+    <string name="upload_banner">رفع بانر</string>
+    <string name="banner_description">وصف البانر</string>
+    <string name="banner_uploaded_success">تم رفع البانر. في انتظار موافقة الإدارة</string>
+    <string name="banner_type_home">سلايدر الهوم</string>
+    <string name="banner_type_more">سلايدر المور</string>
+    <string name="banner_type_cart">سلايدر السلة</string>
+
+    <string name="image_selected">تم اختيار الصورة</string>
+
+    <!-- Employees -->
+    <string name="employee_requests_subtitle">إدارة طلبات الانضمام المعلقة</string>
+    <string name="employees_list_subtitle">عرض وإدارة فريقك</string>
     <string name="employees">الموظفين</string>
     <string name="no_employees">لا يوجد طلبات موظفين</string>
     <string name="employee_requests">طلبات الموظفين</string>
