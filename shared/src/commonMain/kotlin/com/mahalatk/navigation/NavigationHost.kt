@@ -1,6 +1,10 @@
 package com.mahalatk.navigation
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
@@ -48,15 +52,26 @@ import org.jetbrains.compose.resources.stringResource
 fun NavigationHost() {
     val navigator = LocalNavigator.current
 
-    NavDisplay(
-        backStack = navigator.backStack,
-        onBack = { navigator.pop() },
-        entryDecorators = listOf(
-            rememberSaveableStateHolderNavEntryDecorator(),
-            rememberViewModelStoreNavEntryDecorator(),
-        ),
-        entryProvider = { route ->
-            when (route) {
+    val hasPassedAuth = remember(navigator.backStack.first()) {
+        navigator.backStack.first().isTabRoute
+    }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        // Tab screens — only composed after auth, then always alive
+        if (hasPassedAuth) {
+            MainNavGraph()
+        }
+
+        // NavDisplay handles detail screens as overlays
+        NavDisplay(
+            backStack = navigator.backStack,
+            onBack = { navigator.pop() },
+            entryDecorators = listOf(
+                rememberSaveableStateHolderNavEntryDecorator(),
+                rememberViewModelStoreNavEntryDecorator(),
+            ),
+            entryProvider = { route ->
+                when (route) {
                 // ─── Auth ──────────────────────────────────
                 is Route.Splash -> NavEntry(route) {
                     SplashScreen(
@@ -284,10 +299,11 @@ fun NavigationHost() {
                     PrivacyPolicyScreen(onBack = { navigator.pop() })
                 }
 
-                // ─── Main Tabs ─────────────────────────────
+                    // ─── Main Tabs (handled by always-alive MainNavGraph above) ──
                 is Route.Home, is Route.Products, is Route.Orders,
-                is Route.Chat, is Route.Account -> NavEntry(route) { MainNavGraph() }
+                is Route.Chat, is Route.Account -> NavEntry(route) { }
             }
         },
-    )
+        )
+    }
 }

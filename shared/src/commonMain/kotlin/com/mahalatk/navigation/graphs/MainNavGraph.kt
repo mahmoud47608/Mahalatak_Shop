@@ -2,12 +2,14 @@ package com.mahalatk.navigation.graphs
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.mahalatk.features.chat.ChatScreen
 import com.mahalatk.features.home.HomeScreen
@@ -34,7 +36,7 @@ fun MainNavGraph() {
     val visited = remember { mutableStateMapOf("home" to true) }
     visited[currentTab.tabKey] = true
 
-    Box {
+    Box(modifier = Modifier.padding(bottom = 64.dp)) {
         key("home") {
             TabSlot(visible = currentTab is Route.Home) {
                 HomeScreen(

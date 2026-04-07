@@ -59,14 +59,4 @@ val Route.isTabRoute: Boolean
     get() = this is Route.Home || this is Route.Products ||
             this is Route.Orders || this is Route.Chat || this is Route.Account
 
-/** True for screens that show the auth background image. */
-val Route.isAuthScreen: Boolean
-    get() = when (this) {
-        is Route.Splash, is Route.Login, is Route.Register,
-        is Route.PickLocation, is Route.ForgotPassword,
-        is Route.ResetPassword -> true
 
-        is Route.Activation -> !isFromChangePhone && !isFromNewPhone
-
-        else -> false
-    }

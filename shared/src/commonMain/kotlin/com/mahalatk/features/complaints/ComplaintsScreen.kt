@@ -176,7 +176,7 @@ private fun ComplaintCard(complaint: Complaint) {
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     contentPadding = PaddingValues(0.dp),
                 ) {
-                    items(complaint.images) { imageUrl ->
+                    itemsIndexed(complaint.images) { _, imageUrl ->
                         AsyncImage(
                             model = imageUrl,
                             contentDescription = null,
