@@ -1,289 +1,291 @@
-# Mahalatak - دليل المشروع الكامل
+# Mahalatak - Complete Project Guide
 
 ## Compose Multiplatform (CMP) + Clean Architecture
 
 ---
 
-## الفهرس
+## Table of Contents
 
-1. [مقدمة - إيه هو KMP و CMP؟](#1-مقدمة)
-2. [هيكل المشروع العام](#2-هيكل-المشروع-العام)
-3. [الموديولات الأربعة](#3-الموديولات-الأربعة)
-4. [مفهوم expect/actual](#4-مفهوم-expectactual)
-5. [Source Sets - إيه هي؟](#5-source-sets)
-6. [Domain Module - طبقة البيزنس](#6-domain-module)
-7. [Data Module - طبقة البيانات](#7-data-module)
-8. [Shared Module - طبقة الـ UI](#8-shared-module)
-9. [App Module - نقطة دخول Android](#9-app-module)
-10. [Dependency Injection مع Koin](#10-dependency-injection-مع-koin)
-11. [الـ Navigation System](#11-navigation-system)
-12. [الـ Network Layer (Ktor)](#12-network-layer)
-13. [إدارة الحالة (State Management)](#13-state-management)
-14. [الـ Theme و Design System](#14-theme-و-design-system)
-15. [Firebase و Push Notifications](#15-firebase-و-push-notifications)
-16. [إزاي iOS بيشتغل؟](#16-إزاي-ios-بيشتغل)
-17. [ملفات الـ Build و الـ Configuration](#17-ملفات-الـ-build)
-18. [Flow كامل: من الضغط على Login لحد الاستجابة](#18-flow-كامل)
-19. [المكتبات المستخدمة](#19-المكتبات-المستخدمة)
-20. [نصائح ومفاهيم مهمة](#20-نصائح-ومفاهيم-مهمة)
+1. [Introduction - What are KMP and CMP?](#1-introduction)
+2. [Overall Project Structure](#2-overall-project-structure)
+3. [The Four Modules](#3-the-four-modules)
+4. [The expect/actual Concept](#4-the-expectactual-concept)
+5. [Source Sets - What Are They?](#5-source-sets)
+6. [Domain Module - The Business Layer](#6-domain-module)
+7. [Data Module - The Data Layer](#7-data-module)
+8. [Shared Module - The UI Layer](#8-shared-module)
+9. [App Module - Android Entry Point](#9-app-module)
+10. [Dependency Injection with Koin](#10-dependency-injection-with-koin)
+11. [The Navigation System](#11-navigation-system)
+12. [The Network Layer (Ktor)](#12-network-layer)
+13. [State Management](#13-state-management)
+14. [Theme and Design System](#14-theme-and-design-system)
+15. [Firebase and Push Notifications](#15-firebase-and-push-notifications)
+16. [How Does iOS Work?](#16-how-does-ios-work)
+17. [Build and Configuration Files](#17-build-files)
+18. [Complete Flow: From Pressing Login to the Response](#18-complete-flow)
+19. [Libraries Used](#19-libraries-used)
+20. [Important Tips and Concepts](#20-important-tips-and-concepts)
 
 ---
 
-## 1. مقدمة
+## 1. Introduction
 
-### إيه هو KMP (Kotlin Multiplatform)؟
+### What is KMP (Kotlin Multiplatform)?
 
-KMP هي تقنية من JetBrains بتسمحلك تكتب كود Kotlin **مرة واحدة** ويشتغل على أكتر من platform (
-Android + iOS).
+KMP is a technology from JetBrains that lets you write Kotlin code **once** and have it run on more
+than one platform (Android + iOS).
 
-**الفكرة ببساطة:**
+**The idea, simply put:**
 
-- الكود المشترك (Business Logic, Network, Models) → بتكتبه مرة واحدة في `commonMain`
-- الكود الخاص بكل platform (Camera, GPS, Encryption) → بتكتبه في `androidMain` أو `iosMain`
+- Shared code (Business Logic, Network, Models) → you write it once in `commonMain`
+- Platform-specific code (Camera, GPS, Encryption) → you write it in `androidMain` or `iosMain`
 
-### إيه هو CMP (Compose Multiplatform)؟
+### What is CMP (Compose Multiplatform)?
 
-CMP هي امتداد لـ Jetpack Compose عشان تشتغل على iOS كمان. يعني بدل ما تكتب UI بـ Compose لـ Android
-و SwiftUI لـ iOS، بتكتب Compose **مرة واحدة** والاتنين بيشاركوا نفس الـ UI.
+CMP is an extension of Jetpack Compose so it can run on iOS as well. That means instead of writing
+UI with Compose for Android and SwiftUI for iOS, you write Compose **once** and both share the same
+UI.
 
-### ليه نستخدمهم؟
+### Why Use Them?
 
 ```
-بدون KMP:                         مع KMP:
+Without KMP:                      With KMP:
 ┌──────────┐ ┌──────────┐         ┌──────────────────┐
 │ Android  │ │   iOS    │         │   commonMain     │
-│ (Kotlin) │ │ (Swift)  │         │  (كود مشترك)     │
+│ (Kotlin) │ │ (Swift)  │         │  (shared code)   │
 │          │ │          │         ├────────┬─────────┤
 │ UI       │ │ UI       │         │Android │  iOS    │
 │ Network  │ │ Network  │         │ Main   │  Main   │
-│ Logic    │ │ Logic    │         │(خاص)   │ (خاص)  │
+│ Logic    │ │ Logic    │         │(specfc)│(specfc) │
 │ Models   │ │ Models   │         └────────┴─────────┘
 └──────────┘ └──────────┘
-  كود × 2                           كود × 1
+  code × 2                          code × 1
 ```
 
 ---
 
-## 2. هيكل المشروع العام
+## 2. Overall Project Structure
 
 ```
 Mahalatak/
-├── app/                    ← نقطة دخول Android (Application + Activity)
-├── data/                   ← طبقة البيانات (API + Storage) - KMP Module
+├── app/                    ← Android entry point (Application + Activity)
+├── data/                   ← Data layer (API + Storage) - KMP Module
 │   └── src/
-│       ├── commonMain/     ← كود مشترك (Ktor endpoints, Repositories, Utils)
-│       ├── androidMain/    ← كود Android بس (OkHttp, EncryptedSharedPreferences)
-│       └── iosMain/        ← كود iOS بس (Darwin engine, Settings)
-├── domain/                 ← طبقة البيزنس (Entities, Use Cases, Interfaces) - KMP Module
+│       ├── commonMain/     ← shared code (Ktor endpoints, Repositories, Utils)
+│       ├── androidMain/    ← Android-only code (OkHttp, EncryptedSharedPreferences)
+│       └── iosMain/        ← iOS-only code (Darwin engine, Settings)
+├── domain/                 ← Business layer (Entities, Use Cases, Interfaces) - KMP Module
 │   └── src/
-│       ├── commonMain/     ← كود مشترك (Models, Interfaces, Validation)
-│       ├── androidMain/    ← كود Android بس (Locale)
-│       └── iosMain/        ← كود iOS بس (NSLocale)
-├── shared/                 ← طبقة الـ UI (Compose Multiplatform) - KMP Module
+│       ├── commonMain/     ← shared code (Models, Interfaces, Validation)
+│       ├── androidMain/    ← Android-only code (Locale)
+│       └── iosMain/        ← iOS-only code (NSLocale)
+├── shared/                 ← UI layer (Compose Multiplatform) - KMP Module
 │   └── src/
-│       ├── commonMain/     ← كود مشترك (Screens, ViewModels, Theme, Navigation)
-│       ├── androidMain/    ← كود Android بس (Firebase, Notifications, Activity)
-│       └── iosMain/        ← كود iOS بس (MainViewController, KoinInit)
+│       ├── commonMain/     ← shared code (Screens, ViewModels, Theme, Navigation)
+│       ├── androidMain/    ← Android-only code (Firebase, Notifications, Activity)
+│       └── iosMain/        ← iOS-only code (MainViewController, KoinInit)
 ├── gradle/
-│   └── libs.versions.toml  ← ملف إدارة الـ dependencies وإصداراتها
+│   └── libs.versions.toml  ← file for managing dependencies and their versions
 ├── build.gradle.kts         ← Root build file
-├── settings.gradle.kts      ← تعريف الموديولات
-└── Config                   ← API keys و URLs
+├── settings.gradle.kts      ← module definitions
+└── Config                   ← API keys and URLs
 ```
 
 ---
 
-## 3. الموديولات الأربعة
+## 3. The Four Modules
 
-المشروع مبني على **Clean Architecture** ومقسم لـ 4 modules:
+The project is built on **Clean Architecture** and split into 4 modules:
 
 ```
 ┌─────────────────────────────────────────────┐
 │                    app                       │
 │         (Android Entry Point)                │
-│              يعتمد على: shared               │
+│              depends on: shared              │
 ├─────────────────────────────────────────────┤
 │                  shared                      │
 │    (UI Layer - Compose Multiplatform)        │
-│         يعتمد على: domain + data             │
+│         depends on: domain + data            │
 ├──────────────────────┬──────────────────────┤
 │        data          │       domain          │
 │   (Data Layer)       │   (Business Layer)    │
-│  يعتمد على: domain   │   مستقل - لا يعتمد   │
-│                      │   على أي module تاني  │
+│  depends on: domain  │   independent - does  │
+│                      │   not depend on any   │
+│                      │   other module        │
 └──────────────────────┴──────────────────────┘
 ```
 
-### القاعدة الذهبية:
+### The Golden Rule:
 
-- **domain** مش بيعتمد على حد ← مستقل تمامًا
-- **data** بيعتمد على domain ← عشان ينفذ الـ interfaces
-- **shared** بيعتمد على domain + data ← عشان يستخدم الكل
-- **app** بيعتمد على shared ← نقطة دخول Android بس
+- **domain** depends on no one ← completely independent
+- **data** depends on domain ← so it can implement the interfaces
+- **shared** depends on domain + data ← so it can use everything
+- **app** depends on shared ← Android entry point only
 
-### ليه الترتيب ده؟
+### Why This Order?
 
-عشان لو غيرت طريقة تخزين البيانات (مثلاً من API لـ Firebase) → تغير data بس.
-لو غيرت الـ UI (مثلاً redesign) → تغير shared بس.
-الـ domain ثابت لأنه البيزنس logic.
+Because if you change how data is stored (e.g., from API to Firebase) → you only change data.
+If you change the UI (e.g., a redesign) → you only change shared.
+The domain stays stable because it is the business logic.
 
 ---
 
-## 4. مفهوم expect/actual
+## 4. The expect/actual Concept
 
-ده من أهم المفاهيم في KMP. لما يكون عندك كود **مشترك** بس محتاج implementation **مختلف** لكل
-platform:
+This is one of the most important concepts in KMP. When you have **shared** code that needs a *
+*different** implementation for each platform:
 
-### إزاي بيشتغل؟
+### How Does It Work?
 
 ```kotlin
-// ──── commonMain (التعريف - "أنا محتاج الحاجة دي") ────
+// ──── commonMain (the declaration - "I need this thing") ────
 expect fun getPlatformLanguage(): String
 
-// ──── androidMain (التنفيذ لـ Android) ────
+// ──── androidMain (the implementation for Android) ────
 actual fun getPlatformLanguage(): String {
-    return java.util.Locale.getDefault().language  // بيستخدم Java API
+    return java.util.Locale.getDefault().language  // uses the Java API
 }
 
-// ──── iosMain (التنفيذ لـ iOS) ────
+// ──── iosMain (the implementation for iOS) ────
 actual fun getPlatformLanguage(): String {
-    return NSLocale.currentLocale.languageCode ?: "en"  // بيستخدم iOS API
+    return NSLocale.currentLocale.languageCode ?: "en"  // uses the iOS API
 }
 ```
 
-### أمثلة من المشروع:
+### Examples from the Project:
 
-| expect (commonMain)                     | Android actual        | iOS actual               |
-|-----------------------------------------|-----------------------|--------------------------|
-| `expect val platformDeviceType: String` | `"android"`           | `"ios"`                  |
-| `expect object AppConfig`               | يقرأ من `BuildConfig` | قيم hardcoded            |
-| `expect fun createPlatformHttpClient()` | `HttpClient(OkHttp)`  | `HttpClient(Darwin)`     |
-| `expect fun getPlatformLanguage()`      | `Locale.getDefault()` | `NSLocale.currentLocale` |
+| expect (commonMain)                     | Android actual           | iOS actual               |
+|-----------------------------------------|--------------------------|--------------------------|
+| `expect val platformDeviceType: String` | `"android"`              | `"ios"`                  |
+| `expect object AppConfig`               | reads from `BuildConfig` | hardcoded values         |
+| `expect fun createPlatformHttpClient()` | `HttpClient(OkHttp)`     | `HttpClient(Darwin)`     |
+| `expect fun getPlatformLanguage()`      | `Locale.getDefault()`    | `NSLocale.currentLocale` |
 
-### متى تستخدم expect/actual؟
+### When Do You Use expect/actual?
 
-- لما تحتاج API خاص بالـ platform (Locale, Keychain, Context)
-- لما تحتاج library مختلفة لكل platform (OkHttp vs Darwin)
-- لما تحتاج config مختلف (BuildConfig vs hardcoded)
+- When you need a platform-specific API (Locale, Keychain, Context)
+- When you need a different library for each platform (OkHttp vs Darwin)
+- When you need a different config (BuildConfig vs hardcoded)
 
 ---
 
-## 5. Source Sets - إيه هي؟
+## 5. Source Sets - What Are They?
 
-كل KMP module عنده **source sets** - يعني مجموعات كود منفصلة:
+Every KMP module has **source sets** - that is, separate groups of code:
 
 ```
 data/src/
-├── commonMain/    ← الكود اللي بيشتغل على كل الـ platforms
-│                    (Kotlin Pure + Multiplatform Libraries)
+├── commonMain/    ← code that runs on all platforms
+│                    (Pure Kotlin + Multiplatform Libraries)
 │
-├── androidMain/   ← الكود اللي بيشتغل على Android بس
+├── androidMain/   ← code that runs on Android only
 │                    (Android APIs + Java Libraries)
 │
-├── iosMain/       ← الكود اللي بيشتغل على iOS بس
+├── iosMain/       ← code that runs on iOS only
 │                    (iOS APIs + Objective-C/Swift Interop)
 │
-└── commonTest/    ← تيستات مشتركة
+└── commonTest/    ← shared tests
 ```
 
-### القواعد:
+### The Rules:
 
-1. `commonMain` **مش** بيقدر يستخدم أي Android أو iOS APIs
-2. `androidMain` بيقدر يستخدم كل حاجة في `commonMain` + Android APIs
-3. `iosMain` بيقدر يستخدم كل حاجة في `commonMain` + iOS APIs
-4. `androidMain` و `iosMain` **مش** بيشوفوا بعض
+1. `commonMain` **cannot** use any Android or iOS APIs
+2. `androidMain` can use everything in `commonMain` + Android APIs
+3. `iosMain` can use everything in `commonMain` + iOS APIs
+4. `androidMain` and `iosMain` **cannot** see each other
 
 ```
          commonMain
         /          \
 androidMain      iosMain
-(يشوف common)   (يشوف common)
-(مش بيشوف iOS)  (مش بيشوف Android)
+(sees common)   (sees common)
+(can't see iOS) (can't see Android)
 ```
 
 ---
 
-## 6. Domain Module - طبقة البيزنس
+## 6. Domain Module - The Business Layer
 
-الـ domain هو **قلب التطبيق** - فيه البيزنس logic والقواعد. مش بيعتمد على أي framework أو library
-خارجية (ماعدا Coroutines و Serialization).
+The domain is the **heart of the app** - it holds the business logic and rules. It does not depend
+on any external framework or library (except Coroutines and Serialization).
 
-### هيكل الملفات:
+### File Structure:
 
 ```
 domain/src/commonMain/kotlin/com/mahalatk/domain/
-├── entity/                    ← الـ Data Models
-│   ├── AuthData.kt            ← بيانات المستخدم بعد Login
-│   ├── LatLngModel.kt         ← بيانات الموقع
+├── entity/                    ← the Data Models
+│   ├── AuthData.kt            ← user data after Login
+│   ├── LatLngModel.kt         ← location data
 │   └── base/
-│       ├── BaseResponse.kt    ← الـ Response wrapper من السيرفر
-│       └── AnyResponse.kt     ← Response فاضي
+│       ├── BaseResponse.kt    ← the Response wrapper from the server
+│       └── AnyResponse.kt     ← empty Response
 │
-├── repository/                ← الـ Interfaces (العقود)
-│   ├── HomeRepository.kt      ← عقد عمليات الـ Home (login)
-│   └── PreferenceRepository.kt ← عقد إدارة الـ Preferences
+├── repository/                ← the Interfaces (the contracts)
+│   ├── HomeRepository.kt      ← contract for Home operations (login)
+│   └── PreferenceRepository.kt ← contract for managing Preferences
 │
-├── usecase/auth/              ← الـ Use Cases (البيزنس Logic)
-│   └── LoginUseCase.kt        ← منطق الـ Login (validation + call)
+├── usecase/auth/              ← the Use Cases (the business logic)
+│   └── LoginUseCase.kt        ← the Login logic (validation + call)
 │
-├── exception/                 ← الـ Exceptions الخاصة
-│   └── ValidationException.kt ← أخطاء التحقق (Phone, Password)
+├── exception/                 ← the custom Exceptions
+│   └── ValidationException.kt ← validation errors (Phone, Password)
 │
-└── util/                      ← أدوات مساعدة
-    ├── Constants.kt           ← ثوابت (أسماء الـ API params, أكواد الأخطاء)
-    ├── DataState.kt           ← حالات البيانات (Success, Error, Loading, Idle)
-    ├── NetworkExceptions.kt   ← أخطاء الشبكة (Timeout, Auth, Server, etc.)
-    ├── CommonValidation.kt    ← التحقق من الـ Phone والـ Password
-    ├── Gson.kt                ← دوال تحويل JSON (toJson, fromJson)
-    ├── TokenCacheManager.kt   ← Interface لإدارة cache الـ Token
-    ├── PlatformLanguage.kt    ← expect function للغة الجهاز
-    └── ResponseStatusConstants.kt ← ثوابت حالة الـ Response
+└── util/                      ← helper utilities
+    ├── Constants.kt           ← constants (API param names, error codes)
+    ├── DataState.kt           ← data states (Success, Error, Loading, Idle)
+    ├── NetworkExceptions.kt   ← network errors (Timeout, Auth, Server, etc.)
+    ├── CommonValidation.kt    ← validation for Phone and Password
+    ├── Gson.kt                ← JSON conversion functions (toJson, fromJson)
+    ├── TokenCacheManager.kt   ← Interface for managing the Token cache
+    ├── PlatformLanguage.kt    ← expect function for the device language
+    └── ResponseStatusConstants.kt ← Response status constants
 ```
 
-### شرح الملفات المهمة:
+### Explanation of the Important Files:
 
-#### DataState.kt - حالات البيانات
+#### DataState.kt - Data States
 
 ```kotlin
-// ده Sealed Class بيعبر عن كل الحالات الممكنة لأي عملية بيانات
+// This is a Sealed Class that expresses all possible states of any data operation
 sealed class DataState<out T> {
-    data class Success<T>(val data: T) : DataState<T>()   // نجاح + البيانات
-    data class Error(val exception: Throwable) : DataState<Nothing>()  // خطأ
-    data object Loading : DataState<Nothing>()              // تحميل
-    data object Idle : DataState<Nothing>()                 // مفيش حاجة حصلت
+    data class Success<T>(val data: T) : DataState<T>()   // success + the data
+    data class Error(val exception: Throwable) : DataState<Nothing>()  // error
+    data object Loading : DataState<Nothing>()              // loading
+    data object Idle : DataState<Nothing>()                 // nothing has happened
 }
 
-// الاستخدام:
-// عملية الـ login بترجع Flow<DataState<BaseResponse<AuthData>>>
-// يعني ممكن ترجع: Loading → Success(data) أو Loading → Error(exception)
+// Usage:
+// the login operation returns Flow<DataState<BaseResponse<AuthData>>>
+// meaning it can return: Loading → Success(data) or Loading → Error(exception)
 ```
 
-#### BaseResponse.kt - الـ Response من السيرفر
+#### BaseResponse.kt - The Response from the Server
 
 ```kotlin
-// كل API response من السيرفر بييجي بالشكل ده:
+// every API response from the server comes in this shape:
 // { "key": 1, "msg": "success", "data": { ... } }
 @Serializable
 data class BaseResponse<T>(
-    @SerialName("key") val key: Int = 0,      // 1 = نجاح, 0 = فشل
-    @SerialName("msg") val msg: String = "",   // رسالة من السيرفر
-    @SerialName("data") val data: T? = null    // البيانات (Generic)
+    @SerialName("key") val key: Int = 0,      // 1 = success, 0 = failure
+    @SerialName("msg") val msg: String = "",   // message from the server
+    @SerialName("data") val data: T? = null    // the data (Generic)
 )
 ```
 
-#### LoginUseCase.kt - منطق الـ Login
+#### LoginUseCase.kt - The Login Logic
 
 ```kotlin
-// الـ Use Case بيعمل حاجتين:
-// 1. يتحقق من صحة البيانات (Validation)
-// 2. يستدعي الـ Repository لو البيانات صحيحة
+// the Use Case does two things:
+// 1. validates the data (Validation)
+// 2. calls the Repository if the data is valid
 class LoginUseCase(private val homeRepository: HomeRepository) {
     suspend operator fun invoke(phone: String, password: String, ...): Flow<DataState<...>> {
         // 1. Validation
         if (!CommonValidation.isValidPhone(phone))
-            throw InValidPhoneException()  // رقم غلط
+            throw InValidPhoneException()  // wrong number
         if (!CommonValidation.isValidPassword(password))
-            throw InValidPasswordException()  // باسورد غلط
+            throw InValidPasswordException()  // wrong password
 
         // 2. API Call
         return homeRepository.login(...)
@@ -291,11 +293,11 @@ class LoginUseCase(private val homeRepository: HomeRepository) {
 }
 ```
 
-#### Repository Interfaces - العقود
+#### Repository Interfaces - The Contracts
 
 ```kotlin
-// ده Interface - يعني "عقد" بيقول "أنا محتاج الوظائف دي"
-// مين هينفذها؟ → Data Module
+// This is an Interface - meaning a "contract" that says "I need these functions"
+// Who implements it? → the Data Module
 interface HomeRepository {
     suspend fun login(
         countryCode: String,
@@ -306,13 +308,13 @@ interface HomeRepository {
     ): Flow<DataState<BaseResponse<AuthData>>>
 }
 
-// ليه Interface مش Class؟
-// عشان Domain مش عايز يعرف "إزاي" البيانات بتتجاب
-// (من API ولا من Database ولا من Cache)
-// هو بس عايز يعرف "إيه" البيانات المتاحة
+// Why an Interface and not a Class?
+// Because the Domain doesn't want to know "how" the data is fetched
+// (from an API, a Database, or a Cache)
+// it only wants to know "what" data is available
 ```
 
-### ملفات Platform-Specific:
+### Platform-Specific Files:
 
 ```
 domain/src/androidMain/
@@ -324,37 +326,37 @@ domain/src/iosMain/
 
 ---
 
-## 7. Data Module - طبقة البيانات
+## 7. Data Module - The Data Layer
 
-الـ Data Module بينفذ الـ interfaces اللي في Domain وبيتعامل مع الـ API والـ Storage.
+The Data Module implements the interfaces defined in Domain and deals with the API and Storage.
 
-### هيكل الملفات:
+### File Structure:
 
 ```
 data/src/
 ├── commonMain/kotlin/com/mahalatk/data/
 │   ├── datasource/
-│   │   ├── PreferenceDataSource.kt      ← Interface للتخزين المحلي
+│   │   ├── PreferenceDataSource.kt      ← Interface for local storage
 │   │   ├── PreferenceDataSourceImpl.kt  ← Implementation (Settings + SecureStorage)
-│   │   └── SecureStorage.kt            ← Interface للتخزين المشفر
+│   │   └── SecureStorage.kt            ← Interface for encrypted storage
 │   │
 │   ├── remote/
 │   │   └── HomeEndPoint.kt             ← API endpoints (login)
 │   │
 │   ├── repository/
-│   │   ├── HomeRepositoryImpl.kt       ← تنفيذ HomeRepository
-│   │   └── PreferenceRepositoryImpl.kt ← تنفيذ PreferenceRepository
+│   │   ├── HomeRepositoryImpl.kt       ← implements HomeRepository
+│   │   └── PreferenceRepositoryImpl.kt ← implements PreferenceRepository
 │   │
 │   ├── util/
-│   │   ├── SafeApiCall.kt              ← غلاف آمن لاستدعاء الـ API
-│   │   ├── NetworkConstants.kt         ← ثوابت الشبكة
-│   │   ├── PreferenceConstants.kt      ← مفاتيح التخزين
-│   │   └── TokenHeaderProvider.kt      ← يوفر الـ Token للـ HTTP headers
+│   │   ├── SafeApiCall.kt              ← safe wrapper for calling the API
+│   │   ├── NetworkConstants.kt         ← network constants
+│   │   ├── PreferenceConstants.kt      ← storage keys
+│   │   └── TokenHeaderProvider.kt      ← provides the Token for the HTTP headers
 │   │
 │   ├── platform/
-│   │   ├── AppConfig.kt               ← expect: إعدادات التطبيق (URLs, Keys)
-│   │   ├── DeviceType.kt              ← expect: نوع الجهاز
-│   │   └── HttpClientFactory.kt       ← expect: إنشاء HttpClient + Common plugins
+│   │   ├── AppConfig.kt               ← expect: app settings (URLs, Keys)
+│   │   ├── DeviceType.kt              ← expect: device type
+│   │   └── HttpClientFactory.kt       ← expect: creating the HttpClient + Common plugins
 │   │
 │   └── di/
 │       └── DataKoinModule.kt          ← Koin modules (common + expect platform)
@@ -363,7 +365,7 @@ data/src/
 │   ├── datasource/
 │   │   └── AndroidSecureStorage.kt    ← EncryptedSharedPreferences
 │   ├── platform/
-│   │   ├── AppConfig.android.kt       ← actual: يقرأ من BuildConfig
+│   │   ├── AppConfig.android.kt       ← actual: reads from BuildConfig
 │   │   ├── DeviceType.android.kt      ← actual: "android"
 │   │   └── HttpClientFactory.android.kt ← actual: OkHttp engine
 │   └── di/
@@ -371,141 +373,141 @@ data/src/
 │
 └── iosMain/kotlin/com/mahalatk/data/
     ├── datasource/
-    │   └── IosSecureStorage.kt        ← Settings (مؤقتاً - المفروض Keychain)
+    │   └── IosSecureStorage.kt        ← Settings (temporarily - should be Keychain)
     ├── platform/
-    │   ├── AppConfig.ios.kt           ← actual: قيم hardcoded
+    │   ├── AppConfig.ios.kt           ← actual: hardcoded values
     │   ├── DeviceType.ios.kt          ← actual: "ios"
     │   └── HttpClientFactory.ios.kt   ← actual: Darwin engine
     └── di/
         └── IosDataModule.kt           ← actual: platform Koin module
 ```
 
-### شرح الملفات المهمة:
+### Explanation of the Important Files:
 
-#### SafeApiCall.kt - الغلاف الآمن
+#### SafeApiCall.kt - The Safe Wrapper
 
 ```kotlin
-// كل API call بيتلف بالدالة دي عشان يتعامل مع الأخطاء بشكل موحد
+// every API call is wrapped with this function to handle errors uniformly
 fun <T> safeApiCall(apiCall: suspend () -> T): Flow<DataState<T>> =
     flow {
-        withTimeout(120000L) {              // ← Timeout بعد دقيقتين
-            val response = apiCall.invoke() // ← ينفذ الـ API call
-            emit(handleSuccess(response))   // ← لو نجح يبعت Success
+        withTimeout(120000L) {              // ← Timeout after two minutes
+            val response = apiCall.invoke() // ← executes the API call
+            emit(handleSuccess(response))   // ← if it succeeds, emit Success
         }
     }
-        .onStart { emit(DataState.Loading) }    // ← أول حاجة يبعت Loading
-        .catch { emit(handleError(it)) }        // ← لو فيه error يبعت Error
-        .flowOn(Dispatchers.Default)            // ← يشتغل على background thread
+        .onStart { emit(DataState.Loading) }    // ← first thing, emit Loading
+        .catch { emit(handleError(it)) }        // ← if there's an error, emit Error
+        .flowOn(Dispatchers.Default)            // ← runs on a background thread
 
-// الترتيب: Loading → Success أو Loading → Error
+// the order: Loading → Success or Loading → Error
 ```
 
-#### SecureStorage - Interface مشترك
+#### SecureStorage - Shared Interface
 
 ```kotlin
-// في commonMain - مجرد interface
+// in commonMain - just an interface
 interface SecureStorage {
     suspend fun getValue(key: String, default: Any?): Flow<Any?>
     suspend fun setValue(key: String, value: Any?)
 }
 
-// في androidMain - التنفيذ باستخدام EncryptedSharedPreferences (مشفر)
+// in androidMain - the implementation using EncryptedSharedPreferences (encrypted)
 class AndroidSecureStorage(context: Context) : SecureStorage {
     private val encryptedSharedPreferences = EncryptedSharedPreferences.create(...)
-    // البيانات بتتخزن مشفرة بـ AES256
+    // the data is stored encrypted with AES256
 }
 
-// في iosMain - التنفيذ باستخدام Settings (مؤقتاً - المفروض Keychain)
+// in iosMain - the implementation using Settings (temporarily - should be Keychain)
 class IosSecureStorage : SecureStorage {
     private val settings = Settings()
-    // البيانات بتتخزن في NSUserDefaults (مش مشفرة)
+    // the data is stored in NSUserDefaults (not encrypted)
 }
 ```
 
-#### PreferenceDataSourceImpl - التوجيه الذكي
+#### PreferenceDataSourceImpl - Smart Routing
 
 ```kotlin
-// بيوجه البيانات الحساسة لـ SecureStorage والباقي لـ Settings العادي
+// routes sensitive data to SecureStorage and the rest to regular Settings
 class PreferenceDataSourceImpl(
-    private val settings: Settings,          // تخزين عادي
-    private val secureStorage: SecureStorage  // تخزين مشفر
+    private val settings: Settings,          // regular storage
+    private val secureStorage: SecureStorage  // encrypted storage
 ) : PreferenceDataSource {
 
     override suspend fun getValue(key: String, default: Any?): Flow<Any?> {
-        // TOKEN و USER_DATA → يروحوا للتخزين المشفر
+        // TOKEN and USER_DATA → go to encrypted storage
         if (key == PreferenceConstants.TOKEN || key == PreferenceConstants.USER_DATA) {
             return secureStorage.getValue(key, default)
         }
-        // باقي البيانات → تخزين عادي
+        // the rest of the data → regular storage
         return flowOf(settings.getStringOrNull(key) ?: default)
     }
 }
 ```
 
-#### HttpClientFactory - إنشاء الـ HTTP Client
+#### HttpClientFactory - Creating the HTTP Client
 
 ```kotlin
-// في commonMain - الـ plugins المشتركة
+// in commonMain - the shared plugins
 fun HttpClientConfig<*>.installCommonPlugins(json: Json, baseUrl: String) {
-    install(ContentNegotiation) { json(json) }  // ← تحويل JSON تلقائي
-    install(Logging) { level = LogLevel.BODY }   // ← طباعة الـ requests/responses
+    install(ContentNegotiation) { json(json) }  // ← automatic JSON conversion
+    install(Logging) { level = LogLevel.BODY }   // ← print requests/responses
     defaultRequest {
-        url("$baseUrl/api/")                     // ← Base URL لكل الـ requests
-        header("lang", getPlatformLanguage())    // ← لغة الجهاز في كل request
+        url("$baseUrl/api/")                     // ← Base URL for all requests
+        header("lang", getPlatformLanguage())    // ← device language on every request
     }
 }
 
-// في androidMain
+// in androidMain
 actual fun createPlatformHttpClient(json: Json, baseUrl: String): HttpClient {
-    return HttpClient(OkHttp) {                  // ← محرك OkHttp
+    return HttpClient(OkHttp) {                  // ← OkHttp engine
         engine {
             config {
                 connectTimeout(120000, TimeUnit.MILLISECONDS)
                 readTimeout(120000, TimeUnit.MILLISECONDS)
             }
         }
-        installCommonPlugins(json, baseUrl)       // ← نفس الـ plugins المشتركة
+        installCommonPlugins(json, baseUrl)       // ← the same shared plugins
     }
 }
 
-// في iosMain
+// in iosMain
 actual fun createPlatformHttpClient(json: Json, baseUrl: String): HttpClient {
-    return HttpClient(Darwin) {                   // ← محرك Darwin (iOS)
+    return HttpClient(Darwin) {                   // ← Darwin engine (iOS)
         engine {
             configureRequest { setTimeoutInterval(120.0) }
         }
-        installCommonPlugins(json, baseUrl)        // ← نفس الـ plugins المشتركة
+        installCommonPlugins(json, baseUrl)        // ← the same shared plugins
     }
 }
 ```
 
-#### TokenHeaderProvider - إدارة الـ Token
+#### TokenHeaderProvider - Managing the Token
 
 ```kotlin
-// بيخزن الـ Token في الذاكرة (cache) عشان مش كل request يروح يقرأ من الـ storage
+// caches the Token in memory so that not every request reads from storage
 class TokenHeaderProvider(
     private val preferenceRepository: PreferenceRepository
 ) : TokenCacheManager {
 
     @Volatile
-    private var cachedToken: String = ""  // ← الـ token محفوظ في الذاكرة
+    private var cachedToken: String = ""  // ← the token kept in memory
 
     fun getToken(): String {
         return if (cachedToken.isNotEmpty()) "Bearer $cachedToken" else ""
     }
 
     override fun refreshTokenCache() {
-        // بيقرأ الـ token من الـ storage ويحفظه في الـ cache
+        // reads the token from storage and saves it in the cache
         scope.launch { cachedToken = preferenceRepository.getToken().first() }
     }
 }
 
-// بيتضاف تلقائي في كل HTTP request عن طريق interceptor:
+// it's added automatically to every HTTP request via an interceptor:
 fun HttpClient.installTokenInterceptor(tokenProvider: TokenHeaderProvider) {
     plugin(HttpSend).intercept { request ->
         val token = tokenProvider.getToken()
         if (token.isNotEmpty()) {
-            request.headers["Authorization"] = token  // ← يضيف Bearer token
+            request.headers["Authorization"] = token  // ← adds the Bearer token
         }
         execute(request)
     }
@@ -514,133 +516,133 @@ fun HttpClient.installTokenInterceptor(tokenProvider: TokenHeaderProvider) {
 
 ---
 
-## 8. Shared Module - طبقة الـ UI
+## 8. Shared Module - The UI Layer
 
-الـ Shared Module فيه كل الـ UI بتاع التطبيق مكتوب بـ Compose Multiplatform.
+The Shared Module contains all the app's UI written in Compose Multiplatform.
 
-### هيكل الملفات:
+### File Structure:
 
 ```
 shared/src/commonMain/kotlin/com/mahalatk/
 ├── ui/
 │   ├── theme/
-│   │   ├── Color.kt          ← ألوان التطبيق (Light + Dark mode)
-│   │   ├── Type.kt           ← Typography (أحجام وأنواع الخطوط)
-│   │   ├── Theme.kt          ← الـ Theme الرئيسي
-│   │   └── Dimensions.kt     ← مقاسات ثابتة (Spacing, Padding, etc.)
+│   │   ├── Color.kt          ← app colors (Light + Dark mode)
+│   │   ├── Type.kt           ← Typography (font sizes and types)
+│   │   ├── Theme.kt          ← the main Theme
+│   │   └── Dimensions.kt     ← fixed sizes (Spacing, Padding, etc.)
 │   │
 │   ├── navigation/
-│   │   ├── Route.kt          ← تعريف كل الـ Screens
-│   │   ├── AppNavigator.kt   ← إدارة الـ back stack
-│   │   ├── AppNavigation.kt  ← الـ App() الرئيسي (Scaffold + Navigation)
-│   │   ├── NavigationContent.kt ← ربط كل Route بالـ Screen بتاعته
-│   │   ├── BottomNavBar.kt   ← الـ Bottom Navigation
-│   │   ├── ScreenConfig.kt   ← إعدادات كل شاشة (toolbar, padding)
-│   │   └── MainViewModel.kt  ← الـ ViewModel الرئيسي
+│   │   ├── Route.kt          ← definition of all Screens
+│   │   ├── AppNavigator.kt   ← manages the back stack
+│   │   ├── AppNavigation.kt  ← the main App() (Scaffold + Navigation)
+│   │   ├── NavigationContent.kt ← links each Route to its Screen
+│   │   ├── BottomNavBar.kt   ← the Bottom Navigation
+│   │   ├── ScreenConfig.kt   ← settings for each screen (toolbar, padding)
+│   │   └── MainViewModel.kt  ← the main ViewModel
 │   │
 │   ├── managers/
-│   │   ├── LoadingManager.kt  ← إدارة حالة التحميل العامة
-│   │   ├── MessageManager.kt  ← إدارة الرسائل (Snackbar)
-│   │   └── SessionManager.kt  ← إدارة الجلسة (Auth failures, etc.)
+│   │   ├── LoadingManager.kt  ← manages the global loading state
+│   │   ├── MessageManager.kt  ← manages messages (Snackbar)
+│   │   └── SessionManager.kt  ← manages the session (Auth failures, etc.)
 │   │
 │   ├── base/
-│   │   ├── BaseViewModel.kt          ← الـ Base لكل ViewModels
-│   │   ├── BaseState.kt              ← الـ State الأساسي
-│   │   └── SessionAwareViewModel.kt  ← ViewModel بيراقب الجلسة
+│   │   ├── BaseViewModel.kt          ← the Base for all ViewModels
+│   │   ├── BaseState.kt              ← the base State
+│   │   └── SessionAwareViewModel.kt  ← ViewModel that watches the session
 │   │
 │   └── util/
-│       ├── NetworkExtensions.kt ← Extensions للتعامل مع DataState
-│       ├── Constants.kt        ← ثوابت (ARABIC, ENGLISH)
-│       ├── StringKeys.kt       ← مفاتيح الرسائل
-│       ├── UIMessage.kt        ← أنواع الرسائل
-│       └── Logger.kt           ← expect: دالة اللوج
+│       ├── NetworkExtensions.kt ← Extensions for dealing with DataState
+│       ├── Constants.kt        ← constants (ARABIC, ENGLISH)
+│       ├── StringKeys.kt       ← message keys
+│       ├── UIMessage.kt        ← message types
+│       └── Logger.kt           ← expect: the log function
 │
 ├── common/component/
-│   ├── text/DefaultText.kt        ← مكون النص الموحد
-│   ├── textfield/DefaultTextField.kt ← مكون حقل الإدخال الموحد
-│   ├── toolbar/DefaultToolBar.kt   ← مكون الـ Toolbar الموحد
-│   └── noRippleClickable.kt       ← Modifier بدون تأثير الضغط
+│   ├── text/DefaultText.kt        ← the unified text component
+│   ├── textfield/DefaultTextField.kt ← the unified input field component
+│   ├── toolbar/DefaultToolBar.kt   ← the unified Toolbar component
+│   └── noRippleClickable.kt       ← Modifier without the press ripple effect
 │
 ├── features/
 │   ├── splash/
-│   │   ├── SplashScreen.kt    ← شاشة البداية (1.5 ثانية)
-│   │   └── SplashViewModel.kt ← ViewModel شاشة البداية
+│   │   ├── SplashScreen.kt    ← the splash screen (1.5 seconds)
+│   │   └── SplashViewModel.kt ← splash screen ViewModel
 │   │
 │   └── auth/login/
-│       ├── LoginScreen.kt     ← شاشة تسجيل الدخول
-│       ├── LoginViewModel.kt  ← ViewModel تسجيل الدخول
-│       └── LoginState.kt      ← حالة شاشة الـ Login
+│       ├── LoginScreen.kt     ← the login screen
+│       ├── LoginViewModel.kt  ← login ViewModel
+│       └── LoginState.kt      ← the Login screen state
 │
 ├── fcm/
-│   ├── FcmEventHandler.kt    ← معالج أحداث الإشعارات
-│   ├── NotificationItem.kt   ← نموذج الإشعار
-│   └── NotificationKey.kt    ← أنواع الإشعارات
+│   ├── FcmEventHandler.kt    ← notification event handler
+│   ├── NotificationItem.kt   ← the notification model
+│   └── NotificationKey.kt    ← notification types
 │
 ├── di/
-│   ├── SharedKoinModule.kt   ← تسجيل المكونات المشتركة (ViewModels, Managers)
-│   └── UseCaseModule.kt      ← تسجيل الـ Use Cases
+│   ├── SharedKoinModule.kt   ← registers the shared components (ViewModels, Managers)
+│   └── UseCaseModule.kt      ← registers the Use Cases
 │
-├── Platform.kt               ← expect: اسم الـ Platform
-└── App.kt                    ← نقطة الدخول المشتركة
+├── Platform.kt               ← expect: the Platform name
+└── App.kt                    ← the shared entry point
 ```
 
-### شرح الملفات المهمة:
+### Explanation of the Important Files:
 
-#### Route.kt - تعريف الشاشات
+#### Route.kt - Screen Definitions
 
 ```kotlin
-// كل شاشة في التطبيق ليها Route
+// every screen in the app has a Route
 sealed interface Route {
-    data object Splash : Route                          // شاشة البداية
-    data object Login : Route                           // تسجيل الدخول
-    data object Home : Route                            // الرئيسية
-    data object More : Route                            // المزيد
-    data class PickLocation(val latLng: LatLngModel?) : Route  // اختيار موقع
-    data class Chat(val roomId: String, val title: String) : Route  // الشات
+    data object Splash : Route                          // the splash screen
+    data object Login : Route                           // login
+    data object Home : Route                            // home
+    data object More : Route                            // more
+    data class PickLocation(val latLng: LatLngModel?) : Route  // pick a location
+    data class Chat(val roomId: String, val title: String) : Route  // the chat
 }
 ```
 
-#### AppNavigator.kt - إدارة التنقل
+#### AppNavigator.kt - Managing Navigation
 
 ```kotlin
-// بيدير الـ back stack (قائمة الشاشات المفتوحة)
+// manages the back stack (the list of open screens)
 class AppNavigator {
     private val _backStack = mutableStateListOf<Route>(Route.Splash)
     val currentRoute: Route get() = _backStack.last()
 
     fun push(route: Route) {
         _backStack.add(route)
-    }      // فتح شاشة جديدة
+    }      // open a new screen
     fun pop() {
         if (_backStack.size > 1) _backStack.removeLast()
-    }  // رجوع
-    fun replaceAll(route: Route) {                          // استبدال كل الشاشات
+    }  // go back
+    fun replaceAll(route: Route) {                          // replace all screens
         _backStack.clear()
         _backStack.add(route)
     }
 }
 ```
 
-#### BaseViewModel.kt - الـ ViewModel الأساسي
+#### BaseViewModel.kt - The Base ViewModel
 
 ```kotlin
-// كل ViewModel في التطبيق بيورث من هنا
+// every ViewModel in the app inherits from here
 abstract class BaseViewModel<UiState>(
     initialState: UiState,
     private val loadingManager: LoadingManager,
     private val messageManager: MessageManager
 ) : ViewModel() {
 
-    // الحالة الحالية للشاشة
+    // the current state of the screen
     private val _state = MutableStateFlow(initialState)
     val state: StateFlow<UiState> = _state.asStateFlow()
 
-    // تحديث الحالة
+    // update the state
     protected fun updateState(update: UiState.() -> UiState) {
         _state.update { it.update() }
     }
 
-    // تنفيذ عملية مع إدارة Loading + Error تلقائياً
+    // execute an operation with automatic Loading + Error management
     protected fun executeNetworkAction(action: suspend () -> Unit) {
         viewModelScope.launch {
             try {
@@ -653,14 +655,14 @@ abstract class BaseViewModel<UiState>(
 }
 ```
 
-#### LoginViewModel.kt - مثال كامل
+#### LoginViewModel.kt - A Complete Example
 
 ```kotlin
 class LoginViewModel(
     loadingManager: LoadingManager,
     messageManager: MessageManager,
     sessionManager: SessionManager,
-    private val loginUseCase: LoginUseCase,        // Use Case من Domain
+    private val loginUseCase: LoginUseCase,        // Use Case from Domain
     private val preferenceRepository: PreferenceRepository,
     private val tokenCacheManager: TokenCacheManager
 ) : SessionAwareViewModel<LoginState>(
@@ -676,15 +678,15 @@ class LoginViewModel(
                 phone = state.value.mobile,
                 password = state.value.password,
                 ...
-            ).applyCommonSideEffects(this@LoginViewModel)  // يدير Loading/Error تلقائي
+            ).applyCommonSideEffects(this@LoginViewModel)  // manages Loading/Error automatically
             .collect { dataState ->
             when (dataState) {
                 is DataState.Success -> {
-                    // حفظ Token
+                    // save the Token
                     preferenceRepository.setToken(dataState.data.data?.token ?: "")
                     tokenCacheManager.refreshTokenCache()
                     preferenceRepository.setIsLogin(true)
-                    // الانتقال للشاشة الرئيسية
+                    // navigate to the home screen
                 }
                 else -> {}
             }
@@ -694,7 +696,7 @@ class LoginViewModel(
 }
 ```
 
-#### LoginScreen.kt - شاشة الـ Login
+#### LoginScreen.kt - The Login Screen
 
 ```kotlin
 @Composable
@@ -702,14 +704,14 @@ fun LoginScreen(viewModel: LoginViewModel, navigator: AppNavigator) {
     val state by viewModel.state.collectAsState()
 
     Column {
-        // حقل رقم الموبايل
+        // mobile number field
         DefaultTextField(
             value = state.mobile,
             onValueChange = { viewModel.updateMobile(it) },
             placeholder = "Phone Number"
         )
 
-        // حقل الباسورد
+        // password field
         DefaultTextField(
             value = state.password,
             onValueChange = { viewModel.updatePassword(it) },
@@ -717,7 +719,7 @@ fun LoginScreen(viewModel: LoginViewModel, navigator: AppNavigator) {
             isPassword = true
         )
 
-        // زر تسجيل الدخول
+        // login button
         Button(onClick = { viewModel.login() }) {
             Text("Login")
         }
@@ -727,45 +729,46 @@ fun LoginScreen(viewModel: LoginViewModel, navigator: AppNavigator) {
 
 ---
 
-## 9. App Module - نقطة دخول Android
+## 9. App Module - Android Entry Point
 
-أبسط module - مجرد نقطة دخول لتطبيق Android:
+The simplest module - just an entry point for the Android app:
 
 ```
 app/
 └── src/main/
-    ├── AndroidManifest.xml    ← تعريف التطبيق والصلاحيات
+    ├── AndroidManifest.xml    ← app and permissions definition
     └── res/                   ← Resources (icons, strings)
 ```
 
-الـ `app` module بيعتمد على `shared` بس، وكل الشغل الفعلي في `shared`.
+The `app` module depends only on `shared`, and all the real work is in `shared`.
 
 ---
 
-## 10. Dependency Injection مع Koin
+## 10. Dependency Injection with Koin
 
-### إيه هو Dependency Injection (DI)؟
+### What is Dependency Injection (DI)?
 
-بدل ما كل class يعمل `new` للـ dependencies بتاعته، بنسجلهم في مكان واحد و Koin بيوصلهم ببعض:
+Instead of every class calling `new` for its dependencies, we register them in one place and Koin
+wires them together:
 
 ```kotlin
-// ❌ بدون DI:
+// ❌ Without DI:
 class LoginViewModel {
     val useCase = LoginUseCase(HomeRepositoryImpl(HomeEndPoint(HttpClient())))
-    // لازم تعرف كل الـ chain!
+    // you have to know the whole chain!
 }
 
-// ✅ مع DI (Koin):
-class LoginViewModel(val useCase: LoginUseCase)  // Koin بيوفره تلقائي
+// ✅ With DI (Koin):
+class LoginViewModel(val useCase: LoginUseCase)  // Koin provides it automatically
 ```
 
-### هيكل الـ Koin Modules:
+### Structure of the Koin Modules:
 
 ```
 ┌─────────────────────────────────────────────┐
 │              platformDataModule              │
-│  (Android: SecureStorage مع EncryptedPrefs)  │
-│  (iOS: SecureStorage مع Settings)            │
+│  (Android: SecureStorage with EncryptedPrefs)│
+│  (iOS: SecureStorage with Settings)          │
 ├─────────────────────────────────────────────┤
 │              commonDataModule                │
 │  Json, Settings, PreferenceDataSource,       │
@@ -781,42 +784,42 @@ class LoginViewModel(val useCase: LoginUseCase)  // Koin بيوفره تلقائ
 │  MainViewModel, SplashViewModel,             │
 │  LoginViewModel                              │
 ├─────────────────────────────────────────────┤
-│       appModule (Android فقط)                │
+│       appModule (Android only)               │
 │  NotificationHandler                         │
 └─────────────────────────────────────────────┘
 ```
 
-### إزاي بيشتغل؟
+### How Does It Work?
 
 ```kotlin
-// 1. تسجيل (Registration) - في DataKoinModule.kt:
+// 1. Registration - in DataKoinModule.kt:
 val commonDataModule = module {
-    single { Json { ignoreUnknownKeys = true } }           // instance واحد
-    single<HomeRepository> { HomeRepositoryImpl(get()) }   // get() = Koin يجيب HomeEndPoint
-    single { HomeEndPoint(get()) }                         // get() = Koin يجيب HttpClient
+    single { Json { ignoreUnknownKeys = true } }           // a single instance
+    single<HomeRepository> { HomeRepositoryImpl(get()) }   // get() = Koin fetches HomeEndPoint
+    single { HomeEndPoint(get()) }                         // get() = Koin fetches HttpClient
 }
 
-// 2. تسجيل الـ ViewModels - في SharedKoinModule.kt:
+// 2. Registering the ViewModels - in SharedKoinModule.kt:
 val sharedModule = module {
     viewModel { LoginViewModel(get(), get(), get(), get(), get(), get()) }
-    // كل get() → Koin بيجيب الـ dependency المناسبة تلقائي
+    // each get() → Koin fetches the appropriate dependency automatically
 }
 
-// 3. الاستخدام - في الـ Composable:
+// 3. Usage - in the Composable:
 @Composable
 fun LoginScreen() {
-    val viewModel = koinViewModel<LoginViewModel>()  // Koin بيعمل inject تلقائي
+    val viewModel = koinViewModel<LoginViewModel>()  // Koin injects automatically
 }
 ```
 
-### إزاي بيتعمل Init؟
+### How Is Init Done?
 
 ```kotlin
 // ── Android (App.kt) ──
 class App : Application() {
     override fun onCreate() {
         startKoin {
-            androidContext(this@App)          // ← ده بيوفر Android Context
+            androidContext(this@App)          // ← this provides the Android Context
             modules(
                 platformDataModule,            // ← Platform-specific (SecureStorage)
                 commonDataModule,              // ← Common data (Repositories, API)
@@ -832,56 +835,56 @@ class App : Application() {
 object KoinInitHelper {
     fun doInitKoin() {
         startKoin {
-            // مفيش androidContext هنا!
+            // no androidContext here!
             modules(
                 platformDataModule,            // ← Platform-specific (iOS SecureStorage)
-                commonDataModule,              // ← نفس الـ common modules
+                commonDataModule,              // ← the same common modules
                 useCaseModule,
                 sharedModule
-                // مفيش appModule - ده Android بس
+                // no appModule - that's Android only
             )
         }
     }
 }
 ```
 
-### أنواع التسجيل في Koin:
+### Types of Registration in Koin:
 
-| النوع       | الشرح                                   | مثال                                |
-|-------------|-----------------------------------------|-------------------------------------|
-| `single`    | instance واحد في كل التطبيق (Singleton) | `single { Json { ... } }`           |
-| `factory`   | instance جديد كل مرة                    | `factory { LoginUseCase(get()) }`   |
-| `viewModel` | مربوط بـ lifecycle الشاشة               | `viewModel { LoginViewModel(...) }` |
+| Type        | Explanation                                   | Example                             |
+|-------------|-----------------------------------------------|-------------------------------------|
+| `single`    | one instance across the whole app (Singleton) | `single { Json { ... } }`           |
+| `factory`   | a new instance each time                      | `factory { LoginUseCase(get()) }`   |
+| `viewModel` | bound to the screen's lifecycle               | `viewModel { LoginViewModel(...) }` |
 
 ---
 
 ## 11. Navigation System
 
-### إزاي الـ Navigation بيشتغل؟
+### How Does Navigation Work?
 
-التطبيق بيستخدم **Custom Navigator** مبني يدوي (مش Jetpack Navigation):
+The app uses a **Custom Navigator** built by hand (not Jetpack Navigation):
 
 ```kotlin
-// 1. AppNavigator بيدير stack من الشاشات:
+// 1. AppNavigator manages a stack of screens:
 //    [Splash] → push(Login) → [Splash, Login] → replaceAll(Home) → [Home]
 
-// 2. AppNavigation.kt هو الـ Root Composable:
+// 2. AppNavigation.kt is the Root Composable:
 @Composable
 fun App() {
     val navigator = remember { AppNavigator() }
 
     BaseTheme {
         Scaffold(
-            topBar = { DefaultToolBar(...) },       // ← الـ Toolbar
+            topBar = { DefaultToolBar(...) },       // ← the Toolbar
             bottomBar = { BottomNavBar(...) },      // ← Bottom Navigation
-            snackbarHost = { ... }                  // ← رسائل الخطأ
+            snackbarHost = { ... }                  // ← error messages
         ) {
-            NavigationContent(navigator)             // ← محتوى الشاشة الحالية
+            NavigationContent(navigator)             // ← content of the current screen
         }
     }
 }
 
-// 3. NavigationContent بيعرض الشاشة المناسبة:
+// 3. NavigationContent displays the appropriate screen:
 @Composable
 fun NavigationContent(navigator: AppNavigator) {
     Crossfade(targetState = navigator.currentRoute) { route ->
@@ -898,15 +901,15 @@ fun NavigationContent(navigator: AppNavigator) {
 }
 ```
 
-### ScreenConfig - إعدادات كل شاشة:
+### ScreenConfig - Settings for Each Screen:
 
 ```kotlin
-// كل شاشة ليها إعدادات مختلفة للـ Toolbar والـ Bottom Bar
+// each screen has different settings for the Toolbar and the Bottom Bar
 fun getScreenConfig(route: Route): ScreenConfig = when (route) {
     is Route.Splash -> ScreenConfig(
-        toolbarState = ToolbarState.Hidden,     // مفيش toolbar
+        toolbarState = ToolbarState.Hidden,     // no toolbar
         applyTopPadding = false,
-        showBottomBar = false                   // مفيش bottom bar
+        showBottomBar = false                   // no bottom bar
     )
     is Route.Login -> ScreenConfig(
         toolbarState = ToolbarState.AuthTitleWithBack("Login"),
@@ -914,7 +917,7 @@ fun getScreenConfig(route: Route): ScreenConfig = when (route) {
     )
     is Route.Home -> ScreenConfig(
         toolbarState = ToolbarState.TitleWithNotification("Home"),
-        showBottomBar = true                    // فيه bottom bar
+        showBottomBar = true                    // has a bottom bar
     )
 }
 ```
@@ -923,71 +926,72 @@ fun getScreenConfig(route: Route): ScreenConfig = when (route) {
 
 ## 12. Network Layer
 
-### إزاي الـ API Calls بتشتغل؟
+### How Do API Calls Work?
 
 ```
-المستخدم يضغط Login
+the user presses Login
         ↓
 LoginViewModel.login()
         ↓
 LoginUseCase.invoke(phone, password)
         ↓ (Validation ✓)
-HomeRepository.login(...)               ← Interface في Domain
+HomeRepository.login(...)               ← Interface in Domain
         ↓
-HomeRepositoryImpl.login(...)           ← Implementation في Data
+HomeRepositoryImpl.login(...)           ← Implementation in Data
         ↓
-safeApiCall {                           ← غلاف آمن
+safeApiCall {                           ← safe wrapper
     homeEndPoint.login(...)             ← Ktor HTTP call
 }
         ↓
 HttpClient (OkHttp/Darwin)
-        ↓ (+ Token Header تلقائي)
+        ↓ (+ Token Header automatically)
 POST https://ninety-sheets.com/api/sign-in
         ↓
 Flow<DataState<BaseResponse<AuthData>>>
    ↓ Loading
-   ↓ Success(data) أو Error(exception)
+   ↓ Success(data) or Error(exception)
 ```
 
 ### Ktor HttpClient:
 
 ```kotlin
-// Ktor هو HTTP client متعدد المنصات
-// بدل OkHttp (Android فقط) أو URLSession (iOS فقط)
-// Ktor بيشتغل على الاتنين
+// Ktor is a multiplatform HTTP client
+// instead of OkHttp (Android only) or URLSession (iOS only)
+// Ktor works on both
 
-// الـ Engine مختلف لكل platform:
-// Android → OkHttp (سريع ومستقر على Android)
-// iOS → Darwin (مبني على URLSession بتاع Apple)
+// the Engine differs per platform:
+// Android → OkHttp (fast and stable on Android)
+// iOS → Darwin (built on Apple's URLSession)
 
-// لكن الـ API calls نفسها في commonMain:
+// but the API calls themselves are in commonMain:
 class HomeEndPoint(private val client: HttpClient) {
     suspend fun login(...): BaseResponse<AuthData> =
         client.submitForm(
-            url = "sign-in",                    // ← relative URL (Base URL متعرف في defaultRequest)
+            url = "sign-in",                    // ← relative URL (Base URL defined in defaultRequest)
             formParameters = parameters {
                 append("phone", phone)
                 append("password", password)
                 // ...
             }
-        ).body()                                // ← يحول الـ JSON لـ Kotlin object تلقائي
+        )
+            .body()                                // ← converts the JSON to a Kotlin object automatically
 }
 ```
 
-### الـ Plugins المثبتة:
+### The Installed Plugins:
 
-| Plugin                 | الوظيفة                                        |
-|------------------------|------------------------------------------------|
-| `ContentNegotiation`   | تحويل JSON ↔ Kotlin objects تلقائي             |
-| `Logging`              | طباعة كل الـ requests/responses في الـ console |
-| `defaultRequest`       | إضافة Base URL + Language header لكل request   |
-| `HttpSend interceptor` | إضافة Authorization (Bearer token) لكل request |
+| Plugin                 | Function                                           |
+|------------------------|----------------------------------------------------|
+| `ContentNegotiation`   | automatic JSON ↔ Kotlin objects conversion         |
+| `Logging`              | prints all requests/responses to the console       |
+| `defaultRequest`       | adds Base URL + Language header to every request   |
+| `HttpSend interceptor` | adds Authorization (Bearer token) to every request |
 
 ---
 
 ## 13. State Management
 
-### الـ Flow من الـ API للـ UI:
+### The Flow from the API to the UI:
 
 ```
 API Response
@@ -1000,45 +1004,45 @@ ViewModel.state       ← StateFlow<UiState>
     ↓
 Composable            ← collectAsState()
     ↓
-UI يتحدث تلقائي
+the UI updates automatically
 ```
 
-### مثال عملي:
+### A Practical Example:
 
 ```kotlin
-// 1. الـ ViewModel بيجمع DataState:
+// 1. the ViewModel collects DataState:
 fun login() {
     executeNetworkAction {
         loginUseCase(phone, password)
-            .applyCommonSideEffects(this)    // ← يدير Loading/Error تلقائي
+            .applyCommonSideEffects(this)    // ← manages Loading/Error automatically
             .collect { state ->
                 when (state) {
-                    is DataState.Loading -> { /* LoadingManager بيشتغل تلقائي */
+                    is DataState.Loading -> { /* LoadingManager works automatically */
                     }
-                    is DataState.Success -> { /* حفظ الـ token + navigate */
+                    is DataState.Success -> { /* save the token + navigate */
                     }
-                    is DataState.Error -> { /* MessageManager بيعرض الخطأ */
+                    is DataState.Error -> { /* MessageManager shows the error */
                     }
-                    is DataState.Idle -> { /* مفيش حاجة */
+                    is DataState.Idle -> { /* nothing */
                     }
                 }
             }
     }
 }
 
-// 2. الـ UI بيراقب الحالة:
+// 2. the UI watches the state:
 @Composable
 fun LoginScreen(viewModel: LoginViewModel) {
     val state by viewModel.state.collectAsState()
     // state.mobile, state.password, etc.
-    // كل ما الحالة تتغير → الـ UI يتحدث تلقائي
+    // whenever the state changes → the UI updates automatically
 }
 ```
 
-### الـ Managers:
+### The Managers:
 
 ```kotlin
-// LoadingManager - بيدير Loading عام للتطبيق كله
+// LoadingManager - manages a global loading state for the whole app
 class LoadingManager {
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
@@ -1050,10 +1054,10 @@ class LoadingManager {
         _isLoading.value = false
     }
 }
-// في AppNavigation.kt:
+// in AppNavigation.kt:
 // if (isLoading) CircularProgressIndicator()
 
-// MessageManager - بيعرض Snackbar messages
+// MessageManager - displays Snackbar messages
 class MessageManager {
     private val _messages = MutableSharedFlow<UIMessage>()
     suspend fun showMessage(message: UIMessage) {
@@ -1061,39 +1065,39 @@ class MessageManager {
     }
 }
 
-// SessionManager - بيدير الجلسة
+// SessionManager - manages the session
 class SessionManager {
-    val authFailure: StateFlow<Boolean>   // Token انتهى
-    val blocked: StateFlow<Boolean>        // الحساب اتحظر
-    val fcmUpdate: StateFlow<String?>     // FCM token اتحدث
+    val authFailure: StateFlow<Boolean>   // Token expired
+    val blocked: StateFlow<Boolean>        // the account was blocked
+    val fcmUpdate: StateFlow<String?>     // FCM token was updated
 }
 ```
 
 ---
 
-## 14. Theme و Design System
+## 14. Theme and Design System
 
-### الألوان:
+### The Colors:
 
 ```kotlin
-// Color.kt - كل الألوان معرفة كـ tokens
+// Color.kt - all colors defined as tokens
 object ColorLightTokens {
-    val Primary = Color(0xFF4E9FE0)        // أزرق - اللون الرئيسي
-    val Secondary = Color(0xFF543592)      // بنفسجي
-    val Error = Color(0xFFBA1A1A)          // أحمر للأخطاء
-    val Background = Color(0xFFF5F5F5)     // خلفية فاتحة
+    val Primary = Color(0xFF4E9FE0)        // blue - the primary color
+    val Secondary = Color(0xFF543592)      // purple
+    val Error = Color(0xFFBA1A1A)          // red for errors
+    val Background = Color(0xFFF5F5F5)     // light background
 }
 
 object ColorDarkTokens {
-    val Primary = Color(0xFF9ECAFF)        // أزرق فاتح في Dark Mode
+    val Primary = Color(0xFF9ECAFF)        // light blue in Dark Mode
     // ...
 }
 ```
 
-### المقاسات:
+### The Dimensions:
 
 ```kotlin
-// Dimensions.kt - مقاسات ثابتة عشان التصميم يكون consistent
+// Dimensions.kt - fixed sizes so the design is consistent
 object Spacing {
     val xxxSmall = 2.dp
     val xxSmall = 4.dp
@@ -1109,11 +1113,11 @@ object CornerRadius {
     val small = 8.dp
     val medium = 12.dp
     val large = 16.dp
-    val full = 100.dp    // دائري بالكامل
+    val full = 100.dp    // fully circular
 }
 ```
 
-### الـ Theme:
+### The Theme:
 
 ```kotlin
 // Theme.kt
@@ -1131,18 +1135,18 @@ fun BaseTheme(
     )
 }
 
-// الاستخدام:
+// Usage:
 BaseTheme {
-    // كل الـ composables جوا هنا بتستخدم الألوان والخطوط المعرفة
+    // all composables inside here use the defined colors and fonts
     Text("Hello", color = MaterialTheme.colorScheme.primary)
 }
 ```
 
 ---
 
-## 15. Firebase و Push Notifications
+## 15. Firebase and Push Notifications
 
-### إزاي الإشعارات بتشتغل؟
+### How Do Notifications Work?
 
 ```
 ┌──────────────────────────────────────────────┐
@@ -1159,24 +1163,25 @@ BaseTheme {
    Receiver.kt         .kt
              ↓              ↓
         ┌──────────────────────┐
-        │   FcmEventHandler    │  ← commonMain (مشترك)
-        │  (يحلل الإشعار +    │
-        │   يحدث الـ Session)  │
+        │   FcmEventHandler    │  ← commonMain (shared)
+        │  (parses the         │
+        │   notification +     │
+        │   updates Session)   │
         └──────────────────────┘
 ```
 
 ### Android:
 
 ```kotlin
-// FirebaseMessagingReceiver.kt - بيستقبل الإشعارات
+// FirebaseMessagingReceiver.kt - receives the notifications
 class FirebaseMessagingReceiver : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
-        // 1. يبعت البيانات لـ NotificationHandler عشان يعرض notification
-        // 2. يبعت البيانات لـ FcmEventHandler عشان يحدث الـ app state
+        // 1. sends the data to NotificationHandler to display a notification
+        // 2. sends the data to FcmEventHandler to update the app state
     }
 
     override fun onNewToken(token: String) {
-        // يحفظ الـ FCM token الجديد في الـ preferences
+        // saves the new FCM token in the preferences
     }
 }
 ```
@@ -1184,22 +1189,22 @@ class FirebaseMessagingReceiver : FirebaseMessagingService() {
 ### iOS:
 
 ```kotlin
-// IosFcmHandler.kt - bridge بين Swift و Kotlin
+// IosFcmHandler.kt - a bridge between Swift and Kotlin
 class IosFcmHandler(private val fcmEventHandler: FcmEventHandler) {
     fun onNotificationReceived(data: Map<String, String>) {
         fcmEventHandler.handleNotificationData(data)
     }
 }
 
-// في Swift:
+// in Swift:
 // let handler = IosKoinHelper().getFcmHandler()
 // handler.onNotificationReceived(data: notificationData)
 ```
 
-### FcmEventHandler (مشترك):
+### FcmEventHandler (shared):
 
 ```kotlin
-// بيحلل الإشعار ويحدد النوع بتاعه
+// parses the notification and determines its type
 class FcmEventHandler(
     private val preferenceRepository: PreferenceRepository,
     private val sessionManager: SessionManager
@@ -1209,11 +1214,11 @@ class FcmEventHandler(
         when (type) {
             NotificationKey.ACCOUNT_BLOCK,
             NotificationKey.ACCOUNT_DELETED -> {
-                // يعمل logout
+                // performs logout
                 sessionManager.notifyBlocked()
             }
             else -> {
-                // يبعت update عادي
+                // sends a normal update
                 sessionManager.notifyFcmUpdate(data.toString())
             }
         }
@@ -1223,24 +1228,24 @@ class FcmEventHandler(
 
 ---
 
-## 16. إزاي iOS بيشتغل؟
+## 16. How Does iOS Work?
 
-### نقطة الدخول:
+### The Entry Point:
 
 ```swift
-// في Xcode - iOSApp.swift
-import shared    // ← الـ framework اللي Kotlin بيولده
+// in Xcode - iOSApp.swift
+import shared    // ← the framework that Kotlin generates
 
 @main
 struct iOSApp: App {
     init() {
-        // 1. تشغيل Koin (DI)
+        // 1. start Koin (DI)
         KoinInitHelper().doInitKoin()
     }
 
     var body: some Scene {
         WindowGroup {
-            // 2. عرض الـ Compose UI
+            // 2. display the Compose UI
             ComposeView()
         }
     }
@@ -1248,47 +1253,47 @@ struct iOSApp: App {
 
 struct ComposeView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UIViewController {
-        // 3. إنشاء الـ ViewController من Kotlin
+        // 3. create the ViewController from Kotlin
         MainViewControllerKt.MainViewController()
     }
 }
 ```
 
-### الـ Flow:
+### The Flow:
 
 ```
 Swift App starts
     ↓
-KoinInitHelper.doInitKoin()     ← Kotlin (يسجل كل الـ DI)
+KoinInitHelper.doInitKoin()     ← Kotlin (registers all the DI)
     ↓
-MainViewController()            ← Kotlin (يعمل ComposeUIViewController)
+MainViewController()            ← Kotlin (creates a ComposeUIViewController)
     ↓
 App() composable                ← commonMain Compose UI
     ↓
-SplashScreen → LoginScreen → ... (نفس Android بالظبط)
+SplashScreen → LoginScreen → ... (exactly the same as Android)
 ```
 
-### الفرق بين Android و iOS:
+### The Difference Between Android and iOS:
 
-| الجزء          | Android                             | iOS                              |
+| The Part       | Android                             | iOS                              |
 |----------------|-------------------------------------|----------------------------------|
-| نقطة الدخول    | `App : Application()`               | Swift `iOSApp`                   |
+| Entry point    | `App : Application()`               | Swift `iOSApp`                   |
 | Activity/VC    | `MainActivity : ComponentActivity`  | `ComposeUIViewController`        |
 | DI Init        | `startKoin { androidContext(...) }` | `startKoin { /* no context */ }` |
 | HTTP Engine    | OkHttp                              | Darwin                           |
-| Secure Storage | EncryptedSharedPreferences          | Settings (مؤقتاً)                |
+| Secure Storage | EncryptedSharedPreferences          | Settings (temporarily)           |
 | FCM            | `FirebaseMessagingService`          | Swift APNs + `IosFcmHandler`     |
 | Notifications  | `NotificationHandler`               | Swift `UNUserNotificationCenter` |
-| الـ UI         | **نفس الكود بالظبط**                | **نفس الكود بالظبط**             |
+| The UI         | **exactly the same code**           | **exactly the same code**        |
 
 ---
 
-## 17. ملفات الـ Build
+## 17. Build Files
 
 ### settings.gradle.kts:
 
 ```kotlin
-// بيعرف الموديولات الموجودة في المشروع
+// defines the modules in the project
 rootProject.name = "Mahalatk"
 include(":app")      // Android app
 include(":data")     // Data layer (KMP)
@@ -1299,8 +1304,8 @@ include(":shared")   // UI layer (KMP + CMP)
 ### libs.versions.toml:
 
 ```toml
-# ملف مركزي لإدارة كل الـ versions
-# بدل ما تكتب الـ version في كل module
+# central file for managing all the versions
+# instead of writing the version in every module
 
 [versions]
 kotlin = "2.2.21"
@@ -1332,23 +1337,23 @@ kotlin {
     iosSimulatorArm64()                        // ← iOS Simulator (Apple Silicon)
 
     sourceSets {
-        commonMain.dependencies { ... }        // ← مكتبات مشتركة
-        androidMain.dependencies { ... }       // ← مكتبات Android
-        iosMain.dependencies { ... }           // ← مكتبات iOS
+        commonMain.dependencies { ... }        // ← shared libraries
+        androidMain.dependencies { ... }       // ← Android libraries
+        iosMain.dependencies { ... }           // ← iOS libraries
     }
 }
 
 android {
     namespace = "com.mahalatk.data"
     compileSdk = 36
-    // BuildConfig لقراءة الـ Config file
+    // BuildConfig for reading the Config file
 }
 ```
 
 ### Config file:
 
 ```properties
-# القيم دي بتتقرأ في Build time وبتتحول لـ BuildConfig على Android
+# these values are read at Build time and converted into BuildConfig on Android
 API_KEY="AIzaSyAoZ356P2Ke2Xm_njlJIiYjrgp3NgEkVnI"
 REMOTE_URL="https://ninety-sheets.com"
 SOCKET_PORT="4777"
@@ -1356,10 +1361,10 @@ SOCKET_PORT="4777"
 
 ---
 
-## 18. Flow كامل: من الضغط على Login لحد الاستجابة
+## 18. Complete Flow: From Pressing Login to the Response
 
 ```
-1. المستخدم يكتب الموبايل والباسورد ويضغط Login
+1. the user types the mobile and password and presses Login
    ↓
 2. LoginScreen.kt → viewModel.login()
    ↓
@@ -1367,12 +1372,12 @@ SOCKET_PORT="4777"
    ↓
 4. LoginUseCase.invoke(phone, password)
    ↓
-5. CommonValidation.isValidPhone(phone)     ← phone >= 9 حروف؟
-   CommonValidation.isValidPassword(password) ← password >= 8 حروف؟
-   ↓ (لو فشل → throw ValidationException → MessageManager يعرض خطأ)
-   ↓ (لو نجح ↓)
+5. CommonValidation.isValidPhone(phone)     ← phone >= 9 characters?
+   CommonValidation.isValidPassword(password) ← password >= 8 characters?
+   ↓ (if it fails → throw ValidationException → MessageManager shows an error)
+   ↓ (if it succeeds ↓)
 6. HomeRepository.login(countryCode, phone, password, deviceId, socialId)
-   ↓ (Interface في Domain)
+   ↓ (Interface in Domain)
 7. HomeRepositoryImpl.login(...) → safeApiCall { homeEndPoint.login(...) }
    ↓
 8. safeApiCall:
@@ -1384,38 +1389,38 @@ SOCKET_PORT="4777"
 10. HttpClient:
     URL: https://ninety-sheets.com/api/sign-in
     Headers:
-      - lang: "ar" (أو "en")
-      - Authorization: "Bearer eyJ..." (لو موجود)
+      - lang: "ar" (or "en")
+      - Authorization: "Bearer eyJ..." (if present)
       - Content-Type: application/x-www-form-urlencoded
     Body:
       - country_code=+966
       - phone=555555555
       - password=12345678
       - device_id=abc123
-      - device_type=android (أو ios)
+      - device_type=android (or ios)
    ↓
-11. السيرفر يرد:
+11. the server responds:
     { "key": 1, "msg": "success", "data": { "id": 1, "name": "...", "token": "eyJ..." } }
    ↓
-12. Ktor يحول الـ JSON لـ BaseResponse<AuthData> (تلقائي بـ ContentNegotiation)
+12. Ktor converts the JSON to BaseResponse<AuthData> (automatically via ContentNegotiation)
    ↓
 13. safeApiCall:
     emit(DataState.Success(response))     ← LoadingManager.hideLoading()
    ↓
 14. LoginViewModel:
-    - preferenceRepository.setToken(token)      ← يحفظ الـ token (مشفر)
-    - tokenCacheManager.refreshTokenCache()     ← يحدث الـ cache
-    - preferenceRepository.setUserData(json)    ← يحفظ بيانات المستخدم
-    - preferenceRepository.setIsLogin(true)     ← يحفظ حالة الدخول
-    - navigator.replaceAll(Route.Home)          ← ينتقل للشاشة الرئيسية
+    - preferenceRepository.setToken(token)      ← saves the token (encrypted)
+    - tokenCacheManager.refreshTokenCache()     ← refreshes the cache
+    - preferenceRepository.setUserData(json)    ← saves the user data
+    - preferenceRepository.setIsLogin(true)     ← saves the login state
+    - navigator.replaceAll(Route.Home)          ← navigates to the home screen
    ↓
-15. NavigationContent يعرض HomeScreen بدل LoginScreen
+15. NavigationContent displays HomeScreen instead of LoginScreen
 ```
 
-### لو حصل خطأ:
+### If an Error Occurs:
 
 ```
-Step 10 → السيرفر يرد 400:
+Step 10 → the server responds 400:
     { "key": 0, "msg": "Invalid credentials" }
     ↓
 convertErrorBody():
@@ -1429,52 +1434,52 @@ applyCommonSideEffects():
     MessageManager.showMessage("Invalid credentials")
     ↓
 AppNavigation.kt:
-    Snackbar يظهر بالرسالة "Invalid credentials"
+    a Snackbar appears with the message "Invalid credentials"
 ```
 
 ---
 
-## 19. المكتبات المستخدمة
+## 19. Libraries Used
 
-| المكتبة                    | الوظيفة                                      | Platform             |
-|----------------------------|----------------------------------------------|----------------------|
-| **Kotlin Multiplatform**   | مشاركة الكود بين Android و iOS               | الكل                 |
-| **Compose Multiplatform**  | UI مشترك                                     | الكل                 |
-| **Ktor Client**            | HTTP client                                  | الكل (OkHttp/Darwin) |
-| **Koin**                   | Dependency Injection                         | الكل                 |
-| **kotlinx.serialization**  | تحويل JSON ↔ Kotlin                          | الكل                 |
-| **kotlinx.coroutines**     | عمليات Async (Flows, suspend)                | الكل                 |
-| **Multiplatform Settings** | تخزين key-value (SharedPrefs/NSUserDefaults) | الكل                 |
-| **Coil 3**                 | تحميل الصور                                  | الكل                 |
-| **Compottie**              | Lottie animations                            | الكل                 |
-| **Firebase Messaging**     | Push Notifications                           | Android              |
-| **Firebase Crashlytics**   | تقارير الأخطاء                               | Android              |
-| **EncryptedSharedPrefs**   | تخزين مشفر                                   | Android              |
-| **ExoPlayer (Media3)**     | تشغيل الفيديو                                | Android              |
-| **Google Maps**            | خرائط                                        | Android              |
-| **Socket.IO**              | Real-time communication                      | Android              |
+| Library                    | Function                                       | Platform            |
+|----------------------------|------------------------------------------------|---------------------|
+| **Kotlin Multiplatform**   | sharing code between Android and iOS           | all                 |
+| **Compose Multiplatform**  | shared UI                                      | all                 |
+| **Ktor Client**            | HTTP client                                    | all (OkHttp/Darwin) |
+| **Koin**                   | Dependency Injection                           | all                 |
+| **kotlinx.serialization**  | JSON ↔ Kotlin conversion                       | all                 |
+| **kotlinx.coroutines**     | Async operations (Flows, suspend)              | all                 |
+| **Multiplatform Settings** | key-value storage (SharedPrefs/NSUserDefaults) | all                 |
+| **Coil 3**                 | image loading                                  | all                 |
+| **Compottie**              | Lottie animations                              | all                 |
+| **Firebase Messaging**     | Push Notifications                             | Android             |
+| **Firebase Crashlytics**   | crash reports                                  | Android             |
+| **EncryptedSharedPrefs**   | encrypted storage                              | Android             |
+| **ExoPlayer (Media3)**     | video playback                                 | Android             |
+| **Google Maps**            | maps                                           | Android             |
+| **Socket.IO**              | Real-time communication                        | Android             |
 
 ---
 
-## 20. نصائح ومفاهيم مهمة
+## 20. Important Tips and Concepts
 
-### 1. Flow و StateFlow:
+### 1. Flow and StateFlow:
 
 ```kotlin
-// Flow = stream من البيانات (زي أنبوب مياه)
-// StateFlow = Flow بيحتفظ بآخر قيمة (زي متغير reactive)
+// Flow = a stream of data (like a water pipe)
+// StateFlow = a Flow that retains the last value (like a reactive variable)
 
-// Flow: بتستخدمه لعمليات مؤقتة (API call)
-fun login(): Flow<DataState<AuthData>>  // ← بيبعت Loading → Success/Error وخلاص
+// Flow: you use it for one-off operations (API call)
+fun login(): Flow<DataState<AuthData>>  // ← emits Loading → Success/Error and that's it
 
-// StateFlow: بتستخدمه للحالة المستمرة (UI State)
-val state: StateFlow<LoginState>  // ← بيحتفظ بالقيمة الحالية دايماً
+// StateFlow: you use it for continuous state (UI State)
+val state: StateFlow<LoginState>  // ← always retains the current value
 ```
 
 ### 2. Sealed Class/Interface:
 
 ```kotlin
-// بتضمن إن كل الحالات الممكنة معروفة في compile time
+// guarantees that all possible states are known at compile time
 sealed class DataState<out T> {
     data class Success<T>(val data: T) : DataState<T>()
     data class Error(val exception: Throwable) : DataState<Nothing>()
@@ -1482,7 +1487,7 @@ sealed class DataState<out T> {
     data object Idle : DataState<Nothing>()
 }
 
-// لما تعمل when → الـ compiler يجبرك تتعامل مع كل الحالات:
+// when you do a when → the compiler forces you to handle every state:
 when (state) {
     is DataState.Success -> { /* ... */
     }
@@ -1492,91 +1497,91 @@ when (state) {
     }
     is DataState.Idle -> { /* ... */
     }
-    // لو نسيت حالة → compile error!
+    // if you forget a state → compile error!
 }
 ```
 
-### 3. Coroutines و suspend:
+### 3. Coroutines and suspend:
 
 ```kotlin
-// suspend = دالة ممكن تتأخر (API call, Database read)
-// مش بتوقف الـ main thread - بتشتغل في الـ background
+// suspend = a function that may take time (API call, Database read)
+// it doesn't block the main thread - it runs in the background
 
-suspend fun login(): BaseResponse<AuthData>  // ← ممكن تاخد وقت
+suspend fun login(): BaseResponse<AuthData>  // ← may take time
 
-// viewModelScope = scope مربوط بعمر الـ ViewModel
-// لما الـ ViewModel يتدمر → كل الـ coroutines بتتلغي تلقائي
+// viewModelScope = a scope tied to the ViewModel's lifetime
+// when the ViewModel is destroyed → all coroutines are cancelled automatically
 viewModelScope.launch {
     loginUseCase(phone, password).collect { state ->
-        // هنا بنستقبل كل القيم من الـ Flow
+        // here we receive every value from the Flow
     }
 }
 ```
 
-### 4. Composable و State:
+### 4. Composable and State:
 
 ```kotlin
-// @Composable = دالة بتوصف UI
-// مش بترسم مباشرة - بتوصف "عايز إيه" و Compose بيرسمه
+// @Composable = a function that describes UI
+// it doesn't draw directly - it describes "what you want" and Compose draws it
 
 @Composable
 fun LoginScreen(viewModel: LoginViewModel) {
-    // collectAsState() = بيحول StateFlow لـ Compose State
+    // collectAsState() = converts a StateFlow into Compose State
     val state by viewModel.state.collectAsState()
-    // كل ما state تتغير → الدالة دي بتتنادي تاني (recomposition)
+    // whenever state changes → this function is called again (recomposition)
 
-    // remember = بيحفظ القيمة بين الـ recompositions
+    // remember = retains the value across recompositions
     val navigator = remember { AppNavigator() }
 
     Column {
-        Text(state.mobile)  // ← لو mobile اتغير → Text يتحدث تلقائي
+        Text(state.mobile)  // ← if mobile changes → Text updates automatically
     }
 }
 ```
 
-### 5. الفرق بين Interface و expect/actual:
+### 5. The Difference Between Interface and expect/actual:
 
 ```kotlin
-// Interface: لما عايز implementations مختلفة بنفس الـ API
-// بتسجلهم في Koin وبتختار مين يتحقن
+// Interface: when you want different implementations with the same API
+// you register them in Koin and choose which gets injected
 interface SecureStorage {
     suspend fun getValue(key: String, default: Any?): Flow<Any?>
 }
 // Android: class AndroidSecureStorage : SecureStorage
 // iOS: class IosSecureStorage : SecureStorage
 
-// expect/actual: لما عايز الـ compiler يضمنلك إن كل platform عنده implementation
-// مفيش runtime selection - بيتحدد في compile time
+// expect/actual: when you want the compiler to guarantee each platform has an implementation
+// no runtime selection - it's decided at compile time
 expect val platformDeviceType: String
 actual val platformDeviceType: String = "android"  // Android
 actual val platformDeviceType: String = "ios"      // iOS
 ```
 
-### 6. قواعد هيكل المشروع:
+### 6. Project Structure Rules:
 
 ```
-✅ Domain مش بيعرف حاجة عن Data أو UI
-✅ Data بينفذ interfaces من Domain
-✅ Shared (UI) بيستخدم Use Cases من Domain
-✅ commonMain مش فيه أي Android أو iOS APIs
-✅ Platform-specific code في androidMain أو iosMain بس
-✅ expect/actual للـ APIs المختلفة بين الـ platforms
-✅ Koin بيربط كل حاجة ببعض في runtime
+✅ Domain knows nothing about Data or UI
+✅ Data implements interfaces from Domain
+✅ Shared (UI) uses Use Cases from Domain
+✅ commonMain has no Android or iOS APIs
+✅ Platform-specific code lives only in androidMain or iosMain
+✅ expect/actual for APIs that differ between platforms
+✅ Koin wires everything together at runtime
 ```
 
 ---
 
-## ملاحظات أخيرة
+## Final Notes
 
-### حاجات ممكن تتحسن مستقبلاً:
+### Things That Could Be Improved in the Future:
 
-1. **iOS SecureStorage**: استبدال `Settings` بـ `Keychain` للتخزين المشفر
-2. **iOS Config**: قراءة الـ config من `Info.plist` بدل hardcoded values
-3. **Error Handling**: إضافة retry mechanism وoffline support
-4. **Testing**: إضافة unit tests في `commonTest`
-5. **CI/CD**: إعداد GitHub Actions للبناء التلقائي
+1. **iOS SecureStorage**: replace `Settings` with `Keychain` for encrypted storage
+2. **iOS Config**: read the config from `Info.plist` instead of hardcoded values
+3. **Error Handling**: add a retry mechanism and offline support
+4. **Testing**: add unit tests in `commonTest`
+5. **CI/CD**: set up GitHub Actions for automated builds
 
-### مصادر للتعلم:
+### Learning Resources:
 
 - [Kotlin Multiplatform Docs](https://kotlinlang.org/docs/multiplatform.html)
 - [Compose Multiplatform](https://www.jetbrains.com/compose-multiplatform/)
