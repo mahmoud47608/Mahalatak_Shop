@@ -1,4 +1,4 @@
-# Mahalatak - Complete Project Guide
+# Mahalatak Shop- Complete Project Guide
 
 ## Compose Multiplatform (CMP) + Clean Architecture
 
